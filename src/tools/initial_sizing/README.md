@@ -123,4 +123,3 @@ The sizing tool has been validated against RANS CFD and AVL vortex-lattice:
 - Drag: within 6% of CFD with the base drag recovery model
 - Propeller interaction (actuator disk): confirms base drag recovery assumption
 
-See `aero_validation_note.md` in the parent directory for full details.
