@@ -32,8 +32,66 @@ import argparse
 # Allow importing from this directory
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from aircraft_sizing import size_aircraft
-from build_airfoil_db import load_db_as_tuples, db_file_for_re
-from fetch_airfoil_polars import closest_re
+
+_DB_DIR = os.path.dirname(os.path.abspath(__file__))
+_AVAILABLE_RE = [50000, 100000, 200000, 500000, 1000000]
+
+
+def closest_re(target_re: int) -> int:
+    """Return the closest available Reynolds number."""
+    return min(_AVAILABLE_RE, key=lambda r: abs(r - target_re))
+
+
+def db_file_for_re(re_val: int) -> str:
+    """Return the database filepath for a given Reynolds number."""
+    return os.path.join(_DB_DIR, f"airfoil_db_re{re_val}.csv")
+
+
+def load_db_as_tuples(db_path: str = None,
+                      min_cl_max: float = 0.0,
+                      max_cd_0: float = 1.0,
+                      max_thickness: float = 100.0,
+                      min_thickness: float = 0.0,
+                      max_camber: float = 100.0) -> list[tuple]:
+    """
+    Load the database CSV and return tuples:
+      (name, cl_0, cl_alpha_2d, cl_max, cd_0, cm_ac, cd_min, alpha_minD_deg, k_drag, thickness_pct)
+    """
+    if db_path is None:
+        db_path = os.path.join(_DB_DIR, "airfoil_db_re500000.csv")
+    results = []
+    with open(db_path, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            cl_max = float(row["cl_max"])
+            cd_0 = float(row["cd_0"])
+            thick = float(row["thickness_pct"]) if row["thickness_pct"] else 0.0
+            if cl_max < min_cl_max:
+                continue
+            if cd_0 > max_cd_0:
+                continue
+            if thick > max_thickness or thick < min_thickness:
+                continue
+            camber = float(row["camber_pct"]) if row["camber_pct"] else 0.0
+            if camber > max_camber:
+                continue
+            cd_min = float(row["cd_min"]) if row.get("cd_min") else None
+            alpha_minD_deg = float(row["alpha_minD_deg"]) if row.get("alpha_minD_deg") else None
+            k_drag = float(row["k_drag"]) if row.get("k_drag") else None
+            results.append((
+                row["name"],
+                float(row["cl_0"]),
+                float(row["cl_alpha_2d"]),
+                cl_max,
+                cd_0,
+                float(row["cm_ac"]),
+                cd_min,
+                alpha_minD_deg,
+                k_drag,
+                thick,
+            ))
+    return results
+
 
 # ---------------------------------------------------------------------------
 # Tee — write to console and file simultaneously
