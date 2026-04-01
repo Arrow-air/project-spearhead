@@ -30,7 +30,7 @@ import csv
 import argparse
 
 # Allow importing from this directory
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from aircraft_sizing import size_aircraft
 from build_airfoil_db import load_db_as_tuples, db_file_for_re
 from fetch_airfoil_polars import closest_re

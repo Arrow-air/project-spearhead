@@ -725,6 +725,8 @@ def size_aircraft(
         "T_atm":                T_atm,
         "q_cruise":             q_cruise,
         # Main wing geometry
+        "wing_airfoil":         wing_airfoil,
+        "wing_incidence_deg":   math.degrees(wing_incidence),
         "S_wing_eff":           S_wing_eff,
         "S_wing_gross":         S_wing_gross,
         "span_wing":            span_wing,
@@ -735,6 +737,8 @@ def size_aircraft(
         "CL_alpha_wing":        CL_alpha_wing,
         "e_wing":               e_wing,
         # Tail geometry
+        "tail_airfoil":         tail_airfoil,
+        "tail_dihedral_deg":    math.degrees(tail_dihedral),
         "S_tail":               S_tail,
         "span_tail":            tail_span_actual,
         "tail_proj_span":       tail_proj_span,
@@ -820,44 +824,55 @@ def print_results(r: dict) -> None:
     print(f"    Temperature       {r['T_atm']:>10.2f}  K")
     print(f"    Dynamic pressure  {r['q_cruise']:>10.2f}  Pa")
 
+    # -- Main Wing characteristics --
+    airfoil_w = r.get('wing_airfoil') or r.get('airfoil') or 'manual'
     print(f"\n  Main Wing")
-    print(f"    Effective area    {r['S_wing_eff']:>10.4f}  m2")
-    print(f"    Gross area        {r['S_wing_gross']:>10.4f}  m2")
-    print(f"    Physical span     {r['span_wing']:>10.3f}  m")
-    print(f"    Effective span    {r['span_wing_eff']:>10.3f}  m")
-    print(f"    Chord             {r['chord_wing']:>10.3f}  m")
-    print(f"    Effective AR      {r['AR_wing_eff']:>10.2f}")
-    print(f"    3D CL_alpha       {r['CL_alpha_wing']:>10.4f}  rad^-1")
-    print(f"    3D CL_max         {r['CL_max_3d']:>10.4f}")
-    print(f"    Oswald e          {r['e_wing']:>10.4f}")
-    if "wing_thickness_pct" in r and r["wing_thickness_pct"] > 0:
-        t_abs_m = r["wing_thickness_pct"] / 100.0 * r["chord_wing"]
-        print(f"    Thickness         {r['wing_thickness_pct']:>10.1f}  %c")
-        print(f"    Abs. thickness    {t_abs_m*100:>10.1f}  cm")
+    print(f"    - Airfoil:          {airfoil_w}")
+    print(f"    - Incidence:        {r['wing_incidence_deg']:.1f} deg")
+    print(f"    - Span:             {r['span_wing']:.3f} m")
+    print(f"    - Effective span:   {r['span_wing_eff']:.3f} m  (span - fuselage)")
+    print(f"    - Chord:            {r['chord_wing']:.3f} m")
+    print(f"    - Area (eff):       {r['S_wing_eff']:.4f} m2")
+    print(f"    - Area (gross):     {r['S_wing_gross']:.4f} m2")
+    print(f"    - AR (eff):         {r['AR_wing_eff']:.2f}")
+    print(f"    - CL_alpha (3D):    {r['CL_alpha_wing']:.4f} rad^-1")
+    print(f"    - CL_max (3D):      {r['CL_max_3d']:.4f}")
+    print(f"    - Oswald e:         {r['e_wing']:.4f}")
+    if "wing_thickness_pct" in r and r.get("wing_thickness_pct", 0) > 0:
+        t_abs_cm = r["wing_thickness_pct"] / 100.0 * r["chord_wing"] * 100
+        print(f"    - Thickness:        {r['wing_thickness_pct']:.1f} %c  ({t_abs_cm:.1f} cm)")
 
+    # -- Tail characteristics --
     tail_type = "V-Tail" if r.get("tail_config", 1) == 1 else "Conventional Tail"
-    print(f"\n  {tail_type}  (fixed geometry)")
-    print(f"    Panel area total  {r['S_tail']:>10.4f}  m2")
-    print(f"    Projected span    {r['tail_proj_span']:>10.3f}  m")
-    print(f"    Geometric span    {r['span_tail']:>10.3f}  m")
-    print(f"    Chord             {r['tail_chord']:>10.3f}  m")
-    print(f"    AR                {r['tail_AR']:>10.2f}")
-    print(f"    3D CL_alpha       {r['CL_alpha_tail']:>10.4f}  rad^-1")
-    print(f"    Oswald e          {r['e_tail']:>10.4f}")
+    airfoil_t = r.get('tail_airfoil') or 'manual'
+    print(f"\n  Tail ({tail_type})")
+    print(f"    - Airfoil:          {airfoil_t}")
+    if r.get("tail_config", 1) == 1:
+        print(f"    - Dihedral:         {r['tail_dihedral_deg']:.1f} deg")
+    print(f"    - Projected span:   {r['tail_proj_span']:.3f} m")
+    print(f"    - Geometric span:   {r['span_tail']:.3f} m")
+    print(f"    - Chord:            {r['tail_chord']:.3f} m")
+    print(f"    - Area:             {r['S_tail']:.4f} m2")
+    print(f"    - AR:               {r['tail_AR']:.2f}")
+    print(f"    - CL_alpha (3D):    {r['CL_alpha_tail']:.4f} rad^-1")
+    print(f"    - Oswald e:         {r['e_tail']:.4f}")
+    if "tail_thickness_pct" in r and r.get("tail_thickness_pct", 0) > 0:
+        t_abs_cm = r["tail_thickness_pct"] / 100.0 * r["tail_chord"] * 100
+        print(f"    - Thickness:        {r['tail_thickness_pct']:.1f} %c  ({t_abs_cm:.1f} cm)")
     vh_note = "LOW" if r['V_h'] < 0.40 else "ok" if r['V_h'] < 0.70 else "high"
-    print(f"    V_h               {r['V_h']:>10.3f}        ({vh_note})")
+    print(f"    - V_h (eff):        {r['V_h']:.3f}  ({vh_note})")
     if r.get("tail_config", 1) == 1:
         vv_note = "LOW" if r['V_v'] < 0.025 else "ok" if r['V_v'] < 0.07 else "high"
-        print(f"    V_v               {r['V_v']:>10.4f}       ({vv_note})")
+        print(f"    - V_v:              {r['V_v']:.4f}  ({vv_note})")
     elif r['V_v'] > 0:
         vv_note = "LOW" if r['V_v'] < 0.025 else "ok" if r['V_v'] < 0.07 else "high"
-        print(f"    V_v               {r['V_v']:>10.4f}       ({vv_note}, vertical fin {r['vert_chord']*100:.0f}x{r['vert_span']*100:.0f} cm)")
+        print(f"    - V_v:              {r['V_v']:.4f}  ({vv_note}, vert fin {r['vert_chord']*100:.0f}x{r['vert_span']*100:.0f} cm)")
     else:
-        print(f"    V_v                      N/A        (set vert_chord and vert_span for config 2)")
-    print(f"                       Sailplane  Homebuilt  GA-single  GA-twin")
-    print(f"            V_h ref:     0.50       0.48       0.67      0.81")
+        print(f"    - V_v:              N/A  (set vert_chord and vert_span)")
+    print(f"                         Sailplane  Homebuilt  GA-single  GA-twin")
+    print(f"              V_h ref:     0.50       0.48       0.67      0.81")
     if r.get("tail_config", 1) == 1:
-        print(f"            V_v ref:     0.019      0.038      0.044     0.066")
+        print(f"              V_v ref:     0.019      0.038      0.044     0.066")
 
     if r.get("tail_incidence_override"):
         print(f"\n  Cruise State (tail incidence FIXED)")
