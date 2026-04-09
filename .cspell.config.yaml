@@ -24,6 +24,4 @@ ignorePaths:
   - "out"
   - "coverage"
   - "src/*.plan"
-  - "src/tools/initial_sizing/geometry/**"
-  - "src/tools/initial_sizing/*.csv"
 noConfigSearch: true
