@@ -59,6 +59,8 @@ The force and moment columns **Fx**, **Fy**, **Fz**, **Mx**, **My**, and **Mz** 
 
 Keep **SakeDB.exe**, **_internal**, **assets**, and **template.sakedb** together in the same folder, then launch **SakeDB.exe**. Use **New** to create a study from the bundled template or **Open** to load an existing **.sakedb** file. Put the model file, setup script, and launcher script beside the study file when you want simple relative paths.
 
+You can also open a study directly from Windows by choosing **Open with** and selecting **SakeDB.exe** for a **.sakedb** file. Windows passes the study path to SakeDB, and SakeDB loads that study at startup. For this to work on another computer, copy the whole SakeDB folder, not only **SakeDB.exe**.
+
 1. Define the study in **Setup**: set the study name, run folder, run budget, convergence stopping options, model file, setup script, launcher script, variables, export grid, and anchor points.
 2. Save the study file, then press **Start**. SakeDB runs anchors first, then initial sampling, then adaptive infill.
 3. Use **Pause**, **Resume**, and **Stop** from the sidebar to control a campaign. Use **Discard Current Case** when the active case is clearly bad.
