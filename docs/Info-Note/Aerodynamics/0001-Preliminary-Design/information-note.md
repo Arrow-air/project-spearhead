@@ -18,7 +18,7 @@ The resulting geometry will be used as a reference for structural design and aer
 
 | Isometric view |
 |----------------|
-| ![Isometric exterior view](isometric.png) |
+| ![Isometric exterior view](assets/images/isometric.png) |
 
 # Methodology
 
@@ -115,25 +115,26 @@ Due to the electrical elements and avionics in the tail region, the center of th
 
 | Side view |
 |-----------|
-| ![Side exterior view](side.png) |
+| ![Side exterior view](assets/images/side.png) |
 
 | Front view |
 |------------|
-| ![Front exterior view](front.png) |
+| ![Front exterior view](assets/images/front.png) |
 
 | Top view |
 |----------|
-| ![Top exterior view](top.png) |
+| ![Top exterior view](assets/images/top.png) |
 
 ## Source Files
 
-| File | Use |
-|------|-----|
-| `fuselage.step` | Fuselage CAD model |
-| `main_wing.step` | Main wing CAD model |
-| `tail_wing.step` | Tail wing CAD model |
-| `config.py` | Wing/tail station definitions |
-| `sweep_results_re500000.txt` | Wing and tail sizing baseline |
+| File |
+|-----|
+| [Fuselage CAD model](assets/fuselage.step) |
+| [Main wing CAD model](assets/main_wing.step) |
+| [Tail wing CAD model](assets/tail_wing.step) |
+| [Longitudinal Booms CAD model](assets/longitudinal_booms.step) |
+| [Wing/tail sizing config](assets/config.py) |
+| [Wing/tail sizing results](assets/sweep_results_re500000.txt) |
 
 # Remarks
 
