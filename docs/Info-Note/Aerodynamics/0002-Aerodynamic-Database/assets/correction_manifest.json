@@ -1,0 +1,107 @@
+{
+  "created_at": "2026-05-21T14:32:44.486119",
+  "output_dir": "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm",
+  "inputs": [
+    {
+      "path": "F:\\Project_Spearhead\\AeroDB\\v10\\runs\\v10\\results_symmetric.csv",
+      "sha256": "f36a3f751b3a2a63901134e879f0412d61afaa5b9bfcb60ff340572b6b2ea6ac",
+      "bytes": 139791,
+      "mtime": "2026-05-17T13:47:10.913035"
+    },
+    {
+      "path": "F:\\Project_Spearhead\\AeroDB\\v10\\runs\\v10\\results.csv",
+      "sha256": "b46371ba7151471da9c4276b84ee416b71ea16bf88bd862a745c779b3539380f",
+      "bytes": 75492,
+      "mtime": "2026-05-17T12:30:44.330332"
+    },
+    {
+      "path": "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\dense_table.csv",
+      "sha256": "52958edb46b72651076c263cdbd74d63c2aeeeb7ff2ecbc153277d50555e3492",
+      "bytes": 4084002,
+      "mtime": "2026-05-21T13:21:26.693789"
+    },
+    {
+      "path": "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\dense_table_positive_beta.csv",
+      "sha256": "6155248c51e71831cab67063b8a96a5f64ab64414a11d059a06aa6943b759644",
+      "bytes": 2062500,
+      "mtime": "2026-05-21T13:21:26.790158"
+    },
+    {
+      "path": "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\dense_table_symmetric.csv",
+      "sha256": "52958edb46b72651076c263cdbd74d63c2aeeeb7ff2ecbc153277d50555e3492",
+      "bytes": 4084002,
+      "mtime": "2026-05-21T13:21:26.980482"
+    }
+  ],
+  "outputs": [
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\dense_table.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\dense_table_positive_beta.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\dense_table_symmetric.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\applied_correction_dense_table.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\applied_correction_dense_table_positive_beta.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\v10_raw_minus_v13_dense_residual_points.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\diagnostics_at_v10_points.csv",
+    "F:\\Project_Spearhead\\AeroDB\\v13\\runs\\corrected_by_v10_vdm\\correction_manifest.json"
+  ],
+  "parameters": {
+    "method": "local inverse-distance residual correction",
+    "reference": "v10 raw VDM results_symmetric.csv",
+    "base_surface": "v13 dense_table.csv",
+    "residual_definition": "v10_raw - bilinear_interpolate(v13_dense, alpha, beta)",
+    "application": "v13_dense + taper(alpha,beta) * local_idw(residual_points)",
+    "idw_power": 2.0,
+    "idw_neighbors": 24,
+    "taper_inner_distance_deg": 8.0,
+    "taper_outer_distance_deg": 35.0,
+    "exact_point_tolerance_deg": 1e-09,
+    "status_filter": "ok",
+    "symmetry_source": "uses v10 results_symmetric.csv as exported; no extra zeroing of beta=0 odd components",
+    "outside_support": "correction tapers to zero where nearest v10 VDM point is >= outer distance"
+  },
+  "counts": {
+    "v10_raw_symmetric_points_used": 148,
+    "v13_dense_rows_corrected": 32761,
+    "v13_positive_beta_rows_corrected": 16471,
+    "v13_symmetric_rows_corrected": 32761,
+    "full_dense_rows_with_nonzero_taper": 21029,
+    "positive_beta_rows_with_nonzero_taper": 10587
+  },
+  "diagnostics_corrected_dense_interpolated_at_v10_points": {
+    "Fx": {
+      "mean_error": -0.01722234073320389,
+      "median_abs_error": 0.0,
+      "rmse": 0.16113010680726467,
+      "max_abs_error": 1.089531713102212
+    },
+    "Fy": {
+      "mean_error": -0.000735117348612208,
+      "median_abs_error": 0.0,
+      "rmse": 0.08524628356169904,
+      "max_abs_error": 0.33370040288137304
+    },
+    "Fz": {
+      "mean_error": 0.09567446311162323,
+      "median_abs_error": 0.0,
+      "rmse": 0.4745901047053436,
+      "max_abs_error": 2.376829509068358
+    },
+    "Mx": {
+      "mean_error": -0.0008371973756332554,
+      "median_abs_error": 0.0,
+      "rmse": 0.15898414778966125,
+      "max_abs_error": 0.8186790083617836
+    },
+    "My": {
+      "mean_error": -0.010595910446126292,
+      "median_abs_error": 0.0,
+      "rmse": 0.30184194798645,
+      "max_abs_error": 1.9002797592978595
+    },
+    "Mz": {
+      "mean_error": -0.00038383546655666685,
+      "median_abs_error": 0.0,
+      "rmse": 0.06748474338877103,
+      "max_abs_error": 0.45549350743416284
+    }
+  }
+}

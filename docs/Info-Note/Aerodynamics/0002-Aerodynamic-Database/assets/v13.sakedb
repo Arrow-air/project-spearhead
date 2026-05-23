@@ -1,0 +1,126 @@
+project: v13
+output_dir: runs
+variables:
+  alpha:
+    min: -90.0
+    max: 90.0
+    units: deg
+  beta:
+    min: 0.0
+    max: 90.0
+    units: deg
+outputs:
+- Fx
+- Fy
+- Fz
+- Mx
+- My
+- Mz
+anchors:
+  enabled: true
+  values:
+    alpha:
+    - -90.0
+    - -60.0
+    - -30.0
+    - -20.0
+    - -10.0
+    - -5.0
+    - 0.0
+    - 2.0
+    - 4.0
+    - 8.0
+    - 12.0
+    - 16.0
+    - 20.0
+    - 25.0
+    - 30.0
+    - 40.0
+    - 60.0
+    - 90.0
+    beta:
+    - 0.0
+    - 5.0
+    - 10.0
+    - 20.0
+    - 30.0
+    - 45.0
+    - 60.0
+    - 90.0
+  allow_outside_bounds: false
+  points: []
+doe:
+  method: lhs
+  n_initial: 30
+  seed: 42
+surrogate:
+  type: gaussian_process
+  refit_every: 1
+  fit_bounds_only: true
+acquisition:
+  type: uncertainty_curvature_spacing
+  n_candidates: 5000
+  decimals: 3
+  min_distance_normalized: 0.035
+  uncertainty_weight: 1.0
+  curvature_weight: 0.35
+  curvature_step_fraction: 0.015
+  output_weights:
+    Fx: 1.0
+    Fy: 1.0
+    Fz: 1.0
+    Mx: 1.0
+    My: 1.0
+    Mz: 1.0
+  weights:
+  - name: cruise
+    center:
+    - 3.0
+    - 0.0
+    sigma:
+    - 4.0
+    - 3.0
+    boost: 5.0
+  - name: stall
+    center:
+    - 16.0
+    - 0.0
+    sigma:
+    - 3.0
+    - 5.0
+    boost: 2.5
+budget:
+  max_hf_runs: 800
+  min_runs_before_convergence: 120
+  convergence_max_score: 0.02
+driver:
+  type: external
+  sim_file: case.model
+  setup_file: case_setup.txt
+  run_script: run_solver.bat
+  solver_verbose: 0
+  data_file: output.dat
+  stdout_file: output.out
+  completion_file: output.dat
+  console_log: run_console.log
+  force_plot: force.png
+  poll_seconds: 2.0
+  timeout_seconds: 21600
+symmetry:
+  enabled: true
+  variable: beta
+  odd_outputs:
+  - Fy
+  - Mx
+  - Mz
+export:
+  write_on_done: true
+  grid:
+    alpha:
+      min: -90.0
+      max: 90.0
+      step: 1.0
+    beta:
+      min: 0.0
+      max: 90.0
+      step: 1.0
