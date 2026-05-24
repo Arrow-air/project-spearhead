@@ -56,14 +56,14 @@ If moments are mapped, the tool writes force and moment coefficients. If moment 
 Use this tab when you already have a coefficient CSV from Nondimit and need to change the moment center, the nondimensionalization reference values, or the output formatting.
 
 1. Select the existing Nondimit export.
-2. The tool reads the metadata row and fills in `rho`, `S`, `V`, span, chord, output accuracy, and current moment center.
+2. The tool reads the metadata rows and fills in `rho`, `S`, `V`, span, chord, output accuracy, and current moment center.
 3. Edit the reference values if the output should use a different nondimensionalization.
 4. Enter the new body-axis moment center if the moment reference should move. Leave it equal to the current center if only the reference values should change.
 5. Confirm alpha and beta columns.
 6. Set optional beta-zero cleanup and output group order.
 7. Click `Modify and Save`.
 
-The current center is read from `new_moment_center_body_xyz` in the input file metadata. The new output metadata records the previous center as `old_moment_center_body_xyz` and the selected center as `new_moment_center_body_xyz`.
+The current center is read from `moment_center_body_xyz` in the input file metadata. Older exports that used `new_moment_center_body_xyz` still load correctly. New output metadata reports only the final selected moment center, not the previous center.
 
 The reference values in this tab are intentionally editable. When `rho`, `S`, `V`, span, or chord are changed, the tool recalculates all force and moment coefficients with the edited values:
 
@@ -161,10 +161,12 @@ After the body-axis moment is shifted, the tool projects both force and moment v
 
 ## Output File
 
-The saved CSV starts with a metadata row, then the normal CSV header row, then table data. Generated columns include body and wind-frame coefficients plus dimensional body and wind-frame force and moment columns. Numeric table cells are rounded to the requested output accuracy.
+The saved CSV starts with a short readable metadata block, then the normal CSV header row, then table data. The metadata block is intentionally kept to only a few comment rows: reference values, final body-axis moment center, and source/options. It reports only the final moment reference center used by the exported coefficients.
+
+Generated columns include body and wind-frame coefficients plus dimensional body and wind-frame force and moment columns. Numeric table cells are rounded to the requested output accuracy.
 
 Recommended sanity checks after export:
 
 - Beta-zero rows have `Fy`, `Mx`, and `Mz` equal to zero if those cleanup options were selected.
 - Moment signs change as expected when moving the reference center.
-- Metadata values match the intended `rho`, `S`, `V`, span, chord, and moment centers.
+- Metadata values match the intended `rho`, `S`, `V`, span, chord, and final moment center.

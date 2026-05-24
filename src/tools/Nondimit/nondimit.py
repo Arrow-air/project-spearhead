@@ -196,8 +196,8 @@ def read_csv_table_with_metadata(path):
     text = path.read_text(encoding="utf-8-sig", errors="replace")
     lines = text.splitlines()
     metadata = []
-    if lines and lines[0].lstrip().startswith("#"):
-        metadata = next(csv.reader([lines[0]]))
+    while lines and lines[0].lstrip().startswith("#"):
+        metadata.append(next(csv.reader([lines[0]])))
         lines = lines[1:]
     sample = "\n".join(lines[:40])
     try:
@@ -223,7 +223,12 @@ def write_csv_table(path, headers, rows, metadata=None):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
         if metadata:
-            csv.writer(handle).writerow(metadata)
+            writer = csv.writer(handle)
+            first = metadata[0] if isinstance(metadata, list) and metadata else None
+            if isinstance(first, (list, tuple)):
+                writer.writerows(metadata)
+            else:
+                writer.writerow(metadata)
         writer = csv.DictWriter(handle, fieldnames=headers, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
@@ -238,12 +243,24 @@ def as_float(value, name):
 
 def parse_metadata_row(metadata):
     parsed = {}
-    for item in metadata:
-        text = str(item).strip()
-        if "=" not in text:
+    if metadata and all(isinstance(item, str) for item in metadata):
+        rows = [metadata]
+    else:
+        rows = metadata or []
+
+    for row in rows:
+        cells = [str(item).strip() for item in row]
+        if len(cells) >= 3 and cells[0] == "#":
+            key = cells[1]
+            value = cells[2]
+            if key and normalized(key) not in {"field", "parameter", "key"}:
+                parsed[normalized(key)] = value.strip()
             continue
-        key, value = text.split("=", 1)
-        parsed[normalized(key)] = value.strip()
+        for text in cells:
+            if "=" not in text:
+                continue
+            key, value = text.split("=", 1)
+            parsed[normalized(key)] = value.strip()
     return parsed
 
 
@@ -369,25 +386,32 @@ class ConversionSettings:
         return self.force_denominator * self.chord
 
     def metadata_row(self, mapping, output_order=None, zero_at_beta=None):
-        old = ",".join(f"{value:.10g}" for value in self.old_center)
         new = ",".join(f"{value:.10g}" for value in self.new_center)
         order = ";".join(normalized_output_order(output_order))
         zero_options = ";".join(normalized_zero_at_beta_options(zero_at_beta))
         return [
-            "# Nondimit parameters",
-            f"rho={self.rho:.10g}",
-            f"S={self.area:.10g}",
-            f"V={self.velocity:.10g}",
-            f"q={self.q:.10g}",
-            f"span={self.span:.10g}",
-            f"chord={self.chord:.10g}",
-            f"output_accuracy={self.output_accuracy:.10g}",
-            f"old_moment_center_body_xyz=({old})",
-            f"new_moment_center_body_xyz=({new})",
-            f"alpha_column={mapping.get('alpha', '')}",
-            f"beta_column={mapping.get('beta', '')}",
-            f"output_group_order={order}",
-            f"zero_at_beta0={zero_options}",
+            [
+                "# Nondimit export",
+                f"rho={self.rho:.10g}",
+                f"S={self.area:.10g}",
+                f"V={self.velocity:.10g}",
+                f"q={self.q:.10g}",
+                f"span={self.span:.10g}",
+                f"chord={self.chord:.10g}",
+                f"output_accuracy={self.output_accuracy:.10g}",
+            ],
+            [
+                "# Moment center",
+                f"moment_center_body_xyz=({new})",
+                "body_axes=x_forward_y_right_z_down",
+            ],
+            [
+                "# Source and options",
+                f"alpha_column={mapping.get('alpha', '')}",
+                f"beta_column={mapping.get('beta', '')}",
+                f"output_group_order={order}",
+                f"zero_at_beta0={zero_options}",
+            ],
         ]
 
 
@@ -488,7 +512,7 @@ def read_export_settings(metadata):
     parsed = parse_metadata_row(metadata)
     current_center = metadata_vector(
         parsed,
-        ("new_moment_center_body_xyz", "old_moment_center_body_xyz"),
+        ("moment_center_body_xyz", "new_moment_center_body_xyz", "old_moment_center_body_xyz"),
         "current moment center",
     )
     return parsed, ConversionSettings(
