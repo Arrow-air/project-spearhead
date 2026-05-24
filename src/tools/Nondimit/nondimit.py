@@ -3,10 +3,25 @@ import csv
 import math
 import sys
 import tkinter as tk
+import webbrowser
 from dataclasses import dataclass
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
+
+if getattr(sys, "frozen", False):
+    APP_DIR = Path(sys.executable).resolve().parent
+    MODULE_DIR = Path(getattr(sys, "_MEIPASS", APP_DIR))
+else:
+    APP_DIR = Path(__file__).resolve().parent
+    MODULE_DIR = APP_DIR
+
+
+APP_NAME = "Nondimit"
+APP_DESCRIPTION = "Aerodynamic coefficient conversion tool"
+APP_CREDIT = "Developed by Alperen Gundogan for Arrow Air DAO"
+APP_PROJECT = "Project Spearhead"
+APP_WEBSITE = "https://arrowair.com/"
 
 ZERO_VALUE = "<zero>"
 
@@ -749,10 +764,42 @@ def default_mapping(headers):
     }
 
 
+def load_user_guide():
+    for base in [APP_DIR, MODULE_DIR]:
+        path = base / "README.md"
+        if path.exists():
+            try:
+                return path.read_text(encoding="utf-8")
+            except OSError:
+                pass
+    return (
+        "# Nondimit User Guide\n\n"
+        "The packaged README.md could not be loaded. Keep README.md next to "
+        "Nondimit.exe, or rebuild the executable with README.md included."
+    )
+
+
+def add_scrolled_text(parent, text, wrap=tk.WORD):
+    frame = ttk.Frame(parent)
+    frame.pack(fill=tk.BOTH, expand=True)
+    text_widget = tk.Text(frame, wrap=wrap, font=("Consolas", 9), height=24)
+    yscroll = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=text_widget.yview)
+    xscroll = ttk.Scrollbar(frame, orient=tk.HORIZONTAL, command=text_widget.xview)
+    text_widget.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
+    text_widget.grid(row=0, column=0, sticky="nsew")
+    yscroll.grid(row=0, column=1, sticky="ns")
+    xscroll.grid(row=1, column=0, sticky="ew")
+    frame.rowconfigure(0, weight=1)
+    frame.columnconfigure(0, weight=1)
+    text_widget.insert(tk.END, text)
+    text_widget.configure(state=tk.DISABLED)
+    return text_widget
+
+
 class Nondimit:
     def __init__(self, root):
         self.root = root
-        self.root.title("Nondimit")
+        self.root.title(APP_NAME)
         self.root.geometry("1180x760")
         self.root.minsize(980, 620)
 
@@ -820,7 +867,42 @@ class Nondimit:
 
         self.build_ui()
 
+    def build_menu(self):
+        menubar = tk.Menu(self.root)
+        help_menu = tk.Menu(menubar, tearoff=0)
+        help_menu.add_command(label="About", command=self.show_about)
+        menubar.add_cascade(label="Help", menu=help_menu)
+        self.root.config(menu=menubar)
+
+    def show_about(self):
+        dialog = tk.Toplevel(self.root)
+        dialog.title(f"About {APP_NAME}")
+        dialog.geometry("760x620")
+        dialog.minsize(560, 420)
+        dialog.transient(self.root)
+
+        notebook = ttk.Notebook(dialog)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        about_tab = ttk.Frame(notebook, padding=22)
+        guide_tab = ttk.Frame(notebook, padding=10)
+        notebook.add(about_tab, text="About")
+        notebook.add(guide_tab, text="User Guide")
+
+        ttk.Label(about_tab, text=APP_NAME, font=("Segoe UI", 18, "bold")).pack(anchor=tk.W)
+        ttk.Label(about_tab, text=APP_DESCRIPTION, font=("Segoe UI", 11)).pack(anchor=tk.W, pady=(4, 18))
+        ttk.Label(about_tab, text=APP_CREDIT, font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(0, 6))
+        ttk.Label(about_tab, text=APP_PROJECT).pack(anchor=tk.W, pady=(0, 6))
+        ttk.Label(about_tab, text=APP_WEBSITE).pack(anchor=tk.W, pady=(0, 18))
+        ttk.Button(about_tab, text="Open Website", command=lambda: webbrowser.open(APP_WEBSITE)).pack(anchor=tk.W)
+
+        add_scrolled_text(guide_tab, load_user_guide(), wrap=tk.NONE)
+
+        ttk.Button(dialog, text="Close", command=dialog.destroy).pack(anchor=tk.E, padx=10, pady=(0, 10))
+        dialog.focus_set()
+
     def build_ui(self):
+        self.build_menu()
         style = ttk.Style()
         style.theme_use("clam")
         style.configure("TFrame", background="#f7f8fa")
@@ -1168,12 +1250,12 @@ class Nondimit:
     def load_table(self):
         path = self.input_var.get().strip()
         if not path:
-            messagebox.showerror("Nondimit", "Select an input table first.")
+            messagebox.showerror(APP_NAME, "Select an input table first.")
             return
         try:
             self.headers, self.rows = read_csv_table(path)
         except Exception as exc:
-            messagebox.showerror("Nondimit", f"Could not load table:\n{exc}")
+            messagebox.showerror(APP_NAME, f"Could not load table:\n{exc}")
             return
 
         values = [""] + self.headers
@@ -1254,13 +1336,13 @@ class Nondimit:
     def load_recenter_export(self):
         path = self.recenter_input_var.get().strip()
         if not path:
-            messagebox.showerror("Nondimit", "Select an export file first.")
+            messagebox.showerror(APP_NAME, "Select an export file first.")
             return
         try:
             self.recenter_metadata, self.recenter_headers, self.recenter_rows = read_csv_table_with_metadata(path)
             parsed_metadata, settings = read_export_settings(self.recenter_metadata)
         except Exception as exc:
-            messagebox.showerror("Nondimit", f"Could not load export:\n{exc}")
+            messagebox.showerror(APP_NAME, f"Could not load export:\n{exc}")
             return
 
         self.set_recenter_settings(settings)
@@ -1303,7 +1385,7 @@ class Nondimit:
                 return
         out_path = self.recenter_output_var.get().strip()
         if not out_path:
-            messagebox.showerror("Nondimit", "Select an output path first.")
+            messagebox.showerror(APP_NAME, "Select an output path first.")
             return
         try:
             settings = self.recenter_settings()
@@ -1327,7 +1409,7 @@ class Nondimit:
                 ),
             )
         except Exception as exc:
-            messagebox.showerror("Nondimit", f"Modify failed:\n{exc}")
+            messagebox.showerror(APP_NAME, f"Modify failed:\n{exc}")
             return
 
         self.recentered_headers = headers
@@ -1342,7 +1424,7 @@ class Nondimit:
                 return
         out_path = self.output_var.get().strip()
         if not out_path:
-            messagebox.showerror("Nondimit", "Select an output path first.")
+            messagebox.showerror(APP_NAME, "Select an output path first.")
             return
         try:
             settings = self.settings()
@@ -1366,7 +1448,7 @@ class Nondimit:
                 ),
             )
         except Exception as exc:
-            messagebox.showerror("Nondimit", f"Conversion failed:\n{exc}")
+            messagebox.showerror(APP_NAME, f"Conversion failed:\n{exc}")
             return
 
         self.converted_headers = headers

@@ -24,7 +24,7 @@ The illustration shows the force and moment directions. The table below defines 
 Run:
 
 ```bat
-src\tools\Nondimit\Start_Nondimit.bat
+Start_Nondimit.bat
 ```
 
 The launcher starts `Nondimit.exe` when present. If the EXE is missing, it falls back to `nondimit.py`.
