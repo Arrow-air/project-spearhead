@@ -1,4 +1,4 @@
-# Nondimit One Pager
+# Nondimit v1.1 One Pager
 
 ## Purpose
 
@@ -44,10 +44,11 @@ Use this tab when starting from a raw dense CSV with dimensional force and momen
    - span for roll and yaw moments
    - chord for pitch moment
    - output rounding accuracy
-4. Enter old and new moment centers in body-axis coordinates.
-5. Confirm column mapping for alpha, beta, `Fx`, `Fy`, `Fz`, and optionally `Mx`, `My`, `Mz`.
-6. Set optional beta-zero cleanup and output group order.
-7. Click `Convert and Save`.
+4. Set optional force and moment corrections.
+5. Enter old and new moment centers in body-axis coordinates.
+6. Confirm column mapping for alpha, beta, `Fx`, `Fy`, `Fz`, and optionally `Mx`, `My`, `Mz`.
+7. Set optional beta-zero cleanup and output group order.
+8. Click `Convert and Save`.
 
 If moments are mapped, the tool writes force and moment coefficients. If moment columns are not mapped, it writes force coefficients only.
 
@@ -58,25 +59,57 @@ Use this tab when you already have a coefficient CSV from Nondimit and need to c
 1. Select the existing Nondimit export.
 2. The tool reads the metadata rows and fills in `rho`, `S`, `V`, span, chord, output accuracy, and current moment center.
 3. Edit the reference values if the output should use a different nondimensionalization.
-4. Enter the new body-axis moment center if the moment reference should move. Leave it equal to the current center if only the reference values should change.
-5. Confirm alpha and beta columns.
-6. Set optional beta-zero cleanup and output group order.
-7. Click `Modify and Save`.
+4. Set optional force and moment corrections.
+5. Enter the new body-axis moment center if the moment reference should move. Leave it equal to the current center if only the reference values should change.
+6. Confirm alpha and beta columns.
+7. Set optional beta-zero cleanup and output group order.
+8. Click `Modify and Save`.
 
 The current center is read from `moment_center_body_xyz` in the input file metadata. Older exports that used `new_moment_center_body_xyz` still load correctly. New output metadata reports only the final selected moment center, not the previous center.
 
-The reference values in this tab are intentionally editable. When `rho`, `S`, `V`, span, or chord are changed, the tool recalculates all force and moment coefficients with the edited values:
+The reference values in this tab are intentionally editable. When **rho**, **S**, **V**, span, or chord are changed, the tool recalculates all force and moment coefficients with the edited values:
 
-```text
-q = 0.5 rho V^2
-force coefficients = force / qS
-Mx, Mz coefficients = Mx,Mz / qS span
-My coefficient = My / qS chord
-```
+$$
+q = \frac{1}{2}\rho V^2
+$$
+
+$$
+\text{force denominator} = qS
+$$
+
+$$
+\text{roll and yaw moment denominator} = qSb
+$$
+
+$$
+\text{pitch moment denominator} = qSc
+$$
 
 Normal Nondimit exports include dimensional body force and moment columns, so the tool preserves the physical forces and moments, applies any requested moment-center shift, and then writes new coefficients from the edited reference values. If an export has been manually stripped down to coefficient-only columns, do not use this tab to change reference values, because the physical forces and moments cannot be recovered unambiguously.
 
 ## Optional Output Controls
+
+### Force and Moment Corrections
+
+The Corrections section can apply a multiplier and an additive delta to every force and moment component. The correction frame controls which component names are used:
+
+| Frame | Force components | Moment components |
+| --- | --- | --- |
+| None | no correction | no correction |
+| Body | Fx, Fy, Fz | Mx, My, Mz |
+| Wind | D, S, L | R, M, N |
+
+Each corrected component is calculated as:
+
+$$
+X_{corrected} = m_X X_{original} + \Delta X
+$$
+
+For the known missing-component drag correction, use the Wind frame and set D multiplier to 1.3. Leave S, L, R, M, and N multipliers at 1.0 and all deltas at 0.0 unless there is separate calibration evidence for those components.
+
+When the Wind frame is selected, the tool projects the body-axis vector into the wind frame using alpha and beta, applies the selected multipliers and deltas, and reconstructs the body-axis vector before writing the final body and wind columns. This keeps Fx/Fy/Fz and D/S/L internally consistent. Moment corrections work the same way for Mx/My/Mz and R/M/N.
+
+Force corrections are applied before moment-center shifting, so a moment-center shift uses the corrected force vector. Direct moment corrections are applied after the moment-center shift.
 
 ### Beta = 0 Cleanup
 
@@ -124,44 +157,119 @@ D, S, L
 R, M, N
 ```
 
-Forces are nondimensionalized by:
+Nondimensionalization and dimensionalization use the reference values written in the export metadata. The dynamic pressure and denominators are:
 
-```text
-q S
-```
+$$
+q = \frac{1}{2}\rho V^2
+$$
 
-Moments are nondimensionalized by:
+$$
+\text{force denominator} = qS
+$$
 
-```text
-Mx, Mz: q S span
-My:     q S chord
-```
+$$
+\text{roll and yaw moment denominator} = qSb
+$$
 
-where:
+$$
+\text{pitch moment denominator} = qSc
+$$
 
-```text
-q = 0.5 rho V^2
-```
+Body-axis force coefficients are:
+
+$$
+C_{F_x} = \frac{F_x}{qS}
+$$
+
+$$
+C_{F_y} = \frac{F_y}{qS}
+$$
+
+$$
+C_{F_z} = \frac{F_z}{qS}
+$$
+
+Wind-frame force coefficients are:
+
+$$
+C_D = \frac{D}{qS}
+$$
+
+$$
+C_S = \frac{S_w}{qS}
+$$
+
+$$
+C_L = \frac{L}{qS}
+$$
+
+Body-axis moment coefficients are:
+
+$$
+C_{M_x} = \frac{M_x}{qSb}
+$$
+
+$$
+C_{M_y} = \frac{M_y}{qSc}
+$$
+
+$$
+C_{M_z} = \frac{M_z}{qSb}
+$$
+
+Wind-frame moment coefficients are:
+
+$$
+C_R = \frac{R}{qSb}
+$$
+
+$$
+C_M = \frac{M}{qSc}
+$$
+
+$$
+C_N = \frac{N}{qSb}
+$$
+
+To recover dimensional values from coefficients, use the inverse form:
+
+$$
+F_x = C_{F_x}\,qS, \quad F_y = C_{F_y}\,qS, \quad F_z = C_{F_z}\,qS
+$$
+
+$$
+D = C_D\,qS, \quad S_w = C_S\,qS, \quad L = C_L\,qS
+$$
+
+$$
+M_x = C_{M_x}\,qSb, \quad M_y = C_{M_y}\,qSc, \quad M_z = C_{M_z}\,qSb
+$$
+
+$$
+R = C_R\,qSb, \quad M = C_M\,qSc, \quad N = C_N\,qSb
+$$
+
+In the equations above, $S_w$ is the wind-frame side force. The corresponding output column is named **S**.
 
 ## Moment Center Operation
 
 Moment shifting is done in body axes before coefficient conversion:
 
-```text
-M_new = M_old + r_new_to_old x F
-```
+$$
+\mathbf{M}_{new} = \mathbf{M}_{old} + \mathbf{r}_{new \rightarrow old} \times \mathbf{F}
+$$
 
 where:
 
-```text
-r_new_to_old = old_center - new_center
-```
+$$
+\mathbf{r}_{new \rightarrow old} = \mathbf{x}_{old\ center} - \mathbf{x}_{new\ center}
+$$
 
 After the body-axis moment is shifted, the tool projects both force and moment vectors into the wind frame using the row's alpha and beta.
 
 ## Output File
 
-The saved CSV starts with a short readable metadata block, then the normal CSV header row, then table data. The metadata block is intentionally kept to only a few comment rows: reference values, final body-axis moment center, and source/options. It reports only the final moment reference center used by the exported coefficients.
+The saved CSV starts with a short readable metadata block, then the normal CSV header row, then table data. The metadata block is intentionally kept to only a few comment rows: reference values, final body-axis moment center, and source/options. It reports only the final moment reference center used by the exported coefficients. Selected correction frame, force multipliers, force deltas, moment multipliers, and moment deltas are stored in the options row.
 
 Generated columns include body and wind-frame coefficients plus dimensional body and wind-frame force and moment columns. Numeric table cells are rounded to the requested output accuracy.
 
@@ -169,4 +277,5 @@ Recommended sanity checks after export:
 
 - Beta-zero rows have `Fy`, `Mx`, and `Mz` equal to zero if those cleanup options were selected.
 - Moment signs change as expected when moving the reference center.
+- Force and moment correction metadata matches the intended frame, multipliers, and deltas.
 - Metadata values match the intended `rho`, `S`, `V`, span, chord, and final moment center.

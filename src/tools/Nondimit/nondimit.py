@@ -18,6 +18,8 @@ else:
 
 
 APP_NAME = "Nondimit"
+APP_VERSION = "v1.1"
+APP_DISPLAY_NAME = f"{APP_NAME} {APP_VERSION}"
 APP_DESCRIPTION = "Aerodynamic coefficient conversion tool"
 APP_CREDIT = "Developed by Alperen Gundogan for Arrow Air DAO"
 APP_PROJECT = "Project Spearhead"
@@ -188,6 +190,26 @@ ZERO_AT_BETA_COMPONENTS = [
     ("mz", "Mz"),
 ]
 ZERO_AT_BETA_LABELS = {key: label for key, label in ZERO_AT_BETA_COMPONENTS}
+CORRECTION_FRAME_OPTIONS = ["None", "Body", "Wind"]
+CORRECTION_FRAME_VALUES = {
+    "none": "none",
+    "body": "body",
+    "wind": "wind",
+}
+CORRECTION_COMPONENT_LABELS = {
+    "none": {
+        "force": ("Fx/D", "Fy/S", "Fz/L"),
+        "moment": ("Mx/R", "My/M", "Mz/N"),
+    },
+    "body": {
+        "force": ("Fx", "Fy", "Fz"),
+        "moment": ("Mx", "My", "Mz"),
+    },
+    "wind": {
+        "force": ("D", "S", "L"),
+        "moment": ("R", "M", "N"),
+    },
+}
 
 
 def normalized(name):
@@ -373,6 +395,54 @@ def dot(vector, axis):
     return vector[0] * axis[0] + vector[1] * axis[1] + vector[2] * axis[2]
 
 
+def vector_from_axes(components, axes):
+    return tuple(
+        sum(components[index] * axes[index][component] for index in range(3))
+        for component in range(3)
+    )
+
+
+def corrected_components(values, multipliers, deltas):
+    return tuple(value * multiplier + delta for value, multiplier, delta in zip(values, multipliers, deltas))
+
+
+def apply_vector_corrections(vector, alpha, beta, corrections, multipliers, deltas):
+    correction = normalized_corrections(corrections)
+    if correction.frame == "none":
+        return vector
+    if correction.frame == "body":
+        return corrected_components(vector, multipliers, deltas)
+
+    axes = wind_axes(alpha, beta)
+    components = tuple(dot(vector, axis) for axis in axes)
+    corrected = corrected_components(components, multipliers, deltas)
+    return vector_from_axes(corrected, axes)
+
+
+def apply_force_corrections(f_body, alpha, beta, corrections=None):
+    correction = normalized_corrections(corrections)
+    return apply_vector_corrections(
+        f_body,
+        alpha,
+        beta,
+        correction,
+        correction.force_multipliers,
+        correction.force_deltas,
+    )
+
+
+def apply_moment_corrections(m_body, alpha, beta, corrections=None):
+    correction = normalized_corrections(corrections)
+    return apply_vector_corrections(
+        m_body,
+        alpha,
+        beta,
+        correction,
+        correction.moment_multipliers,
+        correction.moment_deltas,
+    )
+
+
 @dataclass
 class ConversionSettings:
     rho: float
@@ -400,10 +470,11 @@ class ConversionSettings:
     def pitch_denominator(self):
         return self.force_denominator * self.chord
 
-    def metadata_row(self, mapping, output_order=None, zero_at_beta=None):
+    def metadata_row(self, mapping, output_order=None, zero_at_beta=None, corrections=None):
         new = ",".join(f"{value:.10g}" for value in self.new_center)
         order = ";".join(normalized_output_order(output_order))
         zero_options = ";".join(normalized_zero_at_beta_options(zero_at_beta))
+        correction = normalized_corrections(corrections)
         return [
             [
                 "# Nondimit export",
@@ -426,6 +497,11 @@ class ConversionSettings:
                 f"beta_column={mapping.get('beta', '')}",
                 f"output_group_order={order}",
                 f"zero_at_beta0={zero_options}",
+                f"correction_frame={correction.frame}",
+                f"force_multipliers={correction_values_text(correction.force_multipliers)}",
+                f"force_deltas={correction_values_text(correction.force_deltas)}",
+                f"moment_multipliers={correction_values_text(correction.moment_multipliers)}",
+                f"moment_deltas={correction_values_text(correction.moment_deltas)}",
             ],
         ]
 
@@ -499,6 +575,38 @@ def parse_zero_at_beta_text(value):
     if not value:
         return []
     return normalized_zero_at_beta_options(str(value).replace(",", ";").split(";"))
+
+
+def normalized_correction_frame(value):
+    return CORRECTION_FRAME_VALUES.get(normalized(value), "none")
+
+
+@dataclass
+class CorrectionSettings:
+    frame: str = "none"
+    force_multipliers: tuple = (1.0, 1.0, 1.0)
+    force_deltas: tuple = (0.0, 0.0, 0.0)
+    moment_multipliers: tuple = (1.0, 1.0, 1.0)
+    moment_deltas: tuple = (0.0, 0.0, 0.0)
+
+
+def normalized_corrections(corrections=None):
+    if corrections is None:
+        return CorrectionSettings()
+    frame = normalized_correction_frame(corrections.frame)
+    if frame == "none":
+        return CorrectionSettings()
+    return CorrectionSettings(
+        frame=frame,
+        force_multipliers=tuple(corrections.force_multipliers),
+        force_deltas=tuple(corrections.force_deltas),
+        moment_multipliers=tuple(corrections.moment_multipliers),
+        moment_deltas=tuple(corrections.moment_deltas),
+    )
+
+
+def correction_values_text(values):
+    return "(" + ",".join(f"{value:.10g}" for value in values) + ")"
 
 
 def output_headers_for(headers, include_moments, output_order=None):
@@ -608,13 +716,10 @@ def apply_zero_at_beta(out, beta, f_body, m_body=None, zero_options=None, source
     return f_body, m_body
 
 
-def write_force_and_moment_columns(out, f_body, m_body, alpha, beta, settings):
+def write_force_columns(out, f_body, alpha, beta, settings):
     force_den = settings.force_denominator
-    roll_yaw_den = settings.roll_yaw_denominator
-    pitch_den = settings.pitch_denominator
     x_axis, y_axis, z_axis = wind_axes(alpha, beta)
     f_wind = (dot(f_body, x_axis), dot(f_body, y_axis), dot(f_body, z_axis))
-    m_wind = (dot(m_body, x_axis), dot(m_body, y_axis), dot(m_body, z_axis))
 
     out["cfx"] = f_body[0] / force_den
     out["cfy"] = f_body[1] / force_den
@@ -628,6 +733,14 @@ def write_force_and_moment_columns(out, f_body, m_body, alpha, beta, settings):
     out["D"] = f_wind[0]
     out["S"] = f_wind[1]
     out["L"] = f_wind[2]
+
+
+def write_force_and_moment_columns(out, f_body, m_body, alpha, beta, settings):
+    write_force_columns(out, f_body, alpha, beta, settings)
+    roll_yaw_den = settings.roll_yaw_denominator
+    pitch_den = settings.pitch_denominator
+    x_axis, y_axis, z_axis = wind_axes(alpha, beta)
+    m_wind = (dot(m_body, x_axis), dot(m_body, y_axis), dot(m_body, z_axis))
 
     out["cmx"] = m_body[0] / roll_yaw_den
     out["cmy"] = m_body[1] / pitch_den
@@ -643,8 +756,9 @@ def write_force_and_moment_columns(out, f_body, m_body, alpha, beta, settings):
     out["N"] = m_wind[2]
 
 
-def convert_rows(rows, headers, mapping, settings, output_order=None, zero_at_beta=None):
+def convert_rows(rows, headers, mapping, settings, output_order=None, zero_at_beta=None, corrections=None):
     validate_settings(settings)
+    correction = normalized_corrections(corrections)
 
     required = ["alpha", "fx", "fy", "fz"]
     missing = [name for name in required if not mapping.get(name)]
@@ -655,9 +769,6 @@ def convert_rows(rows, headers, mapping, settings, output_order=None, zero_at_be
     output_headers = output_headers_for(headers, have_moments, output_order)
 
     converted = []
-    force_den = settings.force_denominator
-    roll_yaw_den = settings.roll_yaw_denominator
-    pitch_den = settings.pitch_denominator
 
     for index, row in enumerate(rows, start=2):
         out = dict(row)
@@ -670,28 +781,15 @@ def convert_rows(rows, headers, mapping, settings, output_order=None, zero_at_be
         source_columns = {key: mapping.get(key, "") for key in ("fy", "mx", "mz")}
         f_body = (fx, fy, fz)
         f_body, _m_body = apply_zero_at_beta(out, beta, f_body, zero_options=zero_at_beta, source_columns=source_columns)
-        x_axis, y_axis, z_axis = wind_axes(alpha, beta)
-        f_wind = (dot(f_body, x_axis), dot(f_body, y_axis), dot(f_body, z_axis))
-
-        out["cfx"] = f_body[0] / force_den
-        out["cfy"] = f_body[1] / force_den
-        out["cfz"] = f_body[2] / force_den
-        out["cd"] = f_wind[0] / force_den
-        out["cs"] = f_wind[1] / force_den
-        out["cl"] = f_wind[2] / force_den
-        out["Fx"] = f_body[0]
-        out["Fy"] = f_body[1]
-        out["Fz"] = f_body[2]
-        out["D"] = f_wind[0]
-        out["S"] = f_wind[1]
-        out["L"] = f_wind[2]
+        f_body = apply_force_corrections(f_body, alpha, beta, correction)
 
         if have_moments:
             mx = row_value(row, mapping.get("mx"), f"Mx at row {index}")
             my = row_value(row, mapping.get("my"), f"My at row {index}")
             mz = row_value(row, mapping.get("mz"), f"Mz at row {index}")
             m_body = shifted_moment((mx, my, mz), f_body, settings.old_center, settings.new_center)
-            _f_body, m_body = apply_zero_at_beta(
+            m_body = apply_moment_corrections(m_body, alpha, beta, correction)
+            f_body, m_body = apply_zero_at_beta(
                 out,
                 beta,
                 f_body,
@@ -699,28 +797,25 @@ def convert_rows(rows, headers, mapping, settings, output_order=None, zero_at_be
                 zero_options=zero_at_beta,
                 source_columns=source_columns,
             )
-            m_wind = (dot(m_body, x_axis), dot(m_body, y_axis), dot(m_body, z_axis))
-
-            out["cmx"] = m_body[0] / roll_yaw_den
-            out["cmy"] = m_body[1] / pitch_den
-            out["cmz"] = m_body[2] / roll_yaw_den
-            out["cr"] = m_wind[0] / roll_yaw_den
-            out["cm"] = m_wind[1] / pitch_den
-            out["cn"] = m_wind[2] / roll_yaw_den
-            out["Mx"] = m_body[0]
-            out["My"] = m_body[1]
-            out["Mz"] = m_body[2]
-            out["R"] = m_wind[0]
-            out["M"] = m_wind[1]
-            out["N"] = m_wind[2]
+            write_force_and_moment_columns(out, f_body, m_body, alpha, beta, settings)
+        else:
+            f_body, _m_body = apply_zero_at_beta(
+                out,
+                beta,
+                f_body,
+                zero_options=zero_at_beta,
+                source_columns=source_columns,
+            )
+            write_force_columns(out, f_body, alpha, beta, settings)
 
         converted.append(format_numeric_cells(out, settings.output_accuracy))
 
     return output_headers, converted
 
 
-def recenter_export_rows(rows, headers, mapping, settings, output_order=None, zero_at_beta=None):
+def recenter_export_rows(rows, headers, mapping, settings, output_order=None, zero_at_beta=None, corrections=None):
     validate_settings(settings)
+    correction = normalized_corrections(corrections)
     if not mapping.get("alpha"):
         raise ValueError("alpha column is not selected")
 
@@ -734,9 +829,11 @@ def recenter_export_rows(rows, headers, mapping, settings, output_order=None, ze
         beta = row_value(row, mapping.get("beta", ZERO_VALUE), f"beta at row {index}", default=0.0)
         f_body = body_force_from_export(row, index, settings)
         f_body, _m_body = apply_zero_at_beta(out, beta, f_body, zero_options=zero_at_beta, source_columns=source_columns)
+        f_body = apply_force_corrections(f_body, alpha, beta, correction)
         m_current = body_moment_from_export(row, index, settings)
         m_body = shifted_moment(m_current, f_body, settings.old_center, settings.new_center)
-        _f_body, m_body = apply_zero_at_beta(
+        m_body = apply_moment_corrections(m_body, alpha, beta, correction)
+        f_body, m_body = apply_zero_at_beta(
             out,
             beta,
             f_body,
@@ -799,7 +896,7 @@ def add_scrolled_text(parent, text, wrap=tk.WORD):
 class Nondimit:
     def __init__(self, root):
         self.root = root
-        self.root.title(APP_NAME)
+        self.root.title(APP_DISPLAY_NAME)
         self.root.geometry("1180x760")
         self.root.minsize(980, 620)
 
@@ -862,6 +959,23 @@ class Nondimit:
             key: {component: tk.BooleanVar(value=False) for component, _label in ZERO_AT_BETA_COMPONENTS}
             for key in ["convert", "recenter"]
         }
+        self.correction_frame_vars = {
+            key: tk.StringVar(value="None")
+            for key in ["convert", "recenter"]
+        }
+        self.correction_value_vars = {
+            key: {
+                "force_multipliers": [tk.StringVar(value="1.0") for _index in range(3)],
+                "force_deltas": [tk.StringVar(value="0.0") for _index in range(3)],
+                "moment_multipliers": [tk.StringVar(value="1.0") for _index in range(3)],
+                "moment_deltas": [tk.StringVar(value="0.0") for _index in range(3)],
+            }
+            for key in ["convert", "recenter"]
+        }
+        self.correction_label_widgets = {
+            key: {"force": [], "moment": []}
+            for key in ["convert", "recenter"]
+        }
         self.preview = None
         self.recenter_preview = None
 
@@ -876,7 +990,7 @@ class Nondimit:
 
     def show_about(self):
         dialog = tk.Toplevel(self.root)
-        dialog.title(f"About {APP_NAME}")
+        dialog.title(f"About {APP_DISPLAY_NAME}")
         dialog.geometry("760x620")
         dialog.minsize(560, 420)
         dialog.transient(self.root)
@@ -889,7 +1003,7 @@ class Nondimit:
         notebook.add(about_tab, text="About")
         notebook.add(guide_tab, text="User Guide")
 
-        ttk.Label(about_tab, text=APP_NAME, font=("Segoe UI", 18, "bold")).pack(anchor=tk.W)
+        ttk.Label(about_tab, text=APP_DISPLAY_NAME, font=("Segoe UI", 18, "bold")).pack(anchor=tk.W)
         ttk.Label(about_tab, text=APP_DESCRIPTION, font=("Segoe UI", 11)).pack(anchor=tk.W, pady=(4, 18))
         ttk.Label(about_tab, text=APP_CREDIT, font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(0, 6))
         ttk.Label(about_tab, text=APP_PROJECT).pack(anchor=tk.W, pady=(0, 6))
@@ -912,7 +1026,7 @@ class Nondimit:
 
         header = ttk.Frame(self.root, style="Header.TFrame", padding=(14, 10))
         header.pack(fill=tk.X)
-        ttk.Label(header, text="Aero Coefficient Converter", style="Header.TLabel").pack(side=tk.LEFT)
+        ttk.Label(header, text=f"Aero Coefficient Converter - {APP_VERSION}", style="Header.TLabel").pack(side=tk.LEFT)
 
         notebook = ttk.Notebook(self.root)
         notebook.pack(fill=tk.BOTH, expand=True)
@@ -999,6 +1113,10 @@ class Nondimit:
         self.number_row(parent, "Chord (My)", self.parameter_vars["chord"])
         self.number_row(parent, "Output accuracy", self.parameter_vars["output_accuracy"])
 
+        ttk.Separator(parent).pack(fill=tk.X, pady=12)
+        ttk.Label(parent, text="Corrections", font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(0, 6))
+        self.correction_control(parent, "convert")
+
         ttk.Label(parent, text="Moment Center", font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(12, 6))
         self.vector_row(
             parent,
@@ -1053,6 +1171,10 @@ class Nondimit:
         self.number_row(parent, "Span (Mx/Mz)", self.recenter_parameter_vars["span"])
         self.number_row(parent, "Chord (My)", self.recenter_parameter_vars["chord"])
         self.number_row(parent, "Output accuracy", self.recenter_parameter_vars["output_accuracy"])
+
+        ttk.Separator(parent).pack(fill=tk.X, pady=12)
+        ttk.Label(parent, text="Corrections", font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(0, 6))
+        self.correction_control(parent, "recenter")
 
         ttk.Label(parent, text="Moment Center", font=("Segoe UI", 10, "bold")).pack(anchor=tk.W, pady=(12, 6))
         self.vector_row(
@@ -1109,6 +1231,61 @@ class Nondimit:
             ttk.Label(row, text=axis).pack(side=tk.LEFT, padx=(4, 2))
             ttk.Entry(row, textvariable=var, width=8, state=state).pack(side=tk.LEFT)
 
+    def correction_control(self, parent, option_key):
+        frame_row = ttk.Frame(parent)
+        frame_row.pack(fill=tk.X, pady=(0, 4))
+        ttk.Label(frame_row, text="Frame", width=10).pack(side=tk.LEFT)
+        frame_box = ttk.Combobox(
+            frame_row,
+            textvariable=self.correction_frame_vars[option_key],
+            values=CORRECTION_FRAME_OPTIONS,
+            state="readonly",
+            width=12,
+        )
+        frame_box.pack(side=tk.LEFT)
+        frame_box.bind("<<ComboboxSelected>>", lambda _event, key=option_key: self.refresh_correction_labels(key))
+        ttk.Button(frame_row, text="Reset", command=lambda key=option_key: self.reset_corrections(key)).pack(side=tk.LEFT, padx=(6, 0))
+
+        header = ttk.Frame(parent)
+        header.pack(fill=tk.X, pady=(4, 0))
+        ttk.Label(header, text="Force", width=10).pack(side=tk.LEFT)
+        ttk.Label(header, text="Multiplier", width=12).pack(side=tk.LEFT)
+        ttk.Label(header, text="Delta", width=12).pack(side=tk.LEFT)
+        for index in range(3):
+            self.correction_row(parent, option_key, "force", index)
+
+        ttk.Label(parent, text="Moment", width=10).pack(anchor=tk.W, pady=(6, 0))
+        for index in range(3):
+            self.correction_row(parent, option_key, "moment", index)
+        self.refresh_correction_labels(option_key)
+
+    def correction_row(self, parent, option_key, kind, index):
+        row = ttk.Frame(parent)
+        row.pack(fill=tk.X, pady=2)
+        label = ttk.Label(row, width=10)
+        label.pack(side=tk.LEFT)
+        self.correction_label_widgets[option_key][kind].append(label)
+        values = self.correction_value_vars[option_key]
+        multiplier_key = f"{kind}_multipliers"
+        delta_key = f"{kind}_deltas"
+        ttk.Entry(row, textvariable=values[multiplier_key][index], width=12).pack(side=tk.LEFT)
+        ttk.Entry(row, textvariable=values[delta_key][index], width=12,).pack(side=tk.LEFT, padx=(4, 0))
+
+    def refresh_correction_labels(self, option_key):
+        frame = normalized_correction_frame(self.correction_frame_vars[option_key].get())
+        labels = CORRECTION_COMPONENT_LABELS[frame]
+        for kind in ["force", "moment"]:
+            for widget, text in zip(self.correction_label_widgets[option_key][kind], labels[kind]):
+                widget.configure(text=text)
+
+    def reset_corrections(self, option_key):
+        self.correction_frame_vars[option_key].set("None")
+        for key, values in self.correction_value_vars[option_key].items():
+            default = "1.0" if key.endswith("multipliers") else "0.0"
+            for var in values:
+                var.set(default)
+        self.refresh_correction_labels(option_key)
+
     def mapping_row(self, parent, label, key, vars_map=None, boxes_map=None):
         vars_map = vars_map or self.mapping_vars
         boxes_map = boxes_map or self.mapping_boxes
@@ -1134,6 +1311,31 @@ class Nondimit:
             component: var.get()
             for component, var in self.zero_beta_vars[option_key].items()
         }
+
+    def current_corrections(self, option_key):
+        frame = normalized_correction_frame(self.correction_frame_vars[option_key].get())
+        if frame == "none":
+            return CorrectionSettings()
+        values = self.correction_value_vars[option_key]
+        return CorrectionSettings(
+            frame=frame,
+            force_multipliers=tuple(
+                as_float(var.get(), f"{frame} force multiplier {index + 1}")
+                for index, var in enumerate(values["force_multipliers"])
+            ),
+            force_deltas=tuple(
+                as_float(var.get(), f"{frame} force delta {index + 1}")
+                for index, var in enumerate(values["force_deltas"])
+            ),
+            moment_multipliers=tuple(
+                as_float(var.get(), f"{frame} moment multiplier {index + 1}")
+                for index, var in enumerate(values["moment_multipliers"])
+            ),
+            moment_deltas=tuple(
+                as_float(var.get(), f"{frame} moment delta {index + 1}")
+                for index, var in enumerate(values["moment_deltas"])
+            ),
+        )
 
     def set_zero_at_beta(self, option_key, options):
         enabled = set(normalized_zero_at_beta_options(options))
@@ -1390,6 +1592,7 @@ class Nondimit:
         try:
             settings = self.recenter_settings()
             mapping = self.current_recenter_mapping()
+            corrections = self.current_corrections("recenter")
             headers, recentered = recenter_export_rows(
                 self.recenter_rows,
                 self.recenter_headers,
@@ -1397,6 +1600,7 @@ class Nondimit:
                 settings,
                 output_order=self.output_orders["recenter"],
                 zero_at_beta=self.current_zero_at_beta("recenter"),
+                corrections=corrections,
             )
             write_csv_table(
                 out_path,
@@ -1406,6 +1610,7 @@ class Nondimit:
                     mapping,
                     self.output_orders["recenter"],
                     self.current_zero_at_beta("recenter"),
+                    corrections,
                 ),
             )
         except Exception as exc:
@@ -1429,6 +1634,7 @@ class Nondimit:
         try:
             settings = self.settings()
             mapping = self.current_mapping()
+            corrections = self.current_corrections("convert")
             headers, converted = convert_rows(
                 self.rows,
                 self.headers,
@@ -1436,6 +1642,7 @@ class Nondimit:
                 settings,
                 output_order=self.output_orders["convert"],
                 zero_at_beta=self.current_zero_at_beta("convert"),
+                corrections=corrections,
             )
             write_csv_table(
                 out_path,
@@ -1445,6 +1652,7 @@ class Nondimit:
                     mapping,
                     self.output_orders["convert"],
                     self.current_zero_at_beta("convert"),
+                    corrections,
                 ),
             )
         except Exception as exc:
@@ -1580,16 +1788,63 @@ def self_test():
     assert zeroed_recentered[0]["Mx"] == "0.0000"
     assert zeroed_recentered[0]["Mz"] == "0.0000"
 
+    body_correction = CorrectionSettings(
+        frame="body",
+        force_multipliers=(1.0, 2.0, 1.0),
+        force_deltas=(1.0, 0.0, 0.0),
+        moment_multipliers=(1.0, 1.0, 1.0),
+        moment_deltas=(0.0, 5.0, 0.0),
+    )
+    _, body_corrected = convert_rows(rows, headers, mapping, settings, corrections=body_correction)
+    assert body_corrected[0]["Fx"] == "-9.0000"
+    assert body_corrected[0]["Fy"] == "4.0000"
+    assert body_corrected[0]["My"] == "7.0000"
+
+    wind_settings = ConversionSettings(
+        rho=1.0,
+        area=2.0,
+        velocity=10.0,
+        span=4.0,
+        chord=5.0,
+        output_accuracy=0.000001,
+        old_center=(0.0, 0.0, 0.0),
+        new_center=(0.0, 0.0, 0.0),
+    )
+    wind_rows = [
+        {"Alpha(deg)": "12", "Beta(deg)": "18", "Fx": "-105", "Fy": "14", "Fz": "-230", "Mx": "1", "My": "2", "Mz": "3"}
+    ]
+    wind_correction = CorrectionSettings(
+        frame="wind",
+        force_multipliers=(1.3, 1.0, 1.0),
+        force_deltas=(0.0, 0.0, 0.0),
+        moment_multipliers=(1.0, 1.0, 1.0),
+        moment_deltas=(0.0, 0.0, 0.0),
+    )
+    _, wind_corrected = convert_rows(wind_rows, headers, mapping, wind_settings, corrections=wind_correction)
+    axes = wind_axes(12.0, 18.0)
+    source_force = (-105.0, 14.0, -230.0)
+    source_wind = tuple(dot(source_force, axis) for axis in axes)
+    expected_wind = (1.3 * source_wind[0], source_wind[1], source_wind[2])
+    expected_body = vector_from_axes(expected_wind, axes)
+    corrected_row = wind_corrected[0]
+    for column, expected in zip(("Fx", "Fy", "Fz"), expected_body):
+        assert abs(float(corrected_row[column]) - expected) < 1e-5
+    assert abs(float(corrected_row["D"]) - expected_wind[0]) < 1e-5
+    assert abs(float(corrected_row["S"]) - expected_wind[1]) < 1e-5
+    assert abs(float(corrected_row["L"]) - expected_wind[2]) < 1e-5
+
     order = ["wind_moment", "body_force", "body_moment", "wind_force"]
     ordered_headers, _ = convert_rows(rows, headers, mapping, settings, output_order=order)
     assert ordered_headers[2:8] == WIND_MOMENT_COLUMNS
     assert ordered_headers[8:14] == BODY_FORCE_COLUMNS
 
-    metadata = settings.metadata_row(mapping, order, {"fy": True, "mz": True})
+    metadata = settings.metadata_row(mapping, order, {"fy": True, "mz": True}, wind_correction)
     parsed, loaded = read_export_settings(metadata)
     assert loaded.old_center == settings.new_center
     assert parse_output_order_text(parsed["outputgrouporder"]) == order
     assert parse_zero_at_beta_text(parsed["zeroatbeta0"]) == ["fy", "mz"]
+    assert parsed["correctionframe"] == "wind"
+    assert parsed["forcemultipliers"] == "(1.3,1,1)"
 
 
 def main():

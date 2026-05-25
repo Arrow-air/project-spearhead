@@ -1,4 +1,4 @@
-# SakeDB Quick Start
+# SakeDB v1.0 Quick Start
 
 SakeDB is a desktop workflow tool for building aerodynamic databases from high-fidelity analysis cases. It manages the sampling plan, prepares each case folder, launches a user-defined external runner, tracks progress, and exports dense force and moment tables for flight dynamics and control work.
 
@@ -85,5 +85,4 @@ SakeDB turns a large manual simulation campaign into a repeatable database proce
 ## Near-Term Next Steps
 
 - Add control-surface deflection dimensions or derivative tables.
-- Convert corrected dimensional force and moment tables into final coefficient tables.
 - Keep the runner contract generic so future projects can connect different high-fidelity tools without changing the SakeDB workflow.
