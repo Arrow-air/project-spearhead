@@ -1,0 +1,11 @@
+# Changelog
+
+## v1.1
+
+- Started the next versioned working folder after the v1.0 baseline.
+- Added visible application version text in the window title, header, and About dialog.
+- Added correction controls in Convert Raw Table and Modify Export.
+- Corrections can be applied in body or wind frame.
+- Each force and moment component has editable multiplier and delta values.
+- Wind-frame corrections project through alpha and beta, apply the selected values, and reconstruct body-axis force and moment vectors so body and wind outputs stay consistent.
+- Correction settings are stored in the export metadata options row.

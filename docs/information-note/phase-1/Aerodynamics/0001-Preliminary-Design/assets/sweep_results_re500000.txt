@@ -1,0 +1,160 @@
+Airfoil Sweep Results - Re = 500,000
+============================================================
+
+Top 30 Candidates
+
+===============================================================================================================================
+  Airfoil Sweep - Wing Sizing Comparison
+  Ranked by composite score (40% wing area, 40% drag, 10% tail, 10% stall safety)
+===============================================================================================================================
+  #    Wing Airfoil    | Tail Airfoil             |  S_wing  Span Chord t_abs i_tail  D_tot   L/D  CLmax M_stall    Stall Score
+                       |                          |    (m2)   (m)   (m)  (cm)  (deg)    (N)                (N.m)               
+  -------------------------------------------------------------------------------------------------------------------------------
+  1    CLARK Z AIRFOIL | NACA 0015                |   1.668  3.95 0.457   5.4   2.00   22.1  11.1  1.199   -1.18       ok 0.288
+  2    GOE 384 AIRFOIL | NACA 0015                |   1.448  3.70 0.425   8.3   2.00   25.1   9.8  1.381   -3.95       ok 0.290
+  3    CLARK Z AIRFOIL | S1048 14% (Danny Howell) |   1.668  3.95 0.457   5.4   2.00   22.2  11.0  1.199   -0.76       ok 0.295
+  4    GOE 384 AIRFOIL | S1048 14% (Danny Howell) |   1.448  3.70 0.425   8.3   2.00   25.2   9.7  1.381   -3.52       ok 0.297
+  5    CLARK Z AIRFOIL | NACA 63-015A AIRFOIL     |   1.668  3.95 0.457   5.4   2.00   22.2  11.0  1.199    0.07 NOSE-UP! 0.298
+  6    GOE 384 AIRFOIL | NACA 63-015A AIRFOIL     |   1.448  3.70 0.425   8.3   2.00   25.2   9.7  1.381   -2.65       ok 0.299
+  7    GOE 384 AIRFOIL | NACA 642-015A AIRFOIL    |   1.448  3.70 0.425   8.3   2.00   25.2   9.7  1.381   -2.20       ok 0.300
+  8    CLARK Z AIRFOIL | NACA 0018                |   1.668  3.95 0.457   5.4   2.00   22.3  11.0  1.199    0.13 NOSE-UP! 0.303
+  9    CLARK Z AIRFOIL | NACA 642-015A AIRFOIL    |   1.668  3.95 0.457   5.4   2.00   22.2  11.0  1.199    0.50 NOSE-UP! 0.304
+  10   CLARK Z AIRFOIL | S1046 17% (Danny Howell) |   1.668  3.95 0.457   5.4   2.00   22.3  11.0  1.199   -0.09       ok 0.305
+  11   CLARK Z AIRFOIL | E169  (14.4%)            |   1.668  3.95 0.457   5.4   2.00   22.3  11.0  1.199   -1.10       ok 0.305
+  12   GOE 384 AIRFOIL | NACA 0018                |   1.448  3.70 0.425   8.3   2.00   25.3   9.7  1.381   -2.58       ok 0.305
+  13   GOE 384 AIRFOIL | E169  (14.4%)            |   1.448  3.70 0.425   8.3   2.00   25.3   9.7  1.381   -3.87       ok 0.308
+  14   GOE 384 AIRFOIL | S1046 17% (Danny Howell) |   1.448  3.70 0.425   8.3   2.00   25.3   9.7  1.381   -2.82       ok 0.308
+  15   CLARK Z AIRFOIL | E475  (15.01%)           |   1.668  3.95 0.457   5.4   2.00   22.4  10.9  1.199   -1.85       ok 0.310
+  16   GOE 384 AIRFOIL | E475  (15.01%)           |   1.448  3.70 0.425   8.3   2.00   25.4   9.7  1.381   -4.65       ok 0.311
+  17   CLARK Z AIRFOIL | E474  (14.09%)           |   1.668  3.95 0.457   5.4   2.00   22.4  10.9  1.199   -1.94       ok 0.312
+  18   GOE 384 AIRFOIL | E474  (14.09%)           |   1.448  3.70 0.425   8.3   2.00   25.4   9.7  1.381   -4.75       ok 0.313
+  19   GOE 624 AIRFOIL | NACA 0015                |   1.605  3.88 0.448   7.2   2.00   23.3  10.5  1.245   -0.20       ok 0.313
+  20   CLARK Z AIRFOIL | EPPLER 479 AIRFOIL       |   1.668  3.95 0.457   5.4   2.00   22.4  10.9  1.199   -0.87       ok 0.314
+  21   GOE 384 AIRFOIL | EPPLER 479 AIRFOIL       |   1.448  3.70 0.425   8.3   2.00   25.5   9.6  1.381   -3.63       ok 0.318
+  22   GOE 384 AIRFOIL | NACA 0021                |   1.448  3.70 0.425   8.3   2.00   25.5   9.6  1.381   -1.41       ok 0.318
+  23   GOE 384 AIRFOIL | GOE 775 AIRFOIL          |   1.448  3.70 0.425   8.3   2.00   25.5   9.6  1.381   -0.99       ok 0.321
+  24   GOE 624 AIRFOIL | S1048 14% (Danny Howell) |   1.605  3.88 0.448   7.2   2.00   23.4  10.5  1.245    0.21 NOSE-UP! 0.322
+  25   CLARK Z AIRFOIL | NACA 0021                |   1.668  3.95 0.457   5.4   2.00   22.5  10.9  1.199    1.24 NOSE-UP! 0.326
+  26   CLARK Z AIRFOIL | EPPLER 473 AIRFOIL       |   1.668  3.95 0.457   5.4   2.00   22.6  10.8  1.199   -1.92       ok 0.328
+  27   GOE 384 AIRFOIL | EPPLER 473 AIRFOIL       |   1.448  3.70 0.425   8.3   2.00   25.6   9.6  1.381   -4.72       ok 0.329
+  28   GOE 681 AIRFOIL | NACA 0015                |   1.609  3.89 0.448   7.6   2.00   23.5  10.5  1.243   -3.92       ok 0.330
+  29   GOE 624 AIRFOIL | E169  (14.4%)            |   1.605  3.88 0.448   7.2   2.00   23.5  10.4  1.245   -0.12       ok 0.330
+  30   GOE 384 AIRFOIL | US1000ROOT               |   1.448  3.70 0.425   8.3   2.00   25.5   9.6  1.381    1.22 NOSE-UP! 0.331
+  -------------------------------------------------------------------------------------------------------------------------------
+
+  Best overall: CLARK Z AIRFOIL + NACA 0015
+  Smallest wing: GOE 384 AIRFOIL
+  Lowest drag:   CLARK Z AIRFOIL
+  Best L/D:      CLARK Z AIRFOIL
+
+
+====================================================
+  Full sizing output - best candidate: CLARK Z AIRFOIL + NACA 0015
+
+====================================================
+    Aircraft Initial Sizing Results
+====================================================
+
+  ISA Atmosphere
+    Altitude              1200.0  m
+    Density               1.0900  kg/m3
+    Temperature           280.35  K
+    Dynamic pressure      340.61  Pa
+
+  Main Wing
+    - Airfoil:          CLARK Z AIRFOIL
+    - Incidence:        1.0 deg
+    - Span:             3.953 m
+    - Effective span:   3.653 m  (span - fuselage)
+    - Chord:            0.457 m
+    - Area (eff):       1.6676 m2
+    - Area (gross):     1.8046 m2
+    - AR (eff):         8.00
+    - CL_alpha (3D):    4.4850 rad^-1
+    - CL_max (3D):      1.1990
+    - Oswald e:         0.8106
+    - Thickness:        11.8 %c  (5.4 cm)
+
+  Tail (V-Tail)
+    - Airfoil:          NACA 0015
+    - Dihedral:         35.0 deg
+    - Projected span:   1.100 m
+    - Geometric span:   1.343 m
+    - Chord:            0.280 m
+    - Area:             0.3760 m2
+    - AR:               4.80
+    - CL_alpha (3D):    4.1116 rad^-1
+    - Oswald e:         0.9074
+    - Thickness:        15.0 %c  (4.2 cm)
+    - V_h (eff):        0.465  (ok)
+    - V_v:              0.0376  (ok)
+                         Sailplane  Homebuilt  GA-single  GA-twin
+              V_h ref:     0.50       0.48       0.67      0.81
+              V_v ref:     0.019      0.038      0.044     0.066
+
+  Cruise State (tail incidence FIXED)
+    Tail incidence          2.00  deg  (OVERRIDE)
+    Fuselage AoA           -0.04  deg
+    Wing geo. AoA           0.96  deg
+    Downwash eps            0.37  deg
+    Tail eff. AoA           1.58  deg
+    Wing CL               0.4100
+    Tail CL               0.1169
+    Thrust moment           4.50  N.m  (nose-up)
+    Moment imbalance        2.54  N.m  (nose-up)
+
+  Stall Condition  (wing at CL_max, tail fixed from cruise trim)
+    Fuselage AoA           10.04  deg
+    Wing geo. AoA          11.04  deg
+    Downwash eps            1.09  deg
+    Tail eff. AoA          10.94  deg
+    Wing CL               1.1990  (= CL_max_3d)
+    Tail CL               0.7885
+    Tail lift (vert)       29.78  N
+    Pitch moment           -1.18  N.m  NOSE-DOWN (safe)
+    Neutral i_tail          1.62  deg  (M=0 at stall)
+
+  Fuselage  (conical nose + cylinder, base recovery 34%)
+    Fineness ratio          3.33
+    Form factor FF        2.6283
+    Re (fuselage)      1.556e+06
+    Cf (turbulent)       0.00412
+    Swet nose             0.1581  m2
+    Swet cylinder         0.6597  m2
+    Swet total            0.8178  m2
+    Friction drag           3.02  N
+    Base drag (full)        6.53  N
+    Base drag (resid)       4.31  N
+    Fuselage total          7.32  N
+
+  Drag (cruise)
+    Wing profile            3.88  N
+    Wing induced            4.69  N
+    Tail profile            0.97  N
+    Tail induced            0.13  N
+    Fuselage                7.32  N
+    Misc (x1.30)           5.10  N
+    Total drag             22.09  N
+    Total lift            245.17  N
+    L/D                    11.10
+
+  Lift & Drag vs AoA
+     AoA      Lift      Drag      L/D
+      0°     247.3      22.2     11.1
+      1°     298.8      25.3     11.8
+      2°     350.2      29.1     12.0
+      3°     401.7      33.8     11.9
+      4°     453.1      39.2     11.6
+      5°     504.6      45.4     11.1
+      6°     556.0      52.3     10.6
+      7°     607.5      60.1     10.1
+      8°     658.9      68.6      9.6
+      9°     710.4      77.9      9.1
+     10°     761.8      88.0      8.7
+     11°     813.3      98.9      8.2
+     12°     864.8     110.5      7.8
+     13°     916.2     122.9      7.5
+     14°     967.7     136.1      7.1
+
+====================================================
+
