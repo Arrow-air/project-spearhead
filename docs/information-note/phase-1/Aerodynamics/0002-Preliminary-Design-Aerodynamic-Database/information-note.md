@@ -8,7 +8,7 @@
 
 "Replacement Log: None"
 
-"Reference: None"
+"Reference: [0001-Preliminary-Design](../0001-Preliminary-Design/information-note.md)"
 
 # Project Description
 
