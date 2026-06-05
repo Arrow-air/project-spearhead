@@ -66,6 +66,8 @@ The corrected dense force and moment output was then processed with Nondimit. No
 
 The coefficient workflow uses body axes with "x" forward, "y" right, and "z" down. Drag is positive aft along the wind direction, lift is positive upward, and side force is positive to the right in the wind-frame convention used by the tool.
 
+The ADM-corrected dense dimensional table uses body-axis coordinates with its moment reference center at (-0.6 m, 0 m, 0 m). The delivered coefficient tables are recentered to the aircraft CG at (-0.15 m, 0 m, 0.15 m) in the same body-axis frame.
+
 A wind-frame drag multiplier of 1.3 was applied during coefficient output preparation to account for known drag-producing components that were not included in the CFD geometry. This correction was applied only to the wind-frame drag component "D". The corrected drag vector was then projected back into body axes so that "Fx", "Fy", "Fz" and "D", "S", "L" remain internally consistent. No independent side-force, lift-force, or direct moment multiplier was applied for this correction.
 
 This drag multiplier is a post-processing correction for the preliminary design aerodynamic database. It is separate from the actuator-disk correction used to transfer pusher propeller effects onto the surrogate surface. This processing step prepares the final coefficient tables for flight dynamics and control-table use.
@@ -84,7 +86,7 @@ Instead of treating every intermediate support table as a deliverable, the datab
 | [Aerodynamic database](assets/adb_v1_1_no_correction.csv) | ADM-corrected dense table converted into body and wind-frame aerodynamic coefficients with the coefficient tool |
 | [Drag-corrected aerodynamic database](assets/adb_v1_1_drag_correction.csv) | Aerodynamic database after the 1.3x drag multiplier for omitted drag-producing components |
 
-The coefficient-table deliverables were generated from the ADM-corrected dense table using Nondimit. If another coefficient format, output group order, reference value set, moment reference center, or correction setup is required, users can reload the ADM-corrected dense table in Nondimit and regenerate the database export. Note that the ADM-corrected dense table moment center is [0, 0, 0].
+The coefficient-table deliverables were generated from the ADM-corrected dense table using Nondimit. If another coefficient format, output group order, reference value set, moment reference center, or correction setup is required, users can reload the ADM-corrected dense table in Nondimit and regenerate the database export. Note that the ADM-corrected dense table moment center is (-0.6 m, 0 m, 0 m) in body-axis coordinates. The delivered coefficient tables are referenced to the aircraft CG at (-0.15 m, 0 m, 0.15 m).
 
 | Drag | Lift |
 |-------|------|
@@ -100,17 +102,18 @@ The coefficient table is organized by alpha and beta in degrees. The delivered c
 
 | Reference | Symbol | Value |
 |-----------|--------|-------|
-| Air density | $$\rho$$ | 1.225 kg/m^3 |
+| Air density | $$\rho$$ | 1.09 kg/m^3 |
 | Reference velocity | $$V$$ | 25 m/s |
-| Dynamic pressure | $$q = 0.5 \rho V^{2}$$ | 382.8125 Pa |
+| Dynamic pressure | $$q = 0.5 \rho V^{2}$$ | 340.625 Pa |
 | Reference area | $$S$$ | 1.805 m^2 |
 | Reference span | $$b$$ | 3.95 m |
 | Reference chord | $$c$$ | 0.457 m |
-| Force denominator | $$qS$$ | 690.9766 N |
-| Roll and yaw moment denominator | $$qSb$$ | 2729.3574 N m |
-| Pitch moment denominator | $$qSc$$ | 315.7763 N m |
-| Moment reference center, body x y z | $$(x_m, y_m, z_m)$$ | -0.15 m, 0 m, 0 m |
+| Force denominator | $$qS$$ | 614.8281 N |
+| Roll and yaw moment denominator | $$qSb$$ | 2428.5711 N m |
+| Pitch moment denominator | $$qSc$$ | 280.9765 N m |
+| Moment reference center / CG, body x y z | $$(x_m, y_m, z_m)$$ | -0.15 m, 0 m, 0.15 m |
 
+The density value corresponds to the database run condition at 1200 m altitude.
 
 The dynamic pressure and denominators are:
 
@@ -182,11 +185,12 @@ The corresponding coefficient columns in the delivered CSV are **cd**, **cs**, *
 
 Body-axis outputs should be used when the receiving flight-dynamics model expects aircraft body axes. The body-axis convention is x forward, y right, and z down. Wind-frame outputs should be used for aerodynamic review and sign-convention checks. In the wind-frame convention used here, drag is positive aft along the wind direction, lift is positive upward, and side force is positive to the right.
 
-If a different moment reference center, reference area, span, chord, density, or velocity is required, the table should be regenerated with Nondimit instead of manually editing the moment coefficient columns. Note that the ADM-corrected dense table moment center is [0, 0, 0].
+If a different moment reference center, reference area, span, chord, density, or velocity is required, the table should be regenerated with Nondimit instead of manually editing the moment coefficient columns. Note that the ADM-corrected dense table moment center is (-0.6 m, 0 m, 0 m) in body-axis coordinates. The delivered coefficient tables are referenced to the aircraft CG at (-0.15 m, 0 m, 0.15 m).
 
 
 # Remarks
 
 - The actuator-disk correction and the 1.3x omitted-component drag correction are accepted for the current aerodynamic database stage.
+- Preliminary pitch-moment trends indicate that the aircraft is not statically stable at the current coefficient-table CG reference by itself. This is expected to be addressed through CG placement, and the longitudinal stability analysis will define the allowable CG range and target CG location.
 - This database will be updated with the control surface deflections once available.
 
