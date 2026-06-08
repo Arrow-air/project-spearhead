@@ -21,13 +21,21 @@ The illustration shows the force and moment directions. The table below defines 
 
 ## Launch
 
-Run:
+The shared source, README, changelog, version file, and reference-frame image are kept in the Nondimit root folder. Platform-specific package files are separated into `windows/` and `macos/`.
 
-```bat
-Start_Nondimit.bat
+On Windows, open:
+
+```text
+windows/Nondimit.exe
 ```
 
-The launcher starts `Nondimit.exe` when present. If the EXE is missing, it falls back to `nondimit.py`.
+On macOS, use one of these paths:
+
+- For a packaged app, open the provided `Nondimit.app`.
+- For the source folder, run `macos/Start_Nondimit.command`.
+- If macOS blocks an unsigned app, use right click, then Open.
+
+The macOS launcher opens the packaged app if present. Otherwise it starts the shared `nondimit.py` source with Python 3.
 
 ## Main Workflows
 
