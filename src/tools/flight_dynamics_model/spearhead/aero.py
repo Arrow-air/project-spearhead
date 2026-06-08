@@ -132,8 +132,9 @@ def aero_model_adb(
     F_adb_b, M_adb_b = dimensional_body_force_moment(
         coefficients,
         qbar,
-        params.aerodb_reference,
+        database.reference,
         shift_to_cg=params.shift_adb_moments_to_cg,
+        cg_body_xyz=params.cg_body_xyz,
     )
     F_increment_b, M_increment_b, increment_coefficients = _placeholder_control_rate_increment(
         alpha,

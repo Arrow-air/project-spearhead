@@ -12,7 +12,7 @@ This note records the simulation-model changes needed after Arrow-air/project-sp
 - Body-axis coefficients are used for equations of motion:
   `Fx = cfx*qS`, `Fy = cfy*qS`, `Fz = cfz*qS`,
   `Mx = cmx*qSb`, `My = cmy*qSc`, `Mz = cmz*qSb`.
-- ADB moments are referenced to `[-0.15, 0.0, 0.0] m`; the simulation shifts them to CG using `M_CG = M_db + cross(r, F_body)`.
+- ADB moments are referenced to `[-0.15, 0.0, 0.15] m` in the latest delivered Nondimit metadata; the simulation shifts them to CG using `M_CG = M_ref + cross(reference.moment_center_body_xyz - cg_body_xyz, F_body)`.
 
 ## Remaining Uncertainties
 

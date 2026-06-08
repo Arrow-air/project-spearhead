@@ -72,26 +72,38 @@ class AircraftGeometry:
 
 @dataclass(frozen=True)
 class AeroDBReference:
-    rho: float = 1.225
+    rho: float = 1.09
     V_ref: float = 25.0
-    q: float = 382.8125
     S: float = 1.805
     b: float = 3.95
     c: float = 0.457
-    qS: float = 690.9766
-    qSb: float = 2729.3574
-    qSc: float = 315.7763
-    moment_center_body_xyz: np.ndarray = field(default_factory=lambda: np.array([-0.15, 0.0, 0.0]))
+    moment_center_body_xyz: np.ndarray = field(default_factory=lambda: np.array([-0.15, 0.0, 0.15]))
     alpha_min_deg: float = -90.0
     alpha_max_deg: float = 90.0
     beta_min_deg: float = -90.0
     beta_max_deg: float = 90.0
 
+    @property
+    def q(self) -> float:
+        return 0.5 * self.rho * self.V_ref**2
+
+    @property
+    def qS(self) -> float:
+        return self.q * self.S
+
+    @property
+    def qSb(self) -> float:
+        return self.qS * self.b
+
+    @property
+    def qSc(self) -> float:
+        return self.qS * self.c
+
 
 @dataclass(frozen=True)
 class AircraftParams:
     g: float = 9.80665
-    rho: float = 1.225
+    rho: float = 1.09
     mass: float = 25.0
     inertia: np.ndarray = field(default_factory=lambda: np.diag([2.5, 4.0, 5.0]))
     Sref: float = 1.805
@@ -102,6 +114,7 @@ class AircraftParams:
     beta_limit: float = np.deg2rad(90.0)
     geometry: AircraftGeometry = field(default_factory=AircraftGeometry)
     aerodb_reference: AeroDBReference = field(default_factory=AeroDBReference)
+    cg_body_xyz: np.ndarray = field(default_factory=lambda: np.array([-0.15, 0.0, 0.15]))
     aero_database_path: Path = field(default_factory=default_aero_database_path)
     use_aero_database: bool = True
     aero_database_clamp: bool = True

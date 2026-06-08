@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
+import re
 from pathlib import Path
 
 import numpy as np
@@ -58,6 +59,135 @@ def _metadata_from_rows(rows: list[list[str]]) -> dict[str, str]:
             continue
         metadata[key] = ",".join(clean[1:])
     return metadata
+
+
+def _split_metadata_values(text: str) -> list[str]:
+    values = []
+    current = []
+    depth = 0
+    for char in text:
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth = max(depth - 1, 0)
+        if char == "," and depth == 0:
+            value = "".join(current).strip()
+            if value:
+                values.append(value)
+            current = []
+            continue
+        current.append(char)
+    value = "".join(current).strip()
+    if value:
+        values.append(value)
+    return values
+
+
+def _metadata_key_values(metadata: dict[str, str]) -> dict[str, str]:
+    parsed: dict[str, str] = {}
+    direct_keys = {
+        "rho",
+        "density",
+        "v",
+        "velocity",
+        "s",
+        "area",
+        "surface_area",
+        "span",
+        "b",
+        "chord",
+        "c",
+        "moment_center_body_xyz",
+        "new_moment_center_body_xyz",
+        "old_moment_center_body_xyz",
+    }
+    for metadata_key, text in metadata.items():
+        normalized_key = metadata_key.strip().lower()
+        if normalized_key in direct_keys:
+            parsed[normalized_key] = text.strip().strip('"')
+        for item in _split_metadata_values(text):
+            if "=" not in item:
+                continue
+            key, value = item.split("=", 1)
+            parsed[key.strip().lower()] = value.strip().strip('"')
+    return parsed
+
+
+def _metadata_float(parsed: dict[str, str], keys: tuple[str, ...], name: str) -> float:
+    for key in keys:
+        value = parsed.get(key)
+        if value is None:
+            continue
+        try:
+            return float(value)
+        except ValueError as exc:
+            raise ValueError(f"Could not parse ADB metadata {name}: {value!r}") from exc
+    raise ValueError(f"ADB metadata is missing required {name}")
+
+
+def _metadata_vector(parsed: dict[str, str], keys: tuple[str, ...], name: str) -> np.ndarray:
+    for key in keys:
+        value = parsed.get(key)
+        if value is None:
+            continue
+        numbers = re.findall(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?", value)
+        if len(numbers) != 3:
+            raise ValueError(f"Could not parse ADB metadata {name}: {value!r}")
+        return np.array([float(number) for number in numbers])
+    raise ValueError(f"ADB metadata is missing required {name}")
+
+
+def reference_from_metadata(
+    metadata: dict[str, str],
+    fallback: AeroDBReference | None = None,
+) -> AeroDBReference:
+    """Build the ADB reference from Nondimit metadata.
+
+    The delivered ADB CSV metadata is the source of truth. A fallback reference
+    is used only when metadata is absent, not to override metadata values.
+    """
+    if not metadata:
+        if fallback is not None:
+            return fallback
+        return AeroDBReference()
+
+    parsed = _metadata_key_values(metadata)
+    has_reference_metadata = any(
+        key in parsed
+        for key in (
+            "rho",
+            "density",
+            "v",
+            "velocity",
+            "s",
+            "area",
+            "surface_area",
+            "span",
+            "b",
+            "chord",
+            "c",
+            "moment_center_body_xyz",
+            "new_moment_center_body_xyz",
+            "old_moment_center_body_xyz",
+        )
+    )
+    if not has_reference_metadata:
+        if fallback is not None:
+            return fallback
+        return AeroDBReference()
+
+    return AeroDBReference(
+        rho=_metadata_float(parsed, ("rho", "density"), "density"),
+        V_ref=_metadata_float(parsed, ("v", "velocity"), "reference velocity"),
+        S=_metadata_float(parsed, ("s", "area", "surface_area"), "reference area"),
+        b=_metadata_float(parsed, ("span", "b"), "reference span"),
+        c=_metadata_float(parsed, ("chord", "c"), "reference chord"),
+        moment_center_body_xyz=_metadata_vector(
+            parsed,
+            ("moment_center_body_xyz", "new_moment_center_body_xyz", "old_moment_center_body_xyz"),
+            "moment center",
+        ),
+    )
 
 
 @dataclass(frozen=True)
@@ -119,14 +249,12 @@ def load_aerodynamic_database(
 ) -> AeroDatabase:
     """Load a Nondimit-style coefficient CSV with optional metadata rows."""
     db_path = Path(path)
-    if reference is None:
-        reference = AeroDBReference()
-
     with db_path.open(newline="") as csv_file:
         rows = list(csv.reader(csv_file))
 
     header_index = _find_header_row(rows)
     metadata = _metadata_from_rows(rows[:header_index])
+    reference = reference_from_metadata(metadata, fallback=reference)
     header = [_normalize_column_name(value) for value in rows[header_index]]
     column_index = {name: i for i, name in enumerate(header)}
     alpha_name = _find_column(column_index, ("alpha_deg", "alpha", "alpha(deg)"))
@@ -187,9 +315,12 @@ def _reference_cache_key(reference: AeroDBReference) -> tuple:
     )
 
 
-def load_aerodynamic_database_cached(path: str | Path, reference: AeroDBReference) -> AeroDatabase:
+def load_aerodynamic_database_cached(
+    path: str | Path,
+    reference: AeroDBReference | None = None,
+) -> AeroDatabase:
     db_path = Path(path).resolve()
-    key = (str(db_path), _reference_cache_key(reference))
+    key = (str(db_path), _reference_cache_key(reference) if reference is not None else None)
     if key not in _CACHE:
         _CACHE[key] = load_aerodynamic_database(db_path, reference)
     return _CACHE[key]
@@ -206,7 +337,8 @@ def dimensional_body_force_moment(
     """Convert body-axis coefficients into dimensional loads.
 
     If requested, moments are shifted from the ADB moment center to the CG with
-    M_CG = M_db + cross(old_center - CG, F_body).
+    M_CG = M_ref + cross(r_ref_to_cg, F_body), where r_ref_to_cg is
+    reference.moment_center_body_xyz - cg_body_xyz in body axes.
     """
     force_b = qbar * reference.S * np.array(
         [coefficients["cfx"], coefficients["cfy"], coefficients["cfz"]]
