@@ -46,8 +46,8 @@ PYINSTALLER_ARGS=(
 	--distpath "$DIST_DIR"
 	--workpath "$BUILD_DIR"
 	--specpath "$SCRIPT_DIR"
-	--add-data "README.md:."
-	--add-data "aero_frame_notation.png:."
+	--add-data "$TOOL_DIR/README.md:."
+	--add-data "$TOOL_DIR/aero_frame_notation.png:."
 )
 
 if [[ -n "$TARGET_ARCH" ]]; then
