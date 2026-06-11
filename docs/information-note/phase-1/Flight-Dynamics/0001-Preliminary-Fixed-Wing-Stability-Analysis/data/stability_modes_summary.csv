@@ -1,0 +1,55 @@
+case,x_ref_m,subsystem,mode,eigenvalue_text,natural_frequency_rad_s,damping_ratio,time_constant_s,classification
+nominal,-0.15,longitudinal,phugoid,-0.091489+0.764909j; -0.091489-0.764909j,0.7703607304437358,0.11876130570367047,10.930270250069293,stable
+nominal,-0.15,longitudinal,short_period,-11.7041+0j; +3.06093+0j,3.060934914692646,-1.0,0.32669757047101794,unstable
+nominal,-0.15,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+nominal,-0.15,lateral-directional,roll,-30.229+0j,30.22900341265614,1.0,0.03308081269994249,stable
+nominal,-0.15,lateral-directional,spiral,-0.00898588+0j,0.008985875202397372,1.0,111.28576543475772,stable
+nominal,-0.15,lateral-directional,lateral_residual_1,-7.26109+0j,7.261085923001386,1.0,0.1377204471348065,stable
+nominal,-0.15,lateral-directional,lateral_residual_2,-1.5312+0j,1.531201600752784,1.0,0.6530818668870059,stable
+case_m10,-0.1,longitudinal,phugoid,-0.32842+0.893381j; -0.32842-0.893381j,0.9518344050515003,0.34503917623313146,3.044880079699117,stable
+case_m10,-0.1,longitudinal,short_period,-9.31431+0j; +1.1421+0j,1.1420990928255943,-1.0,0.8755807672747239,unstable
+case_m10,-0.1,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m10,-0.1,lateral-directional,roll,-30.2281+0j,30.228082733270195,1.0,0.033081820267064486,stable
+case_m10,-0.1,lateral-directional,spiral,+0.000287463+0j,0.0002874629362831633,-1.0,3478.7093352965585,unstable
+case_m10,-0.1,lateral-directional,lateral_residual_1,-6.95664+0j,6.956640358196184,1.0,0.14374754889000674,stable
+case_m10,-0.1,lateral-directional,lateral_residual_2,-1.84464+0j,1.8446374801830814,1.0,0.5421119383851777,stable
+case_m8,-0.08,longitudinal,phugoid,-0.745163+0.728641j; -0.745163-0.728641j,1.0422024569919521,0.7149890040473594,1.3419877285614588,stable
+case_m8,-0.08,longitudinal,short_period,-7.91482+0j; +0.574806+0j,0.5748063587860082,-1.0,1.7397163143984722,unstable
+case_m8,-0.08,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m8,-0.08,lateral-directional,roll,-30.2275+0j,30.22754619716083,1.0,0.033082407466270836,stable
+case_m8,-0.08,lateral-directional,spiral,-0.00116757+0j,0.0011675733348519453,1.0,856.477250850205,stable
+case_m8,-0.08,lateral-directional,lateral_residual_1,-6.95621+0j,6.956205081807501,1.0,0.1437565437245792,stable
+case_m8,-0.08,lateral-directional,lateral_residual_2,-1.84364+0j,1.8436448906456442,1.0,0.5424038029632703,stable
+case_m65,-0.065,longitudinal,short_period,-6.39647+0j; -2.24543+0j; -0.442251+0j; +0.252802+0j,0.2528023366268685,-1.0,3.9556596404248476,unstable
+case_m65,-0.065,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m65,-0.065,lateral-directional,roll,-30.2271+0j,30.227116116636246,1.0,0.03308287817274189,stable
+case_m65,-0.065,lateral-directional,spiral,-0.00228627+0j,0.0022862655123236848,1.0,437.39451722019504,stable
+case_m65,-0.065,lateral-directional,lateral_residual_1,-6.95587+0j,6.9558685129478075,1.0,0.14376349957429152,stable
+case_m65,-0.065,lateral-directional,lateral_residual_2,-1.8429+0j,1.8429014410090823,1.0,0.5426226154842275,stable
+case_m6,-0.06,longitudinal,short_period,-5.50085+0j; -3.20677+0j; -0.240531+0j; +0.116444+0j,0.11644400260335884,-1.0,8.587818845477877,unstable
+case_m6,-0.06,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m6,-0.06,lateral-directional,roll,-30.227+0j,30.22696608698033,1.0,0.033083042377538854,stable
+case_m6,-0.06,lateral-directional,spiral,-0.00266744+0j,0.0026674406193122964,1.0,374.891194488076,stable
+case_m6,-0.06,lateral-directional,lateral_residual_1,-6.95575+0j,6.955753451881877,1.0,0.14376587768927465,stable
+case_m6,-0.06,lateral-directional,lateral_residual_2,-1.84265+0j,1.8426520315344097,1.0,0.5426960613758866,stable
+case_m5p5,-0.055,longitudinal,phugoid,-0.04536+0.166775j; -0.04536-0.166775j,0.1728332214978549,0.2624493520573766,22.045871419746742,stable
+case_m5p5,-0.055,longitudinal,short_period,-4.37067+1.2534j; -4.37067-1.2534j,4.546843244276851,0.9612538380117231,0.22879784590524424,stable
+case_m5p5,-0.055,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m5p5,-0.055,lateral-directional,roll,-30.2268+0j,30.226813025172675,1.0,0.0330832099026519,stable
+case_m5p5,-0.055,lateral-directional,spiral,-0.00305176+0j,0.0030517614028187,1.0,327.6796144929186,stable
+case_m5p5,-0.055,lateral-directional,lateral_residual_1,-6.95564+0j,6.955637244629277,1.0,0.14376827957382907,stable
+case_m5p5,-0.055,lateral-directional,lateral_residual_2,-1.8424+0j,1.8424025742157042,1.0,0.542769541247353,stable
+case_m5,-0.05,longitudinal,phugoid,-0.024601+0.474923j; -0.024601-0.474923j,0.47555936515026825,0.051730764159962556,40.64867255289631,stable
+case_m5,-0.05,longitudinal,short_period,-4.45504+5.15473j; -4.45504-5.15473j,6.813123802159623,0.6538909382895283,0.22446487998482176,stable
+case_m5,-0.05,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_m5,-0.05,lateral-directional,roll,-30.2267+0j,30.226666579906336,1.0,0.033083370187593435,stable
+case_m5,-0.05,lateral-directional,spiral,-0.00364264+0j,0.003642635925164415,1.0,274.526474933084,stable
+case_m5,-0.05,lateral-directional,lateral_residual_1,-6.95406+0j,6.954059267927466,1.0,0.14380090267738432,stable
+case_m5,-0.05,lateral-directional,lateral_residual_2,-1.84346+0j,1.843460819993,1.0,0.54245796230364,stable
+case_0,-0.0,longitudinal,phugoid,-0.0253188+0.540732j; -0.0253188-0.540732j,0.5413249043209475,0.046771950368917195,39.4963090085005,stable
+case_0,-0.0,longitudinal,short_period,-4.45612+7.50931j; -4.45612-7.50931j,8.731942130570907,0.510324189376821,0.22441040874791407,stable
+case_0,-0.0,lateral-directional,dutch_roll_like_lateral_directional,No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.,nan,nan,nan,not identified
+case_0,-0.0,lateral-directional,roll,-30.2252+0j,30.22523090973961,1.0,0.03308494161669963,stable
+case_0,-0.0,lateral-directional,spiral,-0.00285347+0j,0.002853471572555638,1.0,350.4503109888618,stable
+case_0,-0.0,lateral-directional,lateral_residual_1,-6.4729+0j,6.472897646314015,1.0,0.1544903155651548,stable
+case_0,-0.0,lateral-directional,lateral_residual_2,-2.32827+0j,2.328274094636549,1.0,0.42950269571079136,stable
