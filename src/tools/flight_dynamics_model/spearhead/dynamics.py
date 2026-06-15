@@ -2,12 +2,18 @@
 
 import numpy as np
 
+from .controls import ControlInput
 from .force_moment import compute_force_moment_breakdown
 from .params import AircraftParams
 from .rotations import body_rates_to_euler_rates, euler_body_to_ned
 
 
-def dynamics(t: float, x: np.ndarray, params: AircraftParams, control_override=None) -> np.ndarray:
+def dynamics(
+    t: float,
+    x: np.ndarray,
+    params: AircraftParams,
+    control_override: ControlInput | None = None,
+) -> np.ndarray:
     """Return the state derivative for the 12-state nonlinear aircraft model."""
     v_b = x[3:6]
     phi, theta, psi = x[6:9]

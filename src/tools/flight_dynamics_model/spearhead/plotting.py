@@ -3,20 +3,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .aero import aero_model_placeholder
-from .controls import Control, as_control, control_schedule
+from .aero import aero_model
+from .controls import ControlInput, control_at
 from .force_moment import COMPONENTS
 from .params import AircraftParams
 
 
-def _airspeed_alpha_beta(sol, params: AircraftParams) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def _airspeed_alpha_beta(
+    sol,
+    params: AircraftParams,
+    control_override: ControlInput | None = None,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     V = np.zeros_like(sol.t)
     alpha = np.zeros_like(sol.t)
     beta = np.zeros_like(sol.t)
 
     for i, t in enumerate(sol.t):
-        control = control_schedule(float(t))
-        _, _, info = aero_model_placeholder(sol.y[3:6, i], sol.y[9:12, i], control, params)
+        control = control_at(float(t), control_override)
+        _, _, info = aero_model(sol.y[3:6, i], sol.y[9:12, i], control, params)
         V[i] = info["V"]
         alpha[i] = info["alpha"]
         beta[i] = info["beta"]
@@ -26,7 +30,7 @@ def _airspeed_alpha_beta(sol, params: AircraftParams) -> tuple[np.ndarray, np.nd
 
 def _control_history(
     t: np.ndarray,
-    control_override: Control | dict[str, float] | None = None,
+    control_override: ControlInput | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     de = np.zeros_like(t)
     da = np.zeros_like(t)
@@ -34,7 +38,7 @@ def _control_history(
     throttle = np.zeros_like(t)
 
     for i, ti in enumerate(t):
-        control = control_schedule(float(ti)) if control_override is None else as_control(control_override)
+        control = control_at(float(ti), control_override)
         de[i] = control.de
         da[i] = control.da
         dr[i] = control.dr
@@ -46,7 +50,7 @@ def _control_history(
 def plot_open_loop(
     sol,
     params: AircraftParams | None = None,
-    control_override: Control | dict[str, float] | None = None,
+    control_override: ControlInput | None = None,
 ):
     """Create standard plots for an open-loop simulation."""
     if params is None:
@@ -58,7 +62,7 @@ def plot_open_loop(
     pn, pe, pd = sol.y[0], sol.y[1], sol.y[2]
     phi, theta, psi = sol.y[6], sol.y[7], sol.y[8]
     p, q, r = sol.y[9], sol.y[10], sol.y[11]
-    V, alpha, beta = _airspeed_alpha_beta(sol, params)
+    V, alpha, beta = _airspeed_alpha_beta(sol, params, control_override=control_override)
     de, da, dr, throttle = _control_history(t, control_override=control_override)
 
     fig, axes = plt.subplots(4, 2, figsize=(12, 13), constrained_layout=True)
