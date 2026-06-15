@@ -13,10 +13,20 @@ It also tracks:
 src/tools/flight_dynamics_model/spearhead/__pycache__/stability.cpython-310.pyc
 ```
 
-However, the corresponding stability-analysis source module or script is not tracked in the
-current tree. That means the published stability tables, figures, and reports cannot be
-regenerated from source without reconstructing the missing workflow.
+In `codex/sim-core-platform`, the corresponding stability-analysis source module or script
+was not tracked. That meant the published stability tables, figures, and reports could not
+be regenerated from source without reconstructing the missing workflow.
 
-TODO: restore stability-analysis source code as a follow-up PR and make it call the shared
-simulation backend (`SimulationConfig`, `run_simulation`, trim, force/moment, and dynamics)
-instead of introducing a separate model path.
+This stacked branch restores a source implementation under:
+
+```text
+src/tools/flight_dynamics_model/spearhead/stability/
+```
+
+The restored implementation calls the shared simulation backend (`SimulationConfig`,
+`run_simulation`, trim, force/moment, and dynamics) instead of introducing a separate
+model path.
+
+Remaining limitation: the tracked aerodynamic database is the nominal ADB only. The CG
+sweep implementation varies runtime `cg_body_xyz` through the existing moment-shift path
+and does not recreate missing historical Nondimit per-CG CSV cases.

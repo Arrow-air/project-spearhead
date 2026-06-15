@@ -109,8 +109,42 @@ The current trim/control derivatives are preliminary. ADB v1.1 does not include 
 
 ## Stability Analysis Reproducibility
 
-Preliminary stability outputs and information-note material are tracked, but the
-corresponding stability-analysis source module/script is missing from the
-current tree. See `docs/stability_reproducibility_gap.md`. Restoring that source
-should be a follow-up change, and it should call the shared simulation backend
-rather than introducing a separate model path.
+The restored stability pipeline lives under `spearhead.stability` and consumes
+the same backend as simulations:
+
+```python
+from spearhead.scenarios import load_scenario
+from spearhead.stability import analyze_stability
+
+config = load_scenario("src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml")
+result = analyze_stability(config)
+```
+
+CLI examples:
+
+```bash
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.stability analyze \
+  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
+  --json stability.json --csv stability_modes.csv --markdown stability.md
+
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.stability cg-sweep \
+  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
+  --cg-x -0.15 -0.10 -0.05 \
+  --json cg_sweep.json --csv cg_sweep_modes.csv
+```
+
+The analysis trims through `run_simulation(config)`, then linearizes the existing
+`dynamics()` function with central finite differences. Static derivatives are
+estimated from the existing force/moment breakdown path. No separate aircraft
+model is used.
+
+Current limitations:
+
+- The tracked aerodynamic database is the nominal ADB only.
+- CG sweep changes `AircraftParams.cg_body_xyz` at runtime and relies on the
+  existing moment-shift path; it does not recreate the missing Nondimit per-CG
+  CSV cases from the historical information note.
+- The inertia matrix, propulsion model, rate damping, and control increments
+  remain preliminary.
