@@ -117,6 +117,18 @@ def test_cg_x_parser_rejects_empty_input():
         parse_cg_x_values(" , ")
 
 
+def test_flight_deck_visual_helper_html_is_bounded():
+    from spearhead.gui.app import _control_bar_html, _timeline_html
+
+    centered = _control_bar_html(45.0, centered=True)
+    throttle = _control_bar_html(125.0, centered=False)
+    timeline = _timeline_html(12.5, 20.0)
+
+    assert "width: 50.00%" in centered
+    assert "width: 100.00%" in throttle
+    assert "width: 62.5%" in timeline
+
+
 def test_cg_sweep_summary_rows_include_most_unstable_real():
     config = SimulationConfig(name="cg_gui_summary", duration=0.01, n_points=2)
     sweep = run_cg_sweep_for_gui(
@@ -146,6 +158,30 @@ def test_simulation_plot_helper_returns_serializable_plotly_figure():
     assert "data" in payload
     assert len(payload["data"]) == 10
     assert payload["data"][0]["name"] == "u"
+
+
+def test_flight_deck_live_plot_helper_returns_serializable_plotly_figure():
+    pytest.importorskip("plotly")
+
+    from spearhead.gui.flight_deck import FlightDeckSession
+    from spearhead.gui.plotting import figure_to_json_dict, flight_deck_live_figures
+
+    session = FlightDeckSession(
+        "plot",
+        SimulationConfig(name="live_plot_test", duration=0.04, dt=0.02, n_points=None, start_from_trim=False),
+    )
+    session.play()
+    session.advance(0.04)
+
+    figures = flight_deck_live_figures(session.history)
+    payloads = {name: figure_to_json_dict(figure) for name, figure in figures.items()}
+
+    assert set(payloads) == {"attitude", "rates", "controls", "airspeed_altitude"}
+    assert len(payloads["attitude"]["data"]) == 3
+    assert len(payloads["rates"]["data"]) == 3
+    assert len(payloads["controls"]["data"]) == 4
+    assert len(payloads["airspeed_altitude"]["data"]) == 2
+    assert payloads["controls"]["data"][0]["name"] == "elevator deg"
 
 
 def test_stability_plot_helper_returns_serializable_plotly_figure():

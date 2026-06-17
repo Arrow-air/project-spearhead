@@ -31,7 +31,22 @@ from .adapters.stability import (
     stability_mode_table_rows,
     static_derivative_table_rows,
 )
-from .plotting import cg_sweep_trend_figure, simulation_time_history_figure, stability_eigenvalue_figure
+from .flight_deck import (
+    COMPLETE,
+    ERROR,
+    PAUSED,
+    READY,
+    RUNNING,
+    FlightDeckSession,
+    attitude_html,
+    maneuver_options,
+)
+from .plotting import (
+    cg_sweep_trend_figure,
+    flight_deck_live_figures,
+    simulation_time_history_figure,
+    stability_eigenvalue_figure,
+)
 from .state import APP_STATE
 from ..config import ControlInputCommand, SimulationConfig
 
@@ -42,6 +57,7 @@ DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8080
 
 _pages_registered = False
+_flight_deck_session: FlightDeckSession | None = None
 
 
 def get_example_scenarios() -> list[Path]:
@@ -130,6 +146,18 @@ def _active_or_example_config(example_name: str | None = None) -> SimulationConf
     if selected_name is None:
         raise ValueError(f"No example scenarios found in {EXAMPLE_SCENARIOS_DIR}")
     return _load_example_config(selected_name)
+
+
+def _active_flight_deck_session(example_name: str | None = None) -> FlightDeckSession:
+    """Return the shared Flight Deck session, creating it from the active scenario."""
+    global _flight_deck_session
+    config = _active_or_example_config(example_name)
+    source = APP_STATE.scenario_source or config.name
+    if _flight_deck_session is None:
+        _flight_deck_session = FlightDeckSession(source, config)
+    elif _flight_deck_session.base_config is not config:
+        _flight_deck_session.set_scenario(source, config)
+    return _flight_deck_session
 
 
 def build_simulation_config_from_form(
@@ -238,14 +266,355 @@ def cg_positions_from_x_values(config: SimulationConfig, x_values: list[float]) 
 
 
 def _render_page_shell(ui) -> None:
-    ui.colors(primary="#2563eb", secondary="#475569", accent="#0f766e")
-    with ui.header().classes("items-center justify-between"):
-        ui.label("Spearhead FDM").classes("text-lg font-semibold")
+    ui.colors(primary="#0f766e", secondary="#475569", accent="#38bdf8")
+    ui.add_head_html(
+        """
+        <style>
+        body { background: #08111f; }
+        .fd-console {
+            background: radial-gradient(circle at 50% 20%, #172554 0, #0f172a 38%, #08111f 100%);
+            color: #dbeafe;
+            min-height: calc(100vh - 58px);
+        }
+        .fd-panel {
+            background: rgba(15, 23, 42, 0.86);
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            border-radius: 8px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+        }
+        .fd-card {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.20);
+            border-radius: 8px;
+        }
+        .fd-muted { color: #94a3b8; }
+        .fd-maneuver-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.34);
+            background: linear-gradient(90deg, rgba(8, 47, 73, 0.92), rgba(20, 83, 45, 0.84));
+            box-shadow: 0 0 24px rgba(56, 189, 248, 0.14);
+        }
+        .fd-maneuver-badge small {
+            color: #93c5fd;
+            font: 700 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .fd-maneuver-badge strong {
+            color: #f8fafc;
+            font: 800 20px ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: 0;
+        }
+        .fd-pfd {
+            position: relative;
+            height: 520px;
+            min-height: 440px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid rgba(125, 211, 252, 0.38);
+            background: #020617;
+            box-shadow:
+                inset 0 0 0 1px rgba(15, 23, 42, 0.9),
+                inset 0 0 70px rgba(2, 6, 23, 0.8),
+                0 22px 60px rgba(0, 0, 0, 0.36);
+        }
+        .fd-pfd__bezel {
+            position: absolute;
+            inset: 12px;
+            z-index: 8;
+            pointer-events: none;
+            border: 1px solid rgba(226, 232, 240, 0.16);
+            border-radius: 8px;
+            box-shadow: inset 0 0 30px rgba(2, 6, 23, 0.9);
+        }
+        .fd-pfd__world {
+            position: absolute;
+            inset: -32%;
+            transform-origin: center center;
+            transition: transform 90ms linear;
+        }
+        .fd-pfd__pitch {
+            position: absolute;
+            inset: -18%;
+            transform-origin: center center;
+            transition: transform 90ms linear;
+        }
+        .fd-pfd__sky {
+            position: absolute;
+            inset: 0 0 50% 0;
+            background:
+                radial-gradient(circle at 50% 18%, rgba(186, 230, 253, 0.42), transparent 24%),
+                linear-gradient(#0284c7 0%, #075985 64%, #0c4a6e 100%);
+        }
+        .fd-pfd__ground {
+            position: absolute;
+            inset: 50% 0 0 0;
+            background:
+                linear-gradient(rgba(251, 191, 36, 0.14), transparent 22%),
+                linear-gradient(#92400e 0%, #78350f 54%, #451a03 100%);
+        }
+        .fd-pfd__horizon {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #f8fafc;
+            box-shadow: 0 0 14px rgba(248, 250, 252, 0.7);
+        }
+        .fd-pfd__ladder {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+        }
+        .fd-pfd__pitch-mark {
+            position: absolute;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translate(-50%, -50%);
+            color: rgba(241, 245, 249, 0.9);
+            font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: 0;
+        }
+        .fd-pfd__pitch-mark i {
+            display: block;
+            height: 2px;
+            background: rgba(248, 250, 252, 0.92);
+            box-shadow: 0 0 8px rgba(248, 250, 252, 0.32);
+        }
+        .fd-pfd__pitch-label {
+            width: 32px;
+        }
+        .fd-pfd__pitch-label--left {
+            text-align: right;
+        }
+        .fd-pfd__pitch-label--right {
+            text-align: left;
+        }
+        .fd-pfd__roll-scale {
+            position: absolute;
+            top: 26px;
+            left: 50%;
+            z-index: 12;
+            width: 360px;
+            height: 180px;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        .fd-pfd__roll-tick {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 18px;
+            transform-origin: 50% 160px;
+            background: rgba(226, 232, 240, 0.82);
+        }
+        .fd-pfd__roll-tick--major {
+            height: 26px;
+            background: #f8fafc;
+        }
+        .fd-pfd__roll-tick span {
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #e0f2fe;
+            font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .fd-pfd__roll-zero {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            width: 0;
+            height: 0;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 13px solid #f8fafc;
+        }
+        .fd-pfd__roll-pointer {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            z-index: 13;
+            width: 0;
+            height: 0;
+            transform-origin: 50% 151px;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 16px solid #facc15;
+            filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.55));
+        }
+        .fd-pfd__aircraft {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translate(-50%, -50%);
+        }
+        .fd-pfd__wing {
+            width: 124px;
+            height: 7px;
+            background: #facc15;
+            box-shadow: 0 0 14px rgba(250, 204, 21, 0.66);
+        }
+        .fd-pfd__wing--left {
+            border-radius: 999px 0 0 999px;
+        }
+        .fd-pfd__wing--right {
+            border-radius: 0 999px 999px 0;
+        }
+        .fd-pfd__aircraft strong {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 4px solid #facc15;
+            background: rgba(2, 6, 23, 0.72);
+        }
+        .fd-pfd__aircraft em {
+            position: absolute;
+            top: 23px;
+            left: 50%;
+            width: 5px;
+            height: 42px;
+            transform: translateX(-50%);
+            background: #facc15;
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.58);
+        }
+        .fd-pfd__readout {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 16px;
+            z-index: 16;
+            display: flex;
+            justify-content: space-between;
+            color: #dbeafe;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: 0;
+        }
+        .fd-pfd__readout div {
+            display: flex;
+            align-items: baseline;
+            gap: 7px;
+            padding: 7px 10px;
+            border: 1px solid rgba(125, 211, 252, 0.22);
+            border-radius: 8px;
+            background: rgba(2, 6, 23, 0.62);
+        }
+        .fd-pfd__readout span,
+        .fd-pfd__readout small {
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .fd-pfd__readout strong {
+            color: #f8fafc;
+            font-size: 20px;
+        }
+        .fd-telemetry-card {
+            min-height: 78px;
+            padding: 10px 12px;
+            border: 1px solid rgba(148, 163, 184, 0.20);
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.88));
+        }
+        .fd-telemetry-card__value {
+            color: #f8fafc;
+            font: 800 26px ui-monospace, SFMono-Regular, Menlo, monospace;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+        .fd-telemetry-card__unit {
+            margin-top: 3px;
+            color: #7dd3fc;
+            font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .fd-telemetry-card__label {
+            margin-top: 8px;
+            color: #94a3b8;
+            font: 800 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .fd-transport .q-btn { min-width: 88px; }
+        .fd-control-meter {
+            position: relative;
+            height: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+        .fd-control-meter__center {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: rgba(226, 232, 240, 0.72);
+        }
+        .fd-control-meter__fill {
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8, #5eead4);
+            box-shadow: 0 0 10px rgba(94, 234, 212, 0.35);
+        }
+        .fd-timeline {
+            position: relative;
+            width: min(360px, 34vw);
+            height: 10px;
+            overflow: hidden;
+            border-radius: 999px;
+            border: 1px solid rgba(125, 211, 252, 0.28);
+            background: rgba(2, 6, 23, 0.86);
+        }
+        .fd-timeline__fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8, #5eead4);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.42);
+        }
+        .fd-preset {
+            border-left: 3px solid transparent;
+            color: #94a3b8;
+        }
+        .fd-preset--active {
+            border-left-color: #5eead4;
+            color: #e0f2fe;
+            background: rgba(20, 83, 45, 0.24);
+        }
+        .fd-plot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .fd-plot-card {
+            min-height: 292px;
+            padding: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.72);
+        }
+        </style>
+        """
+    )
+    with ui.header().classes("items-center justify-between bg-slate-950 text-white"):
+        ui.label("Spearhead Flight Deck").classes("text-lg font-semibold")
         with ui.row().classes("items-center gap-2"):
-            ui.link("Scenario", "/").classes("text-white no-underline")
-            ui.link("Simulation", "/simulation").classes("text-white no-underline")
-            ui.link("Stability", "/stability").classes("text-white no-underline")
-            ui.link("CG Sweep", "/cg-sweep").classes("text-white no-underline")
+            ui.link("Flight Deck", "/").classes("text-white no-underline")
+            ui.link("Analyze", "/analyze").classes("text-white no-underline")
+            ui.link("Scenario Library", "/scenario-library").classes("text-white no-underline")
     ui.separator()
 
 
@@ -264,8 +633,419 @@ def _empty_state(ui, text: str):
     return ui.label(text).classes("text-slate-500")
 
 
-def _register_scenario_page(ui) -> None:
+def _status_classes(status: str) -> str:
+    colors = {
+        READY: "bg-sky-950 text-sky-200 border-sky-700",
+        RUNNING: "bg-emerald-950 text-emerald-200 border-emerald-700",
+        PAUSED: "bg-amber-950 text-amber-200 border-amber-700",
+        COMPLETE: "bg-indigo-950 text-indigo-200 border-indigo-700",
+        ERROR: "bg-red-950 text-red-200 border-red-700",
+    }
+    return colors.get(status, "bg-slate-900 text-slate-200 border-slate-700")
+
+
+def _control_bar_value(value: float, *, centered: bool) -> float:
+    if centered:
+        return max(0.0, min(1.0, 0.5 + value / 30.0))
+    return max(0.0, min(1.0, value / 100.0))
+
+
+def _control_bar_html(value: float, *, centered: bool) -> str:
+    meter_value = _control_bar_value(value, centered=centered)
+    if centered:
+        left = min(50.0, meter_value * 100.0)
+        width = abs(meter_value - 0.5) * 100.0
+    else:
+        left = 0.0
+        width = meter_value * 100.0
+    center = '<div class="fd-control-meter__center"></div>' if centered else ""
+    return (
+        '<div class="fd-control-meter">'
+        f"{center}"
+        f'<div class="fd-control-meter__fill" style="left: {left:.2f}%; width: {width:.2f}%;"></div>'
+        "</div>"
+    )
+
+
+def _maneuver_badge_html(label: str) -> str:
+    return (
+        '<div class="fd-maneuver-badge">'
+        "<small>MANEUVER</small>"
+        f"<strong>{label.upper()}</strong>"
+        "</div>"
+    )
+
+
+def _telemetry_card_html(*, label: str, value: float, unit: str) -> str:
+    return (
+        '<div class="fd-telemetry-card">'
+        f'<div class="fd-telemetry-card__value">{value:.1f}</div>'
+        f'<div class="fd-telemetry-card__unit">{unit}</div>'
+        f'<div class="fd-telemetry-card__label">{label}</div>'
+        "</div>"
+    )
+
+
+def _maneuver_metadata(config: SimulationConfig, maneuver_key: str) -> list[dict[str, str]]:
+    from .flight_deck import maneuver_by_key
+
+    maneuver = maneuver_by_key(config, maneuver_key)
+    rows = [{"field": "mode", "value": maneuver.label}]
+    for index, command in enumerate(maneuver.commands, start=1):
+        amplitude = command.amplitude
+        unit = ""
+        if command.surface.strip().lower() in {"elevator", "de", "aileron", "da", "rudder", "ruddervator", "dr"}:
+            amplitude = float(np.rad2deg(amplitude))
+            unit = " deg"
+        elif command.surface.strip().lower() == "throttle":
+            amplitude = 100.0 * amplitude
+            unit = "%"
+        rows.append(
+            {
+                "field": f"cmd {index}",
+                "value": (
+                    f"{command.surface} {command.kind} {amplitude:+.2f}{unit}, "
+                    f"t={command.start_time:.1f}s, dur={command.duration:.1f}s"
+                ),
+            }
+        )
+    return rows
+
+
+def _render_maneuver_metadata(ui, container, rows: list[dict[str, str]]) -> None:
+    container.clear()
+    with container:
+        for row in rows:
+            with ui.column().classes("w-full gap-0 fd-card px-3 py-2"):
+                ui.label(row["field"].upper()).classes("text-xs fd-muted")
+                ui.label(row["value"]).classes("text-sm text-sky-100")
+
+
+def _render_preset_list(ui, container, options: dict[str, str], active_key: str) -> None:
+    container.clear()
+    with container:
+        ui.label("PRESETS").classes("text-xs font-semibold text-sky-200")
+        for key, label in options.items():
+            active_class = " fd-preset--active" if key == active_key else ""
+            ui.label(label.upper()).classes(f"w-full fd-preset{active_class} px-2 py-1 text-xs font-mono")
+
+
+def _timeline_html(elapsed: float, total: float) -> str:
+    progress = 0.0 if total <= 0.0 else max(0.0, min(1.0, elapsed / total))
+    return f'<div class="fd-timeline"><div class="fd-timeline__fill" style="width: {100.0 * progress:.1f}%;"></div></div>'
+
+
+def _render_live_plot_cards(ui, container, history: list[dict[str, float]]) -> None:
+    container.clear()
+    with container:
+        with ui.element("div").classes("fd-plot-grid w-full"):
+            for figure in flight_deck_live_figures(history).values():
+                with ui.element("div").classes("fd-plot-card"):
+                    ui.plotly(figure).classes("w-full")
+
+
+def _register_flight_deck_page(ui) -> None:
     @ui.page("/")
+    def flight_deck_page() -> None:
+        _render_page_shell(ui)
+        scenario_options = _scenario_options()
+        selected_name = APP_STATE.scenario_source
+        if selected_name not in scenario_options:
+            selected_name = next(iter(scenario_options), None)
+
+        try:
+            session = _active_flight_deck_session(selected_name)
+        except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+            with ui.column().classes("w-full max-w-5xl mx-auto gap-4 p-4"):
+                _page_intro(ui, "Flight Deck", "Realtime aircraft simulation console.")
+                ui.label(f"Unable to initialize Flight Deck: {exc}").classes("text-red-600")
+            return
+
+        telemetry_cards: dict[str, Any] = {}
+        control_labels: dict[str, Any] = {}
+        control_bars: dict[str, Any] = {}
+        control_centered: dict[str, bool] = {}
+        plot_container = None
+        attitude = None
+        last_plot_time = -1.0
+
+        with ui.column().classes("fd-console w-full gap-3 p-3"):
+            with ui.row().classes("w-full items-center justify-between fd-panel px-4 py-3"):
+                with ui.row().classes("items-center gap-3"):
+                    ui.label("FLIGHT DECK").classes("text-xl font-semibold text-sky-100")
+                    maneuver_badge = ui.html(_maneuver_badge_html(session.maneuver.label))
+                    scenario_badge = ui.label(session.scenario_source).classes("text-sm fd-muted")
+                with ui.row().classes("items-center gap-3"):
+                    flight_condition_label = ui.label("IAS 0.0 m/s | ALT 0.0 m").classes(
+                        "text-sm font-mono text-sky-100"
+                    )
+                    status_badge = ui.label(session.status).classes(
+                        f"text-sm font-semibold border rounded px-3 py-1 {_status_classes(session.status)}"
+                    )
+                    time_label = ui.label("T+0.00 s").classes("text-sm font-mono text-sky-100")
+                    speed_label = ui.label("1.0x").classes("text-sm font-mono text-sky-100")
+
+            with ui.grid(columns="220px minmax(620px, 1.4fr) 250px").classes("w-full gap-3"):
+                with ui.column().classes("fd-panel gap-2 p-3"):
+                    ui.label("SETUP").classes("text-xs font-semibold text-sky-200")
+                    scenario_select = ui.select(
+                        options=list(scenario_options),
+                        value=selected_name,
+                        label="Scenario",
+                    ).props("dark filled dense").classes("w-full")
+                    maneuver_select = ui.select(
+                        options=maneuver_options(session.base_config),
+                        value=session.maneuver_key,
+                        label="Maneuver",
+                    ).props("dark filled dense").classes("w-full")
+                    preset_container = ui.column().classes("w-full gap-1")
+                    _render_preset_list(
+                        ui,
+                        preset_container,
+                        maneuver_options(session.base_config),
+                        session.maneuver_key,
+                    )
+                    metadata_container = ui.column().classes("w-full gap-2")
+                    _render_maneuver_metadata(
+                        ui,
+                        metadata_container,
+                        _maneuver_metadata(session.base_config, session.maneuver_key),
+                    )
+                    ui.label("Trim").classes("text-xs font-semibold text-sky-200")
+                    trim_label = ui.label(
+                        f"{session.base_config.trim_target_speed:g} m/s at "
+                        f"{session.base_config.trim_altitude:g} m"
+                    ).classes("text-sm text-slate-300")
+
+                with ui.column().classes("fd-panel gap-3 p-3"):
+                    with ui.row().classes("w-full items-center justify-between"):
+                        ui.label("PRIMARY FLIGHT DISPLAY").classes("text-xs font-semibold text-sky-200")
+                        status_message = ui.label(session.message).classes("text-sm text-slate-300")
+                    values = session.telemetry()
+                    attitude = ui.html(
+                        attitude_html(
+                            pitch_deg=values.get("pitch_deg", 0.0),
+                            roll_deg=values.get("roll_deg", 0.0),
+                        )
+                    ).classes("w-full")
+
+                with ui.column().classes("fd-panel gap-2 p-3"):
+                    ui.label("TELEMETRY").classes("text-xs font-semibold text-sky-200")
+                    telemetry_fields = [
+                        ("airspeed", "IAS", "m/s"),
+                        ("altitude", "ALT", "m"),
+                        ("pitch_deg", "PITCH", "deg"),
+                        ("roll_deg", "ROLL", "deg"),
+                        ("heading_deg", "HDG", "deg"),
+                        ("alpha_deg", "ALPHA", "deg"),
+                        ("beta_deg", "BETA", "deg"),
+                    ]
+                    for key, label, unit in telemetry_fields:
+                        telemetry_cards[key] = ui.html(
+                            _telemetry_card_html(label=label, value=0.0, unit=unit)
+                        ).classes("w-full")
+
+                    ui.label("CONTROLS").classes("text-xs font-semibold text-sky-200 mt-2")
+                    for key, label, centered in [
+                        ("elevator_deg", "ELEV", True),
+                        ("aileron_deg", "AIL", True),
+                        ("rudder_deg", "RUD", True),
+                        ("throttle_pct", "THR", False),
+                    ]:
+                        with ui.column().classes("w-full gap-1"):
+                            with ui.row().classes("w-full justify-between"):
+                                ui.label(label).classes("text-xs fd-muted")
+                                control_labels[key] = ui.label("0.0").classes("text-xs font-mono text-sky-100")
+                            control_centered[key] = centered
+                            control_bars[key] = ui.html(_control_bar_html(0.0, centered=centered)).classes("w-full")
+
+            with ui.row().classes("w-full items-center justify-between fd-panel fd-transport px-4 py-3"):
+                with ui.row().classes("items-center gap-2"):
+                    reset_button = ui.button("RESET")
+                    step_button = ui.button("STEP")
+                    play_button = ui.button("PLAY").props("color=accent")
+                with ui.row().classes("items-center gap-3"):
+                    ui.label("SPEED").classes("text-xs fd-muted")
+                    speed_select = ui.select(
+                        options={0.5: "0.5x", 1.0: "1x", 2.0: "2x", 5.0: "5x"},
+                        value=session.speed_multiplier,
+                    ).props("dark filled dense").classes("w-28")
+                    timeline_meter = ui.html(_timeline_html(0.0, session.config.duration))
+                timeline_label = ui.label("0.00 / 0.00 s").classes("text-sm font-mono text-sky-100")
+
+            with ui.column().classes("w-full fd-panel p-2"):
+                ui.label("LIVE RESPONSE STRIPS").classes("text-xs font-semibold text-sky-200")
+                plot_container = ui.column().classes("w-full")
+                _render_live_plot_cards(ui, plot_container, session.history)
+
+        def sync_latest_result() -> None:
+            result = session.latest_result()
+            if result is not None:
+                APP_STATE.set_simulation_result(result)
+
+        def render(*, force_plot: bool = False) -> None:
+            nonlocal last_plot_time
+            values = session.telemetry()
+            controls = session.controls()
+            scenario_badge.text = session.scenario_source
+            maneuver_badge.content = _maneuver_badge_html(session.maneuver.label)
+            maneuver_badge.update()
+            status_badge.text = session.status
+            status_badge.classes(replace=f"text-sm font-semibold border rounded px-3 py-1 {_status_classes(session.status)}")
+            time_value = values.get("time", 0.0)
+            time_label.text = f"T+{time_value:.2f} s"
+            speed_label.text = f"{session.speed_multiplier:g}x"
+            timeline_label.text = f"{time_value:.2f} / {session.config.duration:.2f} s"
+            timeline_meter.content = _timeline_html(time_value, session.config.duration)
+            timeline_meter.update()
+            flight_condition_label.text = (
+                f"IAS {values.get('airspeed', 0.0):.1f} m/s | ALT {values.get('altitude', 0.0):.0f} m"
+            )
+            play_button.text = "PAUSE" if session.status == RUNNING else "PLAY"
+            status_message.text = session.message
+            trim_label.text = (
+                f"{session.base_config.trim_target_speed:g} m/s at "
+                f"{session.base_config.trim_altitude:g} m"
+            )
+
+            units = {
+                "airspeed": "m/s",
+                "altitude": "m",
+                "pitch_deg": "deg",
+                "roll_deg": "deg",
+                "heading_deg": "deg",
+                "alpha_deg": "deg",
+                "beta_deg": "deg",
+            }
+            labels = {
+                "airspeed": "IAS",
+                "altitude": "ALT",
+                "pitch_deg": "PITCH",
+                "roll_deg": "ROLL",
+                "heading_deg": "HDG",
+                "alpha_deg": "ALPHA",
+                "beta_deg": "BETA",
+            }
+            for key, card in telemetry_cards.items():
+                card.content = _telemetry_card_html(
+                    label=labels[key],
+                    value=values.get(key, 0.0),
+                    unit=units[key],
+                )
+                card.update()
+            for key, label in control_labels.items():
+                label.text = f"{controls.get(key, 0.0):+.1f}"
+            for key, bar in control_bars.items():
+                bar.content = _control_bar_html(
+                    controls.get(key, 0.0),
+                    centered=control_centered[key],
+                )
+                bar.update()
+            if attitude is not None:
+                attitude.content = attitude_html(
+                    pitch_deg=values.get("pitch_deg", 0.0),
+                    roll_deg=values.get("roll_deg", 0.0),
+                )
+                attitude.update()
+
+            if force_plot or time_value - last_plot_time >= 0.25:
+                _render_live_plot_cards(ui, plot_container, session.history)
+                last_plot_time = time_value
+            sync_latest_result()
+
+        def load_scenario() -> None:
+            try:
+                if not scenario_select.value:
+                    raise ValueError("No example scenario is selected.")
+                config = _load_example_config(str(scenario_select.value))
+                session.set_scenario(str(scenario_select.value), config)
+                maneuver_select.options = maneuver_options(config)
+                maneuver_select.value = session.maneuver_key
+                maneuver_select.update()
+                _render_preset_list(ui, preset_container, maneuver_options(config), session.maneuver_key)
+                _render_maneuver_metadata(ui, metadata_container, _maneuver_metadata(session.base_config, session.maneuver_key))
+                render(force_plot=True)
+            except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                session.status = ERROR
+                session.message = f"Failed to load scenario: {exc}"
+                ui.notify(session.message, type="negative")
+                render(force_plot=True)
+
+        def select_maneuver() -> None:
+            session.set_maneuver(str(maneuver_select.value))
+            _render_preset_list(ui, preset_container, maneuver_options(session.base_config), session.maneuver_key)
+            _render_maneuver_metadata(ui, metadata_container, _maneuver_metadata(session.base_config, session.maneuver_key))
+            render(force_plot=True)
+
+        def reset_clicked() -> None:
+            session.reset()
+            render(force_plot=True)
+
+        def step_clicked() -> None:
+            session.step_once()
+            render(force_plot=True)
+
+        def play_clicked() -> None:
+            session.toggle_playback()
+            render(force_plot=True)
+
+        def speed_changed() -> None:
+            session.speed_multiplier = float(speed_select.value)
+            render()
+
+        def tick() -> None:
+            if session.status == RUNNING:
+                session.advance(0.1)
+                render()
+
+        scenario_select.on("update:model-value", lambda _: load_scenario())
+        maneuver_select.on("update:model-value", lambda _: select_maneuver())
+        speed_select.on("update:model-value", lambda _: speed_changed())
+        reset_button.on_click(reset_clicked)
+        step_button.on_click(step_clicked)
+        play_button.on_click(play_clicked)
+        ui.timer(0.1, tick)
+        render(force_plot=True)
+
+
+def _register_analyze_page(ui) -> None:
+    @ui.page("/analyze")
+    def analyze_page() -> None:
+        _render_page_shell(ui)
+        with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
+            _page_intro(ui, "Analyze", "Review the latest run and open the advanced analysis tools.")
+
+            with ui.grid(columns=3).classes("w-full gap-3"):
+                with ui.card().classes("gap-2 p-4 shadow-sm"):
+                    ui.label("Simulation Review").classes("text-lg font-semibold")
+                    ui.label("Batch run, plots, and exports.").classes("text-slate-600")
+                    ui.link("Open Simulation", "/simulation").classes("text-blue-700 no-underline")
+                with ui.card().classes("gap-2 p-4 shadow-sm"):
+                    ui.label("Stability").classes("text-lg font-semibold")
+                    ui.label("Trim, linearization, modes, derivatives.").classes("text-slate-600")
+                    ui.link("Open Stability", "/stability").classes("text-blue-700 no-underline")
+                with ui.card().classes("gap-2 p-4 shadow-sm"):
+                    ui.label("Advanced CG Sweep").classes("text-lg font-semibold")
+                    ui.label("Runtime CG stability sweep.").classes("text-slate-600")
+                    ui.link("Open CG Sweep", "/cg-sweep").classes("text-blue-700 no-underline")
+
+            result = APP_STATE.simulation_result
+            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
+                _section_header(ui, "Latest Flight Deck Run")
+                if result is None:
+                    _empty_state(ui, "Press Play on the Flight Deck to capture a run.")
+                    return
+                summary = simulation_result_summary(result)
+                ui.label(
+                    f"{summary['name']} | samples={summary['samples']} | "
+                    f"t={summary['start_time']:.2f}-{summary['end_time']:.2f}s | "
+                    f"success={summary['success']}"
+                ).classes("text-slate-600")
+                ui.plotly(simulation_time_history_figure(result)).classes("w-full")
+
+
+def _register_scenario_page(ui) -> None:
+    @ui.page("/scenario-library")
     def scenario_page() -> None:
         _render_page_shell(ui)
         scenario_options = _scenario_options()
@@ -916,6 +1696,8 @@ def create_app() -> None:
     if _pages_registered:
         return
     ui = _require_nicegui()
+    _register_flight_deck_page(ui)
+    _register_analyze_page(ui)
     _register_scenario_page(ui)
     _register_simulation_page(ui)
     _register_stability_page(ui)

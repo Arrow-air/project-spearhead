@@ -26,6 +26,10 @@ def _series(rows: list[dict[str, float]], field: str) -> list[float]:
     return [float(row[field]) for row in rows]
 
 
+def _optional_series(rows: list[dict[str, float]], field: str, default: float = 0.0) -> list[float]:
+    return [float(row.get(field, default)) for row in rows]
+
+
 def simulation_time_history_figure(result: SimulationResult):
     """Return a Plotly figure for key simulation time histories."""
     go, make_subplots = _require_plotly()
@@ -69,6 +73,144 @@ def simulation_time_history_figure(result: SimulationResult):
     fig.update_yaxes(title_text="deg/s", row=2, col=1)
     fig.update_yaxes(title_text="deg", row=3, col=1)
     fig.update_yaxes(title_text="m", row=4, col=1)
+    return fig
+
+
+def _flight_deck_base_figure(title: str):
+    go, _ = _require_plotly()
+    fig = go.Figure()
+    fig.update_layout(
+        title={"text": title, "font": {"size": 13}},
+        height=255,
+        margin={"l": 42, "r": 14, "t": 38, "b": 34},
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#111827",
+        font={"color": "#dbeafe", "size": 11},
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0},
+        hovermode="x unified",
+    )
+    fig.update_xaxes(title_text="Time [s]", gridcolor="#243247", zerolinecolor="#334155")
+    fig.update_yaxes(gridcolor="#243247", zerolinecolor="#334155")
+    return go, fig
+
+
+def flight_deck_attitude_figure(history: list[dict[str, float]]):
+    """Return the rolling attitude plot for the Flight Deck."""
+    go, fig = _flight_deck_base_figure("Attitude")
+    time = _series(history, "time") if history else [0.0]
+    for field in ("phi", "theta", "psi"):
+        values = np.rad2deg(_series(history, field)).tolist() if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=f"{field} deg"))
+    fig.update_yaxes(title_text="deg")
+    return fig
+
+
+def flight_deck_rates_figure(history: list[dict[str, float]]):
+    """Return the rolling body-rates plot for the Flight Deck."""
+    go, fig = _flight_deck_base_figure("Rates")
+    time = _series(history, "time") if history else [0.0]
+    for field in ("p", "q", "r"):
+        values = np.rad2deg(_series(history, field)).tolist() if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=f"{field} deg/s"))
+    fig.update_yaxes(title_text="deg/s")
+    return fig
+
+
+def flight_deck_controls_figure(history: list[dict[str, float]]):
+    """Return the rolling control-input plot for the Flight Deck."""
+    go, fig = _flight_deck_base_figure("Control Inputs")
+    time = _series(history, "time") if history else [0.0]
+    fields = (
+        ("elevator_deg", "elevator deg"),
+        ("aileron_deg", "aileron deg"),
+        ("rudder_deg", "rudder deg"),
+        ("throttle_pct", "throttle %"),
+    )
+    for field, name in fields:
+        values = _optional_series(history, field) if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=name))
+    fig.update_yaxes(title_text="deg / %")
+    return fig
+
+
+def flight_deck_energy_figure(history: list[dict[str, float]]):
+    """Return the rolling airspeed/altitude plot for the Flight Deck."""
+    go, fig = _flight_deck_base_figure("Airspeed / Altitude")
+    time = _series(history, "time") if history else [0.0]
+    if history:
+        airspeed = [
+            float(np.sqrt(row["u"] * row["u"] + row["v"] * row["v"] + row["w"] * row["w"]))
+            for row in history
+        ]
+        altitude = [-float(row["pd"]) for row in history]
+    else:
+        airspeed = [0.0]
+        altitude = [0.0]
+    fig.add_trace(go.Scatter(x=time, y=airspeed, mode="lines", name="airspeed m/s"))
+    fig.add_trace(go.Scatter(x=time, y=altitude, mode="lines", name="altitude m"))
+    fig.update_yaxes(title_text="m/s / m")
+    return fig
+
+
+def flight_deck_live_figures(history: list[dict[str, float]]) -> dict[str, object]:
+    """Return Flight Deck live plot cards keyed by card name."""
+    return {
+        "attitude": flight_deck_attitude_figure(history),
+        "rates": flight_deck_rates_figure(history),
+        "controls": flight_deck_controls_figure(history),
+        "airspeed_altitude": flight_deck_energy_figure(history),
+    }
+
+
+def flight_deck_live_figure(history: list[dict[str, float]]):
+    """Return a legacy combined Flight Deck plot."""
+    go, make_subplots = _require_plotly()
+    time = _series(history, "time") if history else [0.0]
+
+    fig = make_subplots(
+        rows=4,
+        cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.07,
+        subplot_titles=("Attitude", "Rates", "Control Inputs", "Airspeed / Altitude"),
+    )
+
+    for field in ("phi", "theta", "psi"):
+        values = np.rad2deg(_series(history, field)).tolist() if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=f"{field} deg"), row=1, col=1)
+    for field in ("p", "q", "r"):
+        values = np.rad2deg(_series(history, field)).tolist() if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=f"{field} deg/s"), row=2, col=1)
+    for field, name in (
+        ("elevator_deg", "elevator deg"),
+        ("aileron_deg", "aileron deg"),
+        ("rudder_deg", "rudder deg"),
+        ("throttle_pct", "throttle %"),
+    ):
+        values = _optional_series(history, field) if history else [0.0]
+        fig.add_trace(go.Scatter(x=time, y=values, mode="lines", name=name), row=3, col=1)
+    if history:
+        airspeed = [
+            float(np.sqrt(row["u"] * row["u"] + row["v"] * row["v"] + row["w"] * row["w"]))
+            for row in history
+        ]
+        altitude = [-float(row["pd"]) for row in history]
+    else:
+        airspeed = [0.0]
+        altitude = [0.0]
+    fig.add_trace(go.Scatter(x=time, y=airspeed, mode="lines", name="airspeed m/s"), row=4, col=1)
+    fig.add_trace(go.Scatter(x=time, y=altitude, mode="lines", name="altitude m"), row=4, col=1)
+
+    fig.update_layout(
+        height=620,
+        margin={"l": 42, "r": 14, "t": 44, "b": 34},
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#111827",
+        font={"color": "#dbeafe", "size": 11},
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0},
+    )
+    fig.update_xaxes(title_text="Time [s]", gridcolor="#243247", zerolinecolor="#334155", row=4, col=1)
+    fig.update_yaxes(gridcolor="#243247", zerolinecolor="#334155")
     return fig
 
 
