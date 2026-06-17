@@ -5,6 +5,7 @@ import pytest
 
 from spearhead.config import SimulationConfig
 from spearhead.gui.adapters.simulation import run_simulation_for_gui
+from spearhead.gui.adapters.stability import build_linearization_config, run_stability_for_gui
 
 
 def test_gui_app_helpers_do_not_require_nicegui():
@@ -70,6 +71,26 @@ def test_simulation_form_helper_uses_adapter_constructor(monkeypatch):
     assert config.input_commands == base_config.input_commands
 
 
+def test_stability_summary_helper_formats_backend_result():
+    from spearhead.gui.app import stability_result_summary_rows
+
+    result = run_stability_for_gui(
+        SimulationConfig(name="stability_summary_test", duration=0.01, n_points=2),
+        linearization_config=build_linearization_config(
+            state_perturbation=1e-5,
+            control_perturbation=1e-5,
+        ),
+    )
+    rows = stability_result_summary_rows(result)
+    values = {row["field"]: row["value"] for row in rows}
+
+    assert values["success"] == "True"
+    assert values["A_shape"] == "(12, 12)"
+    assert values["B_shape"] == "(12, 4)"
+    assert values["A_longitudinal_shape"] == "(4, 4)"
+    assert "theta" in values["longitudinal_state_labels"]
+
+
 def test_simulation_plot_helper_returns_serializable_plotly_figure():
     pytest.importorskip("plotly")
 
@@ -82,3 +103,17 @@ def test_simulation_plot_helper_returns_serializable_plotly_figure():
     assert "data" in payload
     assert len(payload["data"]) == 10
     assert payload["data"][0]["name"] == "u"
+
+
+def test_stability_plot_helper_returns_serializable_plotly_figure():
+    pytest.importorskip("plotly")
+
+    from spearhead.gui.plotting import figure_to_json_dict, stability_eigenvalue_figure
+
+    result = run_stability_for_gui(SimulationConfig(name="pole_plot_test", duration=0.01, n_points=2))
+    figure = stability_eigenvalue_figure(result)
+    payload = figure_to_json_dict(figure)
+
+    assert "data" in payload
+    assert len(payload["data"]) == 2
+    assert {trace["name"] for trace in payload["data"]} == {"longitudinal", "lateral_directional"}

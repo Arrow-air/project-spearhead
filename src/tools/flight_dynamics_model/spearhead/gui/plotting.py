@@ -6,6 +6,7 @@ import numpy as np
 
 from .adapters.simulation import simulation_time_history_rows
 from ..result import SimulationResult
+from ..stability.types import StabilityResult
 
 
 def _require_plotly():
@@ -67,6 +68,35 @@ def simulation_time_history_figure(result: SimulationResult):
     fig.update_yaxes(title_text="deg/s", row=2, col=1)
     fig.update_yaxes(title_text="deg", row=3, col=1)
     fig.update_yaxes(title_text="m", row=4, col=1)
+    return fig
+
+
+def stability_eigenvalue_figure(result: StabilityResult):
+    """Return a Plotly pole plot for longitudinal and lateral-directional modes."""
+    go, _ = _require_plotly()
+    fig = go.Figure()
+    for analysis in (result.longitudinal, result.lateral_directional):
+        eigenvalues = [mode.eigenvalue for mode in analysis.modes]
+        fig.add_trace(
+            go.Scatter(
+                x=[float(eigenvalue.real) for eigenvalue in eigenvalues],
+                y=[float(eigenvalue.imag) for eigenvalue in eigenvalues],
+                mode="markers+text",
+                name=analysis.subsystem,
+                text=[mode.mode for mode in analysis.modes],
+                textposition="top center",
+            )
+        )
+
+    fig.add_hline(y=0.0, line_width=1, line_dash="dash", line_color="#94a3b8")
+    fig.add_vline(x=0.0, line_width=1, line_dash="dash", line_color="#ef4444")
+    fig.update_layout(
+        height=520,
+        margin={"l": 50, "r": 20, "t": 40, "b": 45},
+        xaxis_title="Real [1/s]",
+        yaxis_title="Imaginary [rad/s]",
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0},
+    )
     return fig
 
 

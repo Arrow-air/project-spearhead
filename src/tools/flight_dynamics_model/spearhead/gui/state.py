@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from ..config import SimulationConfig
 from ..result import SimulationResult
+from ..stability.types import StabilityResult
 
 
 @dataclass
@@ -16,6 +17,8 @@ class GuiState:
     config: SimulationConfig | None = None
     simulation_result: SimulationResult | None = None
     simulation_error: str | None = None
+    stability_result: StabilityResult | None = None
+    stability_error: str | None = None
 
     def set_scenario(self, source: str, config: SimulationConfig) -> None:
         """Store the active scenario and clear dependent results."""
@@ -23,6 +26,8 @@ class GuiState:
         self.config = config
         self.simulation_result = None
         self.simulation_error = None
+        self.stability_result = None
+        self.stability_error = None
 
     def set_simulation_result(self, result: SimulationResult) -> None:
         """Store the latest simulation result."""
@@ -34,6 +39,15 @@ class GuiState:
         self.simulation_result = None
         self.simulation_error = message
 
+    def set_stability_result(self, result: StabilityResult) -> None:
+        """Store the latest stability result."""
+        self.stability_result = result
+        self.stability_error = None
+
+    def set_stability_error(self, message: str) -> None:
+        """Store the latest stability error."""
+        self.stability_result = None
+        self.stability_error = message
+
 
 APP_STATE = GuiState()
-

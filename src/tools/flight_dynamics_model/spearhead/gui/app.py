@@ -8,14 +8,26 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from .adapters.exports import export_simulation_csv_text, export_simulation_json_text
+from .adapters.exports import (
+    export_simulation_csv_text,
+    export_simulation_json_text,
+    export_stability_json_text,
+    export_stability_markdown_text,
+    export_stability_modes_csv_text,
+)
 from .adapters.scenarios import load_scenario_config, scenario_summary
 from .adapters.simulation import (
     build_simulation_config,
     run_simulation_for_gui,
     simulation_result_summary,
 )
-from .plotting import simulation_time_history_figure
+from .adapters.stability import (
+    build_linearization_config,
+    run_stability_for_gui,
+    stability_mode_table_rows,
+    static_derivative_table_rows,
+)
+from .plotting import simulation_time_history_figure, stability_eigenvalue_figure
 from .state import APP_STATE
 from ..config import ControlInputCommand, SimulationConfig
 
@@ -163,6 +175,29 @@ def _simulation_summary_rows(summary: dict[str, Any]) -> list[dict[str, str]]:
     return rows
 
 
+def stability_result_summary_rows(result) -> list[dict[str, str]]:
+    """Return stability result summary rows for GUI tables."""
+    trim = result.trim_result
+    linearization = result.linearization
+    return [
+        {"field": "success", "value": "True"},
+        {"field": "trim_success", "value": str(bool(trim["success"]))},
+        {"field": "trim_message", "value": str(trim["message"])},
+        {"field": "trim_alpha_deg", "value": f"{float(trim['alpha_deg']):.6g}"},
+        {"field": "trim_theta_deg", "value": f"{float(trim['theta_deg']):.6g}"},
+        {"field": "trim_elevator_deg", "value": f"{float(trim['de_deg']):.6g}"},
+        {"field": "trim_throttle", "value": f"{float(trim['throttle']):.6g}"},
+        {"field": "A_shape", "value": str(tuple(linearization.A.shape))},
+        {"field": "B_shape", "value": str(tuple(linearization.B.shape))},
+        {"field": "A_longitudinal_shape", "value": str(tuple(linearization.A_longitudinal.shape))},
+        {"field": "B_longitudinal_shape", "value": str(tuple(linearization.B_longitudinal.shape))},
+        {"field": "A_lateral_directional_shape", "value": str(tuple(linearization.A_lateral_directional.shape))},
+        {"field": "B_lateral_directional_shape", "value": str(tuple(linearization.B_lateral_directional.shape))},
+        {"field": "longitudinal_state_labels", "value": ", ".join(linearization.longitudinal_state_labels)},
+        {"field": "lateral_state_labels", "value": ", ".join(linearization.lateral_state_labels)},
+    ]
+
+
 def _render_page_shell(ui) -> None:
     ui.colors(primary="#2563eb", secondary="#475569", accent="#0f766e")
     with ui.header().classes("items-center justify-between"):
@@ -170,6 +205,7 @@ def _render_page_shell(ui) -> None:
         with ui.row().classes("items-center gap-2"):
             ui.link("Scenario", "/").classes("text-white no-underline")
             ui.link("Simulation", "/simulation").classes("text-white no-underline")
+            ui.link("Stability", "/stability").classes("text-white no-underline")
     ui.separator()
 
 
@@ -394,6 +430,169 @@ def _register_simulation_page(ui) -> None:
             ui.button("Run Simulation", on_click=run_clicked).classes("w-fit")
 
 
+def _register_stability_page(ui) -> None:
+    @ui.page("/stability")
+    def stability_page() -> None:
+        _render_page_shell(ui)
+        scenario_options = _scenario_options()
+        selected_name = APP_STATE.scenario_source
+        if selected_name not in scenario_options:
+            selected_name = next(iter(scenario_options), None)
+
+        with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
+            ui.label("Stability").classes("text-2xl font-semibold")
+            status = ui.label("Load a scenario, set finite-difference options, then analyze stability.").classes(
+                "text-slate-600"
+            )
+
+            try:
+                active_config = _active_or_example_config(selected_name)
+            except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                status.text = str(exc)
+                active_config = None
+
+            with ui.row().classes("items-end gap-3"):
+                selected = ui.select(
+                    options=list(scenario_options),
+                    value=selected_name,
+                    label="Example scenario",
+                ).classes("min-w-80")
+
+                def load_selected_for_analysis() -> None:
+                    try:
+                        if not selected.value:
+                            raise ValueError("No example scenario is selected.")
+                        config = _load_example_config(selected.value)
+                        scenario_label.text = f"Active scenario: {config.name}"
+                        status.text = f"Loaded {selected.value}"
+                    except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                        status.text = f"Failed to load scenario: {exc}"
+                        ui.notify(status.text, type="negative")
+
+                ui.button("Load", on_click=load_selected_for_analysis)
+
+            if active_config is None:
+                return
+
+            scenario_label = ui.label(f"Active scenario: {active_config.name}").classes("text-slate-700")
+
+            with ui.grid(columns=2).classes("w-full gap-3"):
+                state_perturbation_input = ui.number(
+                    "State perturbation",
+                    value=1e-5,
+                    min=1e-12,
+                )
+                control_perturbation_input = ui.number(
+                    "Control perturbation",
+                    value=1e-5,
+                    min=1e-12,
+                )
+
+            summary_columns = [
+                {"name": "field", "label": "Field", "field": "field", "align": "left"},
+                {"name": "value", "label": "Value", "field": "value", "align": "left"},
+            ]
+            summary_table = ui.table(columns=summary_columns, rows=[], row_key="field").classes("w-full")
+
+            mode_columns = [
+                {"name": "subsystem", "label": "Subsystem", "field": "subsystem", "align": "left"},
+                {"name": "mode", "label": "Mode", "field": "mode", "align": "left"},
+                {"name": "eigenvalue_real", "label": "Real", "field": "eigenvalue_real", "align": "right"},
+                {"name": "eigenvalue_imag", "label": "Imaginary", "field": "eigenvalue_imag", "align": "right"},
+                {
+                    "name": "natural_frequency_rad_s",
+                    "label": "wn [rad/s]",
+                    "field": "natural_frequency_rad_s",
+                    "align": "right",
+                },
+                {"name": "damping_ratio", "label": "Damping", "field": "damping_ratio", "align": "right"},
+                {"name": "oscillation_period_s", "label": "Period [s]", "field": "oscillation_period_s", "align": "right"},
+                {"name": "time_to_half_s", "label": "Half [s]", "field": "time_to_half_s", "align": "right"},
+                {"name": "time_to_double_s", "label": "Double [s]", "field": "time_to_double_s", "align": "right"},
+                {"name": "classification", "label": "Class", "field": "classification", "align": "left"},
+            ]
+            modes_table = ui.table(columns=mode_columns, rows=[], row_key="eigenvalue_label").classes("w-full")
+
+            derivative_columns = [
+                {"name": "name", "label": "Derivative", "field": "name", "align": "left"},
+                {"name": "value", "label": "Value", "field": "value", "align": "right"},
+                {"name": "alpha_deg", "label": "Alpha [deg]", "field": "alpha_deg", "align": "right"},
+                {"name": "beta_deg", "label": "Beta [deg]", "field": "beta_deg", "align": "right"},
+                {"name": "source", "label": "Source", "field": "source", "align": "left"},
+            ]
+            derivatives_table = ui.table(columns=derivative_columns, rows=[], row_key="name").classes("w-full")
+            plot_container = ui.column().classes("w-full")
+            export_row = ui.row().classes("gap-3")
+            export_row.visible = False
+
+            def render_exports() -> None:
+                export_row.clear()
+                result = APP_STATE.stability_result
+                if result is None:
+                    export_row.visible = False
+                    return
+                export_row.visible = True
+                with export_row:
+                    ui.button(
+                        "Download JSON",
+                        on_click=lambda: ui.download(
+                            export_stability_json_text(result),
+                            filename=f"{result.config.name}_stability.json",
+                        ),
+                    )
+                    ui.button(
+                        "Download Modes CSV",
+                        on_click=lambda: ui.download(
+                            export_stability_modes_csv_text(result),
+                            filename=f"{result.config.name}_stability_modes.csv",
+                        ),
+                    )
+                    ui.button(
+                        "Download Markdown",
+                        on_click=lambda: ui.download(
+                            export_stability_markdown_text(result),
+                            filename=f"{result.config.name}_stability.md",
+                        ),
+                    )
+
+            def run_clicked() -> None:
+                try:
+                    config = _active_or_example_config(selected.value if selected.value else None)
+                    linearization_config = build_linearization_config(
+                        state_perturbation=float(state_perturbation_input.value),
+                        control_perturbation=float(control_perturbation_input.value),
+                    )
+                    status.text = "Running stability analysis..."
+                    result = run_stability_for_gui(config, linearization_config=linearization_config)
+                    APP_STATE.set_stability_result(result)
+                    summary_table.rows = stability_result_summary_rows(result)
+                    summary_table.update()
+                    modes_table.rows = stability_mode_table_rows(result)
+                    modes_table.update()
+                    derivatives_table.rows = static_derivative_table_rows(result)
+                    derivatives_table.update()
+                    plot_container.clear()
+                    with plot_container:
+                        ui.plotly(stability_eigenvalue_figure(result)).classes("w-full")
+                    render_exports()
+                    status.text = "Stability analysis complete: success=True"
+                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                    message = f"Stability analysis failed: {exc}"
+                    APP_STATE.set_stability_error(message)
+                    summary_table.rows = [{"field": "success", "value": "False"}, {"field": "error", "value": str(exc)}]
+                    summary_table.update()
+                    modes_table.rows = []
+                    modes_table.update()
+                    derivatives_table.rows = []
+                    derivatives_table.update()
+                    plot_container.clear()
+                    render_exports()
+                    status.text = message
+                    ui.notify(message, type="negative")
+
+            ui.button("Run Stability Analysis", on_click=run_clicked).classes("w-fit")
+
+
 def create_app() -> None:
     """Register GUI pages with NiceGUI."""
     global _pages_registered
@@ -402,6 +601,7 @@ def create_app() -> None:
     ui = _require_nicegui()
     _register_scenario_page(ui)
     _register_simulation_page(ui)
+    _register_stability_page(ui)
     _pages_registered = True
 
 

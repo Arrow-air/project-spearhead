@@ -20,6 +20,7 @@ from .simulation import (
     simulation_time_history_rows,
 )
 from .stability import (
+    build_linearization_config,
     cg_sweep_summary_rows,
     run_cg_sweep_for_gui,
     run_stability_for_gui,
@@ -41,6 +42,7 @@ __all__ = [
     "export_stability_modes_csv_text",
     "load_scenario_config",
     "build_simulation_config",
+    "build_linearization_config",
     "run_cg_sweep_for_gui",
     "run_simulation_for_gui",
     "run_stability_for_gui",

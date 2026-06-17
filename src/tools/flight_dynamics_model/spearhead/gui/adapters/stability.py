@@ -11,6 +11,18 @@ from ...stability import analyze_stability, run_cg_sweep
 from ...stability.types import CGSweepResult, LinearizationConfig, StabilityResult
 
 
+def build_linearization_config(
+    *,
+    state_perturbation: float = 1e-5,
+    control_perturbation: float = 1e-5,
+) -> LinearizationConfig:
+    """Build backend finite-difference settings from GUI form values."""
+    return LinearizationConfig(
+        state_perturbation=state_perturbation,
+        control_perturbation=control_perturbation,
+    )
+
+
 def run_stability_for_gui(
     config: SimulationConfig,
     linearization_config: LinearizationConfig | None = None,
