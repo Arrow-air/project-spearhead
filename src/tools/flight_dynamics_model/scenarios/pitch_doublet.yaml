@@ -1,0 +1,18 @@
+name: pitch_doublet_nominal
+
+aircraft_case: nominal
+
+trim:
+  airspeed: 25
+  altitude: 100
+
+simulation:
+  duration: 20
+  dt: 0.01
+
+inputs:
+  elevator:
+    type: doublet
+    amplitude_deg: 5
+    start_time: 2
+    duration: 2

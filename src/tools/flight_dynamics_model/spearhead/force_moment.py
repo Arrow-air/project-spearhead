@@ -3,7 +3,7 @@
 import numpy as np
 
 from .aero import aero_model
-from .controls import Control, as_control, control_schedule
+from .controls import ControlInput, control_at
 from .params import AircraftParams
 from .propulsion import propulsion_model_placeholder
 from .rotations import euler_body_to_ned
@@ -52,7 +52,7 @@ def compute_force_moment_breakdown(
     t: float,
     x: np.ndarray,
     params: AircraftParams,
-    control_override: Control | dict[str, float] | None = None,
+    control_override: ControlInput | None = None,
 ) -> dict[str, dict[str, np.ndarray]]:
     """Return body-frame force and moment contributions about the CG.
 
@@ -63,7 +63,7 @@ def compute_force_moment_breakdown(
     phi, theta, psi = x[6:9]
     omega_b = x[9:12]
 
-    control = control_schedule(t) if control_override is None else as_control(control_override)
+    control = control_at(t, control_override)
     F_aero_b, M_aero_b, _ = aero_model(v_b, omega_b, control, params)
     F_prop_b, M_prop_b = propulsion_model_placeholder(control, params)
 
@@ -87,7 +87,7 @@ def compute_force_moment_history(
     t: np.ndarray,
     y: np.ndarray,
     params: AircraftParams,
-    control_override: Control | dict[str, float] | None = None,
+    control_override: ControlInput | None = None,
 ) -> dict[str, np.ndarray | dict[str, np.ndarray]]:
     """Compute force and moment histories for each saved simulation point."""
     t = np.asarray(t)

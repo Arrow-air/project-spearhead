@@ -66,6 +66,39 @@ python src/tools/flight_dynamics_model/scripts/run_open_loop.py
 python src/tools/flight_dynamics_model/scripts/run_trim.py
 ```
 
+The shared simulation backend is also available as a typed API:
+
+```python
+from spearhead import SimulationConfig, run_simulation
+
+config = SimulationConfig(duration=20.0, dt=0.01, n_points=None)
+result = run_simulation(config)
+```
+
+Future GUIs, notebooks, batch scripts, and report generators should call this
+same backend API. They should not implement their own flight dynamics model.
+
+Scenario YAML files can be run through the thin CLI wrapper:
+
+```bash
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.sim run src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml
+
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.sim run src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
+  --csv output.csv --json output.json
+```
+
+For future real-time frontends, use `RealtimeSimulation`:
+
+```python
+from spearhead import RealtimeSimulation, SimulationConfig
+
+sim = RealtimeSimulation(SimulationConfig(duration=20.0, dt=0.01, n_points=None))
+while sim.running:
+    state = sim.step()
+```
+
 ## Test
 
 ```bash
@@ -73,3 +106,45 @@ PYTHONPATH=src/tools/flight_dynamics_model pytest src/tools/flight_dynamics_mode
 ```
 
 The current trim/control derivatives are preliminary. ADB v1.1 does not include control-surface deflection dimensions, so control increments remain provisional and separate from the ADB interpolation.
+
+## Stability Analysis Reproducibility
+
+The restored stability pipeline lives under `spearhead.stability` and consumes
+the same backend as simulations:
+
+```python
+from spearhead.scenarios import load_scenario
+from spearhead.stability import analyze_stability
+
+config = load_scenario("src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml")
+result = analyze_stability(config)
+```
+
+CLI examples:
+
+```bash
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.stability analyze \
+  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
+  --json stability.json --csv stability_modes.csv --markdown stability.md
+
+PYTHONPATH=src/tools/flight_dynamics_model \
+python -m spearhead.stability cg-sweep \
+  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
+  --cg-x -0.15 -0.10 -0.05 \
+  --json cg_sweep.json --csv cg_sweep_modes.csv
+```
+
+The analysis trims through `run_simulation(config)`, then linearizes the existing
+`dynamics()` function with central finite differences. Static derivatives are
+estimated from the existing force/moment breakdown path. No separate aircraft
+model is used.
+
+Current limitations:
+
+- The tracked aerodynamic database is the nominal ADB only.
+- CG sweep changes `AircraftParams.cg_body_xyz` at runtime and relies on the
+  existing moment-shift path; it does not recreate the missing Nondimit per-CG
+  CSV cases from the historical information note.
+- The inertia matrix, propulsion model, rate damping, and control increments
+  remain preliminary.

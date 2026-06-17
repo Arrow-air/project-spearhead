@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from collections.abc import Mapping
+from typing import Callable
 
 import numpy as np
 
@@ -14,6 +15,9 @@ class Control:
     throttle: float
 
 
+ControlInput = Control | Mapping[str, float] | Callable[[float], Control | Mapping[str, float]]
+
+
 def as_control(control: Control | Mapping[str, float]) -> Control:
     """Return a Control object from a Control instance or control-like dict."""
     if isinstance(control, Control):
@@ -24,6 +28,15 @@ def as_control(control: Control | Mapping[str, float]) -> Control:
         dr=float(control["dr"]),
         throttle=float(control["throttle"]),
     )
+
+
+def control_at(t: float, control_override: ControlInput | None = None) -> Control:
+    """Resolve the active control input at time ``t``."""
+    if control_override is None:
+        return control_schedule(t)
+    if callable(control_override):
+        return as_control(control_override(t))
+    return as_control(control_override)
 
 
 def control_schedule(t: float) -> Control:
