@@ -8,6 +8,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from .adapters.exports import (
     export_simulation_csv_text,
     export_simulation_json_text,
@@ -23,11 +25,13 @@ from .adapters.simulation import (
 )
 from .adapters.stability import (
     build_linearization_config,
+    cg_sweep_summary_rows,
+    run_cg_sweep_for_gui,
     run_stability_for_gui,
     stability_mode_table_rows,
     static_derivative_table_rows,
 )
-from .plotting import simulation_time_history_figure, stability_eigenvalue_figure
+from .plotting import cg_sweep_trend_figure, simulation_time_history_figure, stability_eigenvalue_figure
 from .state import APP_STATE
 from ..config import ControlInputCommand, SimulationConfig
 
@@ -214,6 +218,25 @@ def stability_result_summary_rows(result) -> list[dict[str, str]]:
     ]
 
 
+def parse_cg_x_values(text: str) -> list[float]:
+    """Parse comma-separated CG x values from a GUI text input."""
+    values: list[float] = []
+    for item in text.split(","):
+        stripped = item.strip()
+        if not stripped:
+            continue
+        values.append(float(stripped))
+    if not values:
+        raise ValueError("Enter at least one CG x value.")
+    return values
+
+
+def cg_positions_from_x_values(config: SimulationConfig, x_values: list[float]) -> list[np.ndarray]:
+    """Build body-frame CG vectors by varying x and preserving the scenario y/z CG."""
+    base_cg = np.asarray(config.params.cg_body_xyz, dtype=float)
+    return [np.array([x_value, base_cg[1], base_cg[2]], dtype=float) for x_value in x_values]
+
+
 def _render_page_shell(ui) -> None:
     ui.colors(primary="#2563eb", secondary="#475569", accent="#0f766e")
     with ui.header().classes("items-center justify-between"):
@@ -222,6 +245,7 @@ def _render_page_shell(ui) -> None:
             ui.link("Scenario", "/").classes("text-white no-underline")
             ui.link("Simulation", "/simulation").classes("text-white no-underline")
             ui.link("Stability", "/stability").classes("text-white no-underline")
+            ui.link("CG Sweep", "/cg-sweep").classes("text-white no-underline")
     ui.separator()
 
 
@@ -718,6 +742,174 @@ def _register_stability_page(ui) -> None:
                     ui.notify(message, type="negative")
 
 
+def _register_cg_sweep_page(ui) -> None:
+    @ui.page("/cg-sweep")
+    def cg_sweep_page() -> None:
+        _render_page_shell(ui)
+        scenario_options = _scenario_options()
+        selected_name = APP_STATE.scenario_source
+        if selected_name not in scenario_options:
+            selected_name = next(iter(scenario_options), None)
+
+        active_config = APP_STATE.config
+        if active_config is None and selected_name is not None:
+            active_config = load_scenario_config(scenario_options[selected_name])
+
+        with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
+            _page_intro(ui, "CG Sweep", "Run runtime center-of-gravity stability sweeps through the shared backend.")
+
+            if active_config is None:
+                _empty_state(ui, "Load a scenario first.")
+                return
+
+            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
+                _section_header(ui, "Run CG Sweep", "Enter CG x positions and run the existing stability sweep.")
+                ui.label(
+                    "This sweep varies runtime `cg_body_xyz` with the nominal ADB. "
+                    "It does not use separate per-CG aerodynamic databases."
+                ).classes("text-slate-600")
+                status = ui.label(
+                    f"Loaded scenario: {APP_STATE.scenario_source or active_config.name}"
+                    if APP_STATE.config is not None
+                    else "Load a scenario first, or use the bundled example below."
+                ).classes("text-slate-600")
+                with ui.row().classes("items-end gap-3"):
+                    selected = ui.select(
+                        options=list(scenario_options),
+                        value=selected_name,
+                        label="Example scenario",
+                    ).classes("min-w-80")
+                    ui.button("Load Scenario", on_click=lambda: load_selected_for_sweep())
+                    ui.button("Run CG Sweep", on_click=lambda: run_clicked()).props("color=primary")
+
+                cg_x_input = ui.input(
+                    "CG x values [m]",
+                    value="-0.15, -0.10, -0.05, 0.0",
+                    placeholder="-0.15, -0.10, -0.05, 0.0",
+                ).classes("w-full")
+
+                with ui.expansion("Advanced settings").classes("w-full"):
+                    with ui.grid(columns=2).classes("w-full gap-3"):
+                        state_perturbation_input = ui.number(
+                            "State perturbation",
+                            value=1e-5,
+                            min=1e-12,
+                        )
+                        control_perturbation_input = ui.number(
+                            "Control perturbation",
+                            value=1e-5,
+                            min=1e-12,
+                        )
+
+            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
+                _section_header(ui, "Sweep Results", "Per-point success, mode counts, and most unstable pole.")
+                results_empty = _empty_state(ui, "Run CG sweep to see results.")
+                result_columns = [
+                    {"name": "case", "label": "Case", "field": "case", "align": "left"},
+                    {"name": "cg_x", "label": "CG x [m]", "field": "cg_x", "align": "right"},
+                    {"name": "success", "label": "Success", "field": "success", "align": "left"},
+                    {"name": "total_modes", "label": "Modes", "field": "total_modes", "align": "right"},
+                    {
+                        "name": "most_unstable_real",
+                        "label": "Max Real",
+                        "field": "most_unstable_real",
+                        "align": "right",
+                    },
+                    {"name": "error", "label": "Error", "field": "error", "align": "left"},
+                ]
+                results_table = ui.table(columns=result_columns, rows=[], row_key="case").classes("w-full")
+                results_table.visible = False
+
+            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
+                _section_header(ui, "Trend and Exports", "Inspect CG sensitivity and download sweep outputs.")
+                trend_empty = _empty_state(ui, "Run CG sweep to see trend.")
+                trend_container = ui.column().classes("w-full")
+                export_row = ui.row().classes("gap-3")
+                export_row.visible = False
+
+            def load_selected_for_sweep() -> None:
+                try:
+                    if not selected.value:
+                        raise ValueError("No example scenario is selected.")
+                    _load_example_config(selected.value)
+                    results_table.rows = []
+                    results_table.visible = False
+                    results_table.update()
+                    results_empty.visible = True
+                    trend_container.clear()
+                    trend_empty.visible = True
+                    render_exports()
+                    status.text = f"Loaded scenario: {selected.value}"
+                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                    status.text = f"Failed to load scenario: {exc}"
+                    ui.notify(status.text, type="negative")
+
+            def render_exports() -> None:
+                export_row.clear()
+                result = APP_STATE.cg_sweep_result
+                if result is None:
+                    export_row.visible = False
+                    return
+                export_row.visible = True
+                with export_row:
+                    ui.button(
+                        "Export JSON",
+                        on_click=lambda: ui.download(
+                            export_stability_json_text(result),
+                            filename=f"{result.base_config.name}_cg_sweep.json",
+                        ),
+                    )
+                    ui.button(
+                        "Export CSV",
+                        on_click=lambda: ui.download(
+                            export_stability_modes_csv_text(result),
+                            filename=f"{result.base_config.name}_cg_sweep_modes.csv",
+                        ),
+                    )
+
+            def run_clicked() -> None:
+                try:
+                    config = _active_or_example_config(selected.value if selected.value else None)
+                    x_values = parse_cg_x_values(str(cg_x_input.value))
+                    cg_positions = cg_positions_from_x_values(config, x_values)
+                    linearization_config = build_linearization_config(
+                        state_perturbation=float(state_perturbation_input.value),
+                        control_perturbation=float(control_perturbation_input.value),
+                    )
+                    status.text = "Running CG sweep..."
+                    result = run_cg_sweep_for_gui(
+                        config,
+                        cg_positions,
+                        linearization_config=linearization_config,
+                    )
+                    APP_STATE.set_cg_sweep_result(result)
+                    results_table.rows = cg_sweep_summary_rows(result)
+                    results_table.visible = True
+                    results_table.update()
+                    results_empty.visible = False
+                    trend_container.clear()
+                    with trend_container:
+                        ui.plotly(cg_sweep_trend_figure(result)).classes("w-full")
+                    trend_empty.visible = False
+                    render_exports()
+                    status.text = (
+                        f"CG sweep complete: successful={len(result.successful_points)} "
+                        f"total={len(result.points)}"
+                    )
+                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
+                    message = f"CG sweep failed: {exc}"
+                    APP_STATE.set_cg_sweep_error(message)
+                    results_table.rows = []
+                    results_table.visible = False
+                    results_table.update()
+                    results_empty.visible = True
+                    trend_container.clear()
+                    trend_empty.visible = True
+                    render_exports()
+                    status.text = message
+                    ui.notify(message, type="negative")
+
+
 def create_app() -> None:
     """Register GUI pages with NiceGUI."""
     global _pages_registered
@@ -727,6 +919,7 @@ def create_app() -> None:
     _register_scenario_page(ui)
     _register_simulation_page(ui)
     _register_stability_page(ui)
+    _register_cg_sweep_page(ui)
     _pages_registered = True
 
 

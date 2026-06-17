@@ -5,8 +5,9 @@ from __future__ import annotations
 import numpy as np
 
 from .adapters.simulation import simulation_time_history_rows
+from .adapters.stability import cg_sweep_summary_rows
 from ..result import SimulationResult
-from ..stability.types import StabilityResult
+from ..stability.types import CGSweepResult, StabilityResult
 
 
 def _require_plotly():
@@ -96,6 +97,33 @@ def stability_eigenvalue_figure(result: StabilityResult):
         xaxis_title="Real [1/s]",
         yaxis_title="Imaginary [rad/s]",
         legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0},
+    )
+    return fig
+
+
+def cg_sweep_trend_figure(result: CGSweepResult):
+    """Return a Plotly trend of CG x against the most unstable pole real part."""
+    go, _ = _require_plotly()
+    rows = [
+        row
+        for row in cg_sweep_summary_rows(result)
+        if row["success"] and row["most_unstable_real"] is not None
+    ]
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=[row["cg_x"] for row in rows],
+            y=[row["most_unstable_real"] for row in rows],
+            mode="lines+markers",
+            name="max real eigenvalue",
+        )
+    )
+    fig.add_hline(y=0.0, line_width=1, line_dash="dash", line_color="#ef4444")
+    fig.update_layout(
+        height=420,
+        margin={"l": 50, "r": 20, "t": 40, "b": 45},
+        xaxis_title="CG x body [m]",
+        yaxis_title="Max real eigenvalue [1/s]",
     )
     return fig
 

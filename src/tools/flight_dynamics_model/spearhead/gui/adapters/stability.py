@@ -81,15 +81,20 @@ def cg_sweep_summary_rows(result: CGSweepResult) -> list[dict[str, Any]]:
             "error": point.error,
             "longitudinal_modes": 0,
             "lateral_directional_modes": 0,
+            "total_modes": 0,
+            "most_unstable_real": None,
             "trim_alpha_deg": None,
             "trim_theta_deg": None,
         }
         if point.result is not None:
             trim = point.result.trim_result
+            modes = tuple(point.result.longitudinal.modes) + tuple(point.result.lateral_directional.modes)
             row.update(
                 {
                     "longitudinal_modes": len(point.result.longitudinal.modes),
                     "lateral_directional_modes": len(point.result.lateral_directional.modes),
+                    "total_modes": len(modes),
+                    "most_unstable_real": max(float(mode.eigenvalue.real) for mode in modes),
                     "trim_alpha_deg": float(trim["alpha_deg"]),
                     "trim_theta_deg": float(trim["theta_deg"]),
                 }

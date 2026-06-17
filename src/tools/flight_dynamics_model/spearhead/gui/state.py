@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from ..config import SimulationConfig
 from ..result import SimulationResult
-from ..stability.types import StabilityResult
+from ..stability.types import CGSweepResult, StabilityResult
 
 
 @dataclass
@@ -19,6 +19,8 @@ class GuiState:
     simulation_error: str | None = None
     stability_result: StabilityResult | None = None
     stability_error: str | None = None
+    cg_sweep_result: CGSweepResult | None = None
+    cg_sweep_error: str | None = None
 
     def set_scenario(self, source: str, config: SimulationConfig) -> None:
         """Store the active scenario and clear dependent results."""
@@ -28,6 +30,8 @@ class GuiState:
         self.simulation_error = None
         self.stability_result = None
         self.stability_error = None
+        self.cg_sweep_result = None
+        self.cg_sweep_error = None
 
     def set_simulation_result(self, result: SimulationResult) -> None:
         """Store the latest simulation result."""
@@ -48,6 +52,16 @@ class GuiState:
         """Store the latest stability error."""
         self.stability_result = None
         self.stability_error = message
+
+    def set_cg_sweep_result(self, result: CGSweepResult) -> None:
+        """Store the latest CG sweep result."""
+        self.cg_sweep_result = result
+        self.cg_sweep_error = None
+
+    def set_cg_sweep_error(self, message: str) -> None:
+        """Store the latest CG sweep error."""
+        self.cg_sweep_result = None
+        self.cg_sweep_error = message
 
 
 APP_STATE = GuiState()
