@@ -1,7 +1,7 @@
 # Spearhead Electrical Master Document
 
 **Doc ID:** SPH-E-001
-**Revision:** 0.16
+**Revision:** 0.18
 **Author:** errrks
 **Date:** June 2026
 **Status:** Phase 1 specified. Phases 2–4 are architecture stubs pending detailed design.
@@ -57,8 +57,8 @@ Out of scope: structural design, ArduPilot parameter tuning (see `docs/reference
                      ┌──────────────────┐
                      │  12S LiPo Pack   │
                      └────────┬─────────┘
-                              │  XT150 (pack socket, ground safing disconnect)
-                  [HV Kill (PT1 implementation TBD, OQ-05)]
+                              │  QS8-S (pack socket, anti-spark, ground safing disconnect)
+                  [No hardware HV kill, PT1: software E-stop + QS8-S unplug, OQ-05 closed]
                               │  8 AWG
                         ┌─────┴──────┐
                         │ FCHUB-12S  │  44.4V nominal
@@ -68,8 +68,9 @@ Out of scope: structural design, ArduPilot parameter tuning (see `docs/reference
                           │   │   │   │
                           M1  M2  M3  M4   (FR / RL / FL / RR)
 
-   FCHUB battery pads ─ 16 AWG XT60 pigtail ─ [PM02D HV]
-                                                5.2V/3A + I2C → 6-pin → Pixhawk POWER1
+   FCHUB battery pads ─ 16 AWG XT60 pigtail ─ [PM02 V3]
+                                                5.2V/3A analog → 6-pin → Pixhawk 6C POWER1
+   FCHUB 440A sensor + VBat divider ─ analog ─→ Pixhawk 6C POWER2 (vehicle V/I, sense only)
 
                   FCHUB-12S PDB rails
                         │
@@ -80,7 +81,7 @@ Out of scope: structural design, ArduPilot parameter tuning (see `docs/reference
   (CAN/RC/telem)   5V → adapter+Here4)    + contactor coil
                                            if D2 picks one)
 
-  Flaperon servo power: forward PM12S-3 Vx rail (HV input
+  Flaperon servo power: forward robocombo DC-DC buck @ 8.4V (HV input
   at the FCHUB pads), not shown above. See §4.4.
   Tail PM12S-3 HV input: 18 AWG branch off the ESC-lead extension
   joint at the boom root (not a FCHUB rail), behind the HV kill. See §4.10.
@@ -90,34 +91,33 @@ Out of scope: structural design, ArduPilot parameter tuning (see `docs/reference
           │
      ┌────┴──┬────────┐
   Pixhawk   GPS   Sensors/RC/
-    6X    (shelf) Telemetry
- (POWER1 = power module, POWER2 unused, single FC supply)
+    6C    (shelf) Telemetry
+ (POWER1 = PM02 V3 supply, POWER2 = FCHUB analog V/I sense)
 ```
 
 ### 2.2 Communications Topology
 
 ```
-Pixhawk 6X
+Pixhawk 6C
 │
 ├── CAN1 ─── [120Ω] ── CAN splitter/hub
 │        ├── ESC1..ESC4 (nodes 1–4, short boom stubs)
-│        ├── GPS #1 (fwd shelf, node 10, primary, model TBD)
 │        └── Here4 (tail, node 11) ── CAN-PWM adapter (node 12) ── [120Ω]
 │
 ├── CAN2 ─── [reserved / Phase 3 expansion]
 │
-├── UART1 (TELEM1) ─── Ground telemetry radio (MAVLink 2.0)
-├── UART2 (TELEM2) ─── [reserved / Phase 3 long-range link]
-├── UART3 (GPS1)   ─── [unused, GPS on CAN]
-├── UART4          ─── Radar/LiDAR altimeter
-├── UART5          ─── RC receiver (CRSF or SBUS)
+├── GPS1   ─── u-blox F9P primary GPS (serial, SERIALx_PROTOCOL = 5)
+├── TELEM1 ─── Ground telemetry radio (MAVLink 2.0)
+├── TELEM2 ─── RC receiver (CRSF), or RC on the dedicated RC-IN port (SBUS)
+├── TELEM3 ─── [reserved / Phase 3 long-range link]
+├── GPS2   ─── Ainstein US-D1 altimeter (UART; CAN alternate frees this port)
 │
-├── I2C   ─── 
-├── ADC   ─── Pitot static pressure transducer
+├── I2C   ─── [backup airspeed transducer if I2C DLVR]
+├── ADC   ─── Pitot transducer (analog); POWER1/POWER2 carry battery V/I
 │
-├── PWM OUT (IO, outputs 1–8):
-│     Output 1: Aileron, right flaperon (physical PWM from the 6X IO)
-│     Output 2: Aileron, left flaperon  (physical PWM from the 6X IO)
+├── PWM OUT (IO MAIN 8 ch + FMU AUX 8 ch):
+│     Output 1: Aileron, right flaperon (physical PWM from the 6C IO)
+│     Output 2: Aileron, left flaperon  (physical PWM from the 6C IO)
 │     Output 3: RuddervatorLeft  (SERVO_FUNCTION 79, via DroneCAN to tail adapter, node 12)
 │     Output 4: RuddervatorRight (SERVO_FUNCTION 80, via DroneCAN to tail adapter, node 12)
 │     Outputs 5–8: VTOL motor commands via DroneCAN ESC nodes 1–4 (no physical PWM)
@@ -134,16 +134,16 @@ CAN bus length nose to tail: approximately 2.5 m. No signal integrity issue at 1
 | Zone | Contents |
 |---|---|
 | Nose (slimmed, v5) | No avionics requirement. Pitot mast and external antenna placement only if needed |
-| Forward battery bay | ProFuse 12S 16Ah 60C pack (3,822g, 186×76×160mm), XT150 pack connector (ground safing disconnect), HV kill (implementation TBD, OQ-05). Moved forward for CG per the v5 layout |
-| Avionics shelf (above battery, top access) | Pixhawk 6X, PM02D HV power module (FC POWER1, single supply), primary GPS on the shelf cover (sky view), RC receiver, telemetry radio, LV kill switch |
-| CG bay / boom roots | Matek FCHUB-12S PDB (HV distribution + 5V/12V BECs, battery pads carry the FC power tap), CAN splitter/hub, forward PM12S-3 (flaperon Vx rail) |
+| Forward battery bay | motorobit 12S 22Ah 15C solid-state pack (3,709g, 190×78×126mm), QS8-S socket (anti-spark, ground safing disconnect), HV kill (implementation TBD, OQ-05). Moved forward for CG per the v5 layout |
+| Avionics shelf (above battery, top access) | Pixhawk 6C, PM02 V3 analog power module (FC POWER1 supply; POWER2 = FCHUB analog V/I sense), primary GPS (F9P, serial) on the shelf cover (sky view), RC receiver, telemetry radio, LV kill switch. Compartment ~180×250mm footprint × ~90mm tall between the longerons (June 12 estimate, pending CAD) |
+| CG bay / boom roots | Matek FCHUB-12S PDB (HV distribution + 5V/12V BECs, battery pads carry the FC power tap), CAN splitter/hub, forward robocombo buck (flaperon 8.4V rail) |
 | Boom roots / tips (×4) | ESC externally mounted on boom near motor (within 150mm of motor centerline) |
 | Motors (×4) | MAD V8013 PRO IPE 150KV, 3–5° forward tilt relative to aircraft body (motors vertical relative to gravity when aircraft is in cruise attitude) |
 | Tail group (boom-mounted) | Here4 (secondary GPS), Matek CAN-L4-PWM CAN-to-PWM adapter, PM12S-3 (Vx servo rail + fixed 5V for adapter and Here4), ruddervator servo connectors |
-| Wing panels (×2) | Flaperon servos (5V for PT1), wing panel connector (signal + 5V + GND, 5V from the peripheral rail) |
+| Wing panels (×2) | Flaperon servos (Kingmax CLS3015S, 8.4V), wing panel connector (signal + 8.4V + GND, 8.4V from the forward robocombo buck) |
 | Airframe exterior | WS2812 heading LED strips (wing tips, nose, tail) |
 
-Zones follow Alperen's fuselage conceptual v5 (June 11): longer thinner nose, forward battery for CG, avionics shelf above the battery with top access, pusher between the fuselage and the boom-carried tail. The tail harness (CAN trunk + HV spur) therefore routes along a tail boom, not through a fuselage run. Shelf and bay dimensions are open, see `docs/open-questions.md`.
+Zones follow Alperen's fuselage conceptual v5 (June 11): longer thinner nose, forward battery for CG, avionics shelf above the battery with top access, pusher between the fuselage and the boom-carried tail. The tail harness (CAN trunk + HV spur) therefore routes along a tail boom, not through a fuselage run. Shelf and bay dimensions are open, see the open-question list in `docs/pt1-electrical-information-note.md` (SPH-E-002).
 
 ---
 
@@ -154,7 +154,7 @@ Derived from the Project Spearhead DAO proposal (AIP-006, March 2026) and meetin
 | ID | Requirement | Phase | Source |
 |---|---|---|---|
 | E-REQ-01 | VTOL thrust-to-weight ≥ 1.5:1 at MTOW 25 kg | 1 | AIP-006 §9.2 |
-| E-REQ-02 | Independent hardware kill switches for HV and LV | 1 | AIP-006 §9.3 |
+| E-REQ-02 | Independent hardware kill switches for HV and LV. **PT1 deviation (June 17):** LV hardware kill only; HV path uses software E-stop + QS8-S unplug, no hardware HV kill (recorded §9.3 deviation, see §4.3). Full HV kill returns for the final product | 1 | AIP-006 §9.3 |
 | E-REQ-03 | Real-time telemetry: battery SoC, generator output (Phase 2+), fuel level (Phase 2+) | 1/2 | AIP-006 §9.3, §9.5 |
 | E-REQ-04 | Redundant GPS | 1 | AIP-006 §9.4 |
 | E-REQ-05 | Radar or laser altimeter | 1 | AIP-006 §9.4 |
@@ -206,11 +206,11 @@ Motor operating zones from datasheet footnote (motor thermal limits, not ESC lim
 
 The motor operates in the continuous zone for most of the usable flight window. It only enters the short-term zone near the low-battery warning threshold (42V / 3.5V/cell) — which is also the point at which landing should already be initiated. At altitude (1,200m, ~12% lower air density), add approximately 2–3% throttle to each row above, nudging the nominal and low-battery points further into short-term territory.
 
-**Battery capacity sizing:** the QuadPlane hovers only during VTOL takeoff, landing, and transition and flies wing-borne the rest of the mission, so sustained hover is not the energy driver. At ~85A average hover draw a 16 Ah pack gives roughly 11 minutes of hover before reserve, well beyond the per-flight hover budget for Phase 1 testing and transitions. The bay is sized to **16,000 mAh** (12S) per Alperen's mission-energy rerun (May 2026), trading the earlier conservative 22 Ah sustained-hover figure for about 1.7 kg of weight. Confirm against Alperen's published mission-energy note.
+**Battery capacity sizing:** the QuadPlane hovers only during VTOL takeoff, landing, and transition and flies wing-borne the rest of the mission, so sustained hover is not the energy driver. At ~85A average hover draw a 22 Ah pack gives roughly 15 minutes of hover before reserve, well beyond the per-flight hover budget for Phase 1 testing and transitions. The pack selected June 17, 2026 is the **22,000 mAh** (12S) motorobit solid-state LiPo (3,709g, 190×78×126mm, QS8-S), superseding the 16 Ah ProFuse picked June 11. This returns capacity to the earlier 22 Ah figure with no weight penalty: at 3,709g it is ~113g lighter than the 3,822g 16 Ah ProFuse, so the solid-state cell density offsets the extra capacity and the May mission-energy weight trade (which had dropped to 16 Ah to save ~1.7 kg) no longer applies.
 
 **Peak current** (safety-margin thrust at 75% throttle, 36.6A/motor × 4):
 - 4 × 36.6A = **146A** (short-term zone, < 30s)
-- At 16,000 mAh: 146 / 16 = **9.1C** (within high-discharge LiPo ratings)
+- At 22,000 mAh: 146 / 22 = **6.6C**. The 320A ESC-capped absolute peak is 14.5C, still inside the pack's 15C / 330A continuous rating
 
 **Thrust-to-weight at max thrust** (100% throttle, 15,032 gf/motor × 4 = 60,128 gf = 61.3 kg):
 - T/W = 61.3 / 25 = **2.45:1** (E-REQ-01 of 1.5:1 exceeded)
@@ -224,17 +224,17 @@ The motor operates in the continuous zone for most of the usable flight window. 
 | Nominal voltage | 44.4V |
 | Full charge | 50.4V |
 | Low-battery cutoff | 3.5V/cell → 42V pack (ArduPilot warning), 3.3V/cell → 39.6V (critical) |
-| Capacity | **16,000 mAh** (12S, per Alperen's mission-energy rerun) |
-| C-rating | 60C (ProFuse spec), far above the ≥15C floor. The 320A peak draw is trivial for the pack |
-| Connector | XT150 socket on the pack (ProFuse-fitted). Harness side: XT150 male, 8 AWG to the FCHUB battery pads (4 AWG does not fit XT150 solder cups, see §4.6). Plain XT150 is not anti-spark, see the kill interaction note in §4.3. No Y-splitter: the FC power module taps the FCHUB pads |
-| Form factor | **Selected June 11: ProFuse Super Nano 12S 16,000 mAh 60C**, single pack, 186×76×160mm, robotsepeti (TR, in stock, 41,322 TL incl. VAT). Forward battery bay per the v5 fuselage, the 160mm height drives the bay design. Lock position with Alperen before the fuselage is built |
-| Weight | 3,822g (ProFuse datasheet), largest single CG impact item |
+| Capacity | **22,000 mAh** (12S, motorobit solid-state pack, selected June 17, 2026) |
+| C-rating | 15C (330A continuous). Meets the ≥15C floor exactly. 330A continuous covers even the 320A ESC-capped absolute peak, but expect more voltage sag under the peak than the 60C ProFuse showed — verify on the first high-throttle hover |
+| Connector | **QS8-S socket on the pack** (Amass QS8, anti-spark, ~120A continuous class). Harness side: QS8-S plug, 8 AWG to the FCHUB battery pads. Anti-spark, so there is no mating spark at 12S (see the §4.3 connector note). No Y-splitter: the FC power module taps the FCHUB pads |
+| Form factor | **Selected June 17: 12S 22,000 mAh 15C semi-solid LiPo** (~290–300 Wh/kg; vendor lists it as "solid-state"; sourced from motorobit, TR), single pack, **190×78×126mm**, QS8-S socket. Length 190mm drives the forward bay (34mm shorter than the ProFuse's 160mm height). Lock position with Alperen before the fuselage is built |
+| Weight | **3,709g**, largest single CG impact item. ~113g lighter than the 16Ah ProFuse despite +6Ah, so the May weight trade is moot |
 
 **Dumb LiPo pack (no BMS or CAN).** A standard high-discharge 12S LiPo is used, not a smart battery. Alperen found the smart-battery option added roughly 1 kg, not worth it for the end product. Implications:
 - No CAN battery telemetry and no per-cell data. Vehicle current comes from the FCHUB-12S 440A sensor and pack voltage from the power module or a FC voltage sense (see §4.2 and §4.13)
 - Balance leads are used for charging only, not wired into the aircraft. In flight the pack connects to the HV path by main leads only
 - Set conservative pack-level low-voltage thresholds (no per-cell cutoff). Carry a plug-in cell checker for ground checks
-- Pack selected June 11 (WP-E01 selection closed): ProFuse Super Nano 12S 16Ah 60C, XT150 socket
+- Pack selected June 17 (WP-E01 reopened and reclosed): motorobit 12S 22Ah 15C solid-state LiPo, 3,709g, 190×78×126mm, QS8-S socket (supersedes the ProFuse 16Ah 60C selected June 11)
 
 ---
 
@@ -248,7 +248,7 @@ The motor operates in the continuous zone for most of the usable flight window. 
 | Per-channel rating | 70A continuous, 110A burst per ESC pad. Hover is ~24–31A per motor, peak ~80A per motor (capped by the 80A ESC), so the margin is ample |
 | ESC connection | 4× ESC power pads. Only the power pads are used. The signal and telemetry pads stay unused because the ESCs run DroneCAN (see §4.9) |
 | On-board BECs | 5V/5A (max 6A), 12V/4A (max 5A), 3.3V/0.5A. Rail assignment in §4.4 |
-| Current sensor | On-board 440A analog sensor used for vehicle current (3.3V ADC, scale 75, to a FC ADC pin). Pack voltage from the V2 built-in 1K:20K divider (V pad set to VBat). See §4.13 |
+| Current sensor | On-board 440A analog sensor for vehicle current (0–3.3V over 440A; ArduPilot `BATT_AMP_PERVLT 133.3`), wired to the 6C POWER2 analog CURRENT pin. Pack voltage from the V2 built-in 1K:20K divider (V pad set to VBat, `BATT_VOLT_MULT 21.0`) to the POWER2 VOLTAGE pin. FCHUB is the primary battery monitor (BATT1), PM02 V3 on POWER1 is BATT2. See §4.13 |
 | V2 breakout | JST-SH 8-pin: V (selectable 12V or VBat via the 1K:20K divider), G, Curr, TLM (BLHeli32, unused), S1–S4 (ESC signal, unused with DroneCAN). Ships with the SH1.0 8-pin cable |
 | Switchable 12V | 12VSW pad, on/off via FC PINIO (GPIO level), 2A constant. Candidate supply for the EV200 contactor coil (§4.3) or a switched LED feed |
 | Per-branch fusing | 100A fast-blow per ESC branch, optional for Prototype 1 (assess in WP-E02) |
@@ -262,24 +262,24 @@ The FCHUB-12S replaces the earlier custom PCB and bus bar option, in line with t
 
 | Switch | Covers | Does NOT cover | Placement | Current rating |
 |---|---|---|---|---|
-| HV Kill | 12S battery → FCHUB PDB (including the FC power module pad tap), tail BEC HV spur | — | Exterior, reachable within 3 s, plus RC-switchable per the June 11 criterion | ≥ 300A peak capability |
-| LV Kill | FC power (power module 5.2V to POWER1), peripheral 5V rail (GPS, RC, telemetry, flaperon servos) | Tail PM12S-3: ruddervator servos + adapter + Here4 (on HV spur) | Exterior, separate from HV | ≥ 10A |
+| HV safing (no hardware kill, PT1) | Software E-stop (ArduPilot motor emergency stop on an RC switch) cuts CAN motor commands; QS8-S anti-spark unplug for ground safing | Does not physically interrupt the armed HV bus | RC switch + accessible QS8-S | software + connector |
+| LV Kill | FC power (PM02 V3 5.2V to POWER1), peripheral 5V rail (GPS, RC, telemetry) | Both servo rails: forward robocombo (flaperons) + tail PM12S-3 (ruddervators + adapter + Here4), all HV-derived | Exterior, separate | ≥ 10A |
 
-The tail HV→5V BEC powers the ruddervator servos, the CAN-PWM adapter, and the Here4, all from the HV bus spur. The whole tail control path therefore has no separate LV kill and de-energizes only when the HV kill is thrown, preserving ruddervator authority whenever the aircraft is armed. This is intentional, and it resolves the earlier concern about the adapter losing power on an LV kill, since it no longer draws from the CAN 5V rail.
+The tail HV→5V BEC powers the ruddervator servos, the CAN-PWM adapter, and the Here4, all from the HV bus spur. The whole tail control path therefore has no separate LV kill and de-energizes only when the pack is disconnected at the QS8-S (there is no hardware HV kill for PT1, see below), preserving ruddervator authority whenever the aircraft is armed. This is intentional, and it resolves the earlier concern about the adapter losing power on an LV kill, since it no longer draws from the CAN 5V rail.
 
-**PT1 implementation (open, criterion added June 11):** AIP-006 §9.3 SHALL requires independent HV and LV kill switches, and those drive the design above. The June 1 review noted the contactor approach came from Quiver and final-product assumptions and may be heavier than PT1 needs. The June 11 review added a criterion: the HV kill must be switchable from the RC link, not only from a physical disconnect at the airframe. That rules out a pure manual-disconnect deviation and narrows PT1 to three candidates (decide in OQ-05 before the PT1 order ships):
+**PT1 implementation (resolved June 17: no hardware HV kill).** AIP-006 §9.3 SHALL requires independent HV and LV kill switches. For PT1 the team accepts a **recorded §9.3 deviation: no hardware HV kill.** HV-path safing is the ArduPilot software E-stop (motor emergency stop on an RC switch, with the AMPX 2 s CAN watchdog as a backstop) plus unplugging the QS8-S anti-spark connector for ground safing. The LV kill is retained. Rationale (June 12): no clean contactor placement for PT1 without extra components and mass, and the QS8-S anti-spark already manages connection inrush. The full independent HV kill returns for the final product. The June 11 RC-switchable criterion and the candidates below are kept as record (superseded for PT1):
 
 | Candidate | How it switches | Mass | Notes |
 |---|---|---|---|
 | TE Kilovac EV200AAANA contactor | 12V economizer coil (1.7W hold ≈ 0.14A) from the FCHUB V2 12VSW pad, switched directly by FC PINIO. No driver hardware. RC kill via RC_OPTION relay mapping, GCS kill via MAVLink relay | ~450g | ~€149. Proven interrupt rating (2000A at 320VDC). Closing onto the discharged ESC input caps at 50V is within rating, no precharge stage needed |
 | MOSFET anti-spark switch (e-skate class, 200A cont / 400A peak, up to 20S) | Enable line interfaced to an RC switch or FC GPIO | ~100–150g | ~$80. Fails short (a failed kill no longer kills), no flight heritage, enable interface is an adaptation. Bench evaluation required before trusting it in the HV path |
-| Software E-stop + ground safing only | ArduPilot motor emergency stop on an RC switch cuts CAN motor commands. AMPX throttle-loss protection backstops at 2 s. XT150 unplug for ground safing | 0g | Not a hardware kill. A recorded §9.3 deviation for PT1 only, full hardware kills return for the final product |
+| Software E-stop + ground safing only | ArduPilot motor emergency stop on an RC switch cuts CAN motor commands. AMPX throttle-loss protection backstops at 2 s. Pack connector unplug for ground safing | 0g | Not a hardware kill. A recorded §9.3 deviation for PT1 only, full hardware kills return for the final product |
 
 The software E-stop layer costs nothing and gets configured regardless of which hardware path wins. The earlier WP-E02 options table (contactor + key switch, Anderson PP75 pull disconnect, E-stop pushbutton) is superseded: none of those are RC switchable, and the PP75 was undersized anyway at 75A-class continuous against a 98–124A hover draw.
 
-**Connector interaction (June 11):** the selected ProFuse pack carries a plain XT150 socket, not an anti-spark connector. With an inline hardware kill (contactor or MOSFET switch) the battery is connected with the kill open, so there is no mating spark and the kill element absorbs the ESC cap inrush. That is one more argument for a hardware kill. If the software-only path wins, add an AS150U anti-spark adapter pigtail at the pack or accept the mating spark at 12S.
+**Connector interaction (updated June 17):** the selected motorobit pack carries a **QS8-S socket, which is anti-spark**. The connector itself limits the ESC cap inrush on mating, so there is no mating spark at 12S regardless of the kill choice. This removes the earlier "plain connector" argument for an inline hardware kill. With PT1 going software-only (no hardware HV kill, decided June 17), the QS8-S anti-spark is what manages mating inrush, and no AS150U adapter is needed.
 
-LV kill switch: illuminated rocker or key switch, 10A @ 12V. Interrupts the FC power (power module output) and the peripheral 5V rail (GPS, RC, telemetry, flaperon servos). It does not cut the tail PM12S-3, so the tail control path stays powered on the HV spur until the HV kill is thrown.
+LV kill switch: illuminated rocker or key switch, 10A @ 12V. Interrupts the FC power (PM02 V3 output) and the peripheral 5V rail (GPS, RC, telemetry). It does not cut either servo rail: the forward robocombo (flaperons) and the tail PM12S-3 (ruddervators + adapter + Here4) are both HV-derived and stay powered until the pack is unplugged at the QS8-S (no hardware HV kill for PT1).
 
 ---
 
@@ -287,20 +287,24 @@ LV kill switch: illuminated rocker or key switch, 10A @ 12V. Interrupts the FC p
 
 | Rail | Voltage | Continuous Current | Loads | BEC type |
 |---|---|---|---|---|
-| FC power (POWER1) | 5.2V | 3A max | Pixhawk 6X (single supply, POWER2 unused) | PM02D HV (I2C, in the 6X set), fed from a 16 AWG XT60 pigtail at the FCHUB battery pads |
-| Peripheral 5V | 5.0–5.2V | 4–6A | Nose/shelf GPS (CAN bus), RC receiver, telemetry radio, sensors | FCHUB 5V, separate from the FC inputs. Tail devices (adapter, Here4) run on the tail PM12S-3 instead |
+| FC power (POWER1) | 5.2V | 3A max | Pixhawk 6C (single supply on POWER1) | PM02 V3 (analog, bundled with the 6C), fed from a 16 AWG XT60 pigtail at the FCHUB battery pads. POWER2 carries the FCHUB analog V/I sense, not a power feed |
+| Peripheral 5V | 5.0–5.2V | 4–6A | Shelf F9P GPS (serial), RC receiver, telemetry radio, sensors | FCHUB 5V, separate from the FC inputs. Tail devices (adapter, Here4) run on the tail PM12S-3 instead |
 | LED 5V | 5V | up to ~3A | WS2812B strips (wing tips, nose, tail) | Separate feed, high transient draw, kept off the FC rail |
-| Flaperon servo | 5.25V (PT1), 8V (final) | 2–4A PT1, 15A available | 2× flaperon servos on wing panels | Forward PM12S-3 Vx rail via the wing connectors. PT1 test servos, see §4.11. |
-| Ruddervator servo | 5.25V (PT1), 8V (final) | 2–4A PT1, 15A available | 2× ruddervator servos in tail bay | Tail PM12S-3 Vx rail, fed from the HV bus spur. Its fixed 5V powers the adapter and Here4. No long LV run through the fuselage. |
+| Flaperon servo | 8.4V | ~2–3A/servo, 15A available | 2× Kingmax CLS3015S on wing panels | Forward robocombo DC-DC buck @ 8.4V (HV input at the FCHUB pads, 15A) via the wing connectors. See §4.11 |
+| Ruddervator servo | 8V | ~2–3A/servo, 15A available | 2× Kingmax CLS3015S in tail bay | Tail PM12S-3 Vx rail (8V), fed from the HV bus spur. ~33 kg·cm at 8V vs 35 kg·cm at 8.4V, still ample. Its fixed 5V powers the adapter and Here4. No long LV run through the fuselage |
 | Payload | 12V | TBD | Phase 4 only — not needed for Phase 1 | — |
 
-FC power: the Pixhawk runs from a single source, the power module on POWER1. POWER2 is unused for V1, so there is no hot-standby. This is a single point of failure on FC power, accepted to keep V1 simple. Add a POWER2 backup BEC later if FC power redundancy is wanted before extended flights.
+FC power: the Pixhawk runs from a single source, the PM02 V3 on POWER1. POWER2 is not a backup brick — it carries the FCHUB analog V/I sense (§4.13), so for V1 we trade FC power redundancy for vehicle-current sensing. This is a single point of failure on FC power, accepted to keep V1 simple. If FC power redundancy is wanted before extended flights, move the FCHUB sense to a spare ADC and free POWER2 for a backup BEC.
 
-**FC supply (Pixhawk 6X selected, June 11):** the FC runs from the PM02D HV (I2C, 2–12S, included in the 6X standard set) on POWER1, fed by a 16 AWG XT60 pigtail soldered at the FCHUB-12S battery input pads. The pads are the same electrical node a battery Y-splitter would create, with one fewer connector pair in the 320A path, so the earlier AS150U/XT150 Y-splitter is dropped (it remains the fallback if the pad tap proves mechanically awkward). For the record: the PM02D is supported on the 5X/6X series only, the abandoned 6C path would have needed the analog PM02 V3 (verified against Holybro, June 2026). The module carries only the FC draw.
+**FC supply (Pixhawk 6C + PM02 V3, selected June 17):** the FC runs from the analog PM02 V3 (2–12S, bundled with the 6C at rx-dynamic) on POWER1, fed by a 16 AWG XT60 pigtail soldered at the FCHUB-12S battery input pads. The pads are the same electrical node a battery Y-splitter would create, with one fewer connector pair in the 320A path, so the earlier AS150U/XT150 Y-splitter is dropped (it remains the fallback if the pad tap proves mechanically awkward). The module carries only the FC draw. The 6C's analog POWER ports are what enable the FCHUB vehicle V/I to feed POWER2 directly (§4.13); the digital PM02D used by the earlier 6X plan could not have done this, since its V/I ride I2C.
 
-**FCHUB-12S on-board BECs:** the FCHUB provides 5V/5A (max 6A), 12V/4A, and 3.3V/0.5A (verified against the Matek page, June 2026). With the FC on its own power module, use the FCHUB 5V for the peripheral 5V rail (CAN GPS, adapter, RC, telemetry), and the FCHUB 12V for the Phase 4 payload and the HV kill contactor coil if an EV200 or GX11 is chosen. Keep the WS2812 LED strips on a separate 5V feed so their transients stay off the peripheral rail.
+**FCHUB-12S on-board BECs:** the FCHUB provides 5V/5A (max 6A), 12V/4A, and 3.3V/0.5A (verified against the Matek page, June 2026). With the FC on its own power module, use the FCHUB 5V for the peripheral 5V rail (F9P GPS, RC, telemetry), and the FCHUB 12V for the Phase 4 payload and the HV kill contactor coil if an EV200 or GX11 is chosen. Keep the WS2812 LED strips on a separate 5V feed so their transients stay off the peripheral rail.
 
-BEC selection (updated late June 11): **2× Matek PM12S-3** (Aykut Havacılık TR, 6,900 TL each, specs verified June 2026). Per unit: 9–55V input with TVS protection, Vx rail selectable 5.25V / 6V / 8V at 15A continuous (25A peak), fixed 5.2V/4A, fixed 12V/4A, built-in 1K:20K divider, 53g. Roles: the **tail unit** Vx feeds the ruddervator servo rail (5.25V for PT1, 8V for the final HV servos) and its fixed 5V feeds the adapter logic and the Here4. The **forward unit** Vx feeds the flaperon servo rail through the wing connectors, and its 12V is a second candidate supply for the contactor coil. The 15A Vx rating removes servo current headroom questions, and the later 8V change is a pad setting, not new hardware. Supersedes the BEC12S-PRO plan and the earlier candidates (Matek MBEC6S, Castle BEC Pro, Holybro PM07).
+BEC / servo-rail selection (updated June 17): **1× Matek PM12S-3 (tail) + 1× robocombo DC-DC buck (wing)**.
+- **Tail — Matek PM12S-3** (Aykut Havacılık TR, 6,900 TL, specs verified June 2026): 9–55V input with TVS protection, Vx selectable 5.25 / 6 / 8V at 15A continuous (25A peak), fixed 5.2V/4A, fixed 12V/4A, built-in 1K:20K divider, 53g. Vx set to **8V** feeds the ruddervator servo rail (Kingmax CLS3015S), and its fixed 5V feeds the adapter logic and the Here4. Kept because it provides both the 8V servo rail and the 5V logic rail in one TVS-protected module.
+- **Wing — robocombo DC-DC buck** (8–60V in, 15A adjustable): HV input at the FCHUB pads, output set to **8.4V** for the flaperon servos. Adjustability to 8.4V (which the PM12S-3 Vx cannot reach, capping at 8V) gets full Kingmax torque. Replaces the forward PM12S-3, which is dropped. Caveats: lock the output pot (threadlock), confirm it is a synchronous buck genuinely rated at 15A with heatsinking, and scope for output overshoot before a servo is connected.
+
+This supersedes the late-June-11 "2× PM12S-3" plan and the earlier BEC12S-PRO / MBEC6S / Castle BEC Pro / PM07 candidates. PT1 runs the final 8.x V HV servos directly (no 5V test-servo stage, see §4.11).
 
 ---
 
@@ -451,7 +455,7 @@ Current ratings below assume silicone-insulated stranded copper in open-air UAV 
 
 | Segment | AWG | Est. Length | Est. Current | Connector |
 |---|---|---|---|---|
-| Battery main leads | **8 AWG** | 0.3–0.6 m (forward bay to FCHUB) | ~98–124A hover, 320A peak | XT150 male at the pack socket (cups take 8 AWG, not 4 AWG), leads land on the FCHUB battery pads. FC power module taps the same pads via a 16 AWG XT60 pigtail |
+| Battery main leads | **8 AWG** | 0.3–0.6 m (forward bay to FCHUB) | ~98–124A hover, 320A peak | QS8-S plug at the pack (anti-spark; 8 AWG fits the QS8 solder cups, not 4 AWG), leads land on the FCHUB battery pads. FC power module taps the same pads via a 16 AWG XT60 pigtail |
 | HV bus to each ESC (×4) | **12 AWG** | ~1.4 m run (rear booms 20–30 cm longer) | ~25–31A hover, 80A rated peak | XT90S or solder direct to ESC power leads |
 | ESC power leads (factory, ESC to FCHUB) | **12 AWG** | **800mm** (factory) | 80A rated | Bare tinned. Add XT90S or solder to FCHUB pads |
 | ESC phase wires to motor (factory) | **14 AWG** | **150mm** (factory) | 80A rated (short duty only) | Bare tinned — 5mm bullet at motor side |
@@ -463,7 +467,7 @@ The AMPX 80A ESC ships with 12AWG/800mm power leads and 14AWG/150mm phase leads.
 
 - **Phase leads (14AWG/150mm): do not extend** without upsizing to 12AWG or heavier. The 150mm is short by design — heat dissipates through the motor housing. A longer 14AWG run at 80A will overheat.
 - **Power leads (12AWG/800mm):** adequate for Spearhead's hover current (~25–31A/motor). At rated 80A the wires run warm but duty cycle is short (10–30s per motor zone limits). The boom run exceeds 800mm (confirmed June 11), so each ESC power lead is extended at the boom-fuselage junction with an XT90S splice. Extend with **12AWG throughout** to match the factory lead. MAD rates that same 12AWG factory lead at the full 80A, and the extension carries the same current in series while Spearhead never sustains more than ~31A/motor in hover (the motor winding limit caps continuous draw at 24A, §4.5), so no upsize is warranted. Matching 12-to-12 also keeps the splice a clean same-gauge joint instead of a 12-to-10 step.
-- **Main battery leads:** 8AWG silicone with XT150. The earlier 4AWG spec does not fit XT150 solder cups, and on this 0.3–0.6 m run the connector (~130–150A continuous class), not the wire (~150A for 8AWG silicone in open air), is the thermal limit. Hover at 98–124A runs the lead warm, the 320A peak lasts seconds. Monitor connector and lead temperature during hover tests. The FC power module leg is small-gauge (FC supply only), an XT60 pigtail soldered at the FCHUB battery pads.
+- **Main battery leads:** 8AWG silicone on the pack's QS8-S (anti-spark). The earlier 4AWG spec does not fit the QS8 solder cups, and on this 0.3–0.6 m run the connector (QS8 ~120A continuous class), not the wire (~150A for 8AWG silicone in open air), is the thermal limit. Note the QS8's ~120A continuous rating sits at the top of the worst-case hover draw (124A at low-SoC nominal voltage), so monitor connector temperature during hover tests. Hover at 98–124A runs the lead warm, the 320A peak lasts seconds. Monitor connector and lead temperature during hover tests. The FC power module leg is small-gauge (FC supply only), an XT60 pigtail soldered at the FCHUB battery pads.
 
 Current rating reference (silicone insulated, open air):
 - 4 AWG: ~200A continuous
@@ -489,7 +493,7 @@ Current rating reference (silicone insulated, open air):
 | Signal wire | 26 AWG, < 0.5 m per servo within tail bay |
 | HV spur to tail | 18 AWG HV spur broken out at the tail-boom ESC-lead extension joint (boom root) to the tail BEC (5V is regulated at the tail, not run from the nose) |
 | Signal logic level | 5V (from the CAN-PWM adapter) |
-| Power logic | 5V (local tail BEC, shared ground) |
+| Servo power | 8V (tail PM12S-3 Vx, shared ground) |
 
 #### Wing Panel Connector
 
@@ -497,11 +501,11 @@ The detachable wing panels each carry one flaperon servo. The connector at the w
 
 | Signal | Notes |
 |---|---|
-| Servo signal (×1 per wing) | 5V logic PWM from nose FC |
-| 5V servo power | From the peripheral 5V rail via fuselage harness |
+| Servo signal (×1 per wing) | 5V logic PWM from the 6C IO output |
+| 8.4V servo power | From the forward robocombo buck via fuselage harness |
 | Ground | Shared with avionics ground |
 
-Connector candidate: Molex Mini-Fit Jr 6-pin (known from Quiver, rated 9A per pin, latching). TBD in WP-E06.
+Connector candidate: Molex Mini-Fit Jr 6-pin (known from Quiver, rated 9A per pin, latching). The Kingmax CLS3015S stall current (~2–3A) is well inside the per-pin rating. TBD in WP-E06.
 
 #### Routing and EMI
 
@@ -513,7 +517,7 @@ Servo PWM wires run near ESC DC power in places. Alperen flagged a ~1 m parallel
 - For a long run that must sit near power, use shielded cable with the shield grounded at one end only, the FC end. The same single-end grounding applies to the Phase 2 CDI shielding (§5.4).
 - Quiver avoids this class of noise mostly through multi-layer PCB routing with ground and power planes. Spearhead's discrete wiring does not have that, so the separation and twisting above carry the load.
 - The tail PWM is generated locally at the adapter (§4.10), so only short tail-bay servo leads run as PWM, not a 2.5 m run through the ESC field.
-- Flaperon PWM runs physically from the 6X IO outputs to the wing roots (~1–1.5 m per side). These are exactly the runs the separation, twisting, and crossing rules above exist for. A wing CAN-PWM node was considered on June 11 and dropped the same day with the 6X selection.
+- Flaperon PWM runs physically from the 6C IO outputs to the wing roots (~1–1.5 m per side). These are exactly the runs the separation, twisting, and crossing rules above exist for. A wing CAN-PWM node was considered on June 11 and dropped with the FC selection.
 
 #### PT1 Harness Connection Table
 
@@ -521,26 +525,26 @@ Every PT1 cable end to end, per the June 11 request for the general layout. Leng
 
 | # | From | To | Function | Wire | Connector(s) | Est. length | Notes |
 |---|---|---|---|---|---|---|---|
-| H1 | Battery +/− | FCHUB-12S battery pads | 12S HV main | 8 AWG | XT150 male at the pack socket, solder at pads | 0.3–0.6 m | HV kill (OQ-05) sits in this run. XT150 is not anti-spark: connect with the kill open |
-| H2 | FCHUB battery pads | PM02D HV input | FC power leg | 16 AWG | XT60 pigtail | 0.2 m | Pad tap replaces the Y-splitter |
+| H1 | Battery +/− | FCHUB-12S battery pads | 12S HV main | 8 AWG | QS8-S plug at the pack, solder at pads | 0.3–0.6 m | No hardware HV kill in this run for PT1 (OQ-05 closed, software E-stop). QS8-S is anti-spark, so no mating spark; unplug it for ground safing |
+| H2 | FCHUB battery pads | PM02 V3 input | FC power leg | 16 AWG | XT60 pigtail | 0.2 m | Pad tap replaces the Y-splitter |
 | H3 | FCHUB ESC pads ×4 | ESC power leads | HV per motor | 12 AWG (factory 800mm + 12 AWG extension) | Solder at pads, XT90S splice at the boom-fuselage junction (boom exceeds the 800mm factory lead, confirmed June 11) | per boom geometry | Rear booms run longer, exact extension length pending Alperen's boom dimensions. On the tail-carrying boom this extension joint also breaks out the 18 AWG tail HV feed (H5) |
 | H4 | ESC ×4 | Motor phase leads | 3-phase | 14 AWG (factory 150mm) | 5mm bullets | 150mm | Do not extend (wire notes above) |
 | H5 | ESC-lead extension joint (boom root) | Tail PM12S-3 input | Tail HV spur | 18 AWG | Branch broken out at the ESC-lead extension joint (XT90S or soldered lap, per H3), XT30 at the PM12S-3 | ~1.5–2 m (boom-root joint to the tail group) | Breaks out at the same boom-fuselage junction where the tail-boom ESC lead is extended (H3), so no separate splice into a healthy conductor. Still behind the HV kill (downstream of the FCHUB ESC pad). Runs aft along the tail boom, path TBC with Alperen (inside-tube routing pending structural check) |
-| H6 | PM02D HV 6-pin | Pixhawk POWER1 | 5.2V + I2C V/I sense | Module cable | CLIK-Mate / 6-pin | 0.3 m | |
+| H6 | PM02 V3 6-pin | Pixhawk 6C POWER1 | 5.2V + analog V/I | Module cable | 6-pin power | 0.3 m | Stock cable. PM02 V3 = BATT2 (`BATT2_VOLT_PIN 8`, `BATT2_CURR_PIN 4`, MULT 18.18, PERVLT 36.36). Its current reads only the FC leg. See §4.13 |
 | H7 | FCHUB 5V BEC | LV kill switch, then peripheral 5V rail | RC RX + telemetry power | 20 AWG | Soldered bus / servo leads | Shelf-local | LED strips get their own feed (H14) |
-| H8 | Pixhawk 6X IO PWM 1–2 | Wing root connectors | Flaperon PWM | 26 AWG twisted with its GND | Molex Mini-Fit Jr 6-pin | ~1–1.5 m per side | EMI rules apply: separation from ESC power, right-angle crossings, twisted with its own return |
-| H9 | Forward PM12S-3 Vx out | Wing root connectors | Flaperon servo power | 20 AWG | Same Mini-Fit Jr | ~1–1.5 m per side | 5.25V PT1, 8V final. The forward PM12S-3 HV input taps the FCHUB pads |
+| H8 | Pixhawk 6C IO PWM 1–2 | Wing root connectors | Flaperon PWM | 26 AWG twisted with its GND | Molex Mini-Fit Jr 6-pin | ~1–1.5 m per side | EMI rules apply: separation from ESC power, right-angle crossings, twisted with its own return |
+| H9 | Forward robocombo buck out | Wing root connectors | Flaperon servo power | 18–20 AWG | Same Mini-Fit Jr | ~1–1.5 m per side | 8.4V (Kingmax CLS3015S). The robocombo HV input taps the FCHUB pads |
 | H10 | Pixhawk CAN1 | CAN hub (CG bay) | DroneCAN trunk | 24 AWG twisted pair | JST-GH 4-pin | 0.3–0.5 m | 120Ω at the FC end |
 | H11 | CAN hub | ESC1–4 CAN leads | ESC stubs | Factory 1 m signal leads | JST-GH / solder | Trim toward <0.3 m where layout allows | Daisy-chain along booms instead if stubs misbehave (§4.9) |
 | H12 | CAN hub | Primary GPS (shelf) | CAN branch | 24 AWG twisted pair | JST-GH | 0.3–0.5 m | Node 10 |
 | H13 | CAN hub | Here4, then CAN-L4-PWM (tail) | CAN tail trunk | 24 AWG twisted pair | JST-GH daisy-chain | ~1.5–2 m | 120Ω at the last tail node. Runs alongside H5 on the boom, stays twisted |
 | H14 | FCHUB 5V (separate feed) | WS2812 strips | LED power, data from FC GPIO | 22 AWG | JST | Per airframe | Transients stay off the peripheral rail |
-| H15 | Tail PM12S-3 outputs | Vx → adapter servo V+ rail + ruddervators. Fixed 5V → adapter logic + Here4 | Tail servo and logic rails | 20 AWG | Servo leads / JST-GH | <0.3 m | Keep the two feeds separate, Vx goes to 8V in the final design (§4.10) |
+| H15 | Tail PM12S-3 outputs | Vx → adapter servo V+ rail + ruddervators. Fixed 5V → adapter logic + Here4 | Tail servo and logic rails | 20 AWG | Servo leads / JST-GH | <0.3 m | Keep the two feeds separate. Vx set to 8V (PT1 = final HV servos, §4.10) |
 | H16 | CAN-L4-PWM PWM 1–2 | Ruddervator servos | PWM, 5V logic | Servo leads | JR 3-pin | <0.3 m | Generated locally, no long PWM run |
 | H17 | Pixhawk TELEM1 | Telemetry radio | MAVLink UART | JST-GH 6-pin | JST-GH | 0.2–0.3 m | Radio model pending OQ-04 / parts list D3 |
 | H18 | Pixhawk UART5 | RC receiver | CRSF or SBUS | JST-GH | JST-GH | 0.2 m | Receiver model pending OQ-04 / parts list D3 |
 | H19 | Pixhawk UART4 | US-D1 altimeter | UART | JST-GH to US-D1 lead | JST-GH | 0.3–0.5 m | US-D1 also offers CAN if the UART budget tightens |
-| H20 | FCHUB V/I sense | Pixhawk 6X AD&IO port ADC pins | Vehicle current + voltage (BATT_MONITOR 4) | 26 AWG | JST | Shelf-local | V pad set to VBat (1K:20K divider, multiplier ≈ 21) |
+| H20 | FCHUB V/I sense | Pixhawk 6C POWER2 (Cur→pos 3, V→pos 4, G→pos 6; 4-wire, no 5V) | Vehicle current + voltage (FCHUB = BATT1, BATT_MONITOR 4) | 26 AWG | 6-pin power | Shelf-local | V-pad jumper = VBat (1K:20K, `BATT_VOLT_MULT 21.0`, ADC pin 5). Curr `BATT_AMP_PERVLT 133.3` (ADC pin 14). Leave POWER2 5V pins open. See §4.13 |
 | H21 | Pitot transducer | Pixhawk I2C or ADC | Airspeed | Per model | Per model | Shelf-local | OQ-06 |
 
 ---
@@ -549,20 +553,20 @@ Every PT1 cable end to end, per the June 11 request for the general layout. Leng
 
 | Parameter | Value |
 |---|---|
-| Model | **Pixhawk 6X (Holybro Standard Set v2A, selected June 11).** Set includes the FC module, Standard Baseboard v2A, PM02D HV power module, cable set, and an M9N GPS. Selection rationale: the 6X IO PWM pins drive the wing flaperons directly, saving the second CAN-PWM node and shelf space |
+| Model | **Pixhawk 6C + PM02 V3 (selected June 17, supersedes the June 11 6X).** Full-size 6C (not the Mini), bundled with the analog PM02 V3 12S power module and a cable set. Selection rationale: the 6C IO PWM pins drive the wing flaperons directly (same as the 6X plan, so the wing CAN-PWM node stays dropped), and its two analog POWER ports let the FCHUB vehicle V/I feed POWER2 directly (§4.13). No GPS in this bundle (a +M9NGPS variant exists separately) |
 | Firmware | ArduPlane 4.x with QuadPlane |
-| IMU | Triple redundant, on a vibration-isolated and damped sensor board |
-| Barometer | Dual internal + external baro on CAN (GPS units) |
-| Magnetometer | External compass on CAN (GPS units, internal mag disabled) |
-| CAN ports | FMU-CAN1 (active), FMU-CAN2 (reserved) |
-| UART ports | 6× (TELEM1, TELEM2, GPS1, GPS2, SERIAL4, SERIAL5) |
-| PWM outputs | 16× (8× FMU direct, 8× via IO processor) |
-| Power input | POWER1 from the PM02D HV (I2C, included in the set). POWER2 unused (single FC supply for V1) |
+| IMU | Dual (ICM-42688-P + BMI088), on a vibration-isolated sensor board |
+| Barometer | Internal MS5611 + external baro on the tail Here4 (CAN) |
+| Magnetometer | External compass on the F9P + Here4, internal mag (IST8310) as backup |
+| CAN ports | 2× (CAN1 active, CAN2 reserved) |
+| UART ports | 5× (TELEM1, TELEM2, TELEM3, GPS1, GPS2) |
+| PWM outputs | 16× (8× IO MAIN + 8× FMU AUX), 3.3V/5V switchable |
+| Power input | POWER1 from the analog PM02 V3 (single FC supply). POWER2 = FCHUB analog V/I sense (not a backup brick), see §4.13 |
 | Vibration isolation | Internal gel-foam isolators in chassis |
-| Location | Nose avionics bay, oriented with X-axis forward, mounted to isolator plate |
+| Location | Avionics shelf, oriented with X-axis forward, mounted to isolator plate |
 | USB-C | Ground access for configuration and parameter upload |
 
-Sourcing (June 11): Aykut Havacılık lists the 6X Standard Set v2A at 38,220 TL (~$955) but is out of stock. Holybro direct is $321, roughly a third of the TR price, so order from Holybro EU unless Aykut restocks within the week. The included M9N GPS is serial (not DroneCAN) and is kept as a bench and backup unit, it is not part of the dual DroneCAN GPS architecture (§4.8). For the record: the PM02D is supported on the 5X/6X series only, and earlier PM07/PM06 references are superseded (§4.2 FCHUB-12S handles distribution and vehicle current).
+Sourcing (June 17): ordered from rx-dynamic (TR) at ₺19,900 for the 6C + PM02 set (no GPS), kept TR-side to keep customs simple per the parts-list sourcing rule. The full 6C (vs the Mini) was chosen for the extra UARTs (5 vs 4) and the second analog POWER port. The analog PM02 V3 is now an advantage, not a constraint: it is what makes the FCHUB-into-POWER2 vehicle V/I sensing possible (the 6X's digital PM02D could not have done it). Earlier PM07/PM06 references are superseded (§4.2 FCHUB-12S handles distribution and vehicle current).
 
 ---
 
@@ -570,28 +574,29 @@ Sourcing (June 11): Aykut Havacılık lists the 6X Standard Set v2A at 38,220 TL
 
 #### GPS (×2 redundant, AIP-006 §9.4)
 
-Two independent DroneCAN GPS units. The tail unit is a CubePilot Here4 (carried over from the original tail electronics plan, now GPS only). The nose unit is the primary and its specific model is still open (see OQ-12). The M9N included in the 6X standard set is serial, not DroneCAN, and stays a bench and backup unit outside this architecture. Candidates are u-blox F9P, F9P Neo, or salvaged F9P hardware (RTK), any with internal baro and compass.
+Two independent GPS units on different interfaces (OQ-12 / parts-list D1 closed June 17). The **primary** is a **salvaged u-blox F9P on a serial UART** (GPS1), using the on-hand antennas. The **secondary** is a CubePilot Here4 on CAN (carried over from the tail electronics plan, now GPS only). This bundle has no M9N (a +M9NGPS 6C variant exists separately); the F9P is the primary, not a bench unit.
 
-| Parameter | Primary (nose) | Secondary (tail) |
+| Parameter | Primary (shelf/nose) | Secondary (tail) |
 |---|---|---|
-| Model | DroneCAN GPS, model TBD (OQ-12) | CubePilot Here4 |
-| Interface | DroneCAN | DroneCAN |
-| Internal sensors | Baro and compass (depends on module) | Barometer, IMU, magnetometer |
-| RTK capable | Depends on module | Yes |
-| GNSS constellations | GPS, GLONASS, Galileo, BeiDou (target) | GPS, GLONASS, Galileo, BeiDou |
-| Supply voltage | 5V (CAN bus) | 5V (CAN bus) |
-| CAN node ID | 10 | 11 |
+| Model | u-blox F9P (RTK, salvaged) | CubePilot Here4 |
+| Interface | Serial UART (GPS1) | DroneCAN |
+| Internal sensors | Baro + compass (module-dependent) | Barometer, IMU, magnetometer |
+| RTK capable | Yes | Yes |
+| GNSS constellations | GPS, GLONASS, Galileo, BeiDou | GPS, GLONASS, Galileo, BeiDou |
+| Supply voltage | 5V (peripheral rail, via the GPS port) | 5V (CAN bus) |
+| Node / port | SERIALx (GPS1) | CAN node 11 |
 
 ArduPilot parameters:
 ```
-GPS_TYPE = 9    ; DroneCAN
-GPS_TYPE2 = 9
+GPS_TYPE = 2          ; u-blox serial (primary, F9P on GPS1)
+GPS_TYPE2 = 9         ; DroneCAN (secondary, Here4)
+SERIAL3_PROTOCOL = 5  ; GPS on the GPS1 UART (confirm the port's SERIALx index)
 GPS_GNSS_MODE = 0     ; auto
 GPS_GNSS_MODE2 = 0
 GPS_AUTO_SWITCH = 1   ; auto-switch to best GPS
 ```
 
-**GPS yaw / heading:** moving baseline GPS yaw (dual-antenna heading) requires two matched RTK units configured as base plus rover. A mixed pair (different nose module plus tail Here4) does not support moving baseline, so Phase 1 yaw comes from the compasses on the GPS units rather than from GPS. If GPS yaw is wanted later, select two matched RTK units (e.g. two Here4, or two u-blox F9P-based units), tracked in OQ-12. The ~2 m nose-to-tail separation still gives spatial diversity for the redundant fix.
+**GPS yaw / heading:** moving baseline GPS yaw (dual-antenna heading) requires two matched RTK units on a shared interface configured as base plus rover. A mixed pair (serial F9P plus CAN Here4) does not support moving baseline, so Phase 1 yaw comes from the compasses on the GPS units rather than from GPS. If GPS yaw is wanted later, move to two matched RTK units on one interface. The ~2 m nose-to-tail separation still gives spatial diversity for the redundant fix.
 
 #### Airspeed Sensor
 
@@ -613,7 +618,9 @@ If the stored pitot's transducer is unknown or incompatible, replacement option:
 
 Selection rationale: radar tolerates the prop wash dust kicked up during VTOL landing on dirt fields, where LiDAR returns degrade. Specs corrected against Ainstein's current page (June 2026): the US-D1 is 110g and 100 Hz, not the 56g / 12 Hz carried in earlier revisions, so the weight argument for LiDAR is gone but the robustness argument stands. Sourcing: a unit is believed to be on hand in Turkey already (June 11). Confirm its location and interface variant (UART vs CAN) before buying anything. Only if it does not turn up: no public price, quote via Ainstein or a distributor, and US sourcing plus Turkish customs would make it the longest lead item on the list (parts list line 5).
 
-ArduPilot integration: UART on SERIAL4 with the rangefinder protocol and RNGFND1_TYPE set to the USD1 serial driver, or the DroneCAN variant if the UART budget tightens.
+ArduPilot integration: UART on a spare serial port with the rangefinder protocol and RNGFND1_TYPE set to the USD1 serial driver, or the DroneCAN variant if the UART budget tightens.
+
+**First-flight note (June 12):** the team treats the rangefinder as optional for first flight, not a blocker. Alperen may have an older Feather LiDAR unit available as a fallback — confirm its interface (CAN vs UART) if the US-D1 does not turn up.
 
 ---
 
@@ -627,11 +634,10 @@ CAN1 bus node map:
 | 2 | ESC2 — Motor 2 (RL) | AMPX 80A | |
 | 3 | ESC3 — Motor 3 (FL) | AMPX 80A | |
 | 4 | ESC4 — Motor 4 (RR) | AMPX 80A | |
-| 10 | GPS #1 (nose) | GPS + baro + compass | Primary GPS (DroneCAN, model TBD, OQ-12) |
-| 11 | Here4 (tail) | GPS + baro + compass | Secondary GPS |
+| 11 | Here4 (tail) | GPS + baro + compass | Secondary GPS (primary F9P is serial, not on CAN) |
 | 12 | CAN-PWM adapter (tail) | Matek CAN-L4-PWM | DroneCAN→PWM for ruddervators |
 
-**Topology:** CAN1 leaves the Pixhawk and runs to a passive CAN splitter/hub near the CG, which fans out short stubs to the four boom ESCs. The trunk continues from the splitter to the tail (Here4 and adapter) and branches to the nose GPS. This keeps the CAN fan-out off any custom board for V1. Keep each splitter stub short (ideally under 0.3 m at 1 Mbps), and confirm whether the splitter has a built-in 120Ω terminator. If the boom stubs show marginal signal integrity, daisy-chain the ESCs along the booms instead.
+**Topology:** CAN1 leaves the Pixhawk and runs to a passive CAN splitter/hub near the CG, which fans out short stubs to the four boom ESCs. The trunk continues from the splitter to the tail (Here4 and adapter). The primary GPS is no longer on CAN (F9P moved to a serial UART, §4.8), so the nose GPS branch is dropped. This keeps the CAN fan-out off any custom board for V1. Keep each splitter stub short (ideally under 0.3 m at 1 Mbps), and confirm whether the splitter has a built-in 120Ω terminator. If the boom stubs show marginal signal integrity, daisy-chain the ESCs along the booms instead.
 
 Bus termination: 120Ω at the Pixhawk CAN port (built-in or terminator plug) and 120Ω at the last physical node at the tail (whichever of the Here4 or CAN-PWM adapter sits at the bus end). The CAN splitter sits mid-bus and is not terminated. No termination on the other intermediate nodes.
 
@@ -657,7 +663,7 @@ ESC node IDs are assigned via DroneCAN UI Tool (pre-flight on bench, not in the 
 | CAN | 4-pin JST-GH, daisy-chained from CAN1. Node ID 12, 120Ω term if at bus end |
 | Logic power | 4.5–5.5V from the tail PM12S-3 (not the CAN 5V rail), ~30mA |
 | PWM outputs | 9× PWM (8× DShot-capable), use 2 for ruddervator L/R at 5V logic. AP_Periph firmware (STM32L431), 3.5g |
-| Servo rail | V+ rail fed from the tail PM12S-3 Vx output (5.25V PT1, 8V final). Adapter logic and Here4 stay on the PM12S-3 fixed 5V, deliberately separate so the later 8V switch cannot reach the logic or the GPS |
+| Servo rail | V+ rail fed from the tail PM12S-3 Vx output (8V, PT1 = final Kingmax HV). Adapter logic and Here4 stay on the PM12S-3 fixed 5V, deliberately separate so the 8V rail cannot reach the logic or the GPS |
 | ArduPilot | Map the CAN node's PWM channels to SERVO_FUNCTION 79/80, confirm in WP-E04 |
 
 Sourcing (June 11): in stock in Turkey at Aykut Havacılık, 2,060 TL. The Matek CAN-L431 from the same shop (2,500 TL, 5× PWM, 3× UART, I2C, dual parallel GH-4P CAN connectors) is an acceptable alternate running the same AP_Periph family on the same STM32L431. The L4-PWM stays primary: more PWM headroom, and it sits at the bus end where its single CAN connector plus the 120Ω terminator fits the topology. The L431's pass-through CAN connectors would matter only if the adapter had to sit mid-bus.
@@ -667,8 +673,8 @@ Sourcing (June 11): in stock in Turkey at Aykut Havacılık, 2,060 TL. The Matek
 | Item | Detail |
 |---|---|
 | Input | HV bus spur (36–50V), an 18 AWG branch broken out at the tail-boom ESC-lead extension joint (not a dedicated FCHUB run), via the tail harness |
-| Outputs | Vx at 5.25V (PT1) / 8V (final), 15A cont, for the 2 ruddervator servos. Fixed 5.2V/4A for the adapter logic and the Here4. Fixed 12V unused at the tail |
-| Type | Matek PM12S-3 (9–55V input with TVS, 53g). The 8V switch for the final 6–8.4V servos is a pad setting, no hardware change |
+| Outputs | Vx at 8V, 15A cont, for the 2 Kingmax CLS3015S ruddervator servos. Fixed 5.2V/4A for the adapter logic and the Here4. Fixed 12V unused at the tail |
+| Type | Matek PM12S-3 (9–55V input with TVS, 53g). Vx at 8V drives the Kingmax CLS3015S (6.0–8.4V range) at ~33 kg·cm vs 35 kg·cm at their full 8.4V — still well above target. 8.4V would need the robocombo buck (used on the wing); the tail keeps the PM12S-3 because it also supplies the 5V logic rail |
 | Wiring | Vx lands on the adapter's servo V+ rail, servos plug into the adapter PWM headers. The fixed 5V feeds the adapter logic pad and the Here4 on a separate feed |
 | Kill scope | On the HV spur, de-energized only by the HV kill, not the LV kill (see §4.3) |
 
@@ -678,15 +684,15 @@ Common ground: all PM12S-3 rails share ground, so the Vx servo rail, the adapter
 
 **Fallback for first hover:** for the first VTOL-only bench/hover test, the adapter and servos can be powered from any bench 5V source before the tail harness and PM12S-3 are finalized.
 
-#### Wing Flaperon Drive — 6X IO PWM (wing CAN node considered and dropped)
+#### Wing Flaperon Drive — 6C IO PWM (wing CAN node considered and dropped)
 
-A second CAN-L4-PWM at the wing center was considered on June 11 and dropped the same day with the Pixhawk 6X selection: the 6X IO PWM outputs 1–2 drive the flaperons directly, saving a node, its wiring, and shelf space. The flaperon PWM runs (~1–1.5 m to the wing roots) follow the §4.6 EMI rules. Servo power is unchanged: the forward PM12S-3 Vx feeds the flaperon V+ through the wing connectors. Only the tail keeps a CAN-PWM adapter (node 12), so `CAN_D1_UC_SRV_BM = 0x000C` (servo outputs 3–4).
+A second CAN-L4-PWM at the wing center was considered on June 11 and dropped: the 6C IO PWM outputs 1–2 drive the flaperons directly (the full 6C has the same IO PWM the 6X did), saving a node, its wiring, and shelf space. The flaperon PWM runs (~1–1.5 m to the wing roots) follow the §4.6 EMI rules. Servo power comes from the forward robocombo DC-DC buck @ 8.4V (HV input at the FCHUB pads) through the wing connectors, feeding the Kingmax CLS3015S V+. Only the tail keeps a CAN-PWM adapter (node 12), so `CAN_D1_UC_SRV_BM = 0x000C` (servo outputs 3–4).
 
 ---
 
 ### 4.11 Servo System
 
-**PT1 servo voltage (June 2026):** PT1 uses 5V test servos for both wing and tail. The first prototype only needs hover and control-surface motion, not loaded cruise, so 5V servos off the existing 5V rails simplify the wiring and drop the HV servo rails. This is a test choice, not the final loaded selection. The final design is expected to use 6–8.4V HV servos sized to Zeynep's control-surface hinge-moment study (WP-E06), which switches both PM12S-3 Vx rails (tail and forward) to 8V with no hardware change. The torque and current targets below are the final-design requirements, pending Alperen's main-wing and tail numbers.
+**PT1 servo selection (June 17, 2026):** PT1 runs the final-class HV servos directly, dropping the earlier 5V test-servo stage. All four control surfaces use the **Kingmax CLS3015S** (6.0–8.4V HV, 35 kg·cm at 8.4V / 25.7 kg·cm at 6V, 0.15 s/60° at 8.4V, metal gear, dual ball bearing, waterproof, 80g, 25T spline). Flaperons run at 8.4V off the forward robocombo buck, ruddervators at 8V off the tail PM12S-3 Vx (§4.4). The 35 kg·cm rating is far above the preliminary torque targets below, so the surfaces are not torque-limited even pending Zeynep's hinge-moment study (WP-E06). **CG note:** at 80g each the two ruddervators add ~160g at the tail vs the earlier ≤30g/servo target (~100g more aft), feeding the active CG/stability investigation — confirm with Alperen and Zeynep.
 
 #### Ruddervator Servos (×2)
 
@@ -694,14 +700,14 @@ V-tail airfoil: NACA 0015, 280mm chord, control surface 30–35% chord (~84–98
 
 | Parameter | Requirement |
 |---|---|
-| Type | PT1: 5V digital. Final: digital HV (6–8.4V) |
-| Torque target | ≥ 8 kg·cm at 7.4V |
-| Speed | ≤ 0.12 s / 60° at 7.4V |
-| Weight | ≤ 30g each (tail weight is CG-critical) |
-| Connector | Standard 3-pin JR/Futaba (2.54mm pitch) |
+| Type | Kingmax CLS3015S (digital HV, 6.0–8.4V), run at 8V on the tail PM12S-3 Vx |
+| Torque | ~33 kg·cm at 8V (35 kg·cm at 8.4V) vs ≥ 8 kg·cm target |
+| Speed | ~0.16 s / 60° at 8V vs ≤ 0.12 s / 60° target |
+| Weight | 80g each (tail weight is CG-critical — see the CG note above) |
+| Connector | Standard 3-pin JR/Futaba (2.54mm pitch), 25T spline, 333mm lead |
 | Control | Via tail CAN-PWM adapter PWM output (see §4.10) |
 
-Torque target is preliminary — Zeynep's control surface sizing study output (WP-E06 input) will set the final requirement. Verify hinge moment calculation before locking servo selection.
+Torque is far above the preliminary target. Re-check against Zeynep's hinge-moment study (WP-E06 input); the binding constraint here is tail mass, not torque.
 
 #### Flaperon Servos (×2)
 
@@ -709,14 +715,14 @@ Main wing: Clark Z, 20–25% chord flaperons.
 
 | Parameter | Requirement |
 |---|---|
-| Type | PT1: 5V digital. Final: digital HV (6–8.4V) |
-| Torque target | ≥ 6 kg·cm at 7.4V |
-| Speed | ≤ 0.15 s / 60° at 7.4V |
-| Weight | ≤ 30g each |
+| Type | Kingmax CLS3015S (digital HV, 6.0–8.4V), run at 8.4V on the robocombo buck |
+| Torque | 35 kg·cm at 8.4V vs ≥ 6 kg·cm target |
+| Speed | 0.15 s / 60° at 8.4V |
+| Weight | 80g each |
 | Connector | Standard 3-pin + wing panel connector (see §4.6) |
-| Control | Via Pixhawk 6X IO PWM outputs 1 and 2 (§4.6 EMI rules on the wing runs) |
+| Control | Via Pixhawk 6C IO PWM outputs 1 and 2 (§4.6 EMI rules on the wing runs) |
 
-These are final-design HV candidates: Savöx SH-0255MG (~20g, 9 kg·cm at 7.4V), KST DS135MG (~27g, 13 kg·cm at 7.4V), MKS HV6130 (~20g, 10 kg·cm at 7.4V). Zeynep also flagged a Turkey-available servo with a 6–8.4V range for the final design. For PT1, use inexpensive 5V digital servos (hover and control-surface motion only). Selection in WP-E06.
+Selected June 17: the Kingmax CLS3015S replaces the earlier 5V-test / HV-candidate split (Savöx SH-0255MG, KST DS135MG, MKS HV6130). One servo SKU now covers both flaperons and ruddervators. Confirm linkage geometry and endpoint travel against the Kingmax 25T horn in WP-E06.
 
 ---
 
@@ -728,7 +734,7 @@ These are final-design HV candidates: Savöx SH-0255MG (~20g, 9 kg·cm at 7.4V),
 |---|---|
 | Range requirement (Phase 1) | VLOS, ≤ 5 km |
 | Protocol | CRSF (preferred, bidirectional) or SBUS |
-| FC interface | UART5 (SERIAL5) |
+| FC interface | TELEM2 (CRSF), or the dedicated RC-IN port (SBUS) |
 | Receiver location | Avionics shelf or fuselage side, antenna external |
 | Candidates | ExpressLRS (900 MHz, CRSF, 1W output option) or TBS Crossfire |
 
@@ -740,7 +746,7 @@ ExpressLRS preferred: native CRSF bidirectional allows MAVLink passthrough to GC
 |---|---|
 | Range (Phase 1) | 30–80 km LOS with whip antennas |
 | Protocol | MAVLink 2.0 |
-| FC interface | UART1 (TELEM1) |
+| FC interface | TELEM1 |
 | Data | Attitude, GPS, battery SoC, ESC temps, link quality |
 | Candidates | RFD900x (1W, 900 MHz, ~$200/pair), SiK 915 MHz (100mW, ~$80/pair) |
 
@@ -754,12 +760,12 @@ Phase 3 requirement (> 200 km) likely requires satellite. See §6.1.
 
 #### Battery Monitoring
 
-The pack is a dumb LiPo, so monitoring is sensor-based rather than from a BMS. Vehicle current comes from the FCHUB-12S 440A analog sensor, pack voltage from a FC voltage sense or the power module (analog on the PM02 V3, I2C on the PM02D HV), and SoC from ArduPilot coulomb counting. There is no per-cell data.
+The pack is a dumb LiPo, so monitoring is sensor-based rather than from a BMS. Vehicle current comes from the FCHUB-12S 440A analog sensor on the 6C POWER2 port, pack voltage from the FCHUB VBat divider on the same port, and SoC from ArduPilot coulomb counting. There is no per-cell data.
 
 | Parameter | Method |
 |---|---|
-| Pack current | FCHUB-12S 440A analog sensor (3.3V ADC, scale 75) → FC ADC pin |
-| Pack voltage | FCHUB voltage sense → FC ADC, or the power module (analog on 6C, I2C on 6X) |
+| Pack current | FCHUB-12S 440A analog sensor (0–3.3V over 440A; ArduPilot `BATT_AMP_PERVLT 133.3`) → 6C POWER2 CURRENT pin (BATT1) |
+| Pack voltage | FCHUB VBat divider → 6C POWER2 VOLTAGE pin (BATT1). PM02 V3 on POWER1 gives a redundant read (BATT2) |
 | Cell voltages | Not available (no BMS). Use a plug-in cell checker/alarm for ground checks |
 | SoC / consumed | ArduPilot coulomb counting from the FCHUB current sensor |
 | Temperature | Pack not instrumented (no BMS). Optional external thermistor if needed |
@@ -767,9 +773,41 @@ The pack is a dumb LiPo, so monitoring is sensor-based rather than from a BMS. V
 | Critical voltage | BATT_CRT_VOLT = 39.6V (3.3V/cell), RTL trigger |
 | Low capacity | BATT_LOW_MAH = 2000 mAh (reserve threshold) |
 
-ArduPilot parameter: `BATT_MONITOR = 4` (Analog Voltage and Current). Set `BATT_CURR_PIN` / `BATT_VOLT_PIN` to the Pixhawk ADC pins wired to the FCHUB sense outputs (the 6X keeps ADC pins on its AD&IO port) and `BATT_CURR_SCALE` per the FCHUB (3.3V ADC, scale 75). Voltage sense is confirmed on the FCHUB-12S V2: the V pad set to VBat feeds through the built-in 1K:20K divider, so 50.4V full charge reads ~2.4V at the ADC and `BATT_VOLT_MULT` ≈ 21 (calibrate against a multimeter). The power module stays available as BATT2.
+**ArduPilot parameters (Setup B — FCHUB on POWER2 as BATT1, PM02 V3 on POWER1 as BATT2).**
 
-**Power module as secondary monitor:** the module gives a redundant pack-voltage reading as BATT2 (analog pins on the PM02 V3, I2C on the PM02D HV). Its current reflects only the FC branch, not vehicle current, because the module feeds a dead-end branch off the FCHUB pad tap. Vehicle current and consumed-mAh come from the FCHUB sensor (primary).
+The 6C analog POWER ports map to fixed ADC pin numbers (ArduPilot Pixhawk6C hwdef). Note the difference between the **connector position** (where the wire physically lands) and the **ArduPilot pin number** (the ADC channel that position routes to):
+
+| Port | Module here | Instance | Voltage: conn. pos → ADC pin | Current: conn. pos → ADC pin |
+|---|---|---|---|---|
+| POWER1 | PM02 V3 (FC 5V supply) | BATT2 | pos 4 → pin **8** (PC5) | pos 3 → pin **4** (PC4) |
+| POWER2 | FCHUB-12S V2 sense | BATT1 | pos 4 → pin **5** (PB1) | pos 3 → pin **14** (PA2) |
+
+The instances are deliberately swapped from the board default (which assigns BATT1 to POWER1): the FCHUB is the primary (BATT1) because it carries the real vehicle current, so SoC, consumed-mAh, and the `BATT_LOW_*` / `BATT_CRT_*` failsafes ride on it. The PM02 V3 is BATT2, a redundant pack-voltage read only — its current reads just the FC leg off the pad tap, not vehicle current.
+
+```
+# BATT1 = FCHUB-12S V2 on POWER2 (primary: vehicle current + voltage + SoC)
+BATT_MONITOR     = 4        ; Analog Voltage and Current
+BATT_VOLT_PIN    = 5        ; 6C POWER2 voltage (PB1)
+BATT_CURR_PIN    = 14       ; 6C POWER2 current (PA2)
+BATT_VOLT_MULT   = 21.0     ; FCHUB 1K:20K divider (Matek-specified)
+BATT_AMP_PERVLT  = 133.3    ; FCHUB 440A sensor (Matek-specified)
+BATT_VOLT_OFFSET = 0
+BATT_AMP_OFFSET  = 0
+BATT_LOW_VOLT    = 42.0     ; 3.5V/cell
+BATT_CRT_VOLT    = 39.6     ; 3.3V/cell
+BATT_LOW_MAH     = 2000
+
+# BATT2 = PM02 V3 on POWER1 (redundant voltage; current is FC-leg only)
+BATT2_MONITOR    = 4        ; Analog Voltage and Current
+BATT2_VOLT_PIN   = 8        ; 6C POWER1 voltage (PC5)
+BATT2_CURR_PIN   = 4        ; 6C POWER1 current (PC4)
+BATT2_VOLT_MULT  = 18.18    ; PM02 V3 (6C board default scale)
+BATT2_AMP_PERVLT = 36.36    ; PM02 V3 (6C board default scale)
+```
+
+**FCHUB-to-POWER2 cable:** 4-wire from the FCHUB-12S V2 JST-SH breakout (silk `... TLM Cur G V`) to the 6C POWER2 plug — `Cur` → POWER2 position 3 (CURRENT2), `V` → POWER2 position 4 (VOLTAGE2), `G` → POWER2 position 6 (GND). Leave POWER2 positions 1/2 (5V) open, POWER2 is sense only. **Set the FCHUB `V`-pad jumper to `V = VBat`** so that pin outputs the 1/21 divided voltage (0–2.857V, ≈2.4V at 50.4V). If it is left on `12V` it will destroy the 3.3V ADC, so confirm the `V` wire reads ≈ pack-voltage ÷ 21 on a multimeter before plugging in. The PM02 V3 keeps its stock 6-pin cable into POWER1.
+
+The 6C's two analog POWER ports are what make this split possible — no cutting the PM02 harness, unlike the single-port splice the digital PM02D would have forced. After install, calibrate `BATT_VOLT_MULT` against a multimeter and trim `BATT_AMP_PERVLT` against a clamp meter or a known load.
 
 #### ESC Telemetry and Thermal
 
@@ -847,21 +885,23 @@ Nose (slimmed, v5):
   - No avionics requirement. Pitot mast and antenna placement only if needed
 
 Forward battery bay:
-  - ProFuse 12S pack (186×76×160mm, 3,822g): strapped, fore-aft position sets CG
-  - XT150 pack connector: reachable for ground safing
+  - motorobit 12S 22Ah 15C solid-state pack (3,709g, 190×78×126mm): strapped, fore-aft position sets CG
+  - QS8-S socket (anti-spark): reachable for ground safing
   - HV kill (OQ-05): adjacent, actuation per the chosen implementation
 
 Avionics shelf (above battery, top access):
-  - Pixhawk 6C/6X: vibration-isolated, X-axis forward
-  - Power module (PM02 V3 or PM02D HV): inline on the pad-tap leg
-  - Primary GPS: on the shelf cover, unobstructed sky view
+  - Pixhawk 6C: vibration-isolated, X-axis forward
+  - PM02 V3 power module: inline on the pad-tap leg (POWER1); FCHUB sense to POWER2
+  - Primary GPS (F9P, serial): on the shelf cover, unobstructed sky view
   - RC receiver + telemetry radio: shelf edges, antennas external
   - LV kill switch: reachable through the shelf hatch
   - Shelf footprint reserves rectangular space for a future integration PCB (per Alperen)
+  - Compartment ~180×250mm × ~90mm tall between the longerons (June 12 estimate, pending CAD). Fit check (WP-E07): 6C (84.8×44), PM02 V3, FCHUB-12S (55×50), CAN hub, F9P, RC RX, telemetry radio must all fit this volume
 
 CG bay / boom roots:
   - FCHUB-12S PDB: near the boom-root convergence, short ESC lead runs
   - CAN splitter/hub: adjacent to the FCHUB
+  - Forward robocombo buck (flaperon 8.4V rail): adjacent to the FCHUB
 
 Booms (×4 motor arms, 2 carrying the tail):
   - ESCs: externally mounted near motors (within 150mm of motor centerline)
@@ -871,8 +911,8 @@ Booms (×4 motor arms, 2 carrying the tail):
 
 Tail group (boom-mounted):
   - Here4 (secondary GPS): top surface, unobstructed sky view
-  - CAN-PWM adapter + PM12S-3: bulkhead-mounted, connectors accessible
-  - Ruddervator servos: local, short leads
+  - CAN-PWM adapter + PM12S-3 (Vx @ 8V + fixed 5V): bulkhead-mounted, connectors accessible
+  - Ruddervator servos (Kingmax CLS3015S, 80g each): local, short leads
 
 Wings (detachable panels):
   - Flaperon servo: inline with control horn, servo output axis on hinge line
@@ -898,16 +938,17 @@ Procurement view with priorities, candidate vendors, and lead flags: `docs/pt1-p
 
 | Item | Qty | Est. Unit Cost | Est. Total |
 |---|---|---|---|
-| Pixhawk 6X Standard Set v2A (FC + baseboard + PM02D HV + M9N GPS + cables, selected June 11) | 1 | $321 | $321 |
-| ProFuse Super Nano 12S 16Ah 60C (XT150, robotsepeti TR, 41,322 TL) | 1 | ~$1,030 | ~$1,030 |
+| Pixhawk 6C + PM02 V3 set (FC + analog power module + cables, no GPS, selected June 17, rx-dynamic TR) | 1 | ~$600 | ~$600 |
+| motorobit 12S 22Ah 15C solid-state LiPo (3,709g, 190×78×126mm, QS8-S, selected June 17) | 1 | TBD | TBD |
 | Matek FCHUB-12S V2 PDB (HV distribution + 5V/12V BECs), incl. 1 spare | 2 | $30 | $60 |
 | XT60 pigtail + 16 AWG for the FCHUB pad tap (Y-splitter dropped) | 1 lot | $10 | $10 |
-| Primary GPS, nose (DroneCAN, model TBD, OQ-12) | 1 | TBD | TBD |
+| u-blox F9P primary GPS, serial (salvaged unit on hand; antennas on hand, D1 closed) | 1 | $0 | $0 |
 | Here4 GPS, tail (secondary GPS, GPS only) | 1 | $300 | $300 |
-| Matek PM12S-3 ×2 (tail + forward servo rails, Aykut Havacılık TR, 6,900 TL each) | 2 | $170 | $340 |
-| HV kill hardware (D2 outcome: EV200 ~€149, MOSFET switch ~$80, or software-only $0) | 1 | TBD | TBD |
+| Matek PM12S-3 (tail servo + logic rail, Aykut Havacılık TR, 6,900 TL) | 1 | $170 | $170 |
+| robocombo DC-DC buck 8–60V 15A (wing flaperon 8.4V rail) | 1 | ~$15 | ~$15 |
+| HV kill: none for PT1 (software E-stop, §9.3 deviation, decided June 17) | — | $0 | $0 |
 | LV kill switch | 1 | $15 | $15 |
-| XT150 male connectors (pack mate) + optional AS150U adapter pigtail | 1 lot | $15 | $15 |
+| QS8-S plug (mates the pack socket) ×3, anti-spark so no AS150U needed | 1 lot | $15 | $15 |
 | XT90S connector pairs (ESC boom junctions + spares) | 8 | $6 | $48 |
 | 5mm bullet connectors (×12 sets) | 12 | $2 | $24 |
 | 8 AWG silicone wire (2 m, battery harness) | 1 lot | $15 | $15 |
@@ -917,8 +958,7 @@ Procurement view with priorities, candidate vendors, and lead flags: `docs/pt1-p
 | CAN bus twisted-pair wire (5 m) | 1 lot | $10 | $10 |
 | JST-GH crimp kit (CAN, UART, assorted) | 1 | $25 | $25 |
 | CAN splitter/hub (DroneCAN, JST-GH, model TBD) | 1 | $15 | $15 |
-| 5V digital ruddervator servos (PT1) | 2 | $25 | $50 |
-| 5V digital flaperon servos (PT1) | 2 | $25 | $50 |
+| Kingmax CLS3015S HV servos (4 install: 2 flaperon + 2 ruddervator, + 2 spare; thkmodelucak TR, 3,950 TL) | 6 | ~$110 | ~$660 |
 | Wing panel servo connectors (Molex Mini-Fit Jr) | 2 sets | $10 | $20 |
 | RC receiver (TBD — pending RC system decision) | 1 | TBD | TBD |
 | Telemetry radio (TBD — pending SIYI HM30 decision) | 1 | TBD | TBD |
@@ -926,7 +966,7 @@ Procurement view with priorities, candidate vendors, and lead flags: `docs/pt1-p
 | Pitot tube transducer (if needed beyond existing) | 1 | $30 | $30 |
 | WS2812B LED strip + wiring | 1 lot | $20 | $20 |
 | Matek CAN-L4-PWM adapter (tail), incl. 1 spare (Aykut Havacılık TR, 2,060 TL each) | 2 | $50 | $100 |
-| (tail and flaperon servo rails covered by the PM12S-3 line above) | — | — | — |
+| (tail servo rail = PM12S-3 line above; wing servo rail = robocombo buck line above) | — | — | — |
 | Heat-shrink, zip ties, mounting hardware | 1 lot | $40 | $40 |
 | **Subtotal (to procure, est.)** | | | **~$2,550 + TBD items** |
 | **Phase 1 Grand Total (est., excl. labor)** | | | **~$5,185 + TBD items** |
@@ -1442,7 +1482,7 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 |---|---|
 | Owner | Erick |
 | Phase | 1 |
-| Inputs | Component dimensions (Pixhawk 6C/6X, BECs, power module, RC receiver, telemetry radio), avionics shelf dimensions from Alperen (fuselage v5), forward battery bay dimensions, CG target from Alperen |
+| Inputs | Component dimensions (Pixhawk 6C, BECs, power module, RC receiver, telemetry radio), avionics shelf dimensions from Alperen (fuselage v5), forward battery bay dimensions, CG target from Alperen |
 | Outputs | Physical layout drawing (top view and side view), cable routing plan, component mass and CG contribution |
 | Dependencies | WP-E01 (battery dimensions locked); Alperen's fuselage truss design finalized |
 | Deliverables | Dimensioned layout drawing (Inventor, Fusion, or dimensioned sketch), component placement table with CG contribution |
@@ -1508,18 +1548,18 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 
 | ID | Question | Owner | Priority | Gates |
 |---|---|---|---|---|
-| OQ-01 | Battery: pack format (one 12S vs 2× 6S in series), brand, and forward-bay CG position locked | Erick / Alperen | High | All Phase 1 work |
+| OQ-01 | Battery closed June 17 (single 12S 22Ah 15C semi-solid pack, motorobit TR, 3,709g, 190×78×126mm, QS8-S anti-spark). Only remaining: the forward-bay CG placement, pending the CAD session with Alperen (WP-E07), plus price confirmation | Erick / Alperen | Medium | WP-E07 |
 | OQ-02 | CAN-PWM adapter (Matek CAN-L4-PWM): enumerates as a DroneCAN servo node and outputs correct PWM under ArduPilot 4.x? | Erick / Zeynep | High | WP-E04 |
 | OQ-03 | ~~Altimeter: Ainstein US-D1 vs Benewake TF03-180?~~ Closed June 11: US-D1 selected (radar robustness in prop wash dust). Quote pending, longest lead item | Erick | — | — |
 | OQ-04 | RC system: ELRS vs Crossfire? (depends on team transmitter) | Alperen / Erick | Medium | WP-E08 |
-| OQ-05 | HV kill: must be RC-switchable (June 11 criterion). EV200 contactor + relay driver vs MOSFET anti-spark switch vs software E-stop + recorded deviation (§4.3) | Erick / Alperen | High | WP-E02, PT1 order |
+| OQ-05 | ~~HV kill: must be RC-switchable (June 11 criterion)~~ Closed June 17: **no hardware HV kill for PT1.** Software E-stop + QS8-S unplug for ground safing, recorded §9.3 deviation (§4.3). LV kill retained. Full HV kill returns for the final product | Erick / Alperen | — | — |
 | OQ-06 | Pitot tube (from storage): model and interface confirmed? | Alperen | Medium | WP-E05 |
 | OQ-07 | Shared or separate battery for VTOL vs IC ignition in Phase 2? | Erick | Low | Phase 2 design |
 | OQ-08 | Electric starter generator mode: what is the mechanical limitation? | Erick | Low | WP-E11 |
 | OQ-09 | Wing panel connector: Molex Mini-Fit Jr confirmed, or alternative? | Erick | Medium | WP-E06 |
 | OQ-10 | Payload quick-release connector: align with Arrow platform standard? | Erick / Alperen | Low | Phase 4 design |
 | OQ-11 | ~~Here4 breakout board: does Thomas's kit include one?~~ Closed, superseded by the standalone adapter. Here4 no longer used as converter. | Thomas | — | — |
-| OQ-12 | Primary GPS: second Here4 (matched RTK pair, enables GPS yaw) or F9P-class/salvage with on-hand antennas (compass yaw)? Decide before the PT1 order ships (parts list D1) | Team | High | WP-E05, PT1 order |
+| OQ-12 | ~~Primary GPS: second Here4 (matched RTK pair, GPS yaw) or F9P-class/salvage (compass yaw)?~~ Closed June 17: u-blox F9P on a serial UART (GPS1), compass yaw, on-hand antennas (parts list D1) | Team | — | — |
 
 ---
 
@@ -1527,6 +1567,8 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 
 | Rev | Date | Author | Changes |
 |---|---|---|---|
+| 0.18 | June 17, 2026 | errrks | Decisions and reconciliation pass against the June 1–15 call notes. **HV kill: none for PT1** — software E-stop (ArduPilot motor emergency stop on RC, AMPX 2 s CAN watchdog backstop) + QS8-S anti-spark unplug for ground safing. Recorded §9.3 deviation, E-REQ-02 annotated (§3), OQ-05 and D2 closed; LV kill retained; full HV kill returns for the final product. **F9P confirmed salvaged** (on hand, $0). **Battery** reclassed as semi-solid (~290–300 Wh/kg); clarified that "motorobit" is the TR retailer, not the pack brand. **Avionics compartment** dimensioned ~180×250mm × 90mm (June 12) with a WP-E07 fit check (§2.3, §4.15). **Altimeter** noted optional for first flight with a Feather LiDAR fallback (§4.8). OQ-01 narrowed to forward-bay CG placement pending the CAD session. Bench FC confirmed as the full 6C (same unit as the build, no Mini mismatch). Cross-doc consistency pass: reconciled `docs/open-questions.md` (battery/connector/FC/GPS/servos/POWER2/HV-kill), info note (SPH-E-002) updated, parts list (SPH-E-003) dated June 17. Updated §2.1, §3, §4.1, §4.3, §4.6 H1, §4.8, §4.15, §4.16, OQ-01, OQ-05. |
+| 0.17 | June 17, 2026 | errrks | FC changed from the Pixhawk 6X to the full-size **Pixhawk 6C + analog PM02 V3** (rx-dynamic TR, no GPS in the bundle). The 6C's IO PWM still drives the flaperons (wing CAN node stays dropped) and its **two analog POWER ports** enable the FCHUB vehicle V/I to feed POWER2 directly (PM02 V3 on POWER1 = supply + BATT2 voltage; FCHUB on POWER2 = BATT1 current + voltage), which the digital PM02D could not do. UART map reworked for the 6C's 5 ports. **Primary GPS** moved from a TBD DroneCAN node to a **u-blox F9P on a serial UART** (GPS1, compass yaw), closing OQ-12/D1 and removing CAN node 10. **Battery** changed from the ProFuse 16Ah 60C to the **motorobit 12S 22Ah 15C solid-state** pack (3,709g, 190×78×126mm, QS8-S anti-spark socket; ~113g lighter than the ProFuse so the weight trade is moot; 15C = 330A continuous, covers the 320A peak but watch sag), reopening/reclosing WP-E01 and superseding the June 11 D5. QS8-S being anti-spark removes the connector argument from the HV-kill decision (§4.3). **Servos:** PT1 now runs the final-class **Kingmax CLS3015S HV servos** directly (35 kg·cm @ 8.4V, 80g), dropping the 5V test-servo stage; note the +100g aft tail mass for CG. **Servo rails:** forward PM12S-3 dropped, replaced by a **robocombo DC-DC buck @ 8.4V** for the flaperons; the **tail PM12S-3 stays at Vx 8V** for the ruddervators plus its fixed 5V for the adapter and Here4. Both servo rails are HV-derived, so §4.3 LV kill no longer lists any servos. Battery monitoring documented to the parameter level (§4.13, Setup B): FCHUB on POWER2 = BATT1 (`BATT_VOLT_PIN 5`, `BATT_CURR_PIN 14`, MULT 21.0, PERVLT 133.3), PM02 V3 on POWER1 = BATT2 (`BATT2_VOLT_PIN 8`, `BATT2_CURR_PIN 4`, MULT 18.18, PERVLT 36.36), instances deliberately swapped so the real current sensor is primary. 6C ADC pin numbers taken from the ArduPilot Pixhawk6C hwdef. Updated §2.1/§2.2/§2.3, §4.1–§4.4, §4.6 (H1/H2/H6/H8/H9/H15/H20 + wing/tail connector specs), §4.7, §4.8, §4.9, §4.10, §4.11, §4.12, §4.13, §4.15, §4.16 BOM, OQ-12. |
 | 0.16 | June 11, 2026 | errrks | Reconciled with the June 5 and June 11 calls. FC: Pixhawk 6C or 6X by sourcing (Zeynep approved either). Power module follows the FC and the pairing error is fixed: PM02D is I2C, 5X/6X only, so the 6C path uses the analog PM02 V3 and the 6X set includes the PM02D HV. Battery Y-splitter dropped: the FC power module taps the FCHUB battery input pads (Y stays as fallback). Component zones reworked for fuselage v5: forward battery bay, top-access avionics shelf, slimmed nose, boom-routed tail harness. HV kill: added the RC-switchable criterion (June 11) and a new candidate table (EV200 + relay driver, MOSFET anti-spark switch, software E-stop + recorded deviation), superseding the PP75 option (undersized at 75A class vs 98–124A hover). Altimeter selected: US-D1, specs corrected to 110g / 100 Hz / UART+CAN per Ainstein. Regulators standardized on Matek BEC12S-PRO (5.2/8/12V selectable). Added the PT1 harness connection table (§4.6, H1–H21), renamed §4.6, and split the procurement view into `docs/pt1-parts-list.md` (SPH-E-003). §5: DLE55-class layout model, starter-generator moved to PT3 research. Late June 11 additions: battery selected (ProFuse Super Nano 12S 16Ah 60C, XT150 socket, 3,822g, 186×76×160mm, robotsepeti TR), battery interface moved from AS150U to XT150 with the anti-spark burden shifted to the inline kill (§4.3 connector interaction note), FCHUB-12S confirmed as V2 (built-in 1K:20K VBat divider closes the §4.13 voltage sense question, 12VSW PINIO pad can drive the EV200 coil directly), tail CAN boards sourced in Turkey at Aykut Havacılık with the CAN-L431 documented as alternate, US-D1 believed on hand in Turkey pending confirmation. Regulators changed to 2× Matek PM12S-3 (Vx 15A selectable 5.25/6/8V + fixed 5V + fixed 12V per unit, Aykut Havacılık), superseding the BEC12S-PRO plan: tail unit feeds the ruddervator Vx rail plus adapter/Here4 5V, forward unit feeds the flaperon Vx rail, and the final 8V servo change becomes a pad setting. A wing CAN-PWM node (13) was added and dropped the same evening with the FC decision. Final state: **Pixhawk 6X selected (D4 closed)**, chosen because its IO PWM outputs 1–2 drive the wing flaperons directly, saving the second adapter and shelf space. CAN-L4-PWM order stays at 2 (tail node 12 + spare), `CAN_D1_UC_SRV_BM = 0x000C`, and the §4.6 EMI rules re-apply to the ~1–1.5 m wing PWM runs. 6X sourcing: Aykut lists the set at 38,220 TL (~3× Holybro direct) and is out of stock, so Holybro EU at $321 is the order path. The set's M9N GPS is kept as a bench/backup unit. PM12S-3 TR markup vs Matek direct flagged in the parts list. Battery harness corrected from 4 AWG to 8 AWG: 4 AWG does not fit XT150 solder cups and the connector is the thermal limit on the short run. |
 | 0.15 | June 2026 | errrks | Reconciled with the June 1 call (PT1 decisions). Servos: PT1 uses 5V test servos for wing and tail, dropping both 7.8V BECs. Flaperons run on the peripheral 5V rail, the tail runs on a local HV→5V BEC that also powers the adapter and Here4, which resolves the tail-5V run and puts the whole tail control path on the HV kill only. Final design keeps 6–8.4V HV servos. Battery splitter reverted from XT90 to AS150U/XT150 (full current, 4AWG). Added a §4.6 routing and EMI subsection. Kill switch: PT1 implementation left TBD (contactor/SSR vs manual disconnect), §9.3 requirement noted. Updated §2.1/§2.3, §4.1, §4.3, §4.4, §4.6, §4.10, §4.11, and the BOM. |
 | 0.14 | June 2026 | errrks | Battery changed from a DroneCAN smart pack to a dumb 12S LiPo at 16Ah (Alperen's May mission-energy rerun, saves ~1kg). Monitoring moves to the FCHUB-12S 440A analog current sensor plus a voltage sense (BATT_MONITOR = 4), with the PM02D I2C as a redundant voltage reading. No per-cell or CAN battery data. Reworked §4.1, §4.2, §4.13, §2.3, and the BOM. Reconciled against the May 2026 meeting notes. |
