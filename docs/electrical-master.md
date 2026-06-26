@@ -1,7 +1,7 @@
 # Spearhead Electrical Master Document
 
 **Doc ID:** SPH-E-001
-**Revision:** 0.18
+**Revision:** 0.19
 **Author:** errrks
 **Date:** June 2026
 **Status:** Phase 1 specified. Phases 2–4 are architecture stubs pending detailed design.
@@ -107,8 +107,8 @@ Pixhawk 6C
 ├── CAN2 ─── [reserved / Phase 3 expansion]
 │
 ├── GPS1   ─── u-blox F9P primary GPS (serial, SERIALx_PROTOCOL = 5)
-├── TELEM1 ─── Ground telemetry radio (MAVLink 2.0)
-├── TELEM2 ─── RC receiver (CRSF), or RC on the dedicated RC-IN port (SBUS)
+├── TELEM1 ─── Holybro SiK V3 telemetry radio (MAVLink 2.0; STORK-borrowed first-flight unit, long-term TBD)
+├── RC IN  ─── Radiolink R9DS receiver (SBUS), paired with the AT9S Pro transmitter (D3 RC side closed June 18)
 ├── TELEM3 ─── [reserved / Phase 3 long-range link]
 ├── GPS2   ─── Ainstein US-D1 altimeter (UART; CAN alternate frees this port)
 │
@@ -541,8 +541,8 @@ Every PT1 cable end to end, per the June 11 request for the general layout. Leng
 | H14 | FCHUB 5V (separate feed) | WS2812 strips | LED power, data from FC GPIO | 22 AWG | JST | Per airframe | Transients stay off the peripheral rail |
 | H15 | Tail PM12S-3 outputs | Vx → adapter servo V+ rail + ruddervators. Fixed 5V → adapter logic + Here4 | Tail servo and logic rails | 20 AWG | Servo leads / JST-GH | <0.3 m | Keep the two feeds separate. Vx set to 8V (PT1 = final HV servos, §4.10) |
 | H16 | CAN-L4-PWM PWM 1–2 | Ruddervator servos | PWM, 5V logic | Servo leads | JR 3-pin | <0.3 m | Generated locally, no long PWM run |
-| H17 | Pixhawk TELEM1 | Telemetry radio | MAVLink UART | JST-GH 6-pin | JST-GH | 0.2–0.3 m | Radio model pending OQ-04 / parts list D3 |
-| H18 | Pixhawk UART5 | RC receiver | CRSF or SBUS | JST-GH | JST-GH | 0.2 m | Receiver model pending OQ-04 / parts list D3 |
+| H17 | Pixhawk TELEM1 | Holybro SiK V3 radio | MAVLink UART | JST-GH 6-pin | JST-GH | 0.2–0.3 m | SiK V3 (915 MHz, 100 mW) borrowed from STORK for first flight (D3, June 18). Long-term unit still TBD (range-limited) |
+| H18 | Pixhawk RC IN | Radiolink R9DS RX | SBUS | 3-pin servo | servo | 0.2 m | Radiolink AT9S Pro transmitter + R9DS receiver, SBUS on the dedicated RC-IN port (D3 RC side closed June 18) |
 | H19 | Pixhawk UART4 | US-D1 altimeter | UART | JST-GH to US-D1 lead | JST-GH | 0.3–0.5 m | US-D1 also offers CAN if the UART budget tightens |
 | H20 | FCHUB V/I sense | Pixhawk 6C POWER2 (Cur→pos 3, V→pos 4, G→pos 6; 4-wire, no 5V) | Vehicle current + voltage (FCHUB = BATT1, BATT_MONITOR 4) | 26 AWG | 6-pin power | Shelf-local | V-pad jumper = VBat (1K:20K, `BATT_VOLT_MULT 21.0`, ADC pin 5). Curr `BATT_AMP_PERVLT 133.3` (ADC pin 14). Leave POWER2 5V pins open. See §4.13 |
 | H21 | Pitot transducer | Pixhawk I2C or ADC | Airspeed | Per model | Per model | Shelf-local | OQ-06 |
@@ -733,24 +733,25 @@ Selected June 17: the Kingmax CLS3015S replaces the earlier 5V-test / HV-candida
 | Parameter | Value |
 |---|---|
 | Range requirement (Phase 1) | VLOS, ≤ 5 km |
-| Protocol | CRSF (preferred, bidirectional) or SBUS |
-| FC interface | TELEM2 (CRSF), or the dedicated RC-IN port (SBUS) |
+| Selected (June 18) | **Radiolink AT9S Pro** transmitter + bundled **R9DS** receiver (10-ch, 2.4 GHz) |
+| Protocol | SBUS (R9DS output) |
+| FC interface | Dedicated RC-IN port (SBUS) |
 | Receiver location | Avionics shelf or fuselage side, antenna external |
-| Candidates | ExpressLRS (900 MHz, CRSF, 1W output option) or TBS Crossfire |
+| Prior candidates (superseded for PT1) | ExpressLRS (900 MHz, CRSF, 1W option), TBS Crossfire |
 
-ExpressLRS preferred: native CRSF bidirectional allows MAVLink passthrough to GCS without a separate telemetry radio at short range. CRSF also gives better latency than SBUS. Confirm transmitter compatibility with team.
+Selected June 18: the team's RC direction is the **Radiolink AT9S Pro** transmitter with its bundled R9DS receiver, on SBUS into the 6C RC-IN port (D3 RC side closed). This is the transmitter the pilots will use, which is why the earlier ExpressLRS / Crossfire CRSF preference is dropped for PT1. SBUS is unidirectional, so RC and ground telemetry stay on separate links (the SiK radio below carries MAVLink) rather than the CRSF MAVLink passthrough that would have folded them onto one link. Confirm the AT9S Pro channel map and failsafe in WP-E08.
 
 #### Telemetry Radio
 
 | Parameter | Value |
 |---|---|
-| Range (Phase 1) | 30–80 km LOS with whip antennas |
+| First-flight unit (June 18) | **Holybro SiK Radio V3** (915 MHz, 100 mW, MAVLink 2.0), borrowed from STORK |
 | Protocol | MAVLink 2.0 |
 | FC interface | TELEM1 |
 | Data | Attitude, GPS, battery SoC, ESC temps, link quality |
-| Candidates | RFD900x (1W, 900 MHz, ~$200/pair), SiK 915 MHz (100mW, ~$80/pair) |
+| Long-term | Still open — SiK V3 is range-limited; a better unit (RFD900x-class, 1W) to be researched by Zeynep + Alperen |
 
-For Phase 1 VLOS testing, SiK 915 MHz is adequate and lower cost. Upgrade to RFD900x before Phase 3 extended-range runs (OQ-04 / WP-E08).
+Telemetry is split off from RC: the Radiolink SBUS link carries no MAVLink, so a separate MAVLink radio is needed. For the first flight the team borrows STORK's Holybro SiK V3 (915 MHz, 100 mW) on TELEM1, which is adequate for VLOS but range-limited. The long-term Spearhead telemetry unit stays open (D3, telemetry side), with an RFD900x-class 1W radio the likely upgrade before the Phase 3 extended-range runs (E-REQ-07 / WP-E08).
 
 Phase 3 requirement (> 200 km) likely requires satellite. See §6.1.
 
@@ -893,7 +894,7 @@ Avionics shelf (above battery, top access):
   - Pixhawk 6C: vibration-isolated, X-axis forward
   - PM02 V3 power module: inline on the pad-tap leg (POWER1); FCHUB sense to POWER2
   - Primary GPS (F9P, serial): on the shelf cover, unobstructed sky view
-  - RC receiver + telemetry radio: shelf edges, antennas external
+  - RC receiver (Radiolink R9DS) + telemetry radio (Holybro SiK V3): shelf edges, antennas external
   - LV kill switch: reachable through the shelf hatch
   - Shelf footprint reserves rectangular space for a future integration PCB (per Alperen)
   - Compartment ~180×250mm × ~90mm tall between the longerons (June 12 estimate, pending CAD). Fit check (WP-E07): 6C (84.8×44), PM02 V3, FCHUB-12S (55×50), CAN hub, F9P, RC RX, telemetry radio must all fit this volume
@@ -960,8 +961,8 @@ Procurement view with priorities, candidate vendors, and lead flags: `docs/pt1-p
 | CAN splitter/hub (DroneCAN, JST-GH, model TBD) | 1 | $15 | $15 |
 | Kingmax CLS3015S HV servos (4 install: 2 flaperon + 2 ruddervator, + 2 spare; thkmodelucak TR, 3,950 TL) | 6 | ~$110 | ~$660 |
 | Wing panel servo connectors (Molex Mini-Fit Jr) | 2 sets | $10 | $20 |
-| RC receiver (TBD — pending RC system decision) | 1 | TBD | TBD |
-| Telemetry radio (TBD — pending SIYI HM30 decision) | 1 | TBD | TBD |
+| Radiolink AT9S Pro TX + R9DS RX (RC link, SBUS, selected June 18) | 1 set | ~$130 | ~$130 |
+| Holybro SiK Radio V3 telemetry (first flight, borrowed from STORK; long-term unit TBD) | 1 | $0 (borrowed) | $0 |
 | Ainstein US-D1 radar altimeter (selected June 11, believed on hand in TR, confirm) | 1 | $0–280 | ~$0 |
 | Pitot tube transducer (if needed beyond existing) | 1 | $30 | $30 |
 | WS2812B LED strip + wiring | 1 lot | $20 | $20 |
@@ -1551,7 +1552,7 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 | OQ-01 | Battery closed June 17 (single 12S 22Ah 15C semi-solid pack, motorobit TR, 3,709g, 190×78×126mm, QS8-S anti-spark). Only remaining: the forward-bay CG placement, pending the CAD session with Alperen (WP-E07), plus price confirmation | Erick / Alperen | Medium | WP-E07 |
 | OQ-02 | CAN-PWM adapter (Matek CAN-L4-PWM): enumerates as a DroneCAN servo node and outputs correct PWM under ArduPilot 4.x? | Erick / Zeynep | High | WP-E04 |
 | OQ-03 | ~~Altimeter: Ainstein US-D1 vs Benewake TF03-180?~~ Closed June 11: US-D1 selected (radar robustness in prop wash dust). Quote pending, longest lead item | Erick | — | — |
-| OQ-04 | RC system: ELRS vs Crossfire? (depends on team transmitter) | Alperen / Erick | Medium | WP-E08 |
+| OQ-04 | RC side closed June 18 (**Radiolink AT9S Pro + R9DS, SBUS**). Telemetry side: first flight borrows STORK's **Holybro SiK V3** on TELEM1; the long-term Spearhead telemetry radio (RFD900x-class) is still open | Alperen / Erick / Zeynep | Medium | WP-E08 |
 | OQ-05 | ~~HV kill: must be RC-switchable (June 11 criterion)~~ Closed June 17: **no hardware HV kill for PT1.** Software E-stop + QS8-S unplug for ground safing, recorded §9.3 deviation (§4.3). LV kill retained. Full HV kill returns for the final product | Erick / Alperen | — | — |
 | OQ-06 | Pitot tube (from storage): model and interface confirmed? | Alperen | Medium | WP-E05 |
 | OQ-07 | Shared or separate battery for VTOL vs IC ignition in Phase 2? | Erick | Low | Phase 2 design |
@@ -1567,6 +1568,7 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 
 | Rev | Date | Author | Changes |
 |---|---|---|---|
+| 0.19 | June 26, 2026 | errrks | Reconciled with the June 18–19 call notes. **RC link closed (D3 RC side):** Radiolink AT9S Pro transmitter + bundled R9DS receiver on SBUS into the 6C RC-IN port, superseding the ExpressLRS/Crossfire CRSF preference for PT1. **Telemetry (D3 telemetry side):** first flight borrows STORK's Holybro SiK V3 (915 MHz, 100 mW) on TELEM1; the long-term unit (RFD900x-class) stays open, to be researched by Zeynep + Alperen. Updated §2.2 comms topology, §4.6 H17/H18, §4.12 (RC Link + Telemetry Radio), §4.15, §4.16 BOM, OQ-04. RC and ground telemetry stay on separate links since SBUS is unidirectional. |
 | 0.18 | June 17, 2026 | errrks | Decisions and reconciliation pass against the June 1–15 call notes. **HV kill: none for PT1** — software E-stop (ArduPilot motor emergency stop on RC, AMPX 2 s CAN watchdog backstop) + QS8-S anti-spark unplug for ground safing. Recorded §9.3 deviation, E-REQ-02 annotated (§3), OQ-05 and D2 closed; LV kill retained; full HV kill returns for the final product. **F9P confirmed salvaged** (on hand, $0). **Battery** reclassed as semi-solid (~290–300 Wh/kg); clarified that "motorobit" is the TR retailer, not the pack brand. **Avionics compartment** dimensioned ~180×250mm × 90mm (June 12) with a WP-E07 fit check (§2.3, §4.15). **Altimeter** noted optional for first flight with a Feather LiDAR fallback (§4.8). OQ-01 narrowed to forward-bay CG placement pending the CAD session. Bench FC confirmed as the full 6C (same unit as the build, no Mini mismatch). Cross-doc consistency pass: reconciled `docs/open-questions.md` (battery/connector/FC/GPS/servos/POWER2/HV-kill), info note (SPH-E-002) updated, parts list (SPH-E-003) dated June 17. Updated §2.1, §3, §4.1, §4.3, §4.6 H1, §4.8, §4.15, §4.16, OQ-01, OQ-05. |
 | 0.17 | June 17, 2026 | errrks | FC changed from the Pixhawk 6X to the full-size **Pixhawk 6C + analog PM02 V3** (rx-dynamic TR, no GPS in the bundle). The 6C's IO PWM still drives the flaperons (wing CAN node stays dropped) and its **two analog POWER ports** enable the FCHUB vehicle V/I to feed POWER2 directly (PM02 V3 on POWER1 = supply + BATT2 voltage; FCHUB on POWER2 = BATT1 current + voltage), which the digital PM02D could not do. UART map reworked for the 6C's 5 ports. **Primary GPS** moved from a TBD DroneCAN node to a **u-blox F9P on a serial UART** (GPS1, compass yaw), closing OQ-12/D1 and removing CAN node 10. **Battery** changed from the ProFuse 16Ah 60C to the **motorobit 12S 22Ah 15C solid-state** pack (3,709g, 190×78×126mm, QS8-S anti-spark socket; ~113g lighter than the ProFuse so the weight trade is moot; 15C = 330A continuous, covers the 320A peak but watch sag), reopening/reclosing WP-E01 and superseding the June 11 D5. QS8-S being anti-spark removes the connector argument from the HV-kill decision (§4.3). **Servos:** PT1 now runs the final-class **Kingmax CLS3015S HV servos** directly (35 kg·cm @ 8.4V, 80g), dropping the 5V test-servo stage; note the +100g aft tail mass for CG. **Servo rails:** forward PM12S-3 dropped, replaced by a **robocombo DC-DC buck @ 8.4V** for the flaperons; the **tail PM12S-3 stays at Vx 8V** for the ruddervators plus its fixed 5V for the adapter and Here4. Both servo rails are HV-derived, so §4.3 LV kill no longer lists any servos. Battery monitoring documented to the parameter level (§4.13, Setup B): FCHUB on POWER2 = BATT1 (`BATT_VOLT_PIN 5`, `BATT_CURR_PIN 14`, MULT 21.0, PERVLT 133.3), PM02 V3 on POWER1 = BATT2 (`BATT2_VOLT_PIN 8`, `BATT2_CURR_PIN 4`, MULT 18.18, PERVLT 36.36), instances deliberately swapped so the real current sensor is primary. 6C ADC pin numbers taken from the ArduPilot Pixhawk6C hwdef. Updated §2.1/§2.2/§2.3, §4.1–§4.4, §4.6 (H1/H2/H6/H8/H9/H15/H20 + wing/tail connector specs), §4.7, §4.8, §4.9, §4.10, §4.11, §4.12, §4.13, §4.15, §4.16 BOM, OQ-12. |
 | 0.16 | June 11, 2026 | errrks | Reconciled with the June 5 and June 11 calls. FC: Pixhawk 6C or 6X by sourcing (Zeynep approved either). Power module follows the FC and the pairing error is fixed: PM02D is I2C, 5X/6X only, so the 6C path uses the analog PM02 V3 and the 6X set includes the PM02D HV. Battery Y-splitter dropped: the FC power module taps the FCHUB battery input pads (Y stays as fallback). Component zones reworked for fuselage v5: forward battery bay, top-access avionics shelf, slimmed nose, boom-routed tail harness. HV kill: added the RC-switchable criterion (June 11) and a new candidate table (EV200 + relay driver, MOSFET anti-spark switch, software E-stop + recorded deviation), superseding the PP75 option (undersized at 75A class vs 98–124A hover). Altimeter selected: US-D1, specs corrected to 110g / 100 Hz / UART+CAN per Ainstein. Regulators standardized on Matek BEC12S-PRO (5.2/8/12V selectable). Added the PT1 harness connection table (§4.6, H1–H21), renamed §4.6, and split the procurement view into `docs/pt1-parts-list.md` (SPH-E-003). §5: DLE55-class layout model, starter-generator moved to PT3 research. Late June 11 additions: battery selected (ProFuse Super Nano 12S 16Ah 60C, XT150 socket, 3,822g, 186×76×160mm, robotsepeti TR), battery interface moved from AS150U to XT150 with the anti-spark burden shifted to the inline kill (§4.3 connector interaction note), FCHUB-12S confirmed as V2 (built-in 1K:20K VBat divider closes the §4.13 voltage sense question, 12VSW PINIO pad can drive the EV200 coil directly), tail CAN boards sourced in Turkey at Aykut Havacılık with the CAN-L431 documented as alternate, US-D1 believed on hand in Turkey pending confirmation. Regulators changed to 2× Matek PM12S-3 (Vx 15A selectable 5.25/6/8V + fixed 5V + fixed 12V per unit, Aykut Havacılık), superseding the BEC12S-PRO plan: tail unit feeds the ruddervator Vx rail plus adapter/Here4 5V, forward unit feeds the flaperon Vx rail, and the final 8V servo change becomes a pad setting. A wing CAN-PWM node (13) was added and dropped the same evening with the FC decision. Final state: **Pixhawk 6X selected (D4 closed)**, chosen because its IO PWM outputs 1–2 drive the wing flaperons directly, saving the second adapter and shelf space. CAN-L4-PWM order stays at 2 (tail node 12 + spare), `CAN_D1_UC_SRV_BM = 0x000C`, and the §4.6 EMI rules re-apply to the ~1–1.5 m wing PWM runs. 6X sourcing: Aykut lists the set at 38,220 TL (~3× Holybro direct) and is out of stock, so Holybro EU at $321 is the order path. The set's M9N GPS is kept as a bench/backup unit. PM12S-3 TR markup vs Matek direct flagged in the parts list. Battery harness corrected from 4 AWG to 8 AWG: 4 AWG does not fit XT150 solder cups and the connector is the thermal limit on the short run. |

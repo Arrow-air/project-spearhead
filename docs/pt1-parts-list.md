@@ -49,6 +49,8 @@ Procurement list for the PT1 order cycle, per the June 11 call. Focus areas requ
 | 23 | Motor phase bullets | 5mm gold bullet sets (mate the MAD phase leads) | 12 | local / EU | $2 | Only where phase leads get connectorized instead of soldered direct |
 | 24 | JST kits | Genuine **JST-GH 1.25mm** kit with pre-crimped pigtails (CAN, Pixhawk peripherals) + **JST-PH 2.0mm** kit | 2 kits | Mouser/Digikey | $25 | Generic "1.25mm Micro JST / PicoBlade" is not GH and will not latch, buy actual GH. The FCHUB V2's JST-SH 1.0mm cable ships with the board |
 | 25 | Servo leads | JR 3-pin extensions and pre-crimped pigtails, assorted lengths | 1 lot | local TR hobby | $15 | Tail bay servo runs (H15/H16), wing root runs, and bench |
+| 26 | [RC link](https://www.radiolink.com/at9spro) | **Radiolink AT9S Pro** TX + **R9DS** receiver (10-ch, 2.4 GHz, SBUS out) | 1 set | Radiolink / TR or EU hobby | ~$130 | **RC side closed June 18 (D3).** SBUS into the 6C RC-IN port (H18). This is the transmitter the pilots will use. Confirm channel map + failsafe in WP-E08 |
+| 27 | Telemetry radio | **Holybro SiK Radio V3** (915 MHz, 100 mW, MAVLink 2.0) | 1 | Borrowed from STORK for first flight | $0 | First-flight fallback (D3, June 18), TELEM1 (H17). Range-limited; long-term Spearhead unit (RFD900x-class) still TBD, Zeynep + Alperen to research |
 
 ### Battery interface build (how the PM02 V3 pairs to the battery)
 
@@ -67,7 +69,7 @@ Fallback if two wire sets crowd the pads: solder both the 8 AWG main and the 16 
 |---|---|---|---|---|
 | D1 | ~~Nose (primary) GPS, OQ-12~~ | **Closed June 17: u-blox F9P on a serial UART (GPS1)**, compass yaw, on-hand antennas (line 4b). Mixed serial-F9P + CAN-Here4 means no moving-baseline GPS yaw | Team call | Closed |
 | D2 | ~~HV kill implementation, OQ-05~~ | **Closed June 17: no hardware HV kill for PT1.** Software E-stop (ArduPilot motor emergency stop on an RC switch, AMPX 2 s CAN watchdog backstop) + QS8-S anti-spark unplug for ground safing. Recorded §9.3 deviation (E-REQ-02). LV kill retained. Rationale: no clean contactor placement for PT1 without added mass, and the QS8-S anti-spark already manages connection inrush. Contactor/MOSFET analysis kept as record in SPH-E-001 §4.3; full HV kill returns for the final product | Erick + Alperen | Closed |
-| D3 | RC link + telemetry radio, OQ-04 | SIYI HM30 (shared with Quiver?) vs ExpressLRS + SiK/RFD900x. Receiver and radio lines wait on this | Team call | Before harness finalization |
+| D3 | RC link + telemetry radio, OQ-04 | **RC side closed June 18: Radiolink AT9S Pro + R9DS receiver (SBUS)** (lines 26-27 below). Telemetry side: first flight borrows STORK's Holybro SiK V3; the long-term Spearhead telemetry radio (RFD900x-class) is still open | Team call | RC closed; long-term telemetry before Phase 3 |
 | D4 | FC selection | **Reclosed June 17: full-size Pixhawk 6C + PM02 V3** (line 1), supersedes the June 11 6X. IO PWM still drives the flaperons, 5 UARTs fit the serial F9P, and two analog POWER ports carry the FCHUB V/I. Sourced from rx-dynamic TR | Alperen (sourcing) | Closed |
 | D5 | Battery format | **Closed June 17: single motorobit 12S 22Ah 15C solid-state pack** (line 6), 3,709g, 190×78×126mm, QS8-S anti-spark socket. Supersedes the June 11 ProFuse. Only price left to confirm | — | Closed |
 
@@ -97,10 +99,10 @@ Ordered ~May 1, 2026 with the ATR certificate requested for zero-tax EU-to-Turke
 | Block | Est. |
 |---|---|
 | Priority 1 (6C + PM02 V3 set ~$600, single Here4, F9P TBD, motorobit pack TBD, 1× PM12S-3, 2× robocombo buck, 2× CAN-L4-PWM, 2× FCHUB-12S V2, US-D1 on hand) | ~$1,300 + battery/F9P TBD |
-| Priority 2 (incl. 6× Kingmax CLS3015S ~$660) | ~$1,000 |
+| Priority 2 (incl. 6× Kingmax CLS3015S ~$660, Radiolink AT9S Pro RC set ~$130, SiK V3 telemetry borrowed $0) | ~$1,130 |
 | Decision items (D2 contactor route, if chosen) | ~$160 |
 | If the US-D1 does not turn up in Turkey | +$280 |
-| **PT1 order cycle total** | **~$2,300–2,750 + battery + F9P** |
+| **PT1 order cycle total** | **~$2,430–2,880 + battery + F9P** (incl. ~$130 Radiolink RC set; SiK V3 telemetry borrowed) |
 | Already ordered and in transit (MAD propulsion set, memo only) | ~$2,633 |
 
 Cost baseline and per-phase totals stay in SPH-E-001 §4.16. Cable-level connection detail (what plugs into what, AWG, lengths) is SPH-E-001 §4.6, harness connection table.
