@@ -1,0 +1,67 @@
+"""Small shared state container for GUI pages."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from ..config import SimulationConfig
+from ..result import SimulationResult
+from ..stability.types import CGSweepResult, StabilityResult
+
+
+@dataclass
+class GuiState:
+    """State shared by lightweight GUI pages in one local app process."""
+
+    scenario_source: str | None = None
+    config: SimulationConfig | None = None
+    simulation_result: SimulationResult | None = None
+    simulation_error: str | None = None
+    stability_result: StabilityResult | None = None
+    stability_error: str | None = None
+    cg_sweep_result: CGSweepResult | None = None
+    cg_sweep_error: str | None = None
+
+    def set_scenario(self, source: str, config: SimulationConfig) -> None:
+        """Store the active scenario and clear dependent results."""
+        self.scenario_source = source
+        self.config = config
+        self.simulation_result = None
+        self.simulation_error = None
+        self.stability_result = None
+        self.stability_error = None
+        self.cg_sweep_result = None
+        self.cg_sweep_error = None
+
+    def set_simulation_result(self, result: SimulationResult) -> None:
+        """Store the latest simulation result."""
+        self.simulation_result = result
+        self.simulation_error = None
+
+    def set_simulation_error(self, message: str) -> None:
+        """Store the latest simulation error."""
+        self.simulation_result = None
+        self.simulation_error = message
+
+    def set_stability_result(self, result: StabilityResult) -> None:
+        """Store the latest stability result."""
+        self.stability_result = result
+        self.stability_error = None
+
+    def set_stability_error(self, message: str) -> None:
+        """Store the latest stability error."""
+        self.stability_result = None
+        self.stability_error = message
+
+    def set_cg_sweep_result(self, result: CGSweepResult) -> None:
+        """Store the latest CG sweep result."""
+        self.cg_sweep_result = result
+        self.cg_sweep_error = None
+
+    def set_cg_sweep_error(self, message: str) -> None:
+        """Store the latest CG sweep error."""
+        self.cg_sweep_result = None
+        self.cg_sweep_error = message
+
+
+APP_STATE = GuiState()
