@@ -1,6 +1,12 @@
+---
+title: "Preliminary Design Aerodynamic Database"
+sidebar_label: "Information Note"
+sidebar_position: 1
+---
+
 # Preliminary Design Aerodynamic Database
 
-# Status
+## Status
 
 "Valid"
 
@@ -10,7 +16,7 @@
 
 "Reference: [0001-Preliminary-Design](../0001-Preliminary-Design/information-note.md)"
 
-# Project Description
+## Project Description
 
 This information note documents the preliminary design aerodynamic database generation work for Project Spearhead. The purpose of the database is to provide force, moment, and coefficient data over the aircraft angle-of-attack and sideslip envelope, so that the results can be used for flight dynamics modelling, control simulation, and later flight-control table generation.
 
@@ -18,9 +24,9 @@ This information note documents the preliminary design aerodynamic database gene
 
 This note does not describe the internal operation of SakeDB or Nondimit. It records how the tools were used in the aerodynamic database workflow and what was delivered.
 
-# Methodology
+## Methodology
 
-## 1. CFD Run Methodology
+### 1. CFD Run Methodology
 
 Each database point was solved as a steady incompressible CFD case. The analyses used a segregated flow solver with a K-Omega turbulence model. All Y+ wall treatment was used with five boundary-layer prism layers targeted at Y+ > 30. The computational mesh used approximately 2.7 million polyhedral cells.
 
@@ -36,31 +42,31 @@ SakeDB was used to manage the selected alpha-beta sample points, launch the exte
 | Convergence plot | ![Convergence Plot](assets/images/convergence.png) |
 | Representative CFD result | ![Scalar Map](assets/images/scalar_map.png) |
 
-## 2. Actuator Disk Database
+### 2. Actuator Disk Database
 
 The first database was generated with the actuator disk model. This database includes 80 CFD analyses and is used to capture the aerodynamic effect of the pusher propeller model.
 
 This database is not used as the full final surface by itself. It is used as the correction source for the larger no-actuator-disk surrogate surface.
 
-## 3. No-Actuator-Disk Database
+### 3. No-Actuator-Disk Database
 
 The second database was generated without the actuator disk model. This database includes 800 CFD analyses and covers the broader aircraft angle-of-attack and sideslip envelope.
 
 The no-actuator-disk database is used as the main aerodynamic surface because it has much wider coverage and more sample points than the actuator disk database.
 
-## 4. Surrogate Surface Generation
+### 4. Surrogate Surface Generation
 
 After the 800-case no-actuator-disk database was completed, a surrogate surface was generated from these results. This surface is used to create a dense aerodynamic table over the complete database range.
 
 The database variables are alpha and beta. The delivered dense grid covers alpha from -90 deg to +90 deg and beta from -90 deg to +90 deg at 1 deg increments, for 181 x 181 points and 32,761 total rows. The exported outputs are dimensional body-axis force and moment components: "Fx", "Fy", "Fz", "Mx", "My", and "Mz".
 
-## 5. Correction Factor Application
+### 5. Correction Factor Application
 
 The actuator-disk database was then compared with the corresponding no-actuator-disk database values. From this comparison, a correction factor was applied to the surrogate surface.
 
 This correction transfers the propeller model effect from the 80 actuator-disk analyses onto the larger 800-case surrogate surface. The corrected surface is treated as the completed aerodynamic database for this stage.
 
-## 6. Coefficient Output Preparation
+### 6. Coefficient Output Preparation
 
 The corrected dense force and moment output was then processed with Nondimit. Nondimit was used to convert dimensional body-axis forces and moments into body and wind-frame aerodynamic coefficients, apply the selected moment reference center, and check the drag, lift, side-force, and moment sign conventions.
 
@@ -72,9 +78,9 @@ A wind-frame drag multiplier of 1.3 was applied during coefficient output prepar
 
 This drag multiplier is a post-processing correction for the preliminary design aerodynamic database. It is separate from the actuator-disk correction used to transfer pusher propeller effects onto the surrogate surface. This processing step prepares the final coefficient tables for flight dynamics and control-table use.
 
-# Results and Deliverables
+## Results and Deliverables
 
-## Database Package
+### Database Package
 
 The current database package is presented as **ADB v1.1** for the preliminary design aerodynamic database. This keeps the current release tied to the preliminary design stage while leaving room for later project phases to use higher major versions.
 
@@ -94,7 +100,7 @@ The coefficient-table deliverables were generated from the ADM-corrected dense t
 |![Alpha 0 drag versus beta](assets/images/adb_v1_1_alpha0_drag_vs_beta.png) |![Alpha 0 lift versus beta](assets/images/adb_v1_1_alpha0_lift_vs_beta.png) |
 
 
-## How to Use the Database
+### How to Use the Database
 
 For preliminary design, flight-dynamics modelling, and control-table preparation, it is recommended to use **Drag-corrected aerodynamic database** as the main aerodynamic database. The 1.3x wind-frame drag multiplier was applied to cover known drag-producing equipment and installation details that were omitted from the CFD geometry. This gives a more conservative drag estimate for the current design stage and should be revisited when those components are modelled directly or when higher-fidelity validation data becomes available.
 
@@ -188,7 +194,7 @@ Body-axis outputs should be used when the receiving flight-dynamics model expect
 If a different moment reference center, reference area, span, chord, density, or velocity is required, the table should be regenerated with Nondimit instead of manually editing the moment coefficient columns. Note that the ADM-corrected dense table moment center is (-0.6 m, 0 m, 0 m) in body-axis coordinates. The delivered coefficient tables are referenced to the aircraft CG at (-0.15 m, 0 m, 0.15 m).
 
 
-# Remarks
+## Remarks
 
 - The actuator-disk correction and the 1.3x omitted-component drag correction are accepted for the current aerodynamic database stage.
 - Preliminary pitch-moment trends indicate that the aircraft is not statically stable at the current coefficient-table CG reference by itself. This is expected to be addressed through CG placement, and the longitudinal stability analysis will define the allowable CG range and target CG location.

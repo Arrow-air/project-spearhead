@@ -1,8 +1,14 @@
+---
+title: "Spearhead PT1 Electrical Architecture and Decisions"
+sidebar_label: "PT1 Architecture & Decisions"
+sidebar_position: 3
+---
+
 # Spearhead PT1 Electrical Architecture and Decisions Information Note
 
 Internal doc ID: SPH-E-002. Companion to SPH-E-001 (Spearhead Electrical Master) and SPH-E-004 (PT1 Electrical Planning and Design Foundation).
 
-# Status
+## Status
 
 `Valid`
 
@@ -12,25 +18,25 @@ Internal doc ID: SPH-E-002. Companion to SPH-E-001 (Spearhead Electrical Master)
 
 `Reference: SPH-E-001 (Spearhead Electrical Master), SPH-E-003 (PT1 parts list), SPH-E-004 (planning foundation)`
 
-# Project Description
+## Project Description
 
 Project Spearhead is an Arrow Air fixed-wing QuadPlane UAV at ~25 kg MTOW, a Quad-X VTOL with an IC pusher for cruise. This information note records the Prototype 1 (PT1) electrical architecture and its decision state: what was considered, what PT1 will use, what is closed, what deviates from requirements, and what remains open. It is a review summary and a running status record. Full schematics, the bill of materials, and the work packages live in the electrical master document (SPH-E-001). The reasoning behind each choice lives in the planning foundation (SPH-E-004). The order-facing parts list with priorities and lead flags is SPH-E-003 (`docs/pt1-parts-list.md`).
 
 PT1 covers the electric VTOL phase and its supporting avionics: flight controller, power distribution, battery and health monitoring, ESC and motor wiring, GPS and navigation, tail control-surface conversion, servos, the short-range RC and telemetry link, heading LEDs, pre-flight diagnostics, and the safety disconnects. The IC engine, generator, and long-range (>200 km) telemetry are Phase 2 and later and are out of scope here.
 
-# Bounty or Grant Proposal Document
+## Bounty or Grant Proposal Document
 
 This information note documents an internal engineering work package (PT1 electrical planning and layout), not a discrete bounty or grant. Requirements derive from the Project Spearhead proposal AIP-006 §9. 
 
-# Methodology
+## Methodology
 
 PT1 follows one principle: stay off the shelf and minimize custom PCBs. Each subsystem was chosen by weighing the final product requirement against what PT1 actually needs to achieve VTOL hover and transition. Where a final design choice adds mass or complexity that PT1 does not need, PT1 takes the simpler path, and this note records what stays reserved for the final design. Decisions stem from Spearhead engineering calls through June 17, 2026 and independent research, with key component specs verified against vendor pages in June 2026. The reasoning chain behind each trade is documented in SPH-E-004.
 
 Decision state is tracked in four registers under Results: the considered-versus-chosen summary, the decision register (D1–D5, the procurement-gating calls), the deviation and accepted-risk register (departures from an AIP-006 SHALL and accepted single points of failure), and the open-question list (items needing team input, by owner). A decision is closed when the part and its rationale are fixed and only confirmation actions may remain.
 
-# Results and Deliverables
+## Results and Deliverables
 
-## PT1 electrical decisions (considered versus chosen)
+### PT1 electrical decisions (considered versus chosen)
 
 | Area | Considered | PT1 choice | Why |
 |---|---|---|---|
@@ -53,9 +59,9 @@ Decision state is tracked in four registers under Results: the considered-versus
 | Battery and health monitoring | smart-pack BMS/CAN telemetry vs sensor-based; FCHUB sense on POWER1 (single-port) vs POWER2 (two-port) | **Setup B (two-port):** FCHUB-12S 440A sensor on 6C POWER2 as BATT1, PM02 V3 on POWER1 as BATT2, plug-in cell checker on the ground | The dumb pack has no per-cell data. Vehicle current + SoC from the FCHUB sensor (BATT1) on POWER2, redundant voltage from the PM02 V3 (BATT2) on POWER1, instances swapped so the real current sensor is primary. POWER2 is sense-only: FCHUB Cur + 1/21 VBat + a dedicated low-current G reference, no 5V. The 6C's two analog ports make this clean with no cutting the PM02 harness. Pins and scales in SPH-E-001 §4.13. ESC voltage, current, and temperature stream over DroneCAN. Satisfies E-REQ-03 and E-REQ-10 |
 | HV/LV kill | contactor, MOSFET anti-spark switch, manual disconnect, software E-stop | **LV kill only; no hardware HV kill (closed June 17).** HV path: software E-stop + QS8-S anti-spark unplug for ground safing | §9.3 requires HV and LV kills, so PT1 carries a **recorded §9.3 deviation** (E-REQ-02): software E-stop replaces the HV hardware kill. Rationale: no clean contactor placement for PT1 and the QS8-S anti-spark handles connection inrush. Candidate analysis kept in SPH-E-001 §4.3; full HV kill returns for the final product |
 
-## Decision register
+### Decision register
 
-### Closed
+#### Closed
 
 | ID | Decision | Closed | Outcome | Supersedes | Detail |
 |---|---|---|---|---|---|
@@ -70,13 +76,13 @@ Sub-questions closed alongside the above:
 - **Servo class:** PT1 runs final-class Kingmax CLS3015S HV servos directly; the 5V test stage is dropped.
 - **Bench FC = build FC:** the bench unit is the same full 6C as the flight controller, so Setup B two-port monitoring validates directly.
 
-### Open
+#### Open
 
 | ID | Decision | Options on the table | Owner | Needed by |
 |---|---|---|---|---|
 | D3 (partial) | RC link + telemetry radio (OQ-04) | **RC side closed June 18: Radiolink AT9S Pro TX + R9DS RX (SBUS) into the 6C RC-IN port.** Telemetry side: STORK-borrowed Holybro SiK V3 (915 MHz, 100 mW) on TELEM1 for first flight, range-limited; the long-term Spearhead radio (RFD900x-class) is still open | Team call | RC closed. Long-term telemetry before Phase 3 extended-range runs (E-REQ-07) |
 
-## Deviation and accepted-risk register
+### Deviation and accepted-risk register
 
 | Item | Type | Requirement | What PT1 does | Rationale | Reversal path |
 |---|---|---|---|---|---|
@@ -85,9 +91,9 @@ Sub-questions closed alongside the above:
 | Dumb LiPo pack, no per-cell data | Accepted limitation | E-REQ-03 / E-REQ-10 (satisfied by sensor path) | No BMS/CAN; vehicle V/I from the FCHUB 440 A sensor + VBat divider; plug-in cell checker for ground checks | Smart pack added ~1 kg PT1 does not need | Smart/CAN pack or instrumented BMS if per-cell flight telemetry is required |
 | Tail control path has no separate LV kill | Intentional | E-REQ-02 (LV kill scope) | Tail adapter, Here4, and ruddervators are HV-derived; de-energize only at QS8-S unplug | Preserves ruddervator authority whenever armed; resolves the adapter-loses-power-on-LV-kill concern | N/A for PT1; revisit with the full HV kill design |
 
-## Open questions by owner
+### Open questions by owner
 
-### Alperen — structural / layout
+#### Alperen — structural / layout
 
 - **Boom length.** AMPX 80A ESCs ship 12 AWG / 800 mm power leads. Boom run exceeds 800 mm (confirmed June 11), so each lead is extended with an XT90S splice at the boom-fuselage junction. Need forward and aft boom target lengths to set extension length.
 - **Square CF tube dimensions.** ESCs mount externally on the booms. AMPX body 79.6×36×23.5 mm, M2×4 holes, finned heatsink needs airflow. Need tube outer dimensions and the motor/ESC bracket plan.
@@ -96,7 +102,7 @@ Sub-questions closed alongside the above:
 - **Battery bay dimensions (forward bay, v5).** Pack is 190×78×126 mm, 3,709 g. Confirm the bay takes the 190 mm length plus strap, lead exit, and QS8-S clearance. Lock CG before the frame is finalized.
 - **Tail harness routing (v5).** CAN trunk and the 18 AWG HV spur route along a tail boom. The tail PM12S-3 HV feed breaks out at that boom's ESC-lead extension joint, so the tail-carrying boom sets which ESC lead is tapped. Which boom, and external or internal? Internal routing waits on the June 5 structural check (holes in loaded CF members need analysis).
 
-### Zeynep — flight mechanics / ArduPilot
+#### Zeynep — flight mechanics / ArduPilot
 
 - **Control-surface torque / hinge-moment.** Servos selected (Kingmax CLS3015S, 35 kg·cm @ 8.4V). Hinge-moment study still wanted to validate margin and set endpoint travel and linkage against the 25T horn (WP-E06). The +100 g aft from the two ruddervator servos feeds CG/stability.
 - **CAN-to-PWM adapter validation (Matek CAN-L4-PWM).** One unit at the tail (node 12, ruddervators), `CAN_D1_UC_SRV_BM = 0x000C` broadcasting servo outputs 3–4. Confirm it enumerates as a DroneCAN servo node, accepts SERVO_FUNCTION 79/80, and outputs correct PWM under ArduPilot 4.x. Gates WP-E03/E04.
@@ -105,7 +111,7 @@ Sub-questions closed alongside the above:
 - **GCS preference.** Mission Planner leads (Alperen and Thomas, including on Mac); QGroundControl is the alternative. Affects telemetry radio and RC link selection (feeds D3).
 - **ESC sync freewheeling vs IPE prop auto-center (bench).** Does AMPX 80A sync freewheeling interfere with the V8013 PRO magnetic/mechanical auto-center indexing on spin-down? Confirm on the bench during first motor runs before locking ESC config.
 
-### Team / general
+#### Team / general
 
 - **Telemetry and RC link (D3).** RC side closed June 18: Radiolink AT9S Pro TX + R9DS RX (SBUS), the transmitter the pilots will use. Telemetry side open: first flight borrows STORK's Holybro SiK V3 (range-limited); the long-term Spearhead telemetry radio (RFD900x-class) needs a team decision before Phase 3. Video downlink not required for Phase 1 (MAVLink + RC only).
 - **Pitot tube (OQ-06).** Original Spearhead pitot found in Alperen's drawer. Model and output interface (analog, I2C, or UART)? Determines whether the backup transducer is needed.
@@ -115,12 +121,12 @@ Sub-questions closed alongside the above:
 - **Per-branch ESC fusing (WP-E02).** Add the optional 100A fast-blow fuses per ESC branch on the FCHUB for PT1, or run unfused for the first prototype? Trade is fault isolation versus added resistance and connectors in the HV path; the 4×110A burst rating already covers the 320A peak.
 - **Altimeter on-hand check.** Ainstein US-D1 selected (closed June 11). Confirm the believed-on-hand Turkey unit and its interface variant (UART vs CAN) before any order. Optional for first flight per June 12; an older Feather LiDAR may be a fallback (confirm CAN vs UART).
 
-### Phase 2 (lower urgency, for awareness)
+#### Phase 2 (lower urgency, for awareness)
 
 - **Electric starter.** Any response from Pilot RC on the DLE35RA auto-starter? If unavailable, Phase 2 initial tests use pull-start. Separate 2S/3S LiPo for the starter, or tap the main battery?
 - **IC engine ignition battery.** Shared with the main 12S VTOL battery or a dedicated smaller pack? Affects the Phase 2 HV bus and harness design.
 
-## Pending confirmations on closed decisions
+### Pending confirmations on closed decisions
 
 These do not reopen a decision; they are the verification actions that remain.
 
@@ -133,7 +139,7 @@ These do not reopen a decision; they are the verification actions that remain.
 | Servo travel / linkage vs Kingmax 25T horn | Servos | WP-E06 hinge-moment + geometry |
 | Bench validation of Setup B and the tail adapter | D4 / tail | WP-E04 on the full 6C bench unit |
 
-## Deliverables
+### Deliverables
 
 - This information note (SPH-E-002): the considered-versus-chosen summary, the decision register, the deviation and accepted-risk register, the open-question list, and pending confirmations. Canonical open-question list, superseding `docs/open-questions.md`.
 - Electrical master document (SPH-E-001, Rev 0.18): full architecture, schematics, cost baseline BOM, and work packages.
@@ -141,7 +147,7 @@ These do not reopen a decision; they are the verification actions that remain.
 - PT1 parts list (SPH-E-003, `docs/pt1-parts-list.md`): order priorities, candidate vendors, lead flags, and the order-gating decision register view (D2 and D3 open at issue, since closed except D3).
 - Power and CAN topology diagrams (SPH-E-001 §2) and the PT1 harness connection table H1–H21 (SPH-E-001 §4.6), covering which cable goes where, wire types, and connectors.
 
-# Remarks
+## Remarks
 
 - **Updating this note.** On a new call: record the outcome and date in the decision register, add any new deviation or accepted risk, and close or add the relevant open question. Then propagate to the affected SPH-E-001 section and, if procurement is touched, to SPH-E-003. Reasoning changes land in SPH-E-004.
 - D3 is now partially closed: the RC link is fixed (Radiolink AT9S Pro + R9DS, SBUS, June 18), and only the long-term telemetry radio remains open (first flight borrows STORK's Holybro SiK V3). D1, D2, D4, D5 closed June 17; the remaining work on closed items is the confirmations above, not re-decisions. The FCHUB voltage sense question closed with the V2 built-in divider.

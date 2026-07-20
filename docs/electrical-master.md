@@ -1,3 +1,9 @@
+---
+title: "Spearhead Electrical Master Document"
+sidebar_label: "Electrical Master"
+sidebar_position: 2
+---
+
 # Spearhead Electrical Master Document
 
 **Doc ID:** SPH-E-001
