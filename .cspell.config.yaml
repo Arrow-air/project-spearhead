@@ -24,4 +24,11 @@ ignorePaths:
   - "out"
   - "coverage"
   - "src/*.plan"
+  # Repo-local additions (not from the tf-github template): vendored
+  # runtimes, build output, and analysis data artifacts. If the template
+  # is re-provisioned, these need to be re-added or upstreamed.
+  - "src/tools/**"
+  - "docs/**/assets/**"
+  - "docs/**/data/**"
+  - "**/.DS_Store"
 noConfigSearch: true
