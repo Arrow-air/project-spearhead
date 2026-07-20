@@ -24,10 +24,12 @@ backfeed
 BACKTRANS
 Baro
 Benewake
+Bitmask
 blox
 Bowden
 Brushless
 BVLOS
+callout
 CANH
 CANL
 carb
@@ -38,10 +40,12 @@ CLIK
 connectorized
 CRSF
 CUAV
+CURR
 Cyphal
 Datasheet
 datasheets
 deadband
+DECEL
 Digikey
 dimensionalized
 dist
@@ -65,6 +69,8 @@ Futaba
 Gatekeeper
 Genasun
 GLONASS
+GNSS
+GPIO
 Havacılık
 HDOP
 HDPE
