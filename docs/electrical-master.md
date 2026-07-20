@@ -30,7 +30,7 @@
    - 4.14 Heading LEDs
    - 4.15 Component Locations
    - 4.16 Phase 1 BOM and Cost Estimate
-5. [Phase 2: Hybrid Integration (Stubs)](#5-phase-2-hybrid-integration-stubs)
+5. [Phase 2: Hybrid Integration](#5-phase-2-hybrid-integration)
 6. [Phase 3: BVLOS (Stubs)](#6-phase-3-bvlos-stubs)
 7. [Phase 4: Payload Bay (Stubs)](#7-phase-4-payload-bay-stubs)
 8. [Work Packages](#8-work-packages)
