@@ -54,7 +54,7 @@ internal-combustion cruise system comes later.
 Current work includes:
 
 - Airframe construction: laser-cut plywood ribs and spars, carbon-fiber
-  structure, and 3D-printed skin and structural connectors.
+  structure, Oratex fabric skin, and 3D-printed structural connectors.
 - Electrical harness assembly per the
   [electrical master document](./electrical-master.md), with a fully
   connectorized, bench-tested-first approach.

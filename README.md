@@ -3,7 +3,7 @@
 **An open-source fixed-wing VTOL aircraft for long-endurance missions.**
 
 Project Spearhead is a ~25 kg MTOW hybrid quadplane developed by
-[Arrow Air](https://arrowair.com): electric motors provide vertical takeoff
+[Arrow](https://arrowair.com): electric motors provide vertical takeoff
 and landing, while an internal-combustion pusher engine is intended to provide
 efficient long-range cruise.
 
@@ -18,8 +18,8 @@ larger aircraft.
 **Phase 1 (electric flight validation) — PT1 prototype build in progress.**
 
 The first prototype is being built in Ankara, Türkiye: laser-cut plywood ribs
-and spars, carbon-fiber structure, 3D-printed skin and structural connectors,
-and a fully connectorized electrical harness. PT1 flies electric-only; the
+and spars, carbon-fiber structure, Oratex fabric skin, 3D-printed structural
+connectors, and a fully connectorized electrical harness. PT1 flies electric-only; the
 internal-combustion cruise system comes in Phase 2.
 
 The aircraft is still being validated, so requirements and component choices
