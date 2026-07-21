@@ -1,3 +1,9 @@
+---
+title: "ArduPilot QuadPlane Reference"
+sidebar_label: "ArduPilot QuadPlane"
+sidebar_position: 1
+---
+
 # ArduPilot QuadPlane Reference for Project Spearhead
 
 *Extracted and filtered from the official ArduPilot Plane documentation. Tailsitter, tilt-rotor, and other non-applicable sections omitted. Focused on a Quad-X pusher IC engine configuration at ~25 kg MTOW.*
