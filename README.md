@@ -51,6 +51,12 @@ project-spearhead/
         └── flight_dynamics_model/  # Flight dynamics / stability analysis
 ```
 
+## CAD reconstruction
+
+A [STEP-backed Build123D structural assembly](src/design/README.md) and dated
+Fusion snapshot are available under `src/design/`. The reconstruction labels
+inferred geometry and is not an as-built aircraft definition.
+
 ## Project phases
 
 1. **Electric flight validation** — build and fly the airframe on electric

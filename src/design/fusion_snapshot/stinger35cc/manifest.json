@@ -1,0 +1,44 @@
+{
+  "file": {
+    "path": "Project Spearhead",
+    "name": "stinger35cc",
+    "id": "urn:adsk.wipprod:dm.lineage:0yraxKmqSxOETEMCu6OOIg",
+    "version": 2,
+    "latest": 2,
+    "modified": 1776634331,
+    "extension": "f3d",
+    "description": "User Saved"
+  },
+  "document": "stinger35cc",
+  "root_id": "30c21b81-5a79-465b-b7b8-94cd2ddad37e",
+  "components": [
+    {
+      "id": "30c21b81-5a79-465b-b7b8-94cd2ddad37e",
+      "name": "stinger35cc",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -41.64928945939131,
+              -33.0,
+              -180.0
+            ],
+            [
+              41.64928945939131,
+              132.11376402611506,
+              10.0
+            ]
+          ],
+          "volume_mm3": 580460.6902588684
+        }
+      ],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

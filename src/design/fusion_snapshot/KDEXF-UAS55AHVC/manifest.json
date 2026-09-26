@@ -1,0 +1,359 @@
+{
+  "file": {
+    "path": "Project Spearhead/off-the-shelf",
+    "name": "KDEXF-UAS55AHVC",
+    "id": "urn:adsk.wipprod:dm.lineage:poAdwmsXRfSNmCppeAEA3A",
+    "version": 1,
+    "latest": 1,
+    "modified": 1785186227,
+    "extension": "f3d",
+    "description": "Imported from KDEXF-UAS55AHVC.STEP"
+  },
+  "document": "KDEXF-UAS55AHVC",
+  "root_id": "03e9bc35-a2e3-4954-b6da-8e90ec54be36",
+  "components": [
+    {
+      "id": "a88a642f-5ec1-482b-832b-e92f4bd617d3",
+      "name": "FLAT HEAD PHILLIPS MACHINE SCREW - M2 X 0.4 X 6MM",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -1.8999999999493866,
+              -1.899999999920965,
+              -4.800000000074078
+            ],
+            [
+              1.899999999920965,
+              1.899999999920965,
+              1.1999999999829924
+            ]
+          ],
+          "volume_mm3": 16.67000793260391
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "f4f4dd53-6e97-462e-bebc-a3ad0d506b56",
+      "name": "KDE Direct XF UAS 55A ESC Aluminum Case - Upper V2",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -43.95,
+              -17.4999999889,
+              -8.749999999963622
+            ],
+            [
+              51.00000000000001,
+              17.5,
+              3.8
+            ]
+          ],
+          "volume_mm3": 27192.35648212258
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "bbe4398f-584e-4dbd-ad79-d12a43516a4d",
+      "name": "KDE Direct XF UAS 55A ESC Aluminum Case - Lower V2",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -31.000000000003375,
+              -17.50000000000232,
+              -2.200000000000001
+            ],
+            [
+              40.99999999999994,
+              17.499999999999936,
+              3.2000000000000006
+            ]
+          ],
+          "volume_mm3": 10936.674931457625
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "03e9bc35-a2e3-4954-b6da-8e90ec54be36",
+      "name": "KDEXF-UAS55AHVC",
+      "bodies": [],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [
+    {
+      "path": "FLAT HEAD PHILLIPS MACHINE SCREW - M2 X 0.4 X 6MM:1",
+      "component_id": "a88a642f-5ec1-482b-832b-e92f4bd617d3",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        2.1,
+        0.0,
+        -2.220446049250314e-16,
+        -1.0,
+        -1.0250000000000004,
+        0.0,
+        1.0,
+        -2.220446049250314e-16,
+        1.4500000000000002,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              19.100000000050613,
+              -11.449999999982996,
+              12.600000000079037
+            ],
+            [
+              22.899999999920965,
+              -5.449999999925925,
+              16.399999999920965
+            ]
+          ],
+          "volume_mm3": 16.67000793260391
+        }
+      ]
+    },
+    {
+      "path": "KDE Direct XF UAS 55A ESC Aluminum Case - Upper V2:1",
+      "component_id": "f4f4dd53-6e97-462e-bebc-a3ad0d506b56",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -43.95,
+              -8.749999999963622,
+              -17.500000000000004
+            ],
+            [
+              51.00000000000001,
+              3.8,
+              17.499999988899997
+            ]
+          ],
+          "volume_mm3": 27192.35648212258
+        }
+      ]
+    },
+    {
+      "path": "KDE Direct XF UAS 55A ESC Aluminum Case - Lower V2:1",
+      "component_id": "bbe4398f-584e-4dbd-ad79-d12a43516a4d",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -2.220446049250314e-16,
+        -1.0,
+        -0.8250000000000001,
+        0.0,
+        1.0,
+        -2.220446049250314e-16,
+        2.664535259100375e-17,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -31.000000000003375,
+              -11.450000000000005,
+              -17.50000000000232
+            ],
+            [
+              40.99999999999994,
+              -6.050000000000003,
+              17.499999999999936
+            ]
+          ],
+          "volume_mm3": 10936.674931457625
+        }
+      ]
+    },
+    {
+      "path": "FLAT HEAD PHILLIPS MACHINE SCREW - M2 X 0.4 X 6MM:2",
+      "component_id": "a88a642f-5ec1-482b-832b-e92f4bd617d3",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        -1.1,
+        0.0,
+        -2.220446049250314e-16,
+        -1.0,
+        -1.0250000000000004,
+        0.0,
+        1.0,
+        -2.220446049250314e-16,
+        1.4500000000000002,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.899999999949387,
+              -11.449999999982996,
+              12.600000000079037
+            ],
+            [
+              -9.100000000079035,
+              -5.449999999925925,
+              16.399999999920965
+            ]
+          ],
+          "volume_mm3": 16.67000793260391
+        }
+      ]
+    },
+    {
+      "path": "FLAT HEAD PHILLIPS MACHINE SCREW - M2 X 0.4 X 6MM:3",
+      "component_id": "a88a642f-5ec1-482b-832b-e92f4bd617d3",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        2.1,
+        0.0,
+        2.220446049250314e-16,
+        -1.0,
+        -1.0250000000000004,
+        0.0,
+        1.0,
+        2.220446049250314e-16,
+        -1.4500000000000002,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              19.100000000050613,
+              -11.449999999982996,
+              -16.399999999920965
+            ],
+            [
+              22.899999999920965,
+              -5.449999999925925,
+              -12.600000000079037
+            ]
+          ],
+          "volume_mm3": 16.67000793260391
+        }
+      ]
+    },
+    {
+      "path": "FLAT HEAD PHILLIPS MACHINE SCREW - M2 X 0.4 X 6MM:4",
+      "component_id": "a88a642f-5ec1-482b-832b-e92f4bd617d3",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        -1.1,
+        0.0,
+        2.220446049250314e-16,
+        -1.0,
+        -1.0250000000000004,
+        0.0,
+        1.0,
+        2.220446049250314e-16,
+        -1.4500000000000002,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.899999999949387,
+              -11.449999999982996,
+              -16.399999999920965
+            ],
+            [
+              -9.100000000079035,
+              -5.449999999925925,
+              -12.600000000079037
+            ]
+          ],
+          "volume_mm3": 16.67000793260391
+        }
+      ]
+    }
+  ],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

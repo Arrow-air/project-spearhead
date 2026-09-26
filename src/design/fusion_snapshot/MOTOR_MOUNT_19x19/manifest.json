@@ -1,0 +1,62 @@
+{
+  "file": {
+    "path": "Project Spearhead/Stork",
+    "name": "MOTOR MOUNT 19x19",
+    "id": "urn:adsk.wipprod:dm.lineage:6-TJnSRPTYih7HGk0HsQKA",
+    "version": 3,
+    "latest": 3,
+    "modified": 1780673186,
+    "extension": "f3d",
+    "description": "User Saved"
+  },
+  "document": "MOTOR MOUNT 19x19",
+  "root_id": "02d64764-e4f4-4708-a4ba-1444f670b697",
+  "components": [
+    {
+      "id": "02d64764-e4f4-4708-a4ba-1444f670b697",
+      "name": "MOTOR MOUNT 19x19",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -33.283317945627076,
+              -48.72046318180344,
+              632.7491136436045
+            ],
+            [
+              33.28331794562699,
+              8.283317945627031,
+              663.7489208069289
+            ]
+          ],
+          "volume_mm3": 40322.94460576774
+        },
+        {
+          "name": "Body3",
+          "visible": false,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -33.304118313984844,
+              -56.72046318180344,
+              642.7491136436045
+            ],
+            [
+              33.304118313984844,
+              8.283317945627031,
+              647.7491136436045
+            ]
+          ],
+          "volume_mm3": 1990.9497236822292
+        }
+      ],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

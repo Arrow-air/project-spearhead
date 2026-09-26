@@ -1,0 +1,914 @@
+[
+  {
+    "path": "fuselage:1+fuselage_body:1+mid_box:1",
+    "name": "beam_left",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 154153.71606498584,
+    "area_mm2": 95564.02902703335
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+mid_box:1",
+    "name": "beam_right",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 154153.71606422326,
+    "area_mm2": 95564.0290270334
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+mid_box:1",
+    "name": "beam_support",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 43232.89112734317,
+    "area_mm2": 25536.377903694178
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+mid_box:1",
+    "name": "mid_spar",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 147751.28162476546,
+    "area_mm2": 90171.10501576512
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+bulkheads:1",
+    "name": "sta1",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 96348.43862883016,
+    "area_mm2": 58463.950196671874
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+bulkheads:1",
+    "name": "sta2",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 89063.93802901177,
+    "area_mm2": 54711.58464438196
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+bulkheads:1",
+    "name": "sta4",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 65779.56216228988,
+    "area_mm2": 35605.43271042614
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+bulkheads:1",
+    "name": "sta3",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 126631.95484513094,
+    "area_mm2": 73242.86216922017
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "floor_support_right",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 15429.926468714333,
+    "area_mm2": 12906.272057340868
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "floor_support_left",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 15429.926468809032,
+    "area_mm2": 12906.272057340857
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body4",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 315134.8071299796,
+    "area_mm2": 176714.67619656518
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body5",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 21859.207081772274,
+    "area_mm2": 12769.513311326025
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body6",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 20950.367655954757,
+    "area_mm2": 12143.87500504102
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body7",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 21859.20708176809,
+    "area_mm2": 12769.513311326025
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body8",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 20950.367655954757,
+    "area_mm2": 12143.87500504102
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body9",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 35639.26846573153,
+    "area_mm2": 26225.927079145873
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body19",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 7405.608159228824,
+    "area_mm2": 5613.7805946287
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body21",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 8994.827385391312,
+    "area_mm2": 11222.293713477697
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body22",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 80595.278343207,
+    "area_mm2": 82584.97311843283
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body23",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 26091.77203261165,
+    "area_mm2": 18753.64293601476
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+longerons:1",
+    "name": "Body28",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 31570.4156893175,
+    "area_mm2": 34142.0739626034
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body1",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 103540.2633075327,
+    "area_mm2": 27773.73360795137
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body2",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 1531.9422447541608,
+    "area_mm2": 927.6725334529826
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body3",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 1531.9422447541272,
+    "area_mm2": 927.6725334529722
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body4",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 1531.9422447541556,
+    "area_mm2": 927.6725334529798
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body5",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 1531.942244754159,
+    "area_mm2": 927.672533452981
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body17",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887284,
+    "area_mm2": 631.2139288442542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body22",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887288,
+    "area_mm2": 631.2139288442528
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body23",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887284,
+    "area_mm2": 631.2139288442542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body24",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887291,
+    "area_mm2": 631.2139288442544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body25",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887291,
+    "area_mm2": 631.2139288442544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body26",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887296,
+    "area_mm2": 631.213928844253
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body27",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887265,
+    "area_mm2": 631.2139288442542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body28",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.152332288728,
+    "area_mm2": 631.2139288442528
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body29",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887265,
+    "area_mm2": 631.2139288442542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body30",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887265,
+    "area_mm2": 631.2139288442544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body31",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.1523322887265,
+    "area_mm2": 631.2139288442544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body32",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 646.152332288728,
+    "area_mm2": 631.213928844253
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body12",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.81577483219803,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body13",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.8157748321974,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body14",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.81577483219735,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body7",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.81577483219866,
+    "area_mm2": 462.4999067295208
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body11",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.8157748321973,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body33",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.8157748321979,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body34",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.81577483219814,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body35",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.8157748321988,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body36",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 333.81577483219866,
+    "area_mm2": 462.49990672952066
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body39",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 9621.140575843181,
+    "area_mm2": 4188.529192459907
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body40",
+    "solid": true,
+    "visible": false,
+    "volume_mm3": 9621.140575843148,
+    "area_mm2": 4188.529192459907
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body41",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 9621.14057584318,
+    "area_mm2": 4188.529192459907
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body42",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 9621.14057584316,
+    "area_mm2": 4188.529192459907
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body45",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347179,
+    "area_mm2": 568.0139288464542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body46",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443472385,
+    "area_mm2": 568.0139288464546
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body47",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443470862,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body48",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body49",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body53",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471851,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body54",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443475257,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body55",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443474216,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body56",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443473558,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body57",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443465523,
+    "area_mm2": 568.0139288464547
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body58",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471851,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body61",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443458773,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body62",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443485567,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body63",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443465303,
+    "area_mm2": 568.0139288464559
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body64",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443474271,
+    "area_mm2": 568.0139288464552
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body65",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347517,
+    "area_mm2": 568.0139288464527
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body67",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443282584,
+    "area_mm2": 568.013928846456
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body69",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443610622,
+    "area_mm2": 568.0139288464559
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body70",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443460418,
+    "area_mm2": 568.0139288464552
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body71",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body80 (2)",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body73",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443472386,
+    "area_mm2": 568.0139288464547
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body74",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347179,
+    "area_mm2": 568.0139288464542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body75",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443465522,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body76",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471851,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body77",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347354,
+    "area_mm2": 568.013928846455
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body78",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471851,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body79",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471107,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body80 (2) (1)",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471396,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body81",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347179,
+    "area_mm2": 568.0139288464542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body82",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443472384,
+    "area_mm2": 568.0139288464546
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body83",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443470862,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body84",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body85",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body86",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471853,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body87",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443475257,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body88",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443474219,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body89",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443473556,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body90",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443465524,
+    "area_mm2": 568.0139288464547
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body91",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471853,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body92",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443485567,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body93",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443458773,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body94",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443470085,
+    "area_mm2": 568.0139288464559
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body95",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443474274,
+    "area_mm2": 568.0139288464552
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body96",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443475173,
+    "area_mm2": 568.0139288464527
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body97",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443282584,
+    "area_mm2": 568.013928846456
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body98",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443610621,
+    "area_mm2": 568.013928846456
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body99",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443460417,
+    "area_mm2": 568.0139288464552
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body100",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body80 (2) (2)",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471405,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body102",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443472385,
+    "area_mm2": 568.0139288464547
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body103",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347179,
+    "area_mm2": 568.0139288464542
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body104",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443465522,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body105",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471853,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body106",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.058444347354,
+    "area_mm2": 568.013928846455
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body107",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471853,
+    "area_mm2": 568.0139288464543
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body108",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471108,
+    "area_mm2": 568.0139288464544
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body80 (2) (1) (1)",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 523.0584443471396,
+    "area_mm2": 568.0139288464545
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body112",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 51394.73044215432,
+    "area_mm2": 12748.653461614098
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body22 (1)",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 8654.350881826836,
+    "area_mm2": 6608.830771005713
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body117",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 15443.486846406291,
+    "area_mm2": 6075.275758999524
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body118",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 101304.72768301623,
+    "area_mm2": 26949.436713826224
+  },
+  {
+    "path": "fuselage:1+fuselage_body:1+connectors:1",
+    "name": "Body121",
+    "solid": true,
+    "visible": true,
+    "volume_mm3": 51394.73044215432,
+    "area_mm2": 12748.653461614098
+  }
+]

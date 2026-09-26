@@ -1,0 +1,780 @@
+{
+  "source_files": [
+    {
+      "name": "fuselage_v2",
+      "version": 41,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "8f247dc1e03da9d794495052a2116845383402beddb9ffdd795c6dc2ae708cfe",
+          "bytes": 4754744
+        },
+        "f3d": {
+          "sha256": "b9d473c1ba5a461c0d541013ba08b4a451a2abe1853fb87e08ee9ed38206618f",
+          "bytes": 122524479
+        }
+      },
+      "solids": 113,
+      "shells": 113,
+      "faces": 2824,
+      "valid_solids": 113
+    },
+    {
+      "name": "main_wing_structure",
+      "version": 42,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "05abb0bd21d44dbd6a7172dfd042776444398f5029d4a03f3f0e71b0220a47df",
+          "bytes": 8010748
+        },
+        "f3d": {
+          "sha256": "72cc5a16f1deabcd6847b584a3e5bad2d902a59c58956d52dcf52cce5e421942",
+          "bytes": 16317919
+        }
+      },
+      "solids": 61,
+      "shells": 61,
+      "faces": 3077,
+      "valid_solids": 61
+    },
+    {
+      "name": "tail_wing_structure_v2_USER_EDITS_NOW",
+      "version": 15,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "67a8c79f8468308fe7e473435cc514d90d05b2dfb51d146cf3e57562139cd9f9",
+          "bytes": 7997190
+        },
+        "f3d": {
+          "sha256": "27f2836e329f27f60313a754f0356f8a535585eec7e7d961021e3c24025fc0df",
+          "bytes": 28794356
+        }
+      },
+      "solids": 55,
+      "shells": 55,
+      "faces": 2272,
+      "valid_solids": 55
+    },
+    {
+      "name": "conceptual_design",
+      "version": 14,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "103bc23473f4299acd0d61153beb337e63caa3b65892d85a2e8ac301f277a5c2",
+          "bytes": 412779
+        },
+        "f3d": {
+          "sha256": "f204b061ef4ab2480cf492beef50d602bb26adba7f31f702e79c04ee680b3179",
+          "bytes": 643045
+        }
+      },
+      "solids": 5,
+      "shells": 9,
+      "faces": 48,
+      "valid_solids": 5
+    },
+    {
+      "name": "fuselage",
+      "version": 24,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "5323189df21e1047033764af35c869769fa211d4ce4ea4705895ce8d60c42be8",
+          "bytes": 9478416
+        },
+        "f3d": {
+          "sha256": "8b2a998cd1b11bc6a9ca51583091b0dcf5f9520c6292d768dd4e5e45b06e6c86",
+          "bytes": 21723390
+        }
+      },
+      "solids": 65,
+      "shells": 65,
+      "faces": 1177,
+      "valid_solids": 64
+    },
+    {
+      "name": "fuselage_conceptual",
+      "version": 12,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "1372d26272d7dd5a08ac73b0fd46f260d6084a978285af6b09f564fd11a64859",
+          "bytes": 747201
+        },
+        "f3d": {
+          "sha256": "42185b2021919459c7099f5bb77fc45be601f0dad26898bb789b81ada45d5798",
+          "bytes": 21012219
+        }
+      },
+      "solids": 9,
+      "shells": 9,
+      "faces": 79,
+      "valid_solids": 9
+    },
+    {
+      "name": "fuselage_exterior",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "b007e0b3e280134860b80f6442c439293de5d9ccd0486972779d984cd1e895e2",
+          "bytes": 360140
+        },
+        "f3d": {
+          "sha256": "0161203ee58a3fea844d297aa1e3e969d2886652f941f049505882fefca2951c",
+          "bytes": 471464
+        }
+      },
+      "solids": 3,
+      "shells": 3,
+      "faces": 34,
+      "valid_solids": 3
+    },
+    {
+      "name": "lg",
+      "version": 3,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "4fc829b3d4f267ab9bd7ae6038132ca669f4ef75277e87628cdb501d63999b8d",
+          "bytes": 960729
+        },
+        "f3d": {
+          "sha256": "6c5b8a2cda57ef1037c057c7b256bf1bdd4a1d17aa1e82e6df5ff02ad7bcb5c9",
+          "bytes": 619339
+        }
+      },
+      "solids": 11,
+      "shells": 11,
+      "faces": 606,
+      "valid_solids": 11
+    },
+    {
+      "name": "stinger35cc",
+      "version": 2,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "c44600541712d7a13927b08fac6fc92a0b466af7cbd49d99ab6a51abea88cbfe",
+          "bytes": 577555
+        },
+        "f3d": {
+          "sha256": "e4ab709e7fafdea6a413e0c9a3ae35177c1520e3202ce2f2f89c504b51eb6f99",
+          "bytes": 772310
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 330,
+      "valid_solids": 1
+    },
+    {
+      "name": "tail_wing_structure",
+      "version": 2,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "3c143e8b0e966371c77517743f627ab58488a927c5d19893bfa134fc80fbd033",
+          "bytes": 97656
+        },
+        "f3d": {
+          "sha256": "49fa1630794e7536c5290567d703e98513f97108619fc4c1b10f34286f0ae056",
+          "bytes": 2587914
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 22,
+      "valid_solids": 1
+    },
+    {
+      "name": "tattu_12s_16000mah",
+      "version": 2,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "62fab21511b25a68512681a2e99fb3e46972808387a8b94b421d08e127d3ebda",
+          "bytes": 9127
+        },
+        "f3d": {
+          "sha256": "c00a6710215cf6abc60e2a445645f3559a42b7d85ddead4582582c4ce87d5e6a",
+          "bytes": 109279
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 6,
+      "valid_solids": 1
+    },
+    {
+      "name": "wing_conceptual",
+      "version": 11,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "08114f4f2d905d6638aa1b592e24aa1ad04cc24045ecfed261d0808962feb9c3",
+          "bytes": 1363944
+        },
+        "f3d": {
+          "sha256": "ab8e7a6dc02ad0d94c454978d32b1ebc016f28e334587755d44baa965d724e35",
+          "bytes": 11150578
+        }
+      },
+      "solids": 2,
+      "shells": 2,
+      "faces": 469,
+      "valid_solids": 2
+    },
+    {
+      "name": "wing_connection",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "1b186dbbb5a9afc9c3c167b89ced76ab8fe0a243dc444647d28a524971be793f",
+          "bytes": 8242698
+        },
+        "f3d": {
+          "sha256": "582e5774c107bf9bb77ca6c1a0e150857ee84ad06a9eb51aeb75639a2fc477cb",
+          "bytes": 4661079
+        }
+      },
+      "solids": 21,
+      "shells": 26,
+      "faces": 403,
+      "valid_solids": 21
+    },
+    {
+      "name": "le_mold_mainwing",
+      "version": 2,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "e24572a73e0b9daf8b5f2f89fefc3313e416f64dec904ff3d29e34036b384d97",
+          "bytes": 3482309
+        },
+        "f3d": {
+          "sha256": "9c1f17e4c08756338c79096e553b51c08f046acd64da0d7e85359ef4264ea90d",
+          "bytes": 2373016
+        }
+      },
+      "solids": 13,
+      "shells": 13,
+      "faces": 1241,
+      "valid_solids": 13
+    },
+    {
+      "name": "DLE55RA",
+      "version": 8,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "ecc1e21e2bf85135c53a7f0cbeb1815c0dcad8a9a12ecfb523dae84a20a54a1f",
+          "bytes": 16705141
+        },
+        "f3d": {
+          "sha256": "aab712964f8e45e8cc3873f7eb6fe457b4b40447136611ee5b7df403307556a4",
+          "bytes": 13964344
+        }
+      },
+      "solids": 42,
+      "shells": 42,
+      "faces": 5098,
+      "valid_solids": 42
+    },
+    {
+      "name": "cs_hinge",
+      "version": 3,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "e6149015f57270b8bd9e433be2054476ecb3e7933ef41edb7731fe563925c9b1",
+          "bytes": 43346
+        },
+        "f3d": {
+          "sha256": "78d344487d73cfe9cda95674c674555468420a54e7d19d141705033e49e52e8c",
+          "bytes": 262577
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 31,
+      "valid_solids": 1
+    },
+    {
+      "name": "KDEXF-UAS55AHVC",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "16b21a4abe2fcc2aa088adca45598e1ccaefd0f2de5ac1ac28a63daa8c8a622c",
+          "bytes": 3364235
+        },
+        "f3d": {
+          "sha256": "23d17fa0d1bfed3c0c27740173aa93e4e7da458d3ce698bdbde1d34c6cde6e80",
+          "bytes": 1584796
+        }
+      },
+      "solids": 6,
+      "shells": 6,
+      "faces": 1328,
+      "valid_solids": 6
+    },
+    {
+      "name": "mad-v8013-ipe",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "342299f6d3ff4e017ed1e3dfa5cda41aab5ccd3d13570845427756323bbb24ad",
+          "bytes": 17715818
+        },
+        "f3d": {
+          "sha256": "7aae3ab71e1cbdb76616eeb7dfafe08660ebd9bb33c863c932a6d437234b9cde",
+          "bytes": 11633407
+        }
+      },
+      "solids": 12,
+      "shells": 12,
+      "faces": 7099,
+      "valid_solids": 12
+    },
+    {
+      "name": "mad_ampx_80a_5-14s",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "c392d2b3ade8c1d226a6513866bdbf4e349626f7b1b7b3e28b68ff9b48fce430",
+          "bytes": 12569410
+        },
+        "f3d": {
+          "sha256": "1b0a497eadb4ea9b29e565c3a5ec3d93472ee68ad222ca32e5999777512ee5cb",
+          "bytes": 7242745
+        }
+      },
+      "solids": 3,
+      "shells": 3,
+      "faces": 6102,
+      "valid_solids": 3
+    },
+    {
+      "name": "MAIN SKIDS VTOL",
+      "version": 3,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "2a1dc489013b81bcfdd77d0bb0ec670f3205162144fd1913135aca1fcbd6303e",
+          "bytes": 604332
+        },
+        "f3d": {
+          "sha256": "4a5945acb808612dfd8cdd17dca9c3de850f31b78499d7a214736fe51e0ce0cd",
+          "bytes": 1127818
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 63,
+      "valid_solids": 1
+    },
+    {
+      "name": "MOTOR MOUNT 19x19",
+      "version": 3,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "6879f6f6a2d8b07e5fabfb35514c0318ef650817922f23b1940f04d49c93cb1a",
+          "bytes": 1329287
+        },
+        "f3d": {
+          "sha256": "79b06efd132aff5c652bedbbe9d17dc683816a6f42115537fa6785280d3d5d99",
+          "bytes": 1278489
+        }
+      },
+      "solids": 1,
+      "shells": 1,
+      "faces": 205,
+      "valid_solids": 1
+    },
+    {
+      "name": "latch",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "5970b7a3d5d9c98948df35a9fa30e0575175bb5f0512b5961707a2f6edc4a622",
+          "bytes": 122393
+        },
+        "f3d": {
+          "sha256": "8452170e4637c1d30fb9d5afd6b584f84a0979f1149c2064761db434638ecd4b",
+          "bytes": 124779
+        }
+      },
+      "solids": 2,
+      "shells": 2,
+      "faces": 79,
+      "valid_solids": 2
+    },
+    {
+      "name": "fuselage_v2_4mm",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "1cfb899af505b0e1311724f77faf45bcd7efe31e4a55be378bf163f68e5ae55c",
+          "bytes": 3332
+        },
+        "f3d": {
+          "sha256": "2c695fcf1be48a6c86a026e7f751db39078c892b91987829b4ed772b8c6b8eef",
+          "bytes": 937000
+        }
+      },
+      "solids": 0,
+      "shells": 0,
+      "faces": 0,
+      "valid_solids": 0
+    },
+    {
+      "name": "motor_mount",
+      "version": 7,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "c9f91669cf3329909b4d9d7b18a03e6940b5e27fdec67a27338bc84f4a56b9f3",
+          "bytes": 395749
+        },
+        "f3d": {
+          "sha256": "23d072861a04ba46991706896de8402e31378f058bafd819ddb990116161ced1",
+          "bytes": 893357
+        }
+      },
+      "solids": 11,
+      "shells": 11,
+      "faces": 251,
+      "valid_solids": 11
+    },
+    {
+      "name": "le_mold_tailwing",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "ca2f27f82929ce124c2bd0c24f3b58c9ebd63b42498118eb1a3834b640a28eb4",
+          "bytes": 458811
+        },
+        "f3d": {
+          "sha256": "28ff23f2d867d4aaf8eddfc7e9f48cca86251465e0915c3f47e36cf4e02b1252",
+          "bytes": 2426749
+        }
+      },
+      "solids": 3,
+      "shells": 3,
+      "faces": 111,
+      "valid_solids": 3
+    },
+    {
+      "name": "temp",
+      "version": 1,
+      "status": "complete",
+      "files": {
+        "step": {
+          "sha256": "2963f193116fcc07d5c04ccd26fc448f5f272d4ba3c0f09cb17767ecfb797ddf",
+          "bytes": 83521
+        },
+        "f3d": {
+          "sha256": "ed26562d8ae787d845b8890258cfc2f79961eb169fa5ea5f23959d103ded2630",
+          "bytes": 353540
+        }
+      },
+      "solids": 12,
+      "shells": 12,
+      "faces": 58,
+      "valid_solids": 12
+    }
+  ],
+  "native_comparison": {
+    "fuselage": {
+      "matched_solids": 113,
+      "max_adaptive_volume_difference_percent": 0.008729994007385557,
+      "max_bounds_error_mm": 1.1831434676423669e-07,
+      "missing_native": [],
+      "volume_differences_over_0_25_percent": []
+    },
+    "main_wing": {
+      "matched_solids": 61,
+      "max_adaptive_volume_difference_percent": 0.017719479223397512,
+      "max_bounds_error_mm": 0.006656378225130766,
+      "missing_native": [],
+      "volume_differences_over_0_25_percent": []
+    },
+    "tail": {
+      "matched_solids": 55,
+      "max_adaptive_volume_difference_percent": 0.007820803577102096,
+      "max_bounds_error_mm": 0.009376005228659778,
+      "missing_native": [
+        {
+          "name": "Body3",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              5.0,
+              5.0,
+              5.0
+            ],
+            [
+              5.0,
+              5.0,
+              5.0
+            ]
+          ],
+          "volume_mm3": 0.0,
+          "path": "tail:1+spar:1"
+        }
+      ],
+      "volume_differences_over_0_25_percent": []
+    },
+    "motor_mounts_and_booms": {
+      "matched_solids": 11,
+      "max_adaptive_volume_difference_percent": 0.00017173567556355218,
+      "max_bounds_error_mm": 1.000001930151484e-07,
+      "missing_native": [],
+      "volume_differences_over_0_25_percent": []
+    },
+    "landing_gear": {
+      "matched_solids": 11,
+      "max_adaptive_volume_difference_percent": 1.1615863306090184e-10,
+      "max_bounds_error_mm": 1.6854073692229576e-11,
+      "missing_native": [],
+      "volume_differences_over_0_25_percent": []
+    }
+  },
+  "checks": [
+    {
+      "name": "26 native archives succeeded",
+      "passed": true
+    },
+    {
+      "name": "native source documents were not modified",
+      "passed": true
+    },
+    {
+      "name": "fuselage: adaptive volume within 0.1 percent",
+      "passed": true
+    },
+    {
+      "name": "fuselage: matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "fuselage: no missing nonzero-volume native solid",
+      "passed": true
+    },
+    {
+      "name": "main_wing: adaptive volume within 0.1 percent",
+      "passed": true
+    },
+    {
+      "name": "main_wing: matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "main_wing: no missing nonzero-volume native solid",
+      "passed": true
+    },
+    {
+      "name": "tail: adaptive volume within 0.1 percent",
+      "passed": true
+    },
+    {
+      "name": "tail: matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "tail: no missing nonzero-volume native solid",
+      "passed": true
+    },
+    {
+      "name": "motor_mounts_and_booms: adaptive volume within 0.1 percent",
+      "passed": true
+    },
+    {
+      "name": "motor_mounts_and_booms: matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "motor_mounts_and_booms: no missing nonzero-volume native solid",
+      "passed": true
+    },
+    {
+      "name": "landing_gear: adaptive volume within 0.1 percent",
+      "passed": true
+    },
+    {
+      "name": "landing_gear: matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "landing_gear: no missing nonzero-volume native solid",
+      "passed": true
+    },
+    {
+      "name": "assembly contains 301 solids",
+      "passed": true
+    },
+    {
+      "name": "all 301 assembly solids pass OCP validity",
+      "passed": true
+    },
+    {
+      "name": "3950 mm span",
+      "passed": true
+    },
+    {
+      "name": "47 mirrored wing solids only",
+      "passed": true
+    },
+    {
+      "name": "mirror preserves summed volume",
+      "passed": true
+    },
+    {
+      "name": "mirrored outer wing starts at Y=670 mm",
+      "passed": true
+    },
+    {
+      "name": "three hidden mount solids restored",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip retains 301 solids",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip solids remain valid",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip summed volume within 0.01 percent",
+      "passed": true
+    }
+  ],
+  "warnings": [
+    "Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Adaptive volumes agree with native high-accuracy measurements. Validity, bounds and volume checks do not prove physical fit.",
+    "One zero-volume tail placeholder omitted by STEP export.",
+    "One outer wing is inferred by reflection. Restored fourth mount was hidden in source.",
+    "Not as-built: current propulsion, avionics, battery, harness, coverings and fastening not reconciled."
+  ],
+  "assembly": {
+    "solids": 301,
+    "valid_solids": 301,
+    "summed_solid_volume_mm3": 8294689.099919846,
+    "bounds_mm": [
+      [
+        -750.000000000001,
+        -1975.0000001,
+        -322.4878745142952
+      ],
+      [
+        1462.0140053282628,
+        1975.0000001,
+        329.1618590579933
+      ]
+    ],
+    "size_mm": [
+      2212.014005328264,
+      3950.0000002,
+      651.6497335722885
+    ],
+    "subsystems": [
+      {
+        "name": "fuselage",
+        "solids": 113
+      },
+      {
+        "name": "main_wing",
+        "solids": 61
+      },
+      {
+        "name": "tail",
+        "solids": 55
+      },
+      {
+        "name": "motor_mounts_and_booms",
+        "solids": 11
+      },
+      {
+        "name": "landing_gear",
+        "solids": 11
+      },
+      {
+        "name": "inferred_starboard_outer_wing",
+        "solids": 47
+      },
+      {
+        "name": "restored_hidden_port_aft_motor_mount",
+        "solids": 3
+      }
+    ]
+  },
+  "roundtrip": {
+    "solids": 301,
+    "valid_solids": 301,
+    "summed_solid_volume_mm3": 8294646.964722758,
+    "bounds_mm": [
+      [
+        -750.0,
+        -1975.0000001,
+        -322.4878745142
+      ],
+      [
+        1462.0140053284915,
+        1975.0000001,
+        329.1618590580041
+      ]
+    ],
+    "size_mm": [
+      2212.0140053284913,
+      3950.0000002,
+      651.649733572204
+    ],
+    "subsystems": [
+      {
+        "name": "fuselage",
+        "solids": 113
+      },
+      {
+        "name": "main_wing",
+        "solids": 61
+      },
+      {
+        "name": "tail",
+        "solids": 55
+      },
+      {
+        "name": "motor_mounts_and_booms",
+        "solids": 11
+      },
+      {
+        "name": "landing_gear",
+        "solids": 11
+      },
+      {
+        "name": "inferred_starboard_outer_wing",
+        "solids": 47
+      },
+      {
+        "name": "restored_hidden_port_aft_motor_mount",
+        "solids": 3
+      }
+    ]
+  },
+  "passed": true
+}
