@@ -1,15 +1,15 @@
 {
   "checks": [
     {
-      "name": "7 groups",
+      "name": "9 groups",
       "passed": true
     },
     {
-      "name": "299 efficient render meshes",
+      "name": "316 efficient render meshes",
       "passed": true
     },
     {
-      "name": "301 solids",
+      "name": "318 solids",
       "passed": true
     },
     {
@@ -21,7 +21,7 @@
       "passed": true
     },
     {
-      "name": "restore 301",
+      "name": "restore 318",
       "passed": true
     },
     {
@@ -34,6 +34,14 @@
     },
     {
       "name": "actual STEP download",
+      "passed": true
+    },
+    {
+      "name": "isolate Center-wing ribs",
+      "passed": true
+    },
+    {
+      "name": "isolate Rear landing gear",
       "passed": true
     },
     {
@@ -75,6 +83,10 @@
     {
       "name": "no browser errors",
       "passed": true
+    },
+    {
+      "name": "download equals corrected STEP SHA256",
+      "passed": true
     }
   ],
   "errors": [],
@@ -115,13 +127,24 @@
         "id": "restored_hidden_port_aft_motor_mount",
         "visible": true,
         "solids": 3
+      },
+      {
+        "id": "restored_center_wing_ribs",
+        "visible": true,
+        "solids": 6
+      },
+      {
+        "id": "restored_rear_landing_gear",
+        "visible": true,
+        "solids": 11
       }
     ],
-    "meshes": 299,
+    "meshes": 316,
     "bounds": [
       2.2126077693633466,
       0.6539534159808023,
       3.950000047683715
     ]
-  }
+  },
+  "download_sha256": "2700cd531fb9c476f18ee13f7ee175985d16c6d245e268ff1ec0c9eb15127e3f"
 }

@@ -1,7 +1,7 @@
 """Spearhead structural reconstruction from the 2026-09-26 Fusion snapshot.
 
 Coordinates: mm, X aft, Y span, Z up. Native source STEP assets are immutable.
-Mirrored outer wing and restored hidden fourth motor mount are identified.
+Mirrored outer wing and recovered hidden mount, center ribs and rear gear are identified.
 This is a review assembly, not an as-built or flight-ready definition.
 """
 from __future__ import annotations
@@ -45,7 +45,30 @@ def source_structure(key: str) -> Compound:
                                           for path,bodies in groups.items()])
 
 
-def build_aircraft(mirror_wing=True, restore_mount=True) -> Compound:
+def recovered_structure(slug, label):
+    """Load hidden source bodies, matching identity by aircraft-coordinate bounds."""
+    folder = SNAPSHOT / 'fuselage_v2'
+    recovery = json.loads((folder / 'center-gear-recovery.json').read_text())
+    source = next(g for g in recovery['groups'] if g['slug'] == slug)
+    solids = list(import_step(folder / f'{slug}.step').solids())
+    if len(solids) != len(source['bodies']):
+        raise ValueError(f'{slug}: recovered body count changed')
+    remaining = list(source['bodies'])
+    for solid in solids:
+        bb = solid.bounding_box()
+        bounds = list(bb.min) + list(bb.max)
+        def error(body):
+            return max(abs(a-b) for a,b in zip(bounds, sum(body['bounds_mm'], [])))
+        match = min(remaining, key=error)
+        if error(match) > .02:
+            raise ValueError(f'{slug}: recovered body placement differs from source')
+        solid.label = match['name']
+        solid.color = Color('#75c3ba')
+        remaining.remove(match)
+    return Compound(label=label, children=solids)
+
+
+def build_aircraft(mirror_wing=True, restore_mount=True, restore_structure=True) -> Compound:
     """Assemble latest structures; keep the measured common Fusion coordinates."""
     fuselage = source_structure('fuselage')
     wing = source_structure('main_wing')
@@ -69,6 +92,11 @@ def build_aircraft(mirror_wing=True, restore_mount=True) -> Compound:
         restored.label = 'restored_hidden_port_aft_motor_mount'
         restored.color = Color('#75c3ba')
         children.append(restored)
+    if restore_structure:
+        children += [
+            recovered_structure('hidden_inner_ribs', 'restored_center_wing_ribs'),
+            recovered_structure('hidden_rear_gear', 'restored_rear_landing_gear'),
+        ]
     return Compound(label='Spearhead_reconstruction_2026_09_26', children=children)
 
 
@@ -92,10 +120,10 @@ def summary(aircraft):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,default=HERE/'output'/'spearhead.step')
-    parser.add_argument('--as-exported',action='store_true',help='Only saved-visible geometry; no mirrored wing or restored hidden mount')
+    parser.add_argument('--as-exported',action='store_true',help='Only saved-visible geometry; no mirrored wing or restored hidden geometry')
     parser.add_argument('--show',action='store_true',help='Show in an existing OCP CAD Viewer')
     args=parser.parse_args()
-    aircraft=build_aircraft(not args.as_exported,not args.as_exported)
+    aircraft=build_aircraft(not args.as_exported,not args.as_exported,not args.as_exported)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     export_step(aircraft,args.output)
     report=summary(aircraft)

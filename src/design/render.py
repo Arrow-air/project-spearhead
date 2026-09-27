@@ -12,7 +12,7 @@ def render(output):
     aircraft=build_aircraft()
     fig=plt.figure(figsize=(16,10),facecolor='#101a24')
     ax=fig.add_axes([0,.13,1,.68],projection='3d',facecolor='#101a24');ax.set_proj_type('ortho')
-    palette=['#cead76','#d8c49b','#cfb27e','#657986','#ad987b','#87b4cf','#75c3ba']
+    palette=['#cead76','#d8c49b','#cfb27e','#657986','#ad987b','#87b4cf','#75c3ba','#75c3ba','#75c3ba']
     for subsystem,color in zip(aircraft.children,palette):
         for solid in subsystem.solids():
             vertices,triangles=solid.tessellate(1.0,0.3)

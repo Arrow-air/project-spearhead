@@ -12,8 +12,8 @@ scene.add(new THREE.HemisphereLight(0xe1efff,0x45504a,2.7));
 for(const [pos,color,intensity] of [[[2,5,3],0xffffff,3],[[-3,2,-4],0xb9d5ff,2],[[1,-2,1],0xffe4bf,.7]]){const light=new THREE.DirectionalLight(color,intensity);light.position.set(...pos);scene.add(light);}
 const camera=new THREE.PerspectiveCamera(35,1,.01,100);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=.05;controls.maxDistance=30;
-const names={fuselage:'Fuselage',main_wing:'Main wing · source',tail:'V-tail',motor_mounts_and_booms:'Booms & motor mounts',landing_gear:'Landing gear',inferred_starboard_outer_wing:'Mirrored outer wing',restored_hidden_port_aft_motor_mount:'Recovered fourth mount'};
-const colors={fuselage:'#cead76',main_wing:'#d8c49b',tail:'#cfb27e',motor_mounts_and_booms:'#657986',landing_gear:'#ad987b',inferred_starboard_outer_wing:'#87b4cf',restored_hidden_port_aft_motor_mount:'#75c3ba'};
+const names={fuselage:'Fuselage',main_wing:'Main wing · source',tail:'V-tail',motor_mounts_and_booms:'Booms & motor mounts',landing_gear:'Front landing gear',inferred_starboard_outer_wing:'Mirrored outer wing',restored_hidden_port_aft_motor_mount:'Recovered fourth mount',restored_center_wing_ribs:'Center-wing ribs',restored_rear_landing_gear:'Rear landing gear'};
+const colors={fuselage:'#cead76',main_wing:'#d8c49b',tail:'#cfb27e',motor_mounts_and_booms:'#657986',landing_gear:'#ad987b',inferred_starboard_outer_wing:'#87b4cf',restored_hidden_port_aft_motor_mount:'#75c3ba',restored_center_wing_ribs:'#75c3ba',restored_rear_landing_gear:'#75c3ba'};
 let root,meta,groups=[],meshes=[],selected,view='iso';const center=new THREE.Vector3();let radius=2;
 let wire=false;
 function clearSelection(){if(selected){selected.material.emissive.setHex(0);selected=null;}document.querySelector('#selection strong').textContent='Click a part to identify it';}
@@ -37,9 +37,9 @@ renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clie
 const shown=meshes.filter(m=>{let p=m;while(p){if(!p.visible)return false;p=p.parent;}return true;});const hit=ray.intersectObjects(shown,false)[0];clearSelection();if(hit){selected=hit.object;selected.material.emissive.setHex(0x37584d);document.querySelector('#selection strong').textContent=`${names[selected.userData.subsystem]} / ${selected.name||selected.parent.name||'Body'}`;}});
 try{
 meta=await fetch('assets/model.json').then(r=>{if(!r.ok)throw Error(`Metadata HTTP ${r.status}`);return r.json();});
-const gltf=await new GLTFLoader().loadAsync('assets/spearhead.glb',e=>{if(e.total)document.querySelector('#loading span').textContent=`Loading geometry · ${Math.round(e.loaded/e.total*100)}%`;});root=gltf.scene;
+const gltf=await new GLTFLoader().loadAsync('assets/spearhead-v2.glb',e=>{if(e.total)document.querySelector('#loading span').textContent=`Loading geometry · ${Math.round(e.loaded/e.total*100)}%`;});root=gltf.scene;
 // Fusion glTF emits a primitive per face. Merge faces per named solid so
-// the viewer renders ~301 bodies rather than issuing ~12,000 draw calls.
+// the viewer renders ~316 body groups rather than issuing ~12,000 draw calls.
 const mergeTargets=[];root.traverse(n=>{if(n.isGroup&&gltf.parser.associations.get(n)?.meshes!==undefined&&n.children.every(c=>c.isMesh))mergeTargets.push(n);});
 for(const node of mergeTargets){const geometries=node.children.map(m=>{m.updateMatrix();const geo=m.geometry.clone().applyMatrix4(m.matrix);for(const name of Object.keys(geo.attributes))if(!['position','normal'].includes(name))geo.deleteAttribute(name);return geo;});const geometry=mergeGeometries(geometries,false);if(geometry){const mesh=new THREE.Mesh(geometry,node.children[0].material);mesh.name=node.name;node.clear();node.add(mesh);}for(const geo of geometries)geo.dispose();}
 scene.add(root);

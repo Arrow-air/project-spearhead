@@ -54,7 +54,8 @@ in their existing common coordinates:
 | Main wing | `main_wing_structure` | 42 | 2026-08-07 |
 | V-tail | `tail_wing_structure_v2_USER_EDITS_NOW` | 15 | 2026-08-05 |
 | Booms and motor mounts | `motor_mount` | 7 | 2026-08-06 |
-| Landing gear | `lg` | 3 | 2026-06-24 |
+| Front landing gear | `lg` | 3 | 2026-06-24 |
+| Center-wing ribs and rear landing gear | hidden in `fuselage_v2` | 41 | 2026-09-22 |
 
 The baseline is the latest **CAD available in those designs**, not a claim that
 it matches the aircraft currently flying. Exact cloud lineage IDs, timestamps,
@@ -72,12 +73,15 @@ assembly deliberately uses v15. No cloud reference was updated in place.
 - Three bodies of the fourth motor mount are hidden in v7. They were copied
   into a disposable unsaved Fusion document and exported without changing the
   original. The **actual hidden geometry** is restored in teal, not mirrored.
+- Six fixed center-wing ribs and eleven rear landing-gear bodies were recovered
+  from hidden occurrences in `fuselage_v2` v41, retaining exact native placement.
+  Hidden duplicate spars and alternate front-gear bodies are excluded.
 - Booms, mounts, landing gear and all original structural placements are STEP
   geometry. No arbitrary placement offsets or guessed tube dimensions are used.
 - One tail spar object is a zero-volume point placeholder. STEP drops it;
   the manifest records it. No nonzero-volume selected native solid is missing.
 
-The resulting model has **301 valid solids** and a **3,950 mm span**. The
+The resulting model has **318 valid solids** and a **3,950 mm span**. The
 saved-visible-only configuration contains 251 solids.
 
 ## What is included in the snapshot
@@ -105,7 +109,7 @@ exports. This was resolved, not an outstanding missing file.
 - Loose connectors and incomplete/hidden structure in the source are retained
   as source evidence. Assembly validity does not establish mating fit, joint
   constraints, interference clearance, manufacturing readiness or flight safety.
-- The landing-gear source is older than the fuselage source. No physical-build
+- The front landing-gear source is older than the fuselage source. No physical-build
   reconciliation was attempted.
 - Historical exports can contain defective solids. See the per-file import
   inventory in the validation report; only selected assembly geometry is

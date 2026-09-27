@@ -622,11 +622,11 @@
       "passed": true
     },
     {
-      "name": "assembly contains 301 solids",
+      "name": "assembly contains 318 solids",
       "passed": true
     },
     {
-      "name": "all 301 assembly solids pass OCP validity",
+      "name": "all 318 assembly solids pass OCP validity",
       "passed": true
     },
     {
@@ -650,7 +650,91 @@
       "passed": true
     },
     {
-      "name": "STEP roundtrip retains 301 solids",
+      "name": "recovery left native source unmodified",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs: exact body count",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body13: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body14: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body15: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body16: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body17: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_center_wing_ribs/Body18: native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear: exact body count",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body1 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body2 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body3 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body4 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body5 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body6 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body7 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body8 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body9 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body10 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "restored_rear_landing_gear/Body11 (1): native bounds and volume",
+      "passed": true
+    },
+    {
+      "name": "saved-visible mode still 251 solids",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip retains 318 solids",
       "passed": true
     },
     {
@@ -669,18 +753,18 @@
   "warnings": [
     "Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Adaptive volumes agree with native high-accuracy measurements. Validity, bounds and volume checks do not prove physical fit.",
     "One zero-volume tail placeholder omitted by STEP export.",
-    "One outer wing is inferred by reflection. Restored fourth mount was hidden in source.",
+    "One outer wing is inferred by reflection. Restored fourth mount, center-wing ribs and rear gear were hidden in source.",
     "Not as-built: current propulsion, avionics, battery, harness, coverings and fastening not reconciled."
   ],
   "assembly": {
-    "solids": 301,
-    "valid_solids": 301,
-    "summed_solid_volume_mm3": 8294689.099919846,
+    "solids": 318,
+    "valid_solids": 318,
+    "summed_solid_volume_mm3": 9146882.160412341,
     "bounds_mm": [
       [
         -750.000000000001,
         -1975.0000001,
-        -322.4878745142952
+        -322.48787461429305
       ],
       [
         1462.0140053282628,
@@ -691,7 +775,7 @@
     "size_mm": [
       2212.014005328264,
       3950.0000002,
-      651.6497335722885
+      651.6497336722864
     ],
     "subsystems": [
       {
@@ -721,18 +805,130 @@
       {
         "name": "restored_hidden_port_aft_motor_mount",
         "solids": 3
+      },
+      {
+        "name": "restored_center_wing_ribs",
+        "solids": 6
+      },
+      {
+        "name": "restored_rear_landing_gear",
+        "solids": 11
       }
     ]
   },
+  "recovered_structure": [
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body13",
+      "bounds_error_mm": 0.005658086810370833,
+      "volume_error_fraction": 6.072803872969601e-05
+    },
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body14",
+      "bounds_error_mm": 2.526915063771895e-05,
+      "volume_error_fraction": 3.148123332608055e-05
+    },
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body15",
+      "bounds_error_mm": 0.005682961952771848,
+      "volume_error_fraction": 2.571818982244345e-05
+    },
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body16",
+      "bounds_error_mm": 0.005658086810370833,
+      "volume_error_fraction": 6.0728041146207445e-05
+    },
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body17",
+      "bounds_error_mm": 2.526915063771895e-05,
+      "volume_error_fraction": 3.148123332563646e-05
+    },
+    {
+      "group": "restored_center_wing_ribs",
+      "body": "Body18",
+      "bounds_error_mm": 0.005682961952771848,
+      "volume_error_fraction": 2.5736088547612113e-05
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body1 (1)",
+      "bounds_error_mm": 2.9274360713316128e-12,
+      "volume_error_fraction": 1.0436096431476471e-14
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body2 (1)",
+      "bounds_error_mm": 3.254285729781259e-12,
+      "volume_error_fraction": 5.551115123125783e-15
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body3 (1)",
+      "bounds_error_mm": 1.6285639503621496e-11,
+      "volume_error_fraction": 7.993605777301127e-14
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body4 (1)",
+      "bounds_error_mm": 2.9274360713316128e-12,
+      "volume_error_fraction": 1.6653345369377348e-15
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body5 (1)",
+      "bounds_error_mm": 1.000024383301934e-07,
+      "volume_error_fraction": 3.2289004010532807e-06
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body6 (1)",
+      "bounds_error_mm": 3.254285729781259e-12,
+      "volume_error_fraction": 7.394085344003543e-14
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body7 (1)",
+      "bounds_error_mm": 9.180212146020494e-12,
+      "volume_error_fraction": 7.549516567451064e-15
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body8 (1)",
+      "bounds_error_mm": 6.45172804070171e-12,
+      "volume_error_fraction": 2.886579864025407e-15
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body9 (1)",
+      "bounds_error_mm": 1.0000246675190283e-07,
+      "volume_error_fraction": 3.2289004027186152e-06
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body10 (1)",
+      "bounds_error_mm": 8.173905996500253e-12,
+      "volume_error_fraction": 1.744382416291046e-12
+    },
+    {
+      "group": "restored_rear_landing_gear",
+      "body": "Body11 (1)",
+      "bounds_error_mm": 8.185452315956354e-12,
+      "volume_error_fraction": 4.796163466380676e-14
+    }
+  ],
   "roundtrip": {
-    "solids": 301,
-    "valid_solids": 301,
-    "summed_solid_volume_mm3": 8294646.964722758,
+    "solids": 318,
+    "valid_solids": 318,
+    "summed_solid_volume_mm3": 9146840.025213463,
     "bounds_mm": [
       [
         -750.0,
         -1975.0000001,
-        -322.4878745142
+        -322.4878746142001
       ],
       [
         1462.0140053284915,
@@ -743,7 +939,7 @@
     "size_mm": [
       2212.0140053284913,
       3950.0000002,
-      651.649733572204
+      651.6497336722042
     ],
     "subsystems": [
       {
@@ -773,6 +969,14 @@
       {
         "name": "restored_hidden_port_aft_motor_mount",
         "solids": 3
+      },
+      {
+        "name": "restored_center_wing_ribs",
+        "solids": 6
+      },
+      {
+        "name": "restored_rear_landing_gear",
+        "solids": 11
       }
     ]
   },

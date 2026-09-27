@@ -53,22 +53,37 @@ def run(reuse_imports=False):
         check(f'{key}: matched body bounds within 0.02 mm',all(r['bounds_error']<=.02 for r in bodymap['matched']))
         check(f'{key}: no missing nonzero-volume native solid',all(abs(r.get('volume_mm3',0))<1e-6 for r in bodymap['missing_native']))
     aircraft=build_aircraft();report['assembly']=summary(aircraft)
-    check('assembly contains 301 solids',report['assembly']['solids']==301)
-    check('all 301 assembly solids pass OCP validity',report['assembly']['valid_solids']==301)
+    check('assembly contains 318 solids',report['assembly']['solids']==318)
+    check('all 318 assembly solids pass OCP validity',report['assembly']['valid_solids']==318)
     check('3950 mm span',abs(report['assembly']['size_mm'][1]-3950)<.001)
     mirrored=next(c for c in aircraft.children if c.label=='inferred_starboard_outer_wing')
     original=[s for s in aircraft.children[1].solids() if s.bounding_box().max.Y<=-669.9]
     check('47 mirrored wing solids only',len(mirrored.solids())==len(original)==47)
     check('mirror preserves summed volume',abs(sum(volume_mm3(s) for s in mirrored.solids())-sum(volume_mm3(s) for s in original))<.01)
     check('mirrored outer wing starts at Y=670 mm',abs(mirrored.bounding_box().min.Y-670)<.01)
-    restored=aircraft.children[-1]
+    restored=next(c for c in aircraft.children if c.label=='restored_hidden_port_aft_motor_mount')
     check('three hidden mount solids restored',len(restored.solids())==3)
+    recovery=json.loads((SNAPSHOT/'fuselage_v2/center-gear-recovery.json').read_text())
+    check('recovery left native source unmodified',recovery['status']=='complete' and not recovery['source_modified_before'] and not recovery['source_modified_after'])
+    report['recovered_structure']=[]
+    for slug,label,count in [('hidden_inner_ribs','restored_center_wing_ribs',6),('hidden_rear_gear','restored_rear_landing_gear',11)]:
+        group=next(c for c in aircraft.children if c.label==label)
+        native=next(g for g in recovery['groups'] if g['slug']==slug)
+        check(label+': exact body count',len(group.solids())==count)
+        for solid in group.children:
+            body=next(b for b in native['bodies'] if b['name']==solid.label)
+            bb=solid.bounding_box()
+            error=max(abs(a-b) for a,b in zip(list(bb.min)+list(bb.max),sum(body['bounds_mm'],[])))
+            volume_error=abs(volume_mm3(solid)/body['volume_mm3']-1)
+            report['recovered_structure'].append({'group':label,'body':solid.label,'bounds_error_mm':error,'volume_error_fraction':volume_error})
+            check(label+'/'+solid.label+': native bounds and volume',error<.02 and volume_error<.001)
+    check('saved-visible mode still 251 solids',len(build_aircraft(False,False,False).solids())==251)
     output=HERE/'output';output.mkdir(exist_ok=True)
     export_step(aircraft,output/'spearhead.step')
     (output/'spearhead.json').write_text(json.dumps(report['assembly'],indent=2))
     roundtrip=import_step(output/'spearhead.step');rt=summary(roundtrip);report['roundtrip']=rt
-    check('STEP roundtrip retains 301 solids',rt['solids']==301)
-    check('STEP roundtrip solids remain valid',rt['valid_solids']==301)
+    check('STEP roundtrip retains 318 solids',rt['solids']==318)
+    check('STEP roundtrip solids remain valid',rt['valid_solids']==318)
     error=max(abs(a-b) for aa,bb in zip(rt['bounds_mm'],report['assembly']['bounds_mm']) for a,b in zip(aa,bb))
     check('STEP roundtrip bounds within 0.02 mm',error<.02)
     volume_error=abs(rt['summed_solid_volume_mm3']/report['assembly']['summed_solid_volume_mm3']-1)
@@ -76,7 +91,7 @@ def run(reuse_imports=False):
     report['warnings']=[
         'Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Adaptive volumes agree with native high-accuracy measurements. Validity, bounds and volume checks do not prove physical fit.',
         'One zero-volume tail placeholder omitted by STEP export.',
-        'One outer wing is inferred by reflection. Restored fourth mount was hidden in source.',
+        'One outer wing is inferred by reflection. Restored fourth mount, center-wing ribs and rear gear were hidden in source.',
         'Not as-built: current propulsion, avionics, battery, harness, coverings and fastening not reconciled.'
     ]
     report['passed']=all(r['passed'] for r in report['checks'])

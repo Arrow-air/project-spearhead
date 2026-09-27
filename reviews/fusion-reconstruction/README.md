@@ -16,9 +16,10 @@ Branch: `hex/build123d-fusion-aircraft`.
 Run `src/design/.venv/bin/python src/design/spearhead.py` from the repository
 root to recreate `src/design/output/spearhead.step`.
 
-The model contains 301 solids: 113 fuselage, 61 original wing, 55 tail,
+The model contains 318 solids: 113 fuselage, 61 original wing, 55 tail,
 11 boom/mount, 11 landing gear, 47 inferred mirrored wing and 3 restored hidden
-motor-mount solids. It preserves the shared Fusion coordinates. This is a
+motor-mount solids, plus six fixed center-wing ribs and eleven rear gear bodies.
+It preserves the shared Fusion coordinates. This is a
 STEP-based assembly with a deliberate mirrored-wing completion, not a claim
 that the original parts have been rebuilt parametrically.
 
@@ -35,9 +36,9 @@ opposite outer-wing detail is explicitly inferred; verify handed features
 before using it for manufacture. Current flight hardware and covering skins
 are not fitted.
 
-**Final validation: 28/28 checks passed.** All 301 solids survived the combined
+**Validation: 49/49 geometry checks and 22/22 browser/download checks passed.** All 318 solids survived the combined
 STEP export/import roundtrip and remained valid. The generated STEP was also
-reopened in native Fusion: 301 bodies, 318 components, and an inspected preview.
+reopened in native Fusion; counts are recorded in fusion-roundtrip.json.
 That unsaved review document remains open; source documents were not changed. All 26 design files imported;
 the separate historical fuselage has one invalid solid, excluded from the aircraft.
 
@@ -66,3 +67,13 @@ Historical `fuselage` v24 has an invalid imported solid; it is preserved in the
 snapshot but is not selected for this assembly. A zero-volume object in the
 current tail spar is omitted by STEP. `temp` was a simulation study: Design
 workspace activation resolved its initial export failure.
+
+### Review correction: center-wing ribs and rear landing gear
+
+The initial 301-solid model omitted hidden `wing_inner` ribs and the rear
+`lg` bodies from fuselage_v2 v41. Recovered six ribs and eleven rear gear
+bodies via disposable DirectDesign documents without modifying the source.
+Duplicate hidden spars and alternate front gear were deliberately excluded.
+Exact selections, native bounds and high-accuracy volumes are preserved in
+`fusion_snapshot/fuselage_v2/center-gear-recovery.json`. The corrected web
+asset is `spearhead-v2.glb`; the original review URL remains unchanged.
