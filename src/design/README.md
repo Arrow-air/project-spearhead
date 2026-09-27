@@ -7,6 +7,12 @@ saved, updated, or edited.
 
 ![Generated assembly re-imported into Fusion](../../reviews/fusion-reconstruction/fusion-roundtrip.png)
 
+## Web review
+
+[Open the interactive viewer](http://10.3.10.123:4195/) on the ranch network or
+ranch VPN. Orbit, isolate subsystems, inspect parts and download the STEP.
+[Viewer source and hosting instructions](viewer/README.md).
+
 ## Run
 
 Python 3.13 and Git LFS are required. From the repository root:
