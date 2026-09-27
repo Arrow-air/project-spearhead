@@ -1,0 +1,230 @@
+{
+  "file": {
+    "path": "Project Spearhead/off-the-shelf",
+    "name": "mad_ampx_80a_5-14s",
+    "id": "urn:adsk.wipprod:dm.lineage:Y1GvN4-0Q9i6fwCs2V1ysA",
+    "version": 1,
+    "latest": 1,
+    "modified": 1784074241,
+    "extension": "f3d",
+    "description": "Imported from mad_ampx_80a_5-14s.stp"
+  },
+  "document": "mad_ampx_80a_5-14s",
+  "root_id": "d4f14224-7d60-4c3b-b40f-03e4e6a30bbb",
+  "components": [
+    {
+      "id": "d4f14224-7d60-4c3b-b40f-03e4e6a30bbb",
+      "name": "mad_ampx_80a_5-14s",
+      "bodies": [],
+      "mesh_count": 0
+    },
+    {
+      "id": "cf545e06-4b00-4f30-8a36-2c2ba4445ca0",
+      "name": "PRT0001",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -40.60000000000001,
+              -17.99999999343712,
+              -7.1
+            ],
+            [
+              40.60001117424926,
+              17.999999994617006,
+              12.400000000000002
+            ]
+          ],
+          "volume_mm3": 5815.338994973563
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "30ac22ce-1dc5-4b7c-ba88-30c58e1923e8",
+      "name": "PRT0002",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -40.59999999807334,
+              -17.9999999456,
+              9.5
+            ],
+            [
+              40.599999994330005,
+              17.9999999456,
+              12.399999687290254
+            ]
+          ],
+          "volume_mm3": 4207.583864110022
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "b80d4805-e533-4c12-b041-a49e6a839448",
+      "name": "MAD-1480-S",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -34.7,
+              -18.0,
+              -11.09999999986924
+            ],
+            [
+              34.7,
+              18.0,
+              9.500000000000002
+            ]
+          ],
+          "volume_mm3": 9273.727229319771
+        }
+      ],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [
+    {
+      "path": "MAD-1480-S:1",
+      "component_id": "b80d4805-e533-4c12-b041-a49e6a839448",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        3.4700000000000006,
+        0.0,
+        1.0,
+        0.0,
+        1.8,
+        0.0,
+        0.0,
+        1.0,
+        -0.9500000000003,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              0.0,
+              0.0,
+              -20.59999999987224
+            ],
+            [
+              69.4,
+              36.0,
+              -3.0020430585864233e-12
+            ]
+          ],
+          "volume_mm3": 9273.727229319771
+        }
+      ]
+    },
+    {
+      "path": "PRT0001:1",
+      "component_id": "cf545e06-4b00-4f30-8a36-2c2ba4445ca0",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        3.4700000000000006,
+        0.0,
+        1.0,
+        0.0,
+        1.8,
+        0.0,
+        0.0,
+        1.0,
+        -0.9500000000003,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -5.899999999999999,
+              6.562877525453139e-09,
+              -16.600000000003
+            ],
+            [
+              75.30001117424928,
+              35.999999994617006,
+              2.8999999999970028
+            ]
+          ],
+          "volume_mm3": 5815.338994973563
+        }
+      ]
+    },
+    {
+      "path": "PRT0002:1",
+      "component_id": "30ac22ce-1dc5-4b7c-ba88-30c58e1923e8",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        3.4700000000000006,
+        0.0,
+        1.0,
+        0.0,
+        1.8,
+        0.0,
+        0.0,
+        1.0,
+        -0.9500000000003,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -5.899999998073332,
+              5.4400001690124184e-08,
+              -2.999822612537173e-12
+            ],
+            [
+              75.29999999433,
+              35.9999999456,
+              2.8999996872872558
+            ]
+          ],
+          "volume_mm3": 4207.583864110022
+        }
+      ]
+    }
+  ],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

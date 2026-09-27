@@ -1,0 +1,446 @@
+{
+  "file": {
+    "path": "Project Spearhead",
+    "name": "conceptual_design",
+    "id": "urn:adsk.wipprod:dm.lineage:AOWY91dqSj6BBjsXpl4n5Q",
+    "version": 14,
+    "latest": 14,
+    "modified": 1779458591,
+    "extension": "f3d",
+    "description": "User Saved"
+  },
+  "document": "conceptual_design",
+  "root_id": "0dc4e3e5-2759-402e-86c3-0f8ede00e4f5",
+  "components": [
+    {
+      "id": "30d17221-f6ee-400d-a6c0-aba5956c406a",
+      "name": "tail",
+      "bodies": [
+        {
+          "name": "Body3",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              1230.0389309262914,
+              -561.920854402716,
+              -0.6770098391379975
+            ],
+            [
+              1509.8875132113515,
+              561.9208544027165,
+              337.03105597216484
+            ]
+          ],
+          "volume_mm3": 10363140.938565508
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "0dc4e3e5-2759-402e-86c3-0f8ede00e4f5",
+      "name": "conceptual_design",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -520.8655662115528,
+              -149.99999999999994,
+              -244.98799999999991
+            ],
+            [
+              500.0,
+              149.99999999999997,
+              55.01200000000001
+            ]
+          ],
+          "volume_mm3": 78579654.42355944
+        },
+        {
+          "name": "Body2",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -550.0,
+              -565.0,
+              2.170000000000001
+            ],
+            [
+              1300.0,
+              -535.0,
+              32.169999999999995
+            ]
+          ],
+          "volume_mm3": 316349.99999999854
+        },
+        {
+          "name": "Body3",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -550.0,
+              535.0,
+              2.170000000000001
+            ],
+            [
+              1300.0,
+              565.0,
+              32.169999999999995
+            ]
+          ],
+          "volume_mm3": 316349.99999999854
+        },
+        {
+          "name": "Body4",
+          "visible": false,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -300.0,
+              -343.3941090877614,
+              -454.77601107224785
+            ],
+            [
+              -280.0,
+              343.3941090877614,
+              -244.98799999999991
+            ]
+          ],
+          "volume_mm3": 86914.28552490706
+        },
+        {
+          "name": "Body5",
+          "visible": false,
+          "solid": true,
+          "bounds_mm": [
+            [
+              400.0,
+              -343.3941090877614,
+              -454.77601107224785
+            ],
+            [
+              420.0,
+              343.3941090877614,
+              -244.98799999999991
+            ]
+          ],
+          "volume_mm3": 86914.28552490706
+        },
+        {
+          "name": "Body6",
+          "visible": true,
+          "solid": false,
+          "bounds_mm": [
+            [
+              519.8,
+              -880.1999999999999,
+              100.0
+            ],
+            [
+              1180.2,
+              -219.79999999999976,
+              100.0
+            ]
+          ],
+          "volume_mm3": 0.0
+        },
+        {
+          "name": "Body7",
+          "visible": true,
+          "solid": false,
+          "bounds_mm": [
+            [
+              -880.2,
+              219.79999999999995,
+              100.0
+            ],
+            [
+              -219.7999999999999,
+              880.2,
+              100.0
+            ]
+          ],
+          "volume_mm3": 0.0
+        },
+        {
+          "name": "Body8",
+          "visible": true,
+          "solid": false,
+          "bounds_mm": [
+            [
+              519.8,
+              219.80000000000004,
+              100.0
+            ],
+            [
+              1180.2,
+              880.2000000000003,
+              100.0
+            ]
+          ],
+          "volume_mm3": 0.0
+        },
+        {
+          "name": "Body9",
+          "visible": true,
+          "solid": false,
+          "bounds_mm": [
+            [
+              -880.2,
+              -880.2,
+              100.0
+            ],
+            [
+              -219.7999999999999,
+              -219.7999999999999,
+              100.0
+            ]
+          ],
+          "volume_mm3": 0.0
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "31496c92-92c8-4be0-8c84-9ad4dc040d5d",
+      "name": "main_wing",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -114.23917548260326,
+              -1974.9999999999998,
+              -10.042230181563749
+            ],
+            [
+              342.70736841454334,
+              1974.9999999999998,
+              44.592708543220255
+            ]
+          ],
+          "volume_mm3": 67293804.80069657
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "30abd954-7e3f-49ac-8af6-90496ae6b496",
+      "name": "Fuselage",
+      "bodies": [],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [
+    {
+      "path": "main_wing:1",
+      "component_id": "31496c92-92c8-4be0-8c84-9ad4dc040d5d",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -114.23917548260326,
+              -1974.9999999999998,
+              -10.042230181563749
+            ],
+            [
+              342.70736841454334,
+              1974.9999999999998,
+              44.592708543220255
+            ]
+          ],
+          "volume_mm3": 67293804.80069657
+        }
+      ]
+    },
+    {
+      "path": "Fuselage:1",
+      "component_id": "30abd954-7e3f-49ac-8af6-90496ae6b496",
+      "visible": false,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": []
+    },
+    {
+      "path": "tail:1",
+      "component_id": "30d17221-f6ee-400d-a6c0-aba5956c406a",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body3",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              1230.0389309262914,
+              -561.920854402716,
+              -0.6770098391379975
+            ],
+            [
+              1509.8875132113515,
+              561.9208544027165,
+              337.03105597216484
+            ]
+          ],
+          "volume_mm3": 10363140.938565508
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "name": "chord",
+      "expression": "457",
+      "value_internal": 457.0,
+      "unit": ""
+    },
+    {
+      "name": "span",
+      "expression": "3950 mm",
+      "value_internal": 395.0,
+      "unit": "mm"
+    },
+    {
+      "name": "incidence_main",
+      "expression": "1 deg",
+      "value_internal": 0.017453292519943295,
+      "unit": "deg"
+    },
+    {
+      "name": "cg_relativetomainwing",
+      "expression": "150 mm",
+      "value_internal": 15.0,
+      "unit": "mm"
+    },
+    {
+      "name": "motor",
+      "expression": "550 mm",
+      "value_internal": 55.0,
+      "unit": "mm"
+    },
+    {
+      "name": "tail_distance",
+      "expression": "1300 mm",
+      "value_internal": 130.0,
+      "unit": "mm"
+    },
+    {
+      "name": "motor_diameter",
+      "expression": "26 in",
+      "value_internal": 66.04,
+      "unit": "in"
+    },
+    {
+      "name": "gasprop_diameter",
+      "expression": "20 in",
+      "value_internal": 50.8,
+      "unit": "in"
+    },
+    {
+      "name": "tail_chord",
+      "expression": "280",
+      "value_internal": 280.0,
+      "unit": ""
+    },
+    {
+      "name": "tail_dihedral",
+      "expression": "35 deg",
+      "value_internal": 0.6108652381980153,
+      "unit": "deg"
+    },
+    {
+      "name": "tail_incidence",
+      "expression": "2 deg",
+      "value_internal": 0.03490658503988659,
+      "unit": "deg"
+    },
+    {
+      "name": "motor_lateral",
+      "expression": "550 mm",
+      "value_internal": 55.0,
+      "unit": "mm"
+    },
+    {
+      "name": "boom_vertical",
+      "expression": "15 mm - 1.908 mm + 4.076 mm + 0.002 mm",
+      "value_internal": 1.7169999999999999,
+      "unit": "mm"
+    },
+    {
+      "name": "gasprop_offset",
+      "expression": "120 mm",
+      "value_internal": 12.0,
+      "unit": "mm"
+    },
+    {
+      "name": "icengine_prop_vertical",
+      "expression": "57.05 mm",
+      "value_internal": 5.705,
+      "unit": "mm"
+    }
+  ],
+  "units": "mm; transform translations in cm"
+}

@@ -1,0 +1,80 @@
+{
+  "file": {
+    "path": "Project Spearhead",
+    "name": "fuselage_exterior",
+    "id": "urn:adsk.wipprod:dm.lineage:ncsu54-3QsSWlJyIOLz8Mw",
+    "version": 1,
+    "latest": 1,
+    "modified": 1781287615,
+    "extension": "f3d",
+    "description": "Item created"
+  },
+  "document": "fuselage_exterior",
+  "root_id": "82ab1a01-a6ea-4871-b729-18770eb2dd86",
+  "components": [
+    {
+      "id": "82ab1a01-a6ea-4871-b729-18770eb2dd86",
+      "name": "fuselage_exterior",
+      "bodies": [
+        {
+          "name": "Body80",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -443.4999999999999,
+              -115.19960934246132,
+              -153.28279375741312
+            ],
+            [
+              199.41399999999993,
+              115.19960934245984,
+              57.51200000000001
+            ]
+          ],
+          "volume_mm3": 28740734.45802424
+        },
+        {
+          "name": "Body81",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              199.41399999999993,
+              -115.19960934246132,
+              -153.28279375741263
+            ],
+            [
+              374.00000000000034,
+              115.19960934245984,
+              57.51199999999994
+            ]
+          ],
+          "volume_mm3": 5392729.578467913
+        },
+        {
+          "name": "Body93",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -595.3023656906101,
+              -115.23598130692693,
+              -153.2827937574131
+            ],
+            [
+              -443.5,
+              115.19607815849352,
+              57.511999999999986
+            ]
+          ],
+          "volume_mm3": 4758589.890062865
+        }
+      ],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

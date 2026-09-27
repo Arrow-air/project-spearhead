@@ -1,0 +1,847 @@
+{
+  "file": {
+    "path": "Project Spearhead/off-the-shelf",
+    "name": "mad-v8013-ipe",
+    "id": "urn:adsk.wipprod:dm.lineage:nuQwrBVLQXq1gOdg9QPDUw",
+    "version": 1,
+    "latest": 1,
+    "modified": 1784074192,
+    "extension": "f3d",
+    "description": "Imported from mad-v8013-ipe.stp"
+  },
+  "document": "mad-v8013-ipe",
+  "root_id": "e4aab6ab-6eab-4f4c-ad2f-c5118da707fb",
+  "components": [
+    {
+      "id": "78d1b47b-3d44-4ffd-8e07-dc490d524cfe",
+      "name": "MAD-V8013-IPE-HG_4",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.25,
+              -0.5,
+              -44.2500000000004
+            ],
+            [
+              44.250000000000476,
+              10.50000108452,
+              44.2499999999996
+            ]
+          ],
+          "volume_mm3": 16186.208038434486
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "e4aab6ab-6eab-4f4c-ad2f-c5118da707fb",
+      "name": "mad-v8013-ipe",
+      "bodies": [],
+      "mesh_count": 0
+    },
+    {
+      "id": "098803e9-4ef7-455e-a60e-c3cbe22e40b4",
+      "name": "DIANPIAN_1",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -7.5,
+              0.0,
+              -7.5
+            ],
+            [
+              7.5,
+              1.0,
+              7.5
+            ]
+          ],
+          "volume_mm3": 63.61725123519599
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "8bd54289-db79-48ce-ab9c-33c54d5587a6",
+      "name": "KAHUANG_1",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -6.800000000000001,
+              0.0,
+              -7.300000000000001
+            ],
+            [
+              6.800000000000001,
+              1.0,
+              8.115608971054002
+            ]
+          ],
+          "volume_mm3": 55.810373934449196
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "73c2a573-3442-43cc-a153-61ca4ed54ad9",
+      "name": "SUOZHOUGAIBAN_1",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -7.5,
+              -30.2,
+              -7.5
+            ],
+            [
+              7.5,
+              -26.7,
+              7.5
+            ]
+          ],
+          "volume_mm3": 399.5282496290814
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "c66a1626-39c6-4612-a184-fa017a188252",
+      "name": "GANGSIFANG_6",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -42.5,
+              0.0,
+              -42.5
+            ],
+            [
+              42.5,
+              0.25,
+              42.5
+            ]
+          ],
+          "volume_mm3": 590.599489953667
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "95ba98bf-d9b0-4a14-be45-1b68ec38d5a2",
+      "name": "MAD-V8013-IPE_ASM_3_ASM",
+      "bodies": [],
+      "mesh_count": 0
+    },
+    {
+      "id": "4c2c11af-9481-4b55-990d-9038e292b086",
+      "name": "MAD-V8013-IPE-ZX_3",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.862023651093999,
+              -12.862023651093999,
+              -14.900000000000002
+            ],
+            [
+              12.862023651093999,
+              12.862023651093999,
+              17.199999999999996
+            ]
+          ],
+          "volume_mm3": 1958.023301406691
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "6e1b6a20-452b-47d1-8b91-cbaaa0383f82",
+      "name": "ZHOUCHENG_2",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.000000000000002,
+              0.0,
+              -12.000000000000048
+            ],
+            [
+              12.000000000000002,
+              6.000000000000001,
+              12.0
+            ]
+          ],
+          "volume_mm3": 1798.348574580322
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "188a58f6-0f8c-4f88-b49c-1d2226a1d045",
+      "name": "MAD-8013-IPE-ZHONGZHU_8",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -24.000000000000004,
+              -24.000000000000004,
+              -28.6
+            ],
+            [
+              24.000000000000004,
+              24.000000000000004,
+              -3.999999999999999
+            ]
+          ],
+          "volume_mm3": 12580.818419762354
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "be11216a-0459-4452-9c31-79876faa6006",
+      "name": "MAD-8013-JK_1",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.25,
+              -44.25,
+              0.0
+            ],
+            [
+              44.25,
+              44.25,
+              17.800000000000004
+            ]
+          ],
+          "volume_mm3": 9534.451222105597
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "d2333f96-f02e-4c83-8127-3c6582b0bea3",
+      "name": "MAD-V8013-IPE-XIAGAI_6",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.249999999999396,
+              -44.25,
+              -9.0
+            ],
+            [
+              44.250000000000604,
+              44.25,
+              5.118128143521972e-13
+            ]
+          ],
+          "volume_mm3": 7143.061108545805
+        }
+      ],
+      "mesh_count": 0
+    },
+    {
+      "id": "d0c7c8e1-7724-45d9-8e08-55d8242f600c",
+      "name": "ZHOUCHENGGAI_1",
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -14.500000000000002,
+              0.0,
+              -14.500000000000002
+            ],
+            [
+              14.500000000000002,
+              2.5,
+              14.500000000000002
+            ]
+          ],
+          "volume_mm3": 766.564969937585
+        }
+      ],
+      "mesh_count": 0
+    }
+  ],
+  "occurrences": [
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+MAD-V8013-IPE-HG_4:1",
+      "component_id": "78d1b47b-3d44-4ffd-8e07-dc490d524cfe",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.25,
+              -0.5,
+              -44.2500000000004
+            ],
+            [
+              44.250000000000476,
+              10.50000108452,
+              44.2499999999996
+            ]
+          ],
+          "volume_mm3": 16186.208038434486
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+MAD-V8013-IPE-ZX_3:1",
+      "component_id": "4c2c11af-9481-4b55-990d-9038e292b086",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -0.45,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.862023651093999,
+              -21.7,
+              -12.862023651093999
+            ],
+            [
+              12.862023651093999,
+              10.4,
+              12.862023651093999
+            ]
+          ],
+          "volume_mm3": 1958.023301406691
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+ZHOUCHENG_2:1",
+      "component_id": "6e1b6a20-452b-47d1-8b91-cbaaa0383f82",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -0.65,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.000000000000002,
+              -6.5,
+              -12.000000000000048
+            ],
+            [
+              12.000000000000002,
+              -0.49999999999999933,
+              12.0
+            ]
+          ],
+          "volume_mm3": 1798.348574580322
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+MAD-8013-IPE-ZHONGZHU_8:1",
+      "component_id": "188a58f6-0f8c-4f88-b49c-1d2226a1d045",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -2.91,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -24.000000000000004,
+              -25.1,
+              -24.000000000000004
+            ],
+            [
+              24.000000000000004,
+              -0.4999999999999982,
+              24.000000000000004
+            ]
+          ],
+          "volume_mm3": 12580.818419762354
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+MAD-8013-JK_1:1",
+      "component_id": "be11216a-0459-4452-9c31-79876faa6006",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -0.05,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.25,
+              -18.300000000000004,
+              -44.25
+            ],
+            [
+              44.25,
+              -0.5000000000000004,
+              44.25
+            ]
+          ],
+          "volume_mm3": 9534.451222105597
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+MAD-V8013-IPE-XIAGAI_6:1",
+      "component_id": "d2333f96-f02e-4c83-8127-3c6582b0bea3",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -2.815,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -44.249999999999396,
+              -28.15000000000051,
+              -44.25
+            ],
+            [
+              44.250000000000604,
+              -19.15,
+              44.25
+            ]
+          ],
+          "volume_mm3": 7143.061108545805
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+ZHOUCHENGGAI_1:1",
+      "component_id": "d0c7c8e1-7724-45d9-8e08-55d8242f600c",
+      "visible": true,
+      "transform_cm": [
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        -2.535,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -14.500000000000002,
+              -27.85,
+              -14.500000000000002
+            ],
+            [
+              14.500000000000002,
+              -25.35,
+              14.500000000000002
+            ]
+          ],
+          "volume_mm3": 766.564969937585
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+DIANPIAN_1:1",
+      "component_id": "098803e9-4ef7-455e-a60e-c3cbe22e40b4",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -1.9800000000000002,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -7.5,
+              -19.8,
+              -7.5
+            ],
+            [
+              7.5,
+              -18.8,
+              7.5
+            ]
+          ],
+          "volume_mm3": 63.61725123519599
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+KAHUANG_1:1",
+      "component_id": "8bd54289-db79-48ce-ab9c-33c54d5587a6",
+      "visible": true,
+      "transform_cm": [
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        -1.9800000000000002,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -6.800000000000001,
+              -20.8,
+              -7.300000000000001
+            ],
+            [
+              6.800000000000001,
+              -19.8,
+              8.115608971054002
+            ]
+          ],
+          "volume_mm3": 55.810373934449196
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+SUOZHOUGAIBAN_1:1",
+      "component_id": "73c2a573-3442-43cc-a153-61ca4ed54ad9",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.42108547152e-14,
+        0.5900000000000001,
+        0.0,
+        1.42108547152e-14,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -7.5,
+              -24.299999999999898,
+              -7.50000000000038
+            ],
+            [
+              7.5,
+              -20.8,
+              7.49999999999962
+            ]
+          ],
+          "volume_mm3": 399.5282496290814
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+GANGSIFANG_6:1",
+      "component_id": "c66a1626-39c6-4612-a184-fa017a188252",
+      "visible": true,
+      "transform_cm": [
+        0.7071067811865476,
+        0.0,
+        0.7071067811865476,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -2.535,
+        -0.7071067811865476,
+        0.0,
+        0.7071067811865476,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -42.5,
+              -25.35,
+              -42.5
+            ],
+            [
+              42.5,
+              -25.1,
+              42.5
+            ]
+          ],
+          "volume_mm3": 590.599489953667
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1+ZHOUCHENG_2:2",
+      "component_id": "6e1b6a20-452b-47d1-8b91-cbaaa0383f82",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -1.8800000000000001,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": [
+        {
+          "name": "Body1",
+          "visible": true,
+          "solid": true,
+          "bounds_mm": [
+            [
+              -12.000000000000002,
+              -18.8,
+              -12.000000000000048
+            ],
+            [
+              12.000000000000002,
+              -12.8,
+              12.0
+            ]
+          ],
+          "volume_mm3": 1798.348574580322
+        }
+      ]
+    },
+    {
+      "path": "MAD-V8013-IPE_ASM_3_ASM:1",
+      "component_id": "95ba98bf-d9b0-4a14-be45-1b68ec38d5a2",
+      "visible": true,
+      "transform_cm": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "bodies": []
+    }
+  ],
+  "parameters": [],
+  "units": "mm; transform translations in cm"
+}

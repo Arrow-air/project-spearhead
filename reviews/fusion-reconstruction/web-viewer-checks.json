@@ -1,0 +1,150 @@
+{
+  "checks": [
+    {
+      "name": "9 groups",
+      "passed": true
+    },
+    {
+      "name": "316 efficient render meshes",
+      "passed": true
+    },
+    {
+      "name": "318 solids",
+      "passed": true
+    },
+    {
+      "name": "metre scale span",
+      "passed": true
+    },
+    {
+      "name": "source-only 251",
+      "passed": true
+    },
+    {
+      "name": "restore 318",
+      "passed": true
+    },
+    {
+      "name": "isolate fuselage 113",
+      "passed": true
+    },
+    {
+      "name": "identify clicked part",
+      "passed": true
+    },
+    {
+      "name": "actual STEP download",
+      "passed": true
+    },
+    {
+      "name": "isolate Center-wing ribs",
+      "passed": true
+    },
+    {
+      "name": "isolate Rear landing gear",
+      "passed": true
+    },
+    {
+      "name": "top camera",
+      "passed": true
+    },
+    {
+      "name": "front camera",
+      "passed": true
+    },
+    {
+      "name": "side camera",
+      "passed": true
+    },
+    {
+      "name": "iso camera",
+      "passed": true
+    },
+    {
+      "name": "wireframe on",
+      "passed": true
+    },
+    {
+      "name": "orbit moves camera",
+      "passed": true
+    },
+    {
+      "name": "mobile no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile panel opens",
+      "passed": true
+    },
+    {
+      "name": "mobile source toggle",
+      "passed": true
+    },
+    {
+      "name": "no browser errors",
+      "passed": true
+    },
+    {
+      "name": "download equals corrected STEP SHA256",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "state": {
+    "groups": [
+      {
+        "id": "fuselage",
+        "visible": true,
+        "solids": 113
+      },
+      {
+        "id": "main_wing",
+        "visible": true,
+        "solids": 61
+      },
+      {
+        "id": "tail",
+        "visible": true,
+        "solids": 55
+      },
+      {
+        "id": "motor_mounts_and_booms",
+        "visible": true,
+        "solids": 11
+      },
+      {
+        "id": "landing_gear",
+        "visible": true,
+        "solids": 11
+      },
+      {
+        "id": "inferred_starboard_outer_wing",
+        "visible": true,
+        "solids": 47
+      },
+      {
+        "id": "restored_hidden_port_aft_motor_mount",
+        "visible": true,
+        "solids": 3
+      },
+      {
+        "id": "restored_center_wing_ribs",
+        "visible": true,
+        "solids": 6
+      },
+      {
+        "id": "restored_rear_landing_gear",
+        "visible": true,
+        "solids": 11
+      }
+    ],
+    "meshes": 316,
+    "bounds": [
+      2.2126077693633466,
+      0.6539534159808023,
+      3.950000047683715
+    ]
+  },
+  "download_sha256": "2700cd531fb9c476f18ee13f7ee175985d16c6d245e268ff1ec0c9eb15127e3f"
+}

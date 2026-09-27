@@ -1,0 +1,44 @@
+{
+  "solids": 318,
+  "revision": "center-ribs-rear-gear-v2",
+  "span_m": 3.95,
+  "snapshot": "2026-09-26",
+  "groups": [
+    {
+      "id": "fuselage",
+      "solids": 113
+    },
+    {
+      "id": "main_wing",
+      "solids": 61
+    },
+    {
+      "id": "tail",
+      "solids": 55
+    },
+    {
+      "id": "motor_mounts_and_booms",
+      "solids": 11
+    },
+    {
+      "id": "landing_gear",
+      "solids": 11
+    },
+    {
+      "id": "inferred_starboard_outer_wing",
+      "solids": 47
+    },
+    {
+      "id": "restored_hidden_port_aft_motor_mount",
+      "solids": 3
+    },
+    {
+      "id": "restored_center_wing_ribs",
+      "solids": 6
+    },
+    {
+      "id": "restored_rear_landing_gear",
+      "solids": 11
+    }
+  ]
+}
