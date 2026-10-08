@@ -2,3 +2,5 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+# Local SITL executable, build environments and run logs are reproducible.
+.sitl/

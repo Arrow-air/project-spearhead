@@ -2,6 +2,13 @@
 
 Minimal Python 6-DOF flight dynamics and simulation tool for Project Spearhead.
 
+The external ArduPilot JSON backend is pinned to **ArduPlane 4.7.1** and
+requires the October tail-update AeroDB. See the
+[SITL quickstart](docs/ardupilot_sitl_quickstart.md) for build/run commands
+and the [integration plan](docs/ardupilot_sitl_plan.md) for staged acceptance.
+The bootstrap smoke test verifies the real firmware connection; controlled
+flight and PT1 hover are separate acceptance stages.
+
 The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. Reference Spearhead retains the original ADB v1.1. PT1 KDE uses the October 2026 tail-update database with partial measured controls. Hardware and aerodynamic versions can be selected independently. The preserved original database is:
 
 ```text
