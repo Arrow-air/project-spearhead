@@ -87,6 +87,16 @@ class Session:
         self.accepted = self.duplicates = 0
         self.last_record = None
         self.release_requested = threading.Event()
+        self.pending_air_start = None
+
+    def air_start(self, state):
+        """Queue a logged bootstrap teleport, permitted only before release."""
+        state = np.asarray(state, dtype=float)
+        if state.shape != (12,) or not np.isfinite(state).all() or state[2] >= 0:
+            raise ValueError("Air-start needs a finite airborne 12-state vector")
+        if not self.physics.hold or self.release_requested.is_set():
+            raise ValueError("Cannot teleport after flight release")
+        self.pending_air_start = state.copy()
 
     def release(self):
         """Explicit one-way transition; applied at the next physics boundary."""
@@ -107,7 +117,12 @@ class Session:
                 # Lockstep cannot skip a frame; restart requires a fresh session.
                 raise ValueError("Out-of-order, missing frame, or firmware restart; start a new run")
         control = self.mapping.control(frame.pwm)
-        if self.release_requested.is_set():
+        air_start_applied = self.pending_air_start is not None
+        if air_start_applied:
+            self.physics.state = self.pending_air_start
+            self.pending_air_start = None
+        released = self.release_requested.is_set() and self.physics.hold
+        if released:
             self.physics.hold = False
         # JSON 4.7.1 advertises its adaptive rate (which tends toward the
         # controller rate). Sensor timestamps own the external physics clock.
@@ -122,6 +137,8 @@ class Session:
         self.last_record = {"frame": frame.count, "advertised_rate_hz": frame.rate,
                             "physics_rate_hz": getattr(self.physics, "rate_hz", 200), "time_s": self.physics.time,
                             "hold": self.physics.hold, "pwm": frame.pwm, "control": asdict(control),
+                            "bootstrap_air_start": air_start_applied,
+                            "release_applied": released,
                             "state": self.physics.state.tolist(), "sensor": sensor,
                             "control_coverage_exceeded": not (-5 <= alpha <= 0 and abs(beta) < 1e-6),
                             "alpha_deg": alpha, "beta_deg": beta}
