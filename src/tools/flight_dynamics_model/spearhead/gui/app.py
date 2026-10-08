@@ -49,6 +49,7 @@ from .plotting import (
 )
 from .state import APP_STATE
 from ..config import ControlInputCommand, SimulationConfig
+from ..aircraft import aircraft_options, aerodynamic_options, load_aircraft_config
 
 
 FDM_ROOT = Path(__file__).resolve().parents[2]
@@ -108,6 +109,27 @@ def _scenario_options() -> dict[str, Path]:
     return {path.name: path for path in get_example_scenarios()}
 
 
+def scenario_options_for_aircraft(aircraft_id: str, aerodynamics: str | None = None) -> dict[str, Path]:
+    """Offer scenarios supported by the selected hardware and trim model."""
+    params = load_aircraft_config(aircraft_id, aerodynamics=aerodynamics)
+    options = {}
+    for name, path in _scenario_options().items():
+        try:
+            config = load_scenario_config(path, params=params)
+        except ValueError:
+            continue
+        if config.start_from_trim and not params.pusher_installed:
+            continue
+        if not params.pusher_installed and config.control_override is not None and config.control_override.throttle > 0:
+            continue
+        if config.start_from_trim:
+            from ..trim import trim_fixed_wing_longitudinal
+            if not trim_fixed_wing_longitudinal(params, config.trim_target_speed, config.trim_altitude)["success"]:
+                continue
+        options[name] = path
+    return options
+
+
 def _load_uploaded_config(upload_event) -> tuple[str, dict[str, Any]]:
     suffix = Path(getattr(upload_event, "name", "scenario.yaml")).suffix or ".yaml"
     content = upload_event.content.read()
@@ -129,11 +151,15 @@ def _load_uploaded_config(upload_event) -> tuple[str, dict[str, Any]]:
     return source, scenario_summary(config)
 
 
-def _load_example_config(name: str) -> SimulationConfig:
+def _load_example_config(name: str, aircraft_id: str | None = None, aerodynamics: str | None = None) -> SimulationConfig:
     scenario_options = _scenario_options()
     if name not in scenario_options:
         raise ValueError(f"Unknown example scenario: {name}")
-    config = load_scenario_config(scenario_options[name])
+    config = load_scenario_config(
+        scenario_options[name],
+        params=None if aircraft_id is None else load_aircraft_config(aircraft_id, aerodynamics=aerodynamics),
+        aerodynamics=aerodynamics,
+    )
     APP_STATE.set_scenario(name, config)
     return config
 
@@ -697,7 +723,7 @@ def _maneuver_metadata(config: SimulationConfig, maneuver_key: str) -> list[dict
         if command.surface.strip().lower() in {"elevator", "de", "aileron", "da", "rudder", "ruddervator", "dr"}:
             amplitude = float(np.rad2deg(amplitude))
             unit = " deg"
-        elif command.surface.strip().lower() == "throttle":
+        elif command.surface.strip().lower() in {"throttle", "lift_throttle"}:
             amplitude = 100.0 * amplitude
             unit = "%"
         rows.append(
@@ -761,6 +787,10 @@ def _register_flight_deck_page(ui) -> None:
                 ui.label(f"Unable to initialize Flight Deck: {exc}").classes("text-red-600")
             return
 
+        scenario_options = scenario_options_for_aircraft(session.base_config.params.aircraft_id, session.base_config.params.aero_dataset_id)
+        if selected_name not in scenario_options:
+            selected_name = next(iter(scenario_options), None)
+
         telemetry_cards: dict[str, Any] = {}
         control_labels: dict[str, Any] = {}
         control_bars: dict[str, Any] = {}
@@ -788,6 +818,19 @@ def _register_flight_deck_page(ui) -> None:
             with ui.grid(columns="220px minmax(620px, 1.4fr) 250px").classes("w-full gap-3"):
                 with ui.column().classes("fd-panel gap-2 p-3"):
                     ui.label("SETUP").classes("text-xs font-semibold text-sky-200")
+                    aircraft_select = ui.select(
+                        options=aircraft_options(),
+                        value=session.base_config.params.aircraft_id,
+                        label="Aircraft",
+                    ).props("dark filled dense").classes("w-full")
+                    aerodynamics_select = ui.select(
+                        options=aerodynamic_options(),
+                        value=session.base_config.params.aero_dataset_id,
+                        label="Aerodynamics",
+                    ).props("dark filled dense").classes("w-full")
+                    aircraft_details = ui.label("").classes("text-xs text-slate-300")
+                    aero_details = ui.label("").classes("text-xs text-slate-300")
+                    lift_details = ui.label("").classes("text-xs text-slate-300")
                     scenario_select = ui.select(
                         options=list(scenario_options),
                         value=selected_name,
@@ -851,6 +894,7 @@ def _register_flight_deck_page(ui) -> None:
                         ("aileron_deg", "AIL", True),
                         ("rudder_deg", "RUD", True),
                         ("throttle_pct", "THR", False),
+                        ("lift_throttle_pct", "LIFT", False),
                     ]:
                         with ui.column().classes("w-full gap-1"):
                             with ui.row().classes("w-full justify-between"):
@@ -903,10 +947,38 @@ def _register_flight_deck_page(ui) -> None:
             )
             play_button.text = "PAUSE" if session.status == RUNNING else "PLAY"
             status_message.text = session.message
+            params = session.base_config.params
+            lift = params.lift_system
+            aircraft_details.text = (
+                f"{'' if lift is None else lift.motor.get('model', '')} | "
+                f"{params.battery.voltage_v:g} V | "
+                f"Pusher {'installed' if params.pusher_installed else 'absent'} | "
+                f"{params.aero_database_version}, tail chord "
+                f"{'pending' if params.geometry.tail_chord is None else str(params.geometry.tail_chord) + ' m'}"
+            )
+            aero_details.text = (
+                f"ρ {params.rho:g} kg/m³ | Moment center "
+                f"({', '.join(f'{float(value):g}' for value in params.aerodb_reference.moment_center_body_xyz)}) | "
+                + ("Partial controls: β=0°, ±5°; elevator α=-5..5°, aileron/rudder α=-5..0°. "
+                   "Endpoints held outside coverage; rates provisional."
+                   if params.deflection_database_path else "Provisional controls and rates.")
+            )
+            coverage = session.aerodynamic_coverage()
+            if coverage is not None:
+                aero_details.text += (
+                    " Active controls within measured coverage."
+                    if coverage["within_measured_coverage"]
+                    else " Active controls outside measured coverage; local approximation in use."
+                )
+            lift_details.text = (
+                f"Static lift {controls.get('lift_thrust_n', 0.0):.1f} N | "
+                f"Bench estimate {controls.get('lift_current_a', 0.0):.1f} A, "
+                f"{controls.get('lift_power_w', 0.0):.0f} W"
+            )
             trim_label.text = (
                 f"{session.base_config.trim_target_speed:g} m/s at "
                 f"{session.base_config.trim_altitude:g} m"
-            )
+            ) if session.base_config.start_from_trim else "Open loop; no fixed-wing trim"
 
             units = {
                 "airspeed": "m/s",
@@ -957,7 +1029,7 @@ def _register_flight_deck_page(ui) -> None:
             try:
                 if not scenario_select.value:
                     raise ValueError("No example scenario is selected.")
-                config = _load_example_config(str(scenario_select.value))
+                config = _load_example_config(str(scenario_select.value), str(aircraft_select.value), str(aerodynamics_select.value))
                 session.set_scenario(str(scenario_select.value), config)
                 maneuver_select.options = maneuver_options(config)
                 maneuver_select.value = session.maneuver_key
@@ -970,6 +1042,12 @@ def _register_flight_deck_page(ui) -> None:
                 session.message = f"Failed to load scenario: {exc}"
                 ui.notify(session.message, type="negative")
                 render(force_plot=True)
+
+        def select_aircraft() -> None:
+            options = scenario_options_for_aircraft(str(aircraft_select.value), str(aerodynamics_select.value))
+            selected = scenario_select.value if scenario_select.value in options else next(iter(options), None)
+            scenario_select.set_options(list(options), value=selected)
+            load_scenario()
 
         def select_maneuver() -> None:
             session.set_maneuver(str(maneuver_select.value))
@@ -999,6 +1077,8 @@ def _register_flight_deck_page(ui) -> None:
                 render()
 
         scenario_select.on("update:model-value", lambda _: load_scenario())
+        aircraft_select.on("update:model-value", lambda _: select_aircraft())
+        aerodynamics_select.on("update:model-value", lambda _: select_aircraft())
         maneuver_select.on("update:model-value", lambda _: select_maneuver())
         speed_select.on("update:model-value", lambda _: speed_changed())
         reset_button.on_click(reset_clicked)

@@ -1,0 +1,60 @@
+id: pt1_as_built
+label: PT1 KDE
+description: KDE lift hardware with the October tail-update AeroDB; mass, CG, inertia and numeric tail dimensions await PT1 measurement.
+aircraft:
+  mass: 25.0
+  cg_body_xyz: [-0.15, 0.0, 0.15]
+  inertia: [[2.5, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 5.0]]
+  rho: 1.021
+geometry:
+  tail_chord: null
+  tail_area: null
+aerodynamics:
+  dataset: tail_update_2026_10_07
+battery:
+  cells: 12
+  voltage_v: 44.4
+  capacity_ah: 22.0
+  mass_kg: 3.709
+propulsion:
+  pusher:
+    # Matches the repository's KDE first-hover package; change when the pusher is installed.
+    installed: false
+    max_thrust_n: 120.0
+  lift:
+    motor:
+      model: KDE5215XF-220
+      data_edition: HE manufacturer data
+      kv_rpm_per_v: 220
+      torque_constant_nm_per_a: 0.0434
+      resistance_ohm: 0.078
+      no_load_current_a_at_10v: 0.5
+      magnetic_poles: 28
+      rotor_inertia_kg_m2: 0.0000632
+      mass_kg_with_wires: 0.360
+      continuous_current_a_180s: 44
+      continuous_power_w_180s: 1955
+      source: https://www.kdedirect.com/products/kde5215xf-220
+    esc:
+      model: KDE-UAS75HVC+
+      manufacturer_product_id: KDE-UAS75HVC
+      continuous_current_a_180s: 75
+      peak_current_a_5s: 130
+      continuous_power_w_180s: 3330
+      peak_power_w_5s: 5770
+      voltage_min_v: 11.1
+      voltage_max_v: 52.2
+      refresh_rate_hz: 600
+      mass_kg_with_wires: 0.114
+      source: https://www.kdedirect.com/products/kde-uas75hvc
+    propeller:
+      model: KDE-CF215-DP
+      diameter_in: 21.5
+      pitch_in: 7.3
+      blades: 2
+      mass_kg_per_blade: 0.0258
+      source: https://www.kdedirect.com/products/kde-cf215-dp
+    # Same nominal rectangle as reference; not measured PT1 motor coordinates.
+    positions_body_m: [[0.55, 0.55, 0.15], [-0.85, 0.55, 0.15], [-0.85, -0.55, 0.15], [0.55, -0.55, 0.15]]
+    reaction_torque_signs: [1, -1, 1, -1]
+    performance_path: ../data/propulsion/kde5215xf_220_cf215_dp.csv

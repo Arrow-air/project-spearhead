@@ -10,6 +10,7 @@ import numpy as np
 
 from ..config import ControlInputCommand, SimulationConfig
 from ..controls import control_at
+from ..propulsion import propulsion_telemetry
 from ..realtime import RealtimeSimulation
 from ..result import SimulationResult
 from ..state import STATE_COLUMNS, SimulationState
@@ -49,6 +50,13 @@ def predefined_maneuvers(config: SimulationConfig | None = None) -> list[Maneuve
                 description="Use the input schedule from the selected scenario.",
             )
         )
+    if config is not None and not config.params.pusher_installed:
+        maneuvers.append(ManeuverDefinition(
+            key="lift_step", label="Lift collective step",
+            commands=(ControlInputCommand(surface="lift_throttle", kind="step", amplitude=0.03, start_time=2.0),),
+            description="Lift collective increment, 3 percent, starting at 2 s.",
+        ))
+        return maneuvers
     maneuvers.extend(
         [
             ManeuverDefinition(
@@ -227,6 +235,8 @@ def control_telemetry(simulation: RealtimeSimulation | None, t: float = 0.0) -> 
         "aileron_deg": degrees(control.da),
         "rudder_deg": degrees(control.dr),
         "throttle_pct": 100.0 * control.throttle,
+        "lift_throttle_pct": 100.0 * (float(np.mean(control.lift_motor_throttles)) if control.lift_motor_throttles is not None else control.lift_throttle),
+        **({} if simulation is None else propulsion_telemetry(control, simulation.config.params)),
     }
 
 
@@ -351,6 +361,19 @@ class FlightDeckSession:
         """Return display control positions for the current time."""
         t = 0.0 if self.current_state is None else self.current_state.time
         return control_telemetry(self.simulation, t)
+
+    def aerodynamic_coverage(self) -> dict | None:
+        state = self.current_state
+        params = self.base_config.params
+        if state is None or self.simulation is None or params.deflection_database_path is None:
+            return None
+        from ..deflections import load_deflection_database_cached
+        velocity = state.vector[3:6]
+        speed = max(float(np.linalg.norm(velocity)), params.Vmin)
+        alpha = float(np.rad2deg(np.arctan2(velocity[2], velocity[0])))
+        beta = float(np.rad2deg(np.arcsin(np.clip(velocity[1] / speed, -1, 1))))
+        control = control_at(state.time, self.simulation.control_override)
+        return load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).increments_at(alpha, beta, control)[1]
 
     def latest_result(self) -> SimulationResult | None:
         """Return a completed result, or a partial result if history exists."""

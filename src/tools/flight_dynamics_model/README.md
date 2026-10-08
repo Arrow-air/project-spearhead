@@ -2,13 +2,13 @@
 
 Minimal Python 6-DOF flight dynamics and simulation tool for Project Spearhead.
 
-The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. The default force/moment path uses the latest delivered drag-corrected ADB v1.1 table when it is present in the repository:
+The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. Reference Spearhead retains the original ADB v1.1. PT1 KDE uses the October 2026 tail-update database with partial measured controls. Hardware and aerodynamic versions can be selected independently. The preserved original database is:
 
 ```text
 docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv
 ```
 
-The ADB CSV metadata and the latest aerodynamics/Nondimit documentation are the source of truth for aerodynamic reference values. If those values disagree with old FDM defaults, the ADB metadata wins.
+The selected ADB CSV metadata defines aerodynamic reference values. Explicit user corrections are recorded in a versioned runtime copy, with original source files preserved. For the October delivery, the user confirmed rho=1.021 kg/m³ and moment center=(0,0,0), overriding a contradictory raw CSV moment-center header.
 
 ## ADB Reference Handling
 
@@ -18,7 +18,7 @@ The delivered Nondimit export contains both nondimensional coefficient columns a
 cfx, cfy, cfz, cmx, cmy, cmz
 ```
 
-It dimensionalizes those coefficients at the current simulation dynamic pressure using the ADB reference geometry from the CSV metadata:
+It dimensionalizes those coefficients at the current simulation dynamic pressure using the selected ADB reference geometry. The preserved v1.1 reference is:
 
 ```text
 rho = 1.09 kg/m^3
@@ -48,6 +48,64 @@ M_CG = M_ref + cross(reference.moment_center_body_xyz - cg_body_xyz, F_body)
 This runtime transfer is the correct path for CG-dependent stability studies using one delivered database. Nondimit regeneration can still be used for manual reference checks or official re-exporting at a new moment center, but the runtime FDM must remain consistent with the delivered DB metadata.
 
 If the recommended ADB file is missing, the model falls back to the older placeholder derivative model so scripts remain runnable.
+
+## Aircraft Profiles
+
+One FDM supports two bundled configurations in `aircraft_configs/`:
+
+- `reference_design.yaml`: planned MAD V8013 PRO IPE 150KV / AMPX 80A V2 /
+  FLUXER PRO 26×7.8 lift hardware, with the original preliminary pusher model.
+- `pt1_as_built.yaml`: four KDE5215XF-220 / KDE-UAS75HVC+ / 21.5×7.3 two-blade
+  lift units, 12S at 44.4 V nominal, pusher absent per the KDE first-hover package.
+
+In Flight Deck, use **Setup → Aircraft** to select **Reference Spearhead** or
+**PT1 KDE**. Switching clears the previous run and selects a compatible scenario.
+**Setup → Aerodynamics** selects the original or October dataset independently.
+Only scenarios with a successful bounded trim are offered for trimmed flight.
+The LIFT control bar and bench-estimate thrust/current/power readouts
+show the separately commanded lift system.
+
+The same profiles are available through the API and CLI:
+
+```python
+from spearhead import load_aircraft_config, SimulationConfig, run_simulation
+
+params = load_aircraft_config("reference_design")
+result = run_simulation(SimulationConfig(params=params))
+```
+
+```bash
+PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
+  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml --aircraft reference_design
+
+PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
+  src/tools/flight_dynamics_model/scenarios/pt1_hover.yaml --aircraft pt1_as_built
+```
+
+PT1 mass, CG, inertia and rotor coordinates remain preliminary; the profile
+does not claim to model the wingless first-hover airframe. The original MAD lift
+hardware is preserved, but its lift performance curve is not yet available.
+Reference retains ADB v1.1 and its original 0.28 m tail chord. PT1 defaults to
+the new database; its numeric updated tail chord/area are pending.
+See [profile data and model limits](docs/aircraft_profiles.md) before interpreting
+PT1 results or replacing the AeroDB.
+
+The new database includes 32,761 alpha/beta points and 17 partial deflection
+cases. Measured control increments replace provisional controls; rate damping
+remains provisional. Outside control coverage, endpoints are held and the GUI
+reports the approximation. At the existing CG, fixed-wing trim is not achieved
+within the measured ±5° elevator range. See the
+[comparison and integration report](docs/aerodb_tail_update_2026_10_07.md).
+
+```bash
+PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
+  src/tools/flight_dynamics_model/scenarios/aero_database_check.yaml \
+  --aircraft reference_design --aerodynamics tail_update_2026_10_07
+```
+
+API: `load_aircraft_config("pt1_as_built", aerodynamics="adb_v1_1")` restores
+old aerodynamics with KDE hardware. Scenario YAML accepts `aerodynamics`; both
+simulation and stability CLIs accept `--aerodynamics`. Explicit selections win.
 
 ## Install Dependencies
 
@@ -213,7 +271,7 @@ of the primary realtime workflow.
 PYTHONPATH=src/tools/flight_dynamics_model pytest src/tools/flight_dynamics_model/tests
 ```
 
-The current trim/control derivatives are preliminary. ADB v1.1 does not include control-surface deflection dimensions, so control increments remain provisional and separate from the ADB interpolation.
+The current stability model is preliminary. ADB v1.1 uses provisional controls; the October dataset uses partial measured control increments. Rate derivatives remain provisional for both. Failed force/moment balance is rejected even when the optimizer terminates successfully.
 
 ## Stability Analysis Reproducibility
 

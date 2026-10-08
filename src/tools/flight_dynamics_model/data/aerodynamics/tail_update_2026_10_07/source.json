@@ -1,0 +1,29 @@
+{
+  "version": "tail_update_2026_10_07",
+  "received_date": "2026-10-07",
+  "rho_kg_m3": 1.021,
+  "moment_center_body_xyz_m": [
+    0,
+    0,
+    0
+  ],
+  "authority": "User supplied rho and moment center for both files. Override contradictory database header; coefficients and loads unchanged.",
+  "raw_database_moment_center_body_xyz_m": [
+    -0.1,
+    0,
+    0.15
+  ],
+  "tail_chord_m": null,
+  "tail_chord_note": "Updated tail chord; numeric value not supplied. Reference wing chord remains 0.457 m.",
+  "sources": {
+    "deflection.csv": {
+      "sha256": "9430a96ecd043517d6b584a2973b269c52266d7b79d50392822651dadf136ac4",
+      "path": "sources/deflection.csv"
+    },
+    "database.csv": {
+      "sha256": "6a9561724e7f3059e88e206d8793054ed357723af73b8e7aaec501f6eff83dc1",
+      "path": "sources/database.csv"
+    }
+  },
+  "control_model": "Independent measured increments relative to the zero-deflection row at each alpha. Linear interpolation within measured alpha/deflection bounds; hold endpoints outside with diagnostics; beta held at 0. No inferred combined-surface interactions or rate derivatives. No extra drag correction applied to measured increments."
+}

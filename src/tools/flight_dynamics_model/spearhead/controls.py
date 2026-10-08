@@ -13,6 +13,8 @@ class Control:
     da: float
     dr: float
     throttle: float
+    lift_throttle: float = 0.0
+    lift_motor_throttles: tuple[float, ...] | None = None
 
 
 ControlInput = Control | Mapping[str, float] | Callable[[float], Control | Mapping[str, float]]
@@ -27,6 +29,8 @@ def as_control(control: Control | Mapping[str, float]) -> Control:
         da=float(control["da"]),
         dr=float(control["dr"]),
         throttle=float(control["throttle"]),
+        lift_throttle=float(control.get("lift_throttle", 0.0)),
+        lift_motor_throttles=None if control.get("lift_motor_throttles") is None else tuple(control["lift_motor_throttles"]),
     )
 
 

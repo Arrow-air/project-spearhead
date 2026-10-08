@@ -5,7 +5,7 @@ import numpy as np
 from .aero import aero_model
 from .controls import ControlInput, control_at
 from .params import AircraftParams
-from .propulsion import propulsion_model_placeholder
+from .propulsion import propulsion_model
 from .rotations import euler_body_to_ned
 
 COMPONENTS = ("wing", "tail", "fuselage", "propulsion", "gravity", "total")
@@ -65,7 +65,7 @@ def compute_force_moment_breakdown(
 
     control = control_at(t, control_override)
     F_aero_b, M_aero_b, _ = aero_model(v_b, omega_b, control, params)
-    F_prop_b, M_prop_b = propulsion_model_placeholder(control, params)
+    F_prop_b, M_prop_b = propulsion_model(control, params)
 
     R_body_to_ned = euler_body_to_ned(phi, theta, psi)
     F_gravity_ned = np.array([0.0, 0.0, params.mass * params.g])

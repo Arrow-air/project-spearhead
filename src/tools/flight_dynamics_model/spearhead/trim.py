@@ -58,9 +58,16 @@ def trim_fixed_wing_longitudinal(
     This is a preliminary solver for the current placeholder aero/propulsion
     model. It is not a validated Spearhead trim result.
     """
+    if not params.pusher_installed:
+        raise ValueError("Fixed-wing trim requires an installed pusher; use an untrimmed lift scenario for PT1")
     x0 = _parse_initial_guess(initial_guess)
     lower_bounds = np.array([np.deg2rad(-10.0), np.deg2rad(-10.0), np.deg2rad(-25.0), 0.0])
     upper_bounds = np.array([np.deg2rad(20.0), np.deg2rad(20.0), np.deg2rad(25.0), 1.0])
+    if params.deflection_database_path is not None:
+        from .deflections import load_deflection_database_cached
+        elevator = load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).surfaces["elevator"]
+        lower_bounds[[0, 2]] = np.deg2rad([elevator.alpha_deg[0], elevator.deflection_deg[0]])
+        upper_bounds[[0, 2]] = np.deg2rad([elevator.alpha_deg[-1], elevator.deflection_deg[-1]])
     x0 = np.clip(x0, lower_bounds, upper_bounds)
 
     def residual(unknowns: np.ndarray) -> np.ndarray:
@@ -103,9 +110,11 @@ def trim_fixed_wing_longitudinal(
         control_override=control_trim,
     )
 
+    final_residuals = residual(result.x)
+    balanced = bool(np.linalg.norm(final_residuals) < 1e-3)
     return {
-        "success": bool(result.success),
-        "message": result.message,
+        "success": bool(result.success) and balanced,
+        "message": str(result.message) if balanced else "No force/moment balance within the available trim/control bounds",
         "alpha_rad": alpha,
         "alpha_deg": np.rad2deg(alpha),
         "theta_rad": theta,
@@ -116,7 +125,6 @@ def trim_fixed_wing_longitudinal(
         "state_vector": x_trim,
         "x_trim": x_trim,
         "control_trim": control_trim,
-        "residuals": residual(result.x),
+        "residuals": final_residuals,
         "force_moment_breakdown": breakdown,
     }
-
