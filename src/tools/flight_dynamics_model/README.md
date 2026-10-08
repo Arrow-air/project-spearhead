@@ -10,8 +10,12 @@ The bootstrap smoke test verifies the real firmware connection. Normal arming,
 MANUAL direction checks, nominal FBWA, small steps and combined disturbances
 are exercised by `python -m spearhead.sitl.flight`; the
 [fixed-wing control report](../../../artifacts/fdm_sitl_control_2026_10_08/assessment.md)
-records results and model limits. Envelope sensitivity, replay/Flight Deck
-and PT1 hover remain separate acceptance stages.
+records results and model limits. The web console at `/sitl` starts/stops
+owned runner processes, compares FDM and ArduPilot estimates, and opens
+completed recordings. See the
+[web integration and PWM replay report](../../../artifacts/fdm_sitl_flight_deck_2026_10_08/assessment.md).
+Envelope sensitivity, real-time performance, repeated-run determinism and
+PT1 hover remain separate acceptance checks.
 
 The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. Reference Spearhead retains the original ADB v1.1. PT1 KDE uses the October 2026 tail-update database with partial measured controls. Hardware and aerodynamic versions can be selected independently. The preserved original database is:
 

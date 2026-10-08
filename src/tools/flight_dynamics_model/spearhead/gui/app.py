@@ -59,6 +59,7 @@ DEFAULT_PORT = 8080
 
 _pages_registered = False
 _flight_deck_session: FlightDeckSession | None = None
+_sitl_manager = None
 
 
 def get_example_scenarios() -> list[Path]:
@@ -639,6 +640,7 @@ def _render_page_shell(ui) -> None:
         ui.label("Spearhead Flight Deck").classes("text-lg font-semibold")
         with ui.row().classes("items-center gap-2"):
             ui.link("Flight Deck", "/").classes("text-white no-underline")
+            ui.link("ArduPilot SITL", "/sitl").classes("text-white no-underline")
             ui.link("Analyze", "/analyze").classes("text-white no-underline")
             ui.link("Scenario Library", "/scenario-library").classes("text-white no-underline")
     ui.separator()
@@ -1776,6 +1778,17 @@ def create_app() -> None:
     if _pages_registered:
         return
     ui = _require_nicegui()
+    from nicegui import app as nicegui_app
+    from .sitl_page import register_sitl_page
+    from .sitl_session import SITLManager
+    global _sitl_manager
+    if _sitl_manager is None:
+        _sitl_manager = SITLManager()
+    register_sitl_page(ui, _sitl_manager, _render_page_shell)
+    async def close_sitl():
+        import asyncio
+        await asyncio.to_thread(_sitl_manager.close)
+    nicegui_app.on_shutdown(close_sitl)
     _register_flight_deck_page(ui)
     _register_analyze_page(ui)
     _register_scenario_page(ui)
@@ -1785,9 +1798,15 @@ def create_app() -> None:
     _pages_registered = True
 
 
-def run_gui(*, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, reload: bool = False, show: bool = True) -> None:
+def run_gui(*, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, reload: bool = False, show: bool = True,
+            sitl_binary=None, sitl_python=None, sitl_port=19602, sitl_mavlink_port=16360) -> None:
     """Run the NiceGUI app."""
     ui = _require_nicegui()
+    global _sitl_manager
+    from .sitl_session import SITLManager
+    if not _pages_registered:
+        _sitl_manager = SITLManager(binary=sitl_binary, python=sitl_python,
+                                    port=sitl_port, mavlink_port=sitl_mavlink_port)
     create_app()
     ui.run(title="Spearhead Flight Dynamics Model", host=host, port=port, reload=reload, show=show)
 
@@ -1799,6 +1818,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help="port for the local GUI server")
     parser.add_argument("--reload", action="store_true", help="reload the GUI when source files change")
     parser.add_argument("--no-show", action="store_true", help="do not open a browser window automatically")
+    parser.add_argument("--sitl-binary", help="pinned ArduPlane 4.7.1 executable")
+    parser.add_argument("--sitl-python", help="Python with requirements-sitl installed; defaults to GUI Python")
+    parser.add_argument("--sitl-port", type=int, default=19602)
+    parser.add_argument("--sitl-mavlink-port", type=int, default=16360)
     return parser
 
 
@@ -1807,7 +1830,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
-        run_gui(host=args.host, port=args.port, reload=args.reload, show=not args.no_show)
+        run_gui(host=args.host, port=args.port, reload=args.reload, show=not args.no_show,
+                sitl_binary=args.sitl_binary, sitl_python=args.sitl_python,
+                sitl_port=args.sitl_port, sitl_mavlink_port=args.sitl_mavlink_port)
     except RuntimeError as exc:
         parser.exit(1, f"{exc}\n")
     return 0
