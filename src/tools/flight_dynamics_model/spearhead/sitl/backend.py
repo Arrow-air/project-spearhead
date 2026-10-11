@@ -43,7 +43,7 @@ def load_setup(path=None):
     config = yaml.safe_load(path.read_text())
     required = {"firmware", "aircraft", "aerodynamics", "cg_body_xyz_m", "speed_m_s",
                 "altitude_m", "max_step_s", "physics_rate_hz", "channels"}
-    if not isinstance(config, dict) or set(config) != required:
+    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact"}:
         raise ValueError("Invalid SITL configuration fields")
     if config["firmware"] != FIRMWARE_TAG or config["aerodynamics"] != DATASET:
         raise ValueError("This integration requires Plane-4.7.1 and the new AeroDB")
@@ -60,21 +60,61 @@ def load_setup(path=None):
         raise ValueError("Configure all four conventional actuator mappings explicitly")
     mapping = ActuatorMap(**{k: tuple(Channel(**item) for item in v) if k == "lift" else Channel(**v)
                              for k, v in channels.items()})
-    state, control = full_trim(params, config["speed_m_s"], config["altitude_m"])
+    policy = config.get("control_deflection_policy", "hold")
+    if policy not in ("hold", "linear"):
+        raise ValueError("Control deflection policy must be hold or linear")
+    params = replace(params, control_deflection_policy=policy,
+                     control_surface_limits_deg=tuple(getattr(mapping, name).travel_deg
+                                                      for name in ("elevator", "aileron", "rudder")))
+    regime = config.get("flight_regime", "fixed_wing")
+    ground = None
+    if regime in ("hover", "ground"):
+        from ..propulsion import hover_collective
+        from ..controls import Control
+        from ..dynamics import dynamics
+        if len(mapping.lift) != 4 or config["speed_m_s"] != 0 or not np.isfinite(config["altitude_m"]) or config["altitude_m"] <= 0:
+            raise ValueError("Hover requires four lift channels, zero initial speed and positive altitude")
+        state = np.zeros(12)
+        state[2] = -config["altitude_m"]
+        control = Control(0, 0, 0, 0, lift_throttle=hover_collective(params))
+        if np.linalg.norm(dynamics(0, state, params, control)[3:]) > 1e-6:
+            raise ValueError("Symmetric collective does not balance the configured hover CG")
+        if regime == "ground":
+            from .ground import GroundContact
+            if config["aircraft"] != "pt1_as_built" or not 3 <= config["altitude_m"] <= 30:
+                raise ValueError("Ground start supports PT1 takeoff targets of 3–30 m")
+            ground = GroundContact(**config.get("ground_contact", {}))
+            state = ground.rest_state(params)
+    elif regime == "fixed_wing":
+        state, control = full_trim(params, config["speed_m_s"], config["altitude_m"])
+    else:
+        raise ValueError("Unknown flight regime")
     rate = config["physics_rate_hz"]
     if not isinstance(rate, int) or not 100 <= rate <= 1000:
         raise ValueError("Physics rate must be an integer in [100, 1000] Hz")
-    physics = Physics(params, state, max_step=config["max_step_s"])
+    if regime != "ground" and "ground_contact" in config:
+        raise ValueError("Ground-contact settings require a ground initial point")
+    physics = Physics(params, state, hold=regime != "ground", max_step=config["max_step_s"], ground=ground)
     physics.rate_hz = rate
     manifest = {"config": config, "config_sha256": sha256(path), "aircraft": aircraft_summary(params),
                 "database_sha256": sha256(params.aero_database_path),
                 "deflections_sha256": sha256(params.deflection_database_path),
                 "initial_state": state.tolist(), "trim_control": asdict(control),
+                "control_model": {"deflection_policy": policy,
+                                  "assumed_travel_deg": {name: getattr(mapping, name).travel_deg
+                                                         for name in ("elevator", "aileron", "rudder")},
+                                  "travel_calibrated": False,
+                                  "extrapolation": "continue measured endpoint slopes; alpha/beta held"},
                 "limitations": ["diagnostic CG; not a physical flight recommendation",
-                                "synthetic servo travel, provisional rates/inertia/pusher",
+                                "assumed unmeasured servo travel; provisional rates/inertia/pusher",
                                 "bootstrap hold is a protocol test, not controlled flight",
                                 "AP atmosphere is standard; FDM rho is fixed at 1.021"]}
     source_root = Path(__file__).resolve().parents[1]
+    if ground is not None:
+        manifest["ground_contact"] = {"provisional": True, "datum_ned_z_m": 0, **asdict(ground)}
+        manifest["limitations"] = [item for item in manifest["limitations"] if "bootstrap" not in item and "diagnostic CG" not in item]
+        manifest["limitations"].append("PT1 CG, inertia and motor coordinates are provisional; simulation does not validate hardware")
+        manifest["limitations"].append("Assumed gear footprint/compliance/friction; flat ground only; no rotor ground effect")
     manifest["fdm_source_sha256"] = {str(p.relative_to(source_root)): sha256(p)
                                      for p in sorted(source_root.rglob("*.py"))}
     return physics, mapping, manifest
@@ -134,14 +174,24 @@ class Session:
         speed = np.linalg.norm(self.physics.state[3:6])
         alpha = float(np.rad2deg(np.arctan2(self.physics.state[5], self.physics.state[3])))
         beta = float(np.rad2deg(np.arcsin(np.clip(self.physics.state[4]/max(speed, 1e-12), -1, 1))))
+        from ..deflections import load_deflection_database_cached
+        coverage = None
+        params = self.physics.params
+        if params.deflection_database_path is not None and speed >= 1e-6:
+            _, coverage = load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).increments_at(
+                alpha, beta, control, deflection_policy=params.control_deflection_policy,
+                limits_deg=params.control_surface_limits_deg)
         self.last_record = {"frame": frame.count, "advertised_rate_hz": frame.rate,
                             "physics_rate_hz": getattr(self.physics, "rate_hz", 200), "time_s": self.physics.time,
                             "hold": self.physics.hold, "pwm": frame.pwm, "control": asdict(control),
                             "bootstrap_air_start": air_start_applied,
                             "release_applied": released,
                             "state": self.physics.state.tolist(), "sensor": sensor,
-                            "control_coverage_exceeded": not (-5 <= alpha <= 0 and abs(beta) < 1e-6),
+                            "control_coverage": coverage,
+                            "control_coverage_exceeded": coverage is not None and not coverage["within_measured_coverage"],
                             "alpha_deg": alpha, "beta_deg": beta}
+        if self.physics.ground is not None:
+            self.last_record["ground"] = self.physics.ground.loads(self.physics.state)[2]
         return reply
 
 

@@ -47,11 +47,13 @@ def test_profiles_are_independent_and_preserve_original_parameters():
     original = AircraftParams()
     reference = load_aircraft_config("reference_design")
     pt1 = load_aircraft_config("pt1_as_built")
+    assert pt1.mass == 21.0 and reference.mass == 25.0
     assert reference.lift_system.motor["model"] == "MAD V8013 PRO IPE"
     assert pt1.lift_system.motor["model"] == "KDE5215XF-220"
     assert pt1.lift_system.esc["model"] == "KDE-UAS75HVC+"
     assert pt1.lift_system.propeller["blades"] == 2
-    assert reference.pusher_installed and not pt1.pusher_installed
+    assert reference.pusher_installed and pt1.pusher_installed
+    assert reference.pusher_system is None and pt1.pusher_system.motor["kv_rpm_per_v"] == 150
     assert reference.Tmax == original.Tmax
     assert reference.aero_database_path == original.aero_database_path
     assert reference.geometry == original.geometry
@@ -86,7 +88,7 @@ def test_static_curve_exact_points_interpolation_and_voltage_bounds():
 def test_lift_force_body_sign_moment_balance_and_cg_transfer():
     pt1 = load_aircraft_config("pt1_as_built")
     pt1 = replace(pt1, battery=replace(pt1.battery, voltage_v=50.4))
-    control = Control(0, 0, 0, 1, lift_throttle=0.5)
+    control = Control(0, 0, 0, 0, lift_throttle=0.5)
     force, moment = propulsion_model(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -4 * 42.39])
     np.testing.assert_allclose(moment, [0, 0, 0], atol=1e-12)
@@ -157,15 +159,15 @@ def test_gui_profile_switch_resets_simulation_and_filters_incompatible_scenarios
     assert session.current_state.time == 0
     assert session.base_config.params.aircraft_id == "pt1_as_built"
     assert session.controls()["pusher_thrust_n"] == 0
-    assert session.controls()["lift_thrust_n"] == pytest.approx(25 * 9.80665)
+    assert session.controls()["lift_thrust_n"] == pytest.approx(21 * 9.80665)
     assert "lift_step" in maneuver_options(pt1_config)
-    assert list(scenario_options_for_aircraft("pt1_as_built")) == ["pt1_hover.yaml"]
+    assert "pt1_hover.yaml" in scenario_options_for_aircraft("pt1_as_built")
     assert "pitch_doublet.yaml" in scenario_options_for_aircraft("reference_design")
     session.set_scenario("reference", reference_config)
     assert session.base_config.params.lift_system.motor["model"] == "MAD V8013 PRO IPE"
     assert session.controls()["lift_thrust_n"] == 0
     with pytest.raises(ValueError, match="requires an installed pusher"):
-        trim_fixed_wing_longitudinal(pt1_config.params)
+        trim_fixed_wing_longitudinal(replace(pt1_config.params, pusher_installed=False))
 
 
 def test_new_geometry_and_aerodb_can_be_selected_without_overwriting_old_profile(tmp_path):
@@ -173,6 +175,7 @@ def test_new_geometry_and_aerodb_can_be_selected_without_overwriting_old_profile
     data["geometry"]["tail_chord"] = 0.30
     data["aerodynamics"] = {"version": "future-test-db", "geometry_version": "test_tail_0.30m", "path": "new.csv"}
     data["propulsion"]["lift"]["performance_path"] = str(load_aircraft_config("pt1_as_built").lift_system.performance_path)
+    data["propulsion"]["pusher"]["estimate"]["performance_path"] = str(load_aircraft_config("pt1_as_built").pusher_system.performance_path)
     (tmp_path / "new.csv").write_text("source supplied later\n")
     profile = tmp_path / "new.yaml"
     profile.write_text(yaml.safe_dump(data))

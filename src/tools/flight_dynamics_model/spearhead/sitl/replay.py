@@ -24,7 +24,7 @@ def replay(directory, *, max_seconds=None):
             raise ValueError(f"Replay source data mismatch: {name}")
     # Source mismatches must be visible even if the trajectory still agrees.
     source_match = current["fdm_source_sha256"] == manifest["fdm_source_sha256"]
-    physical_modules = ["aero.py", "aerodb.py", "aircraft.py", "controls.py", "dynamics.py",
+    physical_modules = ["aero.py", "aerodb.py", "deflections.py", "aircraft.py", "controls.py", "dynamics.py",
                         "force_moment.py", "params.py", "propulsion.py", "rotations.py",
                         "sitl/physics.py", "sitl/actuators.py"]
     physics_source_match = all(current["fdm_source_sha256"][name] ==

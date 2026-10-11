@@ -1,9 +1,9 @@
 id: tail_update_2026_10_07
-label: Oct 2026 tail update — partial controls
-version: tail_update_2026_10_07
+label: Oct 2026 tail update — expanded controls
+version: tail_update_2026_10_07_controls_2026_10_09
 geometry_version: updated_tail_chord_value_pending
 path: ../data/aerodynamics/tail_update_2026_10_07/database.csv
-deflection_path: ../data/aerodynamics/tail_update_2026_10_07/sources/deflection.csv
+deflection_path: ../data/aerodynamics/tail_update_2026_10_07/deflections_2026_10_09.csv
 # Numeric tail dimensions were not supplied with these coefficient tables.
 geometry:
   tail_chord: null

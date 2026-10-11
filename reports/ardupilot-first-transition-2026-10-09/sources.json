@@ -1,0 +1,36 @@
+{
+  "review_date": "2026-10-09",
+  "official_sources": {
+    "transitions": "https://ardupilot.org/plane/docs/quadplane-transitions.html",
+    "reliability": "https://ardupilot.org/plane/docs/quadplane-reliability.html",
+    "airspeed": "https://ardupilot.org/plane/docs/airspeed-parameters-setup.html",
+    "sensor": "https://ardupilot.org/plane/docs/calibrating-an-airspeed-sensor.html",
+    "tuning": "https://ardupilot.org/plane/docs/new-roll-and-pitch-tuning.html",
+    "vtol": "https://ardupilot.org/plane/docs/quadplane-vtol-tuning-process.html",
+    "tecs": "https://ardupilot.org/plane/docs/tecs-total-energy-control-system-for-speed-height-tuning-guide.html",
+    "flying": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+    "qsource": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/quadplane.cpp",
+    "psource": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+    "bsource": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/libraries/AP_BattMonitor/AP_BattMonitor_Params.cpp",
+    "greatshark": "https://www.foxtechfpv.com/foxtech-great-shark-330-vtol.html",
+    "mugin": "https://www.muginuav.com/product/mugin-ev350-carbon-fiber-full-electric-vtol-uav-platform/",
+    "kde": "https://www.kdedirect.com/products/kde5215xf-220",
+    "esc": "https://www.kdedirect.com/products/kde-uas75hvc"
+  },
+  "peer_parameter_files": {
+    "Foxtech_GreatShark": {
+      "source_commit": "dbe792162d06cab66c3475fd5556bf7a120f119e",
+      "path": "/private/tmp/spearhead-ardupilot-4.7.1/Tools/Frame_params/QuadPlanes/Foxtech_GreatShark.param",
+      "sha256": "beddf7f8ecf656a2698ba8b8d66c96db4a3ff3a4c929ab9da973f984d162291e",
+      "url": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/Tools/Frame_params/QuadPlanes/Foxtech_GreatShark.param",
+      "license": "ArduPilot GPL-3.0; upstream file retained with comments"
+    },
+    "Mugin_EV350": {
+      "source_commit": "dbe792162d06cab66c3475fd5556bf7a120f119e",
+      "path": "/private/tmp/spearhead-ardupilot-4.7.1/Tools/Frame_params/QuadPlanes/Mugin_EV350.param",
+      "sha256": "2018b482fc81c1b1b4161c97b438731be364f54f86d1dc4167abfaf1d5183200",
+      "url": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/Tools/Frame_params/QuadPlanes/Mugin_EV350.param",
+      "license": "ArduPilot GPL-3.0; upstream file retained with comments"
+    }
+  }
+}

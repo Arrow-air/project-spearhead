@@ -1,0 +1,658 @@
+{
+  "source": "/Users/zeynep/Downloads/00000017.BIN",
+  "sha256": "4bd86fdc5ab39870e896eb3c880ee03fcbf7b2eab39d4dc6ce2f95253dc5e01f",
+  "duration_boot_s": 1789.577825,
+  "parameter_count": 1241,
+  "modes": [
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 207304268,
+      "Mode": 18,
+      "ModeNum": 18,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 210613701,
+      "Mode": 17,
+      "ModeNum": 17,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 212573591,
+      "Mode": 18,
+      "ModeNum": 18,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 213833662,
+      "Mode": 19,
+      "ModeNum": 19,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 953239448,
+      "Mode": 17,
+      "ModeNum": 17,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 954079646,
+      "Mode": 19,
+      "ModeNum": 19,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 1142080530,
+      "Mode": 17,
+      "ModeNum": 17,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 1143340720,
+      "Mode": 19,
+      "ModeNum": 19,
+      "Rsn": 1
+    },
+    {
+      "mavpackettype": "MODE",
+      "TimeUS": 1580597904,
+      "Mode": 20,
+      "ModeNum": 20,
+      "Rsn": 5
+    }
+  ],
+  "arms": [
+    {
+      "mavpackettype": "ARM",
+      "TimeUS": 346420794,
+      "ArmState": 0,
+      "ArmChecks": 0,
+      "Forced": 0,
+      "Method": 2
+    },
+    {
+      "mavpackettype": "ARM",
+      "TimeUS": 1320624480,
+      "ArmState": 1,
+      "ArmChecks": 2097150,
+      "Forced": 0,
+      "Method": 2
+    },
+    {
+      "mavpackettype": "ARM",
+      "TimeUS": 1387217074,
+      "ArmState": 0,
+      "ArmChecks": 0,
+      "Forced": 0,
+      "Method": 2
+    }
+  ],
+  "messages": [
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207135126,
+      "ID": 75,
+      "Seq": 0,
+      "Message": "Throttle armed"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301141,
+      "ID": 76,
+      "Seq": 0,
+      "Message": "ArduPlane V4.7.0 (1511f271)"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301153,
+      "ID": 77,
+      "Seq": 0,
+      "Message": "ChibiOS: 4f34e217"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301174,
+      "ID": 78,
+      "Seq": 0,
+      "Message": "Pixhawk6C 0045002A 35335114 39303930"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301184,
+      "ID": 79,
+      "Seq": 0,
+      "Message": "Param space used: 1437/5120"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301194,
+      "ID": 80,
+      "Seq": 0,
+      "Message": "RC Protocol: CRSF"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301231,
+      "ID": 81,
+      "Seq": 0,
+      "Message": "RCOut: PWM:1-16"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207301243,
+      "ID": 82,
+      "Seq": 0,
+      "Message": "New mission"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207304240,
+      "ID": 83,
+      "Seq": 0,
+      "Message": "New rally"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207304247,
+      "ID": 84,
+      "Seq": 0,
+      "Message": "New fence"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207304262,
+      "ID": 85,
+      "Seq": 0,
+      "Message": "QuadPlane Frame: QUAD/X"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 207304287,
+      "ID": 86,
+      "Seq": 0,
+      "Message": "GPS 1: specified as DroneCAN1-125"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 244330673,
+      "ID": 87,
+      "Seq": 0,
+      "Message": "Battery 1 is low 44.06V used 4 mAh"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 346420817,
+      "ID": 88,
+      "Seq": 0,
+      "Message": "Throttle disarmed"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 346721889,
+      "ID": 89,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 377718272,
+      "ID": 90,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 408715288,
+      "ID": 91,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 439712349,
+      "ID": 92,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 470709308,
+      "ID": 93,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 501706536,
+      "ID": 94,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 532702811,
+      "ID": 95,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 563699973,
+      "ID": 96,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 594696874,
+      "ID": 97,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 625693783,
+      "ID": 98,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 656690366,
+      "ID": 99,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 687687287,
+      "ID": 100,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 718684460,
+      "ID": 101,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 749681318,
+      "ID": 102,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 780678320,
+      "ID": 103,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 811675154,
+      "ID": 104,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 842671807,
+      "ID": 105,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 873668709,
+      "ID": 106,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 904665674,
+      "ID": 107,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 935662817,
+      "ID": 108,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 966659883,
+      "ID": 109,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 997656309,
+      "ID": 110,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1028653447,
+      "ID": 111,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1059650504,
+      "ID": 112,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1090647246,
+      "ID": 113,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1121644227,
+      "ID": 114,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1152641058,
+      "ID": 115,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1183637801,
+      "ID": 116,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1188637190,
+      "ID": 117,
+      "Seq": 0,
+      "Message": "Arm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1212134597,
+      "ID": 118,
+      "Seq": 0,
+      "Message": "Arm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1214635296,
+      "ID": 119,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1245631508,
+      "ID": 120,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1276628372,
+      "ID": 121,
+      "Seq": 0,
+      "Message": "PreArm: Battery 1 below minimum arming voltage"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1320624693,
+      "ID": 122,
+      "Seq": 0,
+      "Message": "Throttle armed"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1387217098,
+      "ID": 123,
+      "Seq": 0,
+      "Message": "Throttle disarmed"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1580597941,
+      "ID": 124,
+      "Seq": 0,
+      "Message": "GCS Failsafe On: switched to QLand"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1586597334,
+      "ID": 125,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1617594639,
+      "ID": 126,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1648591703,
+      "ID": 127,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1679588344,
+      "ID": 128,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1710585271,
+      "ID": 129,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1741581854,
+      "ID": 130,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    },
+    {
+      "mavpackettype": "MSG",
+      "TimeUS": 1772579215,
+      "ID": 131,
+      "Seq": 0,
+      "Message": "PreArm: QLand mode not armable"
+    }
+  ],
+  "statistics_whole_log_not_just_flight": {
+    "QTUN.ThH": {
+      "n": 4792,
+      "min": 0.22739571332931519,
+      "median": 0.22768813371658325,
+      "p95": 0.22768813371658325,
+      "max": 0.22809407114982605
+    },
+    "QTUN.ThO": {
+      "n": 4792,
+      "min": 0.0,
+      "median": 0.23232154548168182,
+      "p95": 0.2940021142363548,
+      "max": 0.4373798966407776
+    },
+    "QTUN.Alt": {
+      "n": 4792,
+      "min": -0.8517142534255981,
+      "median": 11.38204574584961,
+      "p95": 18.02001247406006,
+      "max": 18.294309616088867
+    },
+    "QTUN.DAlt": {
+      "n": 4792,
+      "min": -0.8517142534255981,
+      "median": 11.356865882873535,
+      "p95": 17.996160411834715,
+      "max": 18.277992248535156
+    },
+    "RCOU.C5": {
+      "n": 6647,
+      "min": 1100.0,
+      "median": 1618.0,
+      "p95": 1750.0,
+      "max": 1814.0
+    },
+    "RCOU.C6": {
+      "n": 6647,
+      "min": 1100.0,
+      "median": 1607.0,
+      "p95": 1726.0,
+      "max": 1777.0
+    },
+    "RCOU.C7": {
+      "n": 6647,
+      "min": 1100.0,
+      "median": 1409.0,
+      "p95": 1620.0,
+      "max": 1710.0
+    },
+    "RCOU.C8": {
+      "n": 6647,
+      "min": 1100.0,
+      "median": 1416.0,
+      "p95": 1610.0,
+      "max": 1698.0
+    },
+    "VIBE.VibeZ": {
+      "n": 13294,
+      "min": 0.006626320071518421,
+      "median": 8.160956859588623,
+      "p95": 20.03732051849365,
+      "max": 26.402076721191406
+    },
+    "BAT.Volt": {
+      "n": 2659,
+      "min": 42.345924377441406,
+      "median": 43.46846008300781,
+      "p95": 46.717919158935544,
+      "max": 47.39760208129883
+    },
+    "BAT.Curr": {
+      "n": 2659,
+      "min": 0.0020139587577432394,
+      "median": 0.11699268966913223,
+      "p95": 0.22979269325733184,
+      "max": 0.4974478483200073
+    }
+  },
+  "message_counts": {
+    "FMT": 186,
+    "FMTU": 197,
+    "MSG": 57,
+    "AUXF": 8,
+    "RCIN": 6655,
+    "RCI2": 6655,
+    "IMU": 159540,
+    "ANG": 61770,
+    "RATE": 61770,
+    "MOTB": 2000,
+    "QTUN": 4792,
+    "PSCD": 4738,
+    "PARM": 1433,
+    "RFND": 13295,
+    "ISBH": 333,
+    "ISBD": 10630,
+    "DCM": 2657,
+    "ATT": 6647,
+    "PIQR": 5151,
+    "PIQP": 5151,
+    "PIQY": 5151,
+    "PIQA": 5151,
+    "PIDR": 6647,
+    "PIDP": 6647,
+    "XKF4": 13294,
+    "XKF1": 13294,
+    "XKF2": 13294,
+    "XKF3": 13294,
+    "XKF5": 6647,
+    "XKFS": 13294,
+    "XKQ": 13294,
+    "XKV1": 512,
+    "XKV2": 512,
+    "XKT": 108,
+    "AHR2": 6647,
+    "POS": 6647,
+    "CTUN": 6647,
+    "NTUN": 6647,
+    "RCOU": 6647,
+    "RCO2": 6647,
+    "RSSI": 6647,
+    "AETR": 6647,
+    "VIBE": 13294,
+    "GPS": 1330,
+    "GPA": 1330,
+    "MAG": 5318,
+    "BARO": 2659,
+    "POWR": 2659,
+    "MCU": 2659,
+    "BAT": 2659,
+    "AOA": 2659,
+    "MAV": 795,
+    "UNIT": 38,
+    "MULT": 15,
+    "DSF": 266,
+    "VER": 1,
+    "RTC": 87,
+    "CMD": 1,
+    "MODE": 9,
+    "ORGN": 24,
+    "FILE": 2484,
+    "STAT": 1329,
+    "STAK": 2628,
+    "CANS": 266,
+    "IOMC": 264,
+    "RAD": 267,
+    "TERR": 265,
+    "UART": 1068,
+    "HEAT": 266,
+    "PM": 53,
+    "CAND": 1,
+    "PIDN": 6480,
+    "PIDE": 6480,
+    "PSCN": 4635,
+    "PSCE": 4635,
+    "EV": 5,
+    "XKY0": 9005,
+    "XKY1": 9005,
+    "ARM": 3
+  }
+}

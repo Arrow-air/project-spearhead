@@ -78,6 +78,28 @@ def propulsion_model_placeholder(control: Control, params: AircraftParams) -> tu
     return np.array([thrust, 0.0, 0.0]), np.zeros(3)
 
 
+def pusher_performance(control: Control, params: AircraftParams, axial_speed_m_s: float = 0.0):
+    if not params.pusher_installed:
+        return {"thrust_n": 0.0}
+    if params.pusher_system is None:
+        return {"thrust_n": float(propulsion_model_placeholder(control, params)[0][0])}
+    from .pusher import estimate_pusher
+    return estimate_pusher(params.pusher_system, params.battery.voltage_v, control.throttle,
+                           axial_speed_m_s, params.rho)
+
+
+def pusher_propulsion(control: Control, params: AircraftParams, axial_speed_m_s: float = 0.0):
+    sample = pusher_performance(control, params, axial_speed_m_s)
+    force = np.array([sample["thrust_n"], 0., 0.])
+    moment = np.zeros(3)
+    if params.pusher_installed and params.pusher_system is not None:
+        system = params.pusher_system
+        if system.position_body_m is not None:
+            moment += np.cross(np.asarray(system.position_body_m)-params.cg_body_xyz, force)
+        moment[0] += system.reaction_torque_sign*sample["torque_nm"]
+    return force, moment
+
+
 def lift_propulsion(control: Control, params: AircraftParams) -> tuple[np.ndarray, np.ndarray, list[dict[str, float]]]:
     """Resolve rotor thrust and reaction torque about the aircraft CG."""
     lift = params.lift_system
@@ -108,9 +130,9 @@ def lift_propulsion(control: Control, params: AircraftParams) -> tuple[np.ndarra
     return force, moment, samples
 
 
-def propulsion_model(control: Control, params: AircraftParams) -> tuple[np.ndarray, np.ndarray]:
+def propulsion_model(control: Control, params: AircraftParams, axial_speed_m_s: float = 0.0) -> tuple[np.ndarray, np.ndarray]:
     """Combine independently commanded forward and lift propulsion."""
-    pusher_force, pusher_moment = propulsion_model_placeholder(control, params)
+    pusher_force, pusher_moment = pusher_propulsion(control, params, axial_speed_m_s)
     lift_force, lift_moment, _ = lift_propulsion(control, params)
     return pusher_force + lift_force, pusher_moment + lift_moment
 
@@ -128,12 +150,13 @@ def hover_collective(params: AircraftParams) -> float:
     return float(np.interp(per_rotor_weight, thrust, curve.throttles))
 
 
-def propulsion_telemetry(control: Control, params: AircraftParams) -> dict[str, float]:
+def propulsion_telemetry(control: Control, params: AircraftParams, axial_speed_m_s: float = 0.0) -> dict[str, float]:
     """Report static bench estimates, without a battery or voltage-sag model."""
     _, _, samples = lift_propulsion(control, params)
+    pusher = pusher_performance(control, params, axial_speed_m_s)
     return {
         "lift_thrust_n": sum(sample["thrust_n"] for sample in samples),
         "lift_current_a": sum(sample["current_a"] for sample in samples),
         "lift_power_w": sum(sample["power_w"] for sample in samples),
-        "pusher_thrust_n": float(propulsion_model_placeholder(control, params)[0][0]),
+        **{f"pusher_{key}": value for key, value in pusher.items()},
     }

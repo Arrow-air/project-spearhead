@@ -1,0 +1,32 @@
+{
+  "source": "/Users/zeynep/Desktop/Work/Spearhead/project-spearhead/src/tools/flight_dynamics_model/.sitl/envelope-20261009/roll_plus_28/logs/00000001.BIN",
+  "sha256": "679f0d1c728d27c97ca29080facecac1c1bee7a01a0bfd71b196869615b01412",
+  "messages": [
+    "Throttle failsafe off",
+    "ArduPlane V4.7.1 (dbe79216)",
+    "feyneps-MacBook-Pro.local",
+    "Param space used: 185/3840",
+    "RC Protocol: UDP",
+    "New mission",
+    "New rally",
+    "New fence",
+    "Airspeed 1 calibrated",
+    "GPS 1: probing for u-blox at 230400 baud",
+    "GPS 1: detected u-blox",
+    "EKF3 IMU0 initialised",
+    "EKF3 IMU1 initialised",
+    "EKF3 IMU0 tilt alignment complete",
+    "EKF3 IMU1 tilt alignment complete",
+    "EKF3 IMU0 MAG0 initial yaw alignment complete",
+    "EKF3 IMU1 MAG0 initial yaw alignment complete",
+    "EKF3 IMU0 origin set",
+    "EKF3 IMU1 origin set",
+    "EKF3 IMU0 is using GPS",
+    "EKF3 IMU1 is using GPS",
+    "AHRS: EKF3 active",
+    "Field Elevation Set: 600m",
+    "Throttle armed",
+    "Autoland direction= 0"
+  ],
+  "parameter_count": 1346
+}

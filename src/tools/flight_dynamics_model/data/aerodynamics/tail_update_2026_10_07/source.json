@@ -23,7 +23,46 @@
     "database.csv": {
       "sha256": "6a9561724e7f3059e88e206d8793054ed357723af73b8e7aaec501f6eff83dc1",
       "path": "sources/database.csv"
+    },
+    "results_2026_10_09.csv": {
+      "path": "sources/results_2026_10_09.csv",
+      "sha256": "9efdce5b1f23ff7e7119de211697b2f668a5fcaa8dc4277740b409f532120b60",
+      "received_date": "2026-10-09",
+      "cases": 54
     }
   },
-  "control_model": "Independent measured increments relative to the zero-deflection row at each alpha. Linear interpolation within measured alpha/deflection bounds; hold endpoints outside with diagnostics; beta held at 0. No inferred combined-surface interactions or rate derivatives. No extra drag correction applied to measured increments."
+  "control_model": "Independent measured increments relative to the zero-deflection row at each alpha. Linear interpolation within measured alpha/deflection bounds; hold endpoints outside with diagnostics; beta held at 0. No inferred combined-surface interactions or rate derivatives. No extra drag correction applied to measured increments.",
+  "active_controls": {
+    "version": "controls_2026_10_09",
+    "path": "deflections_2026_10_09.csv",
+    "sha256": "c94135f1a1931e5a86471f2fea8ad651cceca8979c415940d8a355d557c0e49e",
+    "cases": 49,
+    "alpha_deg": [
+      -5,
+      0,
+      5,
+      10,
+      15,
+      20,
+      30
+    ],
+    "beta_deg": 0,
+    "velocity_m_s": 25,
+    "surface_deflections_deg": [
+      -5,
+      0,
+      5
+    ],
+    "source": "results_2026_10_09.csv",
+    "excluded_from_increments": [
+      "Case050",
+      "Case051",
+      "Case052",
+      "Case053",
+      "Case054"
+    ],
+    "selection_reason": "These five cases are zero-control sideslip baselines, not control increments. Preserve for audit; full base alpha/beta database remains unchanged.",
+    "convergence": "not_assessed",
+    "units_and_reference": "Inherited user-confirmed degrees, N, N*m, rho=1.021, body moment origin=(0,0,0); no new reference metadata supplied."
+  }
 }

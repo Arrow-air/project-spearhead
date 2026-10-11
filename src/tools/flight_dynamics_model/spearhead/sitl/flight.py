@@ -14,7 +14,8 @@ from ..controls import Control
 from ..dynamics import dynamics
 from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_firmware
 from .__main__ import telemetry_record
-from .metrics import analyse_truth, command_at
+from .metrics import analyse_truth, analyse_elevator_truth, command_at, elevator_at
+from .ground_control import ModeCommands
 
 
 def surface_pwm(channel, angle):
@@ -23,6 +24,21 @@ def surface_pwm(channel, angle):
         raise ValueError("Trim outside configured surface travel")
     span = channel.maximum-channel.trim if normalized >= 0 else channel.trim-channel.minimum
     return round(channel.trim + normalized*span)
+
+
+def manual_elevator_rc(mapping, trim, firmware_trim_pwm, delta_deg):
+    """Invert Plane's asymmetric servo-trim mapping to command physical degrees.
+
+    MANUAL RC2 is centred at 1500; firmware output is centred at SERVO2_TRIM.
+    Neither direct PWM injection nor an FDM control override is used.
+    """
+    channel = mapping.elevator
+    desired_pwm = surface_pwm(channel, trim.de+np.deg2rad(delta_deg))
+    span = (channel.maximum-firmware_trim_pwm if desired_pwm >= firmware_trim_pwm
+            else firmware_trim_pwm-channel.minimum)
+    if span <= 0:
+        raise ValueError("Elevator servo trim must leave authority in both directions")
+    return round(1500+500*(desired_pwm-firmware_trim_pwm)/span)
 
 
 def startup_states(initial, roll_deg, pitch_deg):
@@ -36,9 +52,9 @@ def startup_states(initial, roll_deg, pitch_deg):
 
 
 def bootstrap_mode(scenario, armed_at, now):
-    if scenario not in ("manual", "fbwa", "steps"):
+    if scenario not in ("manual", "elevator", "fbwa", "steps"):
         raise ValueError("Unknown flight scenario")
-    return 5 if scenario != "manual" and armed_at is not None and now-armed_at >= 3 else 0
+    return 5 if scenario not in ("manual", "elevator") and armed_at is not None and now-armed_at >= 3 else 0
 
 
 def parameters_match(observed, expected):
@@ -48,6 +64,8 @@ def parameters_match(observed, expected):
 
 def flight_parameters(mapping, state, trim):
     """Firmware servo trims, not hidden forces, establish the physical trim."""
+    pitch_scale = 5 / mapping.elevator.travel_deg
+    roll_scale = 5 / mapping.aileron.travel_deg
     return {"SERVO1_TRIM": surface_pwm(mapping.aileron, trim.da),
             "SERVO2_TRIM": surface_pwm(mapping.elevator, trim.de),
             "SERVO4_TRIM": surface_pwm(mapping.rudder, trim.dr),
@@ -61,27 +79,34 @@ def flight_parameters(mapping, state, trim):
             "AIRSPEED_CRUISE": float(np.linalg.norm(state[3:6])),
             "SCALING_SPEED": float(np.linalg.norm(state[3:6])),
             "AIRSPEED_MIN": 15, "AIRSPEED_MAX": 35,
-            # Virtual +/-5 degree travel and the -3 degree elevator trim give
-            # lower nose-up authority than ArduPilot's generic plane defaults.
-            # These gains belong only to this diagnostic SITL aircraft.
-            "PTCH_RATE_FF": 1.0, "PTCH_RATE_P": .08, "PTCH_RATE_I": .3,
+            # Gains are tuned for provisional +/-20 travel and scale with travel.
+            # Pitch FF uses local rate damping / elevator authority; P/I and
+            # roll I were rechecked against quantized-output step/recovery tests.
+            "PTCH_RATE_FF": 1.8*pitch_scale, "PTCH_RATE_P": .32*pitch_scale,
+            "PTCH_RATE_I": .6*pitch_scale, "PTCH2SRV_TCONST": .2,
+            "RLL_RATE_FF": .345*roll_scale, "RLL_RATE_P": .08*roll_scale,
+            "RLL_RATE_I": .3*roll_scale,
             "ROLL_LIMIT_DEG": 30, "PTCH_LIM_MIN_DEG": -10, "PTCH_LIM_MAX_DEG": 10}
 
 
 def run(args):
     from pymavlink import mavutil
-    physics, mapping, manifest = load_setup(args.config or CONFIG_ROOT / "fixed_wing_control.yaml")
+    default_config = "elevator_demo.yaml" if args.scenario == "elevator" else "fixed_wing_control.yaml"
+    physics, mapping, manifest = load_setup(args.config or CONFIG_ROOT / default_config)
     initial = physics.state.copy()
     stationary, air_start_state = startup_states(initial, args.perturb_roll, args.perturb_pitch)
     trim = Control(**manifest["trim_control"])
     firmware = verify_firmware(args.binary)
     output = Path(args.output).resolve()
     output.mkdir(parents=True, exist_ok=False)
+    interactive = getattr(args, "interactive", False)
+    if interactive:
+        (output / "commands").mkdir()
     params = flight_parameters(mapping, initial, trim)
     parameter_path = output / "flight.parm"
     parameter_path.write_text((CONFIG_ROOT / "plane_4_7_1.parm").read_text() + "\n" +
                               "\n".join(f"{k} {v}" for k, v in params.items()) + "\n")
-    manifest.update(firmware=firmware, test_kind=args.scenario, parameter_overlay=params,
+    manifest.update(firmware=firmware, test_kind=args.scenario, interactive=interactive, parameter_overlay=params,
                     parameter_sha256=sha256(parameter_path), forced_arm=False,
                     scenario_options={"duration_s": args.duration, "instance": args.instance,
                                       "perturb_roll_deg": args.perturb_roll,
@@ -105,20 +130,27 @@ def run(args):
     last_rc_values = None
     critical = {"ARMING_REQUIRE": 1., "ARMING_SKIPCHK": 0., "AHRS_EKF_TYPE": 3.,
                 "PTCH_RATE_FF": params["PTCH_RATE_FF"], "PTCH_RATE_P": params["PTCH_RATE_P"],
-                "PTCH_RATE_I": params["PTCH_RATE_I"]}
+                "PTCH_RATE_I": params["PTCH_RATE_I"], "PTCH2SRV_TCONST": params["PTCH2SRV_TCONST"]}
     observed = {}
     signs = {}
     neutral_pwm = [params["SERVO1_TRIM"], params["SERVO2_TRIM"],
                    round(1000+1000*trim.throttle), params["SERVO4_TRIM"], *([0]*12)]
     neutral_control = mapping.control(neutral_pwm)
     base_accel = dynamics(0, initial, physics.params, neutral_control)[9:12]
-    mode = 0 if args.scenario == "manual" else 5
+    mode = 0 if args.scenario in ("manual", "elevator") else 5
     started = time.monotonic()
 
     def event(name, **data):
         row = {"time_s": physics.time, "event": name, **data}
         events.append(row)
         print(json.dumps(row), flush=True)
+
+    def command_event(**data):
+        with (output / "control-events.jsonl").open("a") as stream:
+            stream.write(json.dumps({"time_s": physics.time, **data}) + "\n")
+        event("ground_control", **data)
+
+    mode_commands = ModeCommands(output / "commands", command_event)
 
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
         sock.bind(("127.0.0.1", args.port))
@@ -131,7 +163,8 @@ def run(args):
 
         worker = threading.Thread(target=backend, daemon=True)
         worker.start()
-        report = {"passed": False, "scenario": args.scenario, "forced_arm": False}
+        report = {"passed": False, "scenario": args.scenario, "forced_arm": False,
+                  "interactive": interactive, "validation_run": not interactive}
         try:
             with (output / "sitl.log").open("x") as sitl_log, (output / "telemetry.jsonl").open("x") as tlog:
                 command = [str(Path(args.binary).resolve()), "--model", "JSON:127.0.0.1",
@@ -162,7 +195,7 @@ def run(args):
                         if kind == "HEARTBEAT":
                             link.target_system, link.target_component = msg.get_srcSystem(), msg.get_srcComponent()
                             link.mav.heartbeat_send(6, 8, 0, 0, 4)
-                            if release_at is not None and msg.custom_mode != mode:
+                            if release_at is not None and msg.custom_mode != mode and not interactive:
                                 raise RuntimeError("Firmware changed flight mode after release")
                             if version is None:
                                 link.mav.request_data_stream_send(link.target_system, link.target_component, 0, 10, 1)
@@ -200,6 +233,9 @@ def run(args):
                     if "HEARTBEAT" not in telemetry:
                         continue
                     now = physics.time
+                    if interactive:
+                        mode_commands.update(link, None if msg is None else msg.to_dict(),
+                                             ready=release_at is not None)
                     if airspeed_calibrated and now >= 5 and air_started_at is None:
                         # Establish the disturbed attitude before EKF alignment;
                         # do not teleport an aligned estimator without gyro motion.
@@ -216,7 +252,7 @@ def run(args):
                     # Keep controllers reset in MANUAL during artificial hold;
                     # holding a nonzero FBWA error for 25 s would wind up I.
                     desired_mode = bootstrap_mode(args.scenario, armed_at, now)
-                    if now-last_mode >= 1 and telemetry["HEARTBEAT"]["custom_mode"] != desired_mode:
+                    if (not interactive or release_at is None) and now-last_mode >= 1 and telemetry["HEARTBEAT"]["custom_mode"] != desired_mode:
                         link.mav.set_mode_send(link.target_system, 1, desired_mode)
                         last_mode = now
                     rc = [1500, 1500, 1000, 1500, 1500, 1500, 1500, 1500]
@@ -268,6 +304,9 @@ def run(args):
                         axis, delta_pwm, _ = command_at(now-release_at)
                         if axis is not None:
                             rc[axis] += delta_pwm
+                    if release_at is not None and args.scenario == "elevator":
+                        rc[1] = manual_elevator_rc(mapping, trim, params["SERVO2_TRIM"],
+                                                   elevator_at(now-release_at))
                     if now-last_rc >= .05:
                         link.mav.rc_channels_override_send(link.target_system, link.target_component, *rc)
                         if tuple(rc) != last_rc_values:
@@ -276,7 +315,7 @@ def run(args):
                         last_rc = now
                     if release_at is not None:
                         x = physics.state.copy()
-                        if abs(np.rad2deg(x[6])) > 20 or abs(np.rad2deg(x[7])) > 15:
+                        if abs(np.rad2deg(x[6])) > (60 if interactive else 20) or abs(np.rad2deg(x[7])) > (45 if interactive else 15):
                             raise RuntimeError("Diagnostic attitude envelope exceeded")
                         if now-release_at >= args.duration:
                             break
@@ -286,9 +325,14 @@ def run(args):
             worker.join(timeout=2)
             if worker.is_alive() or failures:
                 raise RuntimeError("Physics log did not close cleanly")
-            report.update(analyse_truth(output / "truth.jsonl", initial, args.scenario, args.duration,
-                                        perturbation=[args.perturb_roll, args.perturb_pitch]),
-                          controlled_flight=mode == 5, normal_arm=arm_ack, arm_parameters=observed,
+            metrics = ({"passed": True, "test_kind": "interactive_session", "validation_run": False}
+                       if interactive else analyse_elevator_truth(output / "truth.jsonl", initial, trim, args.duration,
+                                             surface_limit_deg=mapping.elevator.travel_deg)
+                       if args.scenario == "elevator" else
+                       analyse_truth(output / "truth.jsonl", initial, args.scenario, args.duration,
+                                     perturbation=[args.perturb_roll, args.perturb_pitch]))
+            report.update(metrics,
+                          controlled_flight=not interactive and mode == 5, normal_arm=arm_ack, arm_parameters=observed,
                           release_at_s=release_at, direction_checks=signs,
                           last_airspeed=telemetry.get("AIRSPEED"),
                           stationary_pitot_calibration=airspeed_calibrated,
@@ -297,7 +341,7 @@ def run(args):
                           last_ekf_status=telemetry.get("EKF_STATUS_REPORT"), errors=failures)
         except Exception as exc:
             report.update(error=repr(exc), simulated_s=physics.time, errors=failures,
-                          controlled_flight=mode == 5 and release_at is not None,
+                          controlled_flight=not interactive and mode == 5 and release_at is not None,
                           normal_arm=arm_ack, arm_parameters=observed,
                           release_at_s=release_at, direction_checks=signs,
                           stationary_pitot_calibration=airspeed_calibrated,
@@ -325,7 +369,7 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("scenario", choices=["manual", "fbwa", "steps"])
+    parser.add_argument("scenario", choices=["manual", "elevator", "fbwa", "steps"])
     parser.add_argument("--binary", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--config")
@@ -333,15 +377,20 @@ def main():
     parser.add_argument("--mavlink-port", type=int, default=15760)
     parser.add_argument("--instance", type=int, default=0)
     parser.add_argument("--duration", type=float)
+    parser.add_argument("--interactive", action="store_true", help="Allow Flight Deck mode commands after bootstrap")
     parser.add_argument("--perturb-roll", type=float, default=0.)
     parser.add_argument("--perturb-pitch", type=float, default=0.)
     args = parser.parse_args()
+    if args.interactive and args.scenario != "fbwa":
+        parser.error("interactive sessions bootstrap in FBWA")
     if args.duration is None:
-        args.duration = 118. if args.scenario == "steps" else 60.
+        args.duration = {"steps": 118., "elevator": 45.}.get(args.scenario, 60.)
     if not np.isfinite(args.duration) or args.duration <= 0:
         parser.error("duration must be finite and positive")
     if args.scenario == "steps" and args.duration < 118:
         parser.error("six step tests require at least 118 seconds")
+    if args.scenario == "elevator" and args.duration < 45:
+        parser.error("elevator demonstration requires at least 45 seconds")
     if not 0 <= args.instance <= 20:
         parser.error("instance must be between 0 and 20")
     if not np.isfinite([args.perturb_roll, args.perturb_pitch]).all() or max(abs(args.perturb_roll), abs(args.perturb_pitch)) > .5:

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .aircraft import BatterySpec, LiftSystem
+from .aircraft import BatterySpec, LiftSystem, PusherSystem
 
 
 def default_aero_database_path() -> Path:
@@ -130,6 +130,10 @@ class AircraftParams:
     aero_database_version: str = "adb_v1.1"
     battery: BatterySpec = field(default_factory=BatterySpec)
     pusher_installed: bool = True
+    pusher_system: PusherSystem | None = None
     lift_system: LiftSystem | None = None
     aero_dataset_id: str = "adb_v1_1"
     deflection_database_path: Path | None = None
+    control_deflection_policy: str = "hold"
+    # Elevator, aileron, rudder; provisional mechanical limits for extrapolation.
+    control_surface_limits_deg: tuple[float, float, float] = (5., 5., 5.)

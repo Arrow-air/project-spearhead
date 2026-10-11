@@ -65,7 +65,7 @@ def compute_force_moment_breakdown(
 
     control = control_at(t, control_override)
     F_aero_b, M_aero_b, _ = aero_model(v_b, omega_b, control, params)
-    F_prop_b, M_prop_b = propulsion_model(control, params)
+    F_prop_b, M_prop_b = propulsion_model(control, params, axial_speed_m_s=float(v_b[0]))
 
     R_body_to_ned = euler_body_to_ned(phi, theta, psi)
     F_gravity_ned = np.array([0.0, 0.0, params.mass * params.g])

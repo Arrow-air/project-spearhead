@@ -4,3 +4,6 @@ __pycache__/
 .pytest_cache/
 # Local SITL executable, build environments and run logs are reproducible.
 .sitl/
+# Keep the compact validation report and plots; raw ground runs stay local.
+artifacts/ground_start_2026_10_11/trial_*/
+artifacts/ground_start_2026_10_11/verified_*/

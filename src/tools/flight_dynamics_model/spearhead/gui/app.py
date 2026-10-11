@@ -293,11 +293,31 @@ def cg_positions_from_x_values(config: SimulationConfig, x_values: list[float]) 
 
 
 def _render_page_shell(ui) -> None:
-    ui.colors(primary="#0f766e", secondary="#475569", accent="#38bdf8")
+    ui.colors(primary="#0943bf", secondary="#191c22", accent="#527bd2")
     ui.add_head_html(
         """
         <style>
         body { background: #08111f; }
+        .fd-nav { gap: 6px; }
+        .fd-nav a { padding: 8px 14px; border-radius: 8px; color: #94a3b8; text-decoration: none; }
+        .fd-nav a:hover { color: #f8fafc; background: #172334; }
+        .fd-nav a[aria-current="page"] { color: #e0f2fe; background: #153047; }
+        .nicegui-content:has(.fd-workspace) { padding: 0; gap: 0; }
+        .fd-workspace { max-width: 1600px; margin: 0 auto; background: none; }
+        .fd-workspace .fd-panel { box-shadow: none; border-color: #26364a; border-radius: 12px; }
+        .fd-workspace .fd-pfd { height: 330px; min-height: 330px; box-shadow: none; }
+        .fd-workspace .fd-scene { height: 330px !important; }
+        .fd-workspace .q-btn { text-transform: none; border-radius: 8px; }
+        .fd-session-select { width: 280px; max-width: 100%; }
+        .fd-instruments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .fd-health { font-size: 12px; color: #94a3b8; }
+        .fd-alert { border-left: 3px solid #f59e0b; background: #332b1b; padding: 8px 12px; border-radius: 6px; }
+        .fd-error { border-left-color: #ef4444; background: #361f2b; }
+        @media (max-width: 760px) {
+            .fd-instruments { grid-template-columns: minmax(0, 1fr); }
+            .fd-nav a { padding: 6px 9px; font-size: 13px; }
+            .fd-session-select { width: 100%; }
+        }
         .fd-console {
             background: radial-gradient(circle at 50% 20%, #172554 0, #0f172a 38%, #08111f 100%);
             color: #dbeafe;
@@ -636,13 +656,21 @@ def _render_page_shell(ui) -> None:
         </style>
         """
     )
-    with ui.header().classes("items-center justify-between bg-slate-950 text-white"):
-        ui.label("Spearhead Flight Deck").classes("text-lg font-semibold")
-        with ui.row().classes("items-center gap-2"):
-            ui.link("Flight Deck", "/").classes("text-white no-underline")
-            ui.link("ArduPilot SITL", "/sitl").classes("text-white no-underline")
-            ui.link("Analyze", "/analyze").classes("text-white no-underline")
-            ui.link("Scenario Library", "/scenario-library").classes("text-white no-underline")
+    ui.add_head_html("<style>" + Path(__file__).with_name("arrow_theme.css").read_text() + "</style>")
+    path = ui.context.client.request.url.path
+    if path == "/embed":
+        return
+    with ui.header().classes("items-center justify-between fd-arrow-header text-white"):
+        ui.html('<img src="https://www.arrowair.com/images/arrow-flint_logo-lockup-white2x.png" alt="Arrow" style="width:132px;height:40px;object-fit:contain">')
+        with ui.row().classes("items-center fd-nav"):
+            for label, target, active in [
+                ("Flight Deck", "/", path in ("/", "/sitl")),
+                ("Analyze", "/analyze", path in ("/analyze", "/model-lab", "/simulation", "/stability", "/cg-sweep")),
+                ("Scenarios", "/scenario-library", path == "/scenario-library"),
+            ]:
+                link = ui.link(label, target)
+                if active:
+                    link.props('aria-current="page"')
     ui.separator()
 
 
@@ -773,7 +801,7 @@ def _render_live_plot_cards(ui, container, history: list[dict[str, float]]) -> N
 
 
 def _register_flight_deck_page(ui) -> None:
-    @ui.page("/")
+    @ui.page("/model-lab")
     def flight_deck_page() -> None:
         _render_page_shell(ui)
         scenario_options = _scenario_options()
@@ -785,8 +813,8 @@ def _register_flight_deck_page(ui) -> None:
             session = _active_flight_deck_session(selected_name)
         except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
             with ui.column().classes("w-full max-w-5xl mx-auto gap-4 p-4"):
-                _page_intro(ui, "Flight Deck", "Realtime aircraft simulation console.")
-                ui.label(f"Unable to initialize Flight Deck: {exc}").classes("text-red-600")
+                _page_intro(ui, "Model Lab", "Model-only maneuvers and response analysis.")
+                ui.label(f"Unable to initialize Model Lab: {exc}").classes("text-red-600")
             return
 
         scenario_options = scenario_options_for_aircraft(session.base_config.params.aircraft_id, session.base_config.params.aero_dataset_id)
@@ -804,7 +832,7 @@ def _register_flight_deck_page(ui) -> None:
         with ui.column().classes("fd-console w-full gap-3 p-3"):
             with ui.row().classes("w-full items-center justify-between fd-panel px-4 py-3"):
                 with ui.row().classes("items-center gap-3"):
-                    ui.label("FLIGHT DECK").classes("text-xl font-semibold text-sky-100")
+                    ui.label("MODEL LAB").classes("text-xl font-semibold text-sky-100")
                     maneuver_badge = ui.html(_maneuver_badge_html(session.maneuver.label))
                     scenario_badge = ui.label(session.scenario_source).classes("text-sm fd-muted")
                 with ui.row().classes("items-center gap-3"):
@@ -1097,7 +1125,11 @@ def _register_analyze_page(ui) -> None:
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
             _page_intro(ui, "Analyze", "Review the latest run and open the advanced analysis tools.")
 
-            with ui.grid(columns=3).classes("w-full gap-3"):
+            with ui.element("div").classes("grid grid-cols-1 md:grid-cols-2 w-full gap-3"):
+                with ui.card().classes("gap-2 p-4 shadow-sm"):
+                    ui.label("Model Lab").classes("text-lg font-semibold")
+                    ui.label("Model-only maneuvers, playback and control responses.").classes("text-slate-600")
+                    ui.link("Open Model Lab", "/model-lab").classes("text-blue-700 no-underline")
                 with ui.card().classes("gap-2 p-4 shadow-sm"):
                     ui.label("Simulation Review").classes("text-lg font-semibold")
                     ui.label("Batch run, plots, and exports.").classes("text-slate-600")
@@ -1113,9 +1145,9 @@ def _register_analyze_page(ui) -> None:
 
             result = APP_STATE.simulation_result
             with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Latest Flight Deck Run")
+                _section_header(ui, "Latest Model Lab Run")
                 if result is None:
-                    _empty_state(ui, "Press Play on the Flight Deck to capture a run.")
+                    _empty_state(ui, "Press Play in Model Lab to capture a model-only run. ArduPilot recordings are available on the Flight Deck.")
                     return
                 summary = simulation_result_summary(result)
                 ui.label(
@@ -1779,6 +1811,7 @@ def create_app() -> None:
         return
     ui = _require_nicegui()
     from nicegui import app as nicegui_app
+    nicegui_app.add_static_file(url_path="/embed-preview", local_file=Path(__file__).with_name("embed_preview.html"))
     from .sitl_page import register_sitl_page
     from .sitl_session import SITLManager
     global _sitl_manager

@@ -1,6 +1,6 @@
 id: reference_design
 label: Reference Spearhead
-description: Planned MAD lift hardware; existing preliminary fixed-wing model retained.
+description: Planned finished aircraft at 25 kg with MAD lift hardware; existing preliminary fixed-wing model retained.
 
 # Aircraft totals remain the FDM baseline, not a sum of individual component masses.
 aircraft:

@@ -24,6 +24,7 @@ sys.path.insert(0, str(FDM_ROOT.parent / "Nondimit"))
 import nondimit as nd
 from spearhead.aerodb import load_aerodynamic_database
 from spearhead.deflections import load_deflection_database
+from spearhead.aircraft import load_aircraft_config
 
 SOURCE = FDM_ROOT / "data/aerodynamics/tail_update_2026_10_07"
 CASES = {
@@ -103,7 +104,8 @@ def main():
     if reference.old_center != (0.0, 0.0, 0.0) or reference.rho != 1.021:
         raise ValueError("Source must use the user-confirmed origin and density")
     mapping = nd.default_mapping(headers)
-    _, def_headers, def_rows = nd.read_csv_table_with_metadata(SOURCE / "sources/deflection.csv")
+    control_source = load_aircraft_config("pt1_as_built").deflection_database_path
+    _, def_headers, def_rows = nd.read_csv_table_with_metadata(control_source)
     def_headers = [column.strip() for column in def_headers]
     def_rows = [{key.strip(): value.strip() for key, value in row.items()} for row in def_rows]
     def_mapping = nd.default_mapping(def_headers)
@@ -115,7 +117,8 @@ def main():
         "tool": nd.APP_DISPLAY_NAME,
         "tool_source_sha256": hashlib.sha256(Path(nd.__file__).read_bytes()).hexdigest(),
         "source_database_sha256": hashlib.sha256((SOURCE / "database.csv").read_bytes()).hexdigest(),
-        "source_deflection_sha256": hashlib.sha256((SOURCE / "sources/deflection.csv").read_bytes()).hexdigest(),
+        "source_deflection_sha256": hashlib.sha256(control_source.read_bytes()).hexdigest(),
+        "source_deflection_path": str(control_source),
         "source_center_body_xyz_m": [0, 0, 0], "rho_kg_m3": reference.rho,
         "reference_speed_m_s": reference.velocity,
         "corrections_applied_this_operation": "none; preserve already-corrected physical loads",
@@ -172,16 +175,16 @@ def main():
         database = load_aerodynamic_database(directory / "database.csv")
         controls = load_deflection_database(directory / "deflection.csv", database.reference)
         np.testing.assert_allclose(database.reference.moment_center_body_xyz, case["moment_center_body_xyz_m"], rtol=0, atol=0)
-        if database.reference.rho != 1.021 or database.alpha_grid_deg.size * database.beta_grid_deg.size != 32761 or controls.case_count != 17:
+        if database.reference.rho != 1.021 or database.alpha_grid_deg.size * database.beta_grid_deg.size != 32761 or controls.case_count != len(def_rows):
             raise AssertionError("Generated database could not be loaded consistently by the FDM")
         fdm_checks.append({"case": case["case"], "base_grid_points": 32761,
-                           "deflection_cases": 17, "fdm_load_passed": True})
+                           "deflection_cases": controls.case_count, "fdm_load_passed": True})
     (args.output_dir / "fdm_validation.json").write_text(json.dumps(fdm_checks, indent=2) + "\n")
     lines = ["# October AeroDB — Nondimit moment-center exports", "",
              "Generated with the actual Nondimit v1.1 conversion backend. Each case is independently recentered from the user-confirmed source origin (0,0,0) m. Density remains 1.021 kg/m³; reference velocity 25 m/s, S=1.805 m², b=3.95 m, c=0.457 m. Existing drag correction is preserved and not reapplied. No beta-zero cleanup is applied during recentering.", "",
              "| Case | x (m) | y (m) | z (m) |", "|---|---:|---:|---:|"]
     lines.extend(f"| {name} | {center[0]:g} | {center[1]:g} | {center[2]:g} |" for name, center in CASES.items())
-    lines += ["", "Each folder has `database.csv` (32,761 base points), `deflection_nondimit.csv` (17 cases, native Nondimit metadata and coefficient columns), `deflection.csv` (the same data with a plain CSV header for the FDM control loader), and `reference.json`. Surface angles, case IDs, source velocities and force values are preserved.", "",
+    lines += ["", f"Each folder has `database.csv` (32,761 base points), `deflection_nondimit.csv` ({len(def_rows)} cases, native Nondimit metadata and coefficient columns), `deflection.csv` (the same data with a plain CSV header for the FDM control loader), and `reference.json`. Surface angles, case IDs, source velocities and force values are preserved.", "",
               "`validation.csv` checks every row against M_new = M_origin + cross(-r_new, F). Exported density, center, geometry, row counts and coefficient consistency are also checked. Dimensional columns are used as the source, matching Nondimit Modify Export behavior; source coefficients are rounded and can differ slightly from coefficients regenerated from dimensional loads.", "",
               f"Maximum force error: {provenance['max_force_error_n']:.8g} N. Maximum moment-transfer error: {provenance['max_moment_transfer_error_nm']:.8g} N·m (output rounding accuracy 0.0001).", "",
               "The 8 non-origin centers match the previous CG study at z=0.15 m; the origin export is an additional baseline. A moment-reference change does not itself move the physical CG. When loading a case into the FDM, use its actual CSV reference and the desired CG; the FDM performs any remaining transfer once.", "",

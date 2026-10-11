@@ -1,6 +1,7 @@
 import csv
 import hashlib
 import json
+import runpy
 from dataclasses import replace
 from pathlib import Path
 
@@ -18,12 +19,13 @@ from spearhead.gui.flight_deck import FlightDeckSession
 from spearhead.scenarios import load_scenario
 from spearhead.simulation import run_simulation
 from spearhead.trim import trim_fixed_wing_longitudinal
+from spearhead.sitl.physics import common_control_alpha_bounds
 
 ROOT = FDM_ROOT / "data/aerodynamics/tail_update_2026_10_07"
 
 
 def source_rows():
-    with (ROOT / "sources/deflection.csv").open() as stream:
+    with load_aircraft_config("pt1_as_built").deflection_database_path.open() as stream:
         reader = csv.DictReader(stream)
         reader.fieldnames = [name.strip() for name in reader.fieldnames]
         return [{key: float(value) for key, value in row.items() if key != "case_id"} for row in reader]
@@ -44,6 +46,54 @@ def test_preserves_original_deliveries_and_overrides_only_the_conflicting_header
     np.testing.assert_equal(database.reference.moment_center_body_xyz, [0, 0, 0])
     assert p.cref == 0.457  # Wing reference chord, not the updated tail chord.
     assert p.geometry.tail_chord is None
+    active = source["active_controls"]
+    assert hashlib.sha256(p.deflection_database_path.read_bytes()).hexdigest() == active["sha256"]
+
+
+def test_results_intake_preserves_loads_and_excludes_only_sideslip_baselines(tmp_path):
+    namespace = runpy.run_path(str(FDM_ROOT / "scripts/import_control_results.py"))
+    output = tmp_path / "normalized.csv"
+    report = namespace["normalize"](ROOT / "sources/results_2026_10_09.csv", output,
+                                    ROOT / "sources/deflection.csv")
+    assert report["source_cases"] == 54 and report["active_cases"] == 49
+    assert report["overlap_cases"] == 17 and report["overlap_fields"] == 204
+    assert not report["changed_overlap_fields"]
+    assert output.read_bytes() == load_aircraft_config("pt1_as_built").deflection_database_path.read_bytes()
+    assert all(float(r["beta"]) != 0 and all(float(r[k]) == 0 for k in ("aileron", "elevator", "rudder"))
+               for r in report["audit_only_sideslip_baselines"])
+    assert common_control_alpha_bounds(load_aircraft_config("pt1_as_built")) == (-5., 30.)
+
+
+def test_results_intake_cannot_silently_discard_a_nonzero_beta_control_case(tmp_path):
+    namespace = runpy.run_path(str(FDM_ROOT / "scripts/import_control_results.py"))
+    with (ROOT / "sources/results_2026_10_09.csv").open() as stream:
+        reader = csv.DictReader(stream)
+        fields, rows = reader.fieldnames, list(reader)
+    rows[-1]["rudder"] = "5"
+    source = tmp_path / "unsupported.csv"
+    with source.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+    with pytest.raises(ValueError, match="Nonzero-beta control cases"):
+        namespace["normalize"](source, tmp_path / "out.csv", ROOT / "sources/deflection.csv")
+
+
+@pytest.mark.parametrize("speed", [18., 22., 25., 28.])
+def test_new_positive_alpha_control_increments_scale_speed_and_shift_moments_once(speed):
+    p = load_aircraft_config("pt1_as_built")
+    rows = source_rows()
+    base = next(r for r in rows if r["alpha"] == 10 and all(r[k] == 0 for k in ("aileron", "elevator", "rudder")))
+    row = next(r for r in rows if r["alpha"] == 10 and r["elevator"] == 5)
+    velocity = speed * np.array([np.cos(np.deg2rad(10)), 0, np.sin(np.deg2rad(10))])
+    f0, m0, _ = aero_model(velocity, np.zeros(3), Control(0, 0, 0, 0), p)
+    f, m, info = aero_model(velocity, np.zeros(3), Control(np.deg2rad(5), 0, 0, 0), p)
+    df = np.array([row[k] - base[k] for k in ("Fx", "Fy", "Fz")])
+    dm = np.array([row[k] - base[k] for k in ("Mx", "My", "Mz")])
+    scale = (speed / 25)**2
+    np.testing.assert_allclose(f-f0, scale*df, atol=1e-10)
+    np.testing.assert_allclose(m-m0, scale*(dm+np.cross(-p.cg_body_xyz, df)), atol=1e-10)
+    assert info["control_data_coverage"]["within_measured_coverage"]
 
 
 @pytest.mark.parametrize("row", source_rows())
@@ -87,9 +137,9 @@ def test_outside_coverage_holds_endpoints_and_exposes_assumptions():
     p = load_aircraft_config("pt1_as_built")
     database = load_deflection_database(p.deflection_database_path, p.aerodb_reference)
     query = Control(np.deg2rad(20), np.deg2rad(5), 0, 0)
-    values, coverage = database.increments_at(20, 2, query)
-    bounded, _ = database.increments_at(5, 0, replace(query, de=np.deg2rad(5), da=0))
-    aileron, _ = database.increments_at(0, 0, replace(query, de=0))
+    values, coverage = database.increments_at(40, 2, query)
+    bounded, _ = database.increments_at(30, 0, replace(query, de=np.deg2rad(5), da=0))
+    aileron, _ = database.increments_at(30, 0, replace(query, de=0))
     assert values == pytest.approx({key: bounded[key] + aileron[key] for key in values})
     assert not coverage["within_measured_coverage"]
     assert coverage["held_surfaces"] == ["aileron", "elevator"]
@@ -111,6 +161,42 @@ def test_rate_derivatives_remain_provisional_with_measured_controls():
     assert info["rate_source"] == "provisional_derivatives"
 
 
+@pytest.mark.parametrize("surface,field", [("elevator", "de"), ("aileron", "da"), ("rudder", "dr")])
+@pytest.mark.parametrize("sign", [-1, 1])
+def test_assumed_travel_extrapolates_each_measured_side_and_stops_at_limit(surface, field, sign):
+    p = replace(load_aircraft_config("pt1_as_built"), cg_body_xyz=np.zeros(3),
+                control_deflection_policy="linear", control_surface_limits_deg=(20., 20., 20.))
+    zero = Control(0, 0, 0, 0)
+    velocity = np.array([25., 0, 0])
+    f0, m0, _ = aero_model(velocity, np.zeros(3), zero, p)
+    measured = replace(zero, **{field: np.deg2rad(sign*5)})
+    guessed = replace(zero, **{field: np.deg2rad(sign*20)})
+    f5, m5, info5 = aero_model(velocity, np.zeros(3), measured, p)
+    f20, m20, info20 = aero_model(velocity, np.zeros(3), guessed, p)
+    np.testing.assert_allclose(f20-f0, 4*(f5-f0), atol=1e-10)
+    np.testing.assert_allclose(m20-m0, 4*(m5-m0), atol=1e-10)
+    assert info5["control_data_coverage"]["within_measured_coverage"]
+    coverage = info20["control_data_coverage"]
+    assert coverage["extrapolated_surfaces"] == [surface]
+    assert not coverage["within_measured_coverage"]
+    beyond = replace(zero, **{field: np.deg2rad(sign*40)})
+    fb, mb, info = aero_model(velocity, np.zeros(3), beyond, p)
+    np.testing.assert_allclose(fb, f20, atol=1e-10)
+    np.testing.assert_allclose(mb, m20, atol=1e-10)
+    assert info["control_data_coverage"]["travel_limited_surfaces"] == [surface]
+
+
+def test_extrapolation_keeps_alpha_and_beta_at_measured_endpoints():
+    p = load_aircraft_config("pt1_as_built")
+    db = load_deflection_database(p.deflection_database_path, p.aerodb_reference)
+    command = Control(0, np.deg2rad(10), 0, 0)
+    outside, coverage = db.increments_at(40, 2, command, deflection_policy="linear", limits_deg=(20, 20, 20))
+    boundary, _ = db.increments_at(30, 0, command, deflection_policy="linear", limits_deg=(20, 20, 20))
+    assert outside == pytest.approx(boundary)
+    assert coverage["held_surfaces"] == ["aileron"]
+    assert coverage["extrapolated_surfaces"] == ["aileron"] and coverage["beta_held"]
+
+
 def test_hardware_and_databases_can_be_switched_independently():
     reference = load_aircraft_config("reference_design")
     new = select_aerodynamics(reference, "tail_update_2026_10_07")
@@ -121,7 +207,7 @@ def test_hardware_and_databases_can_be_switched_independently():
     assert old.aero_database_path == reference.aero_database_path
     assert old.geometry == reference.geometry
     assert old.deflection_database_path is None
-    assert aircraft_summary(new)["control_data"]["coverage"]["elevator"]["alpha_deg"] == [-5, 5]
+    assert aircraft_summary(new)["control_data"]["coverage"]["elevator"]["alpha_deg"] == [-5, 30]
     assert "pitch_doublet.yaml" not in scenario_options_for_aircraft("reference_design", "tail_update_2026_10_07")
 
 
@@ -151,8 +237,16 @@ def test_open_loop_new_database_runs_and_gui_switch_resets_history():
 
 
 def test_missing_zero_baseline_is_rejected(tmp_path):
-    text = (ROOT / "sources/deflection.csv").read_text()
+    text = load_aircraft_config("pt1_as_built").deflection_database_path.read_text()
     path = tmp_path / "bad.csv"
     path.write_text('\n'.join(line for line in text.splitlines() if not line.startswith('Case008,')))
     with pytest.raises(ValueError, match="zero-deflection baseline"):
+        load_deflection_database(path, load_aircraft_config("pt1_as_built").aerodb_reference)
+
+
+def test_malformed_delivery_identifies_case_and_field_without_guessing_decimals(tmp_path):
+    path = tmp_path / "deflection-2.csv"
+    path.write_text("case_id,alpha,beta,velocity,aileron,elevator,rudder,Fx,Fy,Fz,Mx,My,Mz\n"
+                    "Case008,0,0,25,0,0,0,-189.448,974,-2.072.462,-589,-365.681,-3.135\n")
+    with pytest.raises(ValueError, match=r"line 2 \(Case008\): invalid Fz=.*Decimal positions must not be guessed"):
         load_deflection_database(path, load_aircraft_config("pt1_as_built").aerodb_reference)

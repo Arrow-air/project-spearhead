@@ -1,8 +1,8 @@
 id: pt1_as_built
-label: PT1 KDE
-description: KDE lift hardware with the October tail-update AeroDB; mass, CG, inertia and numeric tail dimensions await PT1 measurement.
+label: PT1 KDE + MAD pusher
+description: 21 kg prototype with KDE lift hardware, MAD V8013 150KV / AMPX 80A / APC 20x12 estimated pusher and October AeroDB. CG, inertia, thrust line and tail dimensions await PT1 measurement.
 aircraft:
-  mass: 25.0
+  mass: 21.0
   cg_body_xyz: [-0.15, 0.0, 0.15]
   inertia: [[2.5, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 5.0]]
   rho: 1.021
@@ -18,9 +18,43 @@ battery:
   mass_kg: 3.709
 propulsion:
   pusher:
-    # Matches the repository's KDE first-hover package; change when the pusher is installed.
-    installed: false
-    max_thrust_n: 120.0
+    installed: true
+    # User-confirmed 150 KV on 2026-10-11. Analytical estimate, not bench validation.
+    # Loader derives Tmax at nominal battery voltage and the selected FDM density.
+    estimate:
+      motor:
+        model: MAD V8013 PRO IPE 150KV
+        kv_rpm_per_v: 150
+        no_load_current_a: 2.35
+        no_load_test_voltage_v: 30
+        phase_resistance_ohm: 0.037
+        source: https://www.mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor
+        electrical_data: ../data/propulsion/mad_v8013_150_bench.json
+        data_edition: MAD V8013 IPE 150KV manufacturer test sheet; confirm installed PRO edition
+      esc:
+        model: MAD AMPX 80A (5-14S)
+        continuous_current_a: 80
+        voltage_cells_min: 5
+        voltage_cells_max: 14
+        source: https://www.mad-motor.com/products/mad-ampx-80a-5-14s-esc
+      propeller:
+        model: APC 20x12 Sport LP20012
+        diameter_in: 20.0
+        pitch_in: 12.0
+        blades: 2
+        # Conservative Sport limit 190000 / diameter; actual 12S motor RPM is lower.
+        max_rpm: 9500
+        source: https://www.apcprop.com/product/20x12/
+      performance_path: ../data/propulsion/sources/PER3_20x12.dat
+      equivalent_resistance_ohm: 0.1056886284068577
+      esc_efficiency: 0.97
+      voltage_min_v: 36.0
+      voltage_max_v: 50.4
+      max_current_a: 77.8
+      max_input_power_w: 3569.0
+      sustainable_current_a: 24.0
+      position_body_m: null
+      reaction_torque_sign: 0
   lift:
     motor:
       model: KDE5215XF-220

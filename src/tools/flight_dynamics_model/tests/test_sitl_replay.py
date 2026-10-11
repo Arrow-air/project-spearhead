@@ -51,3 +51,14 @@ def test_replay_rejects_missing_frame_and_changed_source_data(recorded):
     (path / "manifest.json").write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="source data mismatch"):
         replay(path)
+
+
+def test_replay_flags_changed_control_physics_even_when_trajectory_agrees(recorded):
+    path, _ = recorded
+    manifest = json.loads((path / "manifest.json").read_text())
+    manifest["fdm_source_sha256"]["deflections.py"] = "different-control-model"
+    (path / "manifest.json").write_text(json.dumps(manifest))
+    result = replay(path)
+    assert result["passed"]
+    assert not result["physics_source_hashes_match"]
+    assert not result["source_hashes_match"]

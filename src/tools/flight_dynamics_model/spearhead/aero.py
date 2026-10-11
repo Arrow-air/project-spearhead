@@ -139,6 +139,8 @@ def aero_model_adb(
         deflections = load_deflection_database_cached(params.deflection_database_path, database.reference)
         control_coefficients, coverage = deflections.increments_at(
             float(np.rad2deg(alpha)), float(np.rad2deg(beta)), control,
+            deflection_policy=params.control_deflection_policy,
+            limits_deg=params.control_surface_limits_deg,
         )
         for key, value in control_coefficients.items():
             total_coefficients[key] += value

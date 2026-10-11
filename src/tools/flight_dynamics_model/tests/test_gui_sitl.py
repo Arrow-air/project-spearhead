@@ -5,16 +5,67 @@ import math
 from pathlib import Path
 
 import pytest
+import numpy as np
 
 from spearhead.gui import sitl_session
 from spearhead.gui.sitl_page import sitl_figures
 from spearhead.gui.sitl_session import JsonlTail, RunObserver, SITLManager, body_attitude
+from spearhead.gui.external_view import camera_pose, scene_pose, trail_points
 
 
 def truth(t=1, hold=False):
     return {"time_s": t, "state": [0, 0, -100, 28, 0, 0, .01, -.02, 0, 0, 0, 0],
+            "control": {"de": math.radians(-3)},
             "hold": hold, "pwm": [1500, 1801, 1254, 1495], "physics_rate_hz": 200,
             "alpha_deg": -.1, "beta_deg": 0, "control_coverage_exceeded": False}
+
+
+@pytest.mark.parametrize("angles, body_axis, expected", [
+    ([0, 0, 0], [1, 0, 0], [1, 0, 0]),
+    ([0, 30, 0], [1, 0, 0], [np.sqrt(3)/2, 0, .5]),  # nose up
+    ([30, 0, 0], [0, 1, 0], [0, -np.sqrt(3)/2, -.5]),  # right wing down
+    ([0, 0, 90], [1, 0, 0], [0, -1, 0]),  # east is scene -Y
+])
+def test_external_view_preserves_physical_attitude_signs(angles, body_axis, expected):
+    state = truth()["state"]
+    state[6:9] = np.deg2rad(angles).tolist()
+    matrix = np.array(scene_pose(state)["rotation"])
+    np.testing.assert_allclose(matrix @ body_axis, expected, atol=1e-12)
+    np.testing.assert_allclose(matrix.T @ matrix, np.eye(3), atol=1e-12)
+    assert np.linalg.det(matrix) == pytest.approx(1)
+
+
+def test_external_view_rebases_large_positions_without_changing_altitude_or_path():
+    rows = []
+    for i in range(1000):
+        row = truth(i*.05, hold=i < 5)
+        row["state"][:3] = [1e7+i, 2e7+2*i, -100-i*.01]
+        rows.append(row)
+    current = rows[-1]
+    pose = scene_pose(current["state"])
+    points = trail_points(rows, current)
+    assert pose["position"] == pytest.approx([0, 0, 109.99])
+    assert len(points) <= 121
+    assert points[-1] == pytest.approx(pose["position"])
+    assert all(p[0] <= 0 and p[1] >= 0 for p in points)
+    assert np.linalg.norm(np.array(points[-1])-points[0]) < 1500
+    assert all(0 <= v < 25 for v in pose["ground_offset"][:2])
+    assert trail_points(rows[:5], rows[4]) == []
+    # Neither coordinate conversion nor display history changes FDM samples.
+    assert current["state"][:3] == [10000999., 20001998., -109.99]
+
+
+def test_external_camera_follows_heading_with_world_up_and_rejects_bad_state():
+    state = truth()["state"]
+    state[8] = 0
+    north = camera_pose(state, "chase")
+    state[8] = math.pi/2
+    east = camera_pose(state, "chase")
+    assert east == pytest.approx([north[1], -north[0], north[2]])
+    assert east[2] > -state[2]
+    state[0] = float("nan")
+    with pytest.raises(ValueError, match="finite"):
+        scene_pose(state)
 
 
 def append(path, row):
@@ -89,11 +140,12 @@ def test_finished_report_and_cancelled_run_are_distinct(tmp_path):
     assert observer.snapshot()["status"] == "FAILED"
 
 
-def test_plot_body_pitch_uses_converted_estimate_and_actual_pwm():
+def test_plot_shows_only_fdm_attitude_and_actual_pwm():
     pytest.importorskip("plotly")
     estimate = body_attitude({"roll": .01, "pitch": .02, "yaw": 0}, -3)
     figures = sitl_figures({"history": [truth()], "estimates": [{"time_s": 1, **estimate}]})
-    assert figures["Pitch"].data[1].y[0] == pytest.approx(math.degrees(.02)-3)
+    assert len(figures["Pitch"].data) == len(figures["Roll"].data) == 1
+    assert figures["Pitch"].data[0].y[0] == pytest.approx(math.degrees(-.02))
     assert figures["PWM"].data[1].y[0] == 1801
 
 
@@ -164,3 +216,30 @@ def test_recording_load_is_read_only_and_cannot_escape_log_root(tmp_path):
     (tmp_path / "saved.session.json").write_text('{"cancelled":true}')
     manager.load_completed("saved")
     assert manager.snapshot()["status"] == "STOPPED"
+
+
+def test_quad_interactive_preset_uses_owned_quad_runner(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    calls = []
+    process = SimpleNamespace(pid=987654, returncode=None, poll=lambda: None)
+    monkeypatch.setattr(sitl_session, "verify_firmware", lambda path: {})
+    monkeypatch.setattr(sitl_session.subprocess, "Popen", lambda command, **kwargs: calls.append((command, kwargs)) or process)
+    monkeypatch.setattr(sitl_session.threading.Thread, "start", lambda self: None)
+    manager = SITLManager(root=tmp_path / "runs")
+    manager.start("quad_interactive")
+    command, kwargs = calls[0]
+    assert command[1:4] == ["-m", "spearhead.sitl.quad", "--binary"]
+    assert command[-3:] == ["--interactive", "--duration", "600"]
+    assert kwargs["start_new_session"] is True
+
+
+def test_quad_controls_ready_and_interactive_completion_are_distinct_from_validation(tmp_path):
+    append(tmp_path / "truth.jsonl", truth())
+    (tmp_path / "manifest.json").write_text(json.dumps({"interactive": True, "requires_controls_ready": True}))
+    observer = RunObserver(tmp_path); observer.poll()
+    assert not observer.snapshot(active=True)["mode_controls_ready"]
+    (tmp_path / "controls-ready.json").write_text('{"time_s": 1}')
+    assert observer.snapshot(active=True)["mode_controls_ready"]
+    (tmp_path / "report.json").write_text('{"passed":true,"test_kind":"interactive_session","validation_run":false}')
+    observer.poll()
+    assert observer.snapshot()["status"] == "COMPLETED"

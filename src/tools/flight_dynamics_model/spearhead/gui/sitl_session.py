@@ -13,15 +13,25 @@ import threading
 import time
 import uuid
 
+import yaml
+
 from ..sitl.backend import CONFIG_ROOT, verify_firmware
+from ..sitl.ground_control import MODE_NAMES, session_modes
+from .ground_status import StatusTexts, firmware_health
+from .flight_setup import FlightSetup
 
 
 SCENARIOS = {
+    "quad_ground": "PT1 · ground takeoff, hover and landing",
+    "quad_interactive": "PT1 QuadPlane · all modes · 10 min",
+    "quad_hover": "PT1 QuadPlane hover · KDE · 60 s",
+    "interactive": "Interactive flight · mode controls · 10 min",
     "fbwa": "Nominal FBWA · 60 s",
     "steps": "Pitch / roll steps · 118 s",
     "plus": "+0.5° roll / pitch disturbance · 60 s",
     "minus": "−0.5° roll / pitch disturbance · 60 s",
     "manual": "MANUAL direction checks · 60 s",
+    "elevator": "Elevator ±1° doublet · MANUAL · 32 m/s · 45 s",
 }
 
 
@@ -57,10 +67,16 @@ def body_attitude(message, pitch_trim):
 class RunObserver:
     """Incremental, bounded display history from the runner's authoritative logs."""
 
-    def __init__(self, directory, history_limit=600):
+    def __init__(self, directory, history_limit=3000):
+        # About 150 seconds at 20 Hz keeps preset inputs visible after completion.
         self.directory = Path(directory)
         self.truth_tail = JsonlTail(self.directory / "truth.jsonl")
         self.telemetry_tail = JsonlTail(self.directory / "telemetry.jsonl")
+        self.control_tail = JsonlTail(self.directory / "control-events.jsonl")
+        self.notifications = deque(maxlen=200)
+        self.status_texts = StatusTexts(self.notifications)
+        self.last_command = None
+        self.last_heartbeat_wall = None
         self.history = deque(maxlen=history_limit)
         self.estimates = deque(maxlen=history_limit)
         self.latest = None
@@ -70,8 +86,23 @@ class RunObserver:
         self.last_truth_wall = None
         self.free_start = None
         self.rows_seen = 0
+        self.flight_setup = None
+        self.recipe_loaded = False
+        self.phase = None
 
     def poll(self):
+        phase_path = self.directory / "phase.json"
+        if phase_path.exists():
+            self.phase = json.loads(phase_path.read_text())
+        recipe = self.directory.parent / (self.directory.name+".session.json")
+        if not self.recipe_loaded and recipe.exists():
+            self.recipe_loaded = True
+            try:
+                saved = json.loads(recipe.read_text()).get("flight_setup")
+                if saved is not None:
+                    self.flight_setup = FlightSetup(**saved).validate().as_dict()
+            except (OSError, TypeError, ValueError):
+                pass  # Optional labels must not prevent observing/stopping a run.
         manifest = self.directory / "manifest.json"
         if self.manifest is None and manifest.exists():
             try:
@@ -82,17 +113,31 @@ class RunObserver:
             self.latest = row
             self.rows_seen += 1
             self.last_truth_wall = time.monotonic()
-            if not row["hold"] and self.free_start is None:
+            if not row["hold"] and self.free_start is None and not (self.manifest or {}).get("ground_contact"):
                 self.free_start = row["time_s"]
             if not self.history or row["time_s"]-self.history[-1]["time_s"] >= .049:
-                self.history.append(row)
+                # Display history needs only these fields. Full sensor/coverage
+                # records remain in truth.jsonl and the current-state readout.
+                self.history.append({key: row[key] for key in ("time_s", "hold", "state", "pwm", "control")})
+        if self.phase is not None:
+            self.free_start = self.phase.get("flight_start_s")
         for row in self.telemetry_tail.read():
             message = row["message"]
             kind = message["mavpackettype"]
             self.messages[kind] = row
+            if kind == "HEARTBEAT":
+                self.last_heartbeat_wall = time.monotonic()
+            if kind == "STATUSTEXT":
+                self.status_texts.add(message, row["fdm_time_s"])
             if kind == "ATTITUDE" and self.manifest is not None:
                 trim = self.manifest["parameter_overlay"]["PTCH_TRIM_DEG"]
                 self.estimates.append({"time_s": row["fdm_time_s"], **body_attitude(message, trim)})
+        for row in self.control_tail.read():
+            self.last_command = row
+            self.notifications.append({"time_s": row["time_s"], "source": "Flight Deck",
+                                       "severity": 4 if row["status"] in ("rejected", "timeout") else 6,
+                                       "level": "Warning" if row["status"] in ("rejected", "timeout") else "Info",
+                                       "text": row["text"]})
         report = self.directory / "report.json"
         if report.exists():
             try:
@@ -107,15 +152,20 @@ class RunObserver:
         heartbeat = self.messages.get("HEARTBEAT")
         attitude = self.messages.get("ATTITUDE")
         stale_truth = active and (self.last_truth_wall is None or now-self.last_truth_wall > 2)
-        stale_mavlink = active and (heartbeat is None or t is None or t-heartbeat["fdm_time_s"] > 2.5)
+        stale_mavlink = active and (heartbeat is None or t is None or t-heartbeat["fdm_time_s"] > 2.5
+                                   or self.last_heartbeat_wall is None or now-self.last_heartbeat_wall > 2.5)
         estimate = self.estimates[-1] if self.estimates else None
         if active and (attitude is None or t is None or t-attitude["fdm_time_s"] > .75):
             estimate = None
         status = "STARTING" if active and truth is None else "READY"
         if active and truth is not None:
             status = "BOOTSTRAP HOLD" if truth["hold"] else "FREE FLIGHT"
+            if self.phase:
+                status = self.phase["phase"]
         if not active and truth is not None:
             status = "PASSED" if self.report and self.report.get("passed") else "FAILED"
+            if self.report and self.report.get("test_kind") == "interactive_session" and self.report.get("passed"):
+                status = "COMPLETED"
         if stopped:
             status = "STOPPED"
         if error:
@@ -129,6 +179,14 @@ class RunObserver:
                          "stale_truth": stale_truth, "stale_mavlink": stale_mavlink,
                          "armed": None if heartbeat is None else bool(heartbeat["message"]["base_mode"] & 128),
                          "mode": None if heartbeat is None else heartbeat["message"]["custom_mode"],
+                         "mode_name": None if heartbeat is None else MODE_NAMES.get(heartbeat["message"]["custom_mode"], f"Mode {heartbeat['message']['custom_mode']}"),
+                         "interactive": bool((self.manifest or {}).get("interactive")),
+                         "mode_controls_ready": (not (self.manifest or {}).get("requires_controls_ready")
+                                                 or (self.directory / "controls-ready.json").exists()),
+                         "notifications": sorted(self.notifications, key=lambda r: r["time_s"]),
+                         "flight_setup": self.flight_setup,
+                         "command": self.last_command,
+                         "health": firmware_health({} if stale_mavlink else self.messages, t, live=active),
                          "ekf_flags": ekf.get("flags"), "error": error, "rows_seen": self.rows_seen})
 
 
@@ -144,13 +202,25 @@ class SITLManager:
         self.lock = threading.RLock()
         self.stopped = False
         self.error = None
+        self.pending_command = None
         self.cached = {"status": "READY", "active": False, "run_id": None,
                        "truth": None, "history": [], "estimates": [], "estimate": None,
-                       "manifest": None, "report": None, "error": None}
+                       "manifest": None, "report": None, "error": None,
+                       "interactive": False, "notifications": [], "command": None, "health": {}}
 
-    def start(self, scenario):
+    def start_configured(self, setup):
+        if not isinstance(setup, FlightSetup):
+            raise ValueError("Choose a valid flight setup")
+        setup.validate()
+        return self.start(setup.scenario, setup=setup)
+
+    def start(self, scenario, *, setup=None):
         if scenario not in SCENARIOS:
             raise ValueError("Choose a supported SITL scenario")
+        if setup is not None:
+            setup.validate()
+            if scenario != setup.scenario:
+                raise ValueError("Flight setup and runner scenario must agree")
         if os.name != "posix":
             raise RuntimeError("Managed SITL processes currently require macOS or Linux")
         with self.lock:
@@ -161,20 +231,41 @@ class SITLManager:
             self.root.mkdir(parents=True, exist_ok=True)
             directory = self.root / (time.strftime("%Y%m%d-%H%M%S")+"-"+uuid.uuid4().hex[:8])
             command = [self.python, "-m", "spearhead.sitl.flight",
-                       scenario if scenario in ("manual", "steps") else "fbwa",
+                       scenario if scenario in ("manual", "elevator", "steps") else "fbwa",
                        "--binary", str(self.binary), "--output", str(directory),
                        "--port", str(self.port), "--mavlink-port", str(self.mavlink_port)]
+            if scenario in ("quad_hover", "quad_interactive"):
+                command = [self.python, "-m", "spearhead.sitl.quad", "--binary", str(self.binary),
+                           "--output", str(directory), "--port", str(self.port),
+                           "--mavlink-port", str(self.mavlink_port)]
+            if scenario == "quad_ground":
+                command = [self.python, "-m", "spearhead.sitl.ground_flight", "--binary", str(self.binary),
+                           "--output", str(directory), "--port", str(self.port),
+                           "--mavlink-port", str(self.mavlink_port)]
             if scenario in ("plus", "minus"):
                 delta = ".5" if scenario == "plus" else "-.5"
                 command += ["--perturb-roll", delta, "--perturb-pitch", delta]
+            if scenario in ("interactive", "quad_interactive"):
+                command += ["--interactive", "--duration", "600"]
+            if setup is not None:
+                config_path = self.root / (directory.name+".setup.yaml")
+                config_path.write_text(yaml.safe_dump(setup.config(), sort_keys=False))
+                command += ["--config", str(config_path)]
+                if "--duration" in command:
+                    command[command.index("--duration")+1] = str(setup.duration_s)
+                else:
+                    command += ["--duration", str(setup.duration_s)]
             env = os.environ.copy()
             env["PYTHONDONTWRITEBYTECODE"] = "1"
             env["OPENBLAS_NUM_THREADS"] = "1"
             env["PYTHONPATH"] = str(CONFIG_ROOT.parent)+os.pathsep+env.get("PYTHONPATH", "")
             self.observer = RunObserver(directory)
+            self.observer.flight_setup = None if setup is None else setup.as_dict()
             self.stopped, self.error = False, None
+            self.pending_command = None
             (self.root / (directory.name+".session.json")).write_text(json.dumps(
-                {"scenario": scenario, "cancelled": False}))
+                {"scenario": scenario, "cancelled": False,
+                 "flight_setup": None if setup is None else setup.as_dict()}))
             with (self.root / (directory.name+".console.log")).open("xb") as log:
                 self.process = subprocess.Popen(command, cwd=CONFIG_ROOT.parent, env=env,
                                                 stdout=log, stderr=subprocess.STDOUT,
@@ -200,6 +291,11 @@ class SITLManager:
                         self.error = (self._console_error() if self.observer.report is None
                                       else self.observer.report.get("error"))
                     self.cached = self.observer.snapshot(active=active, stopped=self.stopped, error=self.error)
+                    if self.pending_command is not None:
+                        event = self.cached.get("command")
+                        if event and event.get("command_id") == self.pending_command["command_id"]:
+                            self.pending_command = event
+                        self.cached["command"] = deepcopy(self.pending_command)
                 if not active:
                     return
                 time.sleep(.1)
@@ -218,9 +314,35 @@ class SITLManager:
             stream.seek(max(0, path.stat().st_size-1600))
             return stream.read().decode(errors="replace") or "SITL runner exited without a report"
 
-    def snapshot(self):
+    def snapshot(self, *, include_history=True):
         with self.lock:
-            return deepcopy(self.cached)
+            if include_history:
+                return deepcopy(self.cached)
+            return deepcopy({**self.cached, "history": self.cached["history"][-600:], "estimates": []})
+
+    def set_mode(self, mode):
+        """Queue only to this manager's current interactive simulation runner."""
+        with self.lock:
+            view = self.cached
+            if mode not in session_modes(view.get("manifest")):
+                raise ValueError("Choose a supported mode for this aircraft configuration")
+            if (self.process is None or self.process.poll() is not None or not view.get("interactive")
+                    or view.get("status") != "FREE FLIGHT" or view.get("stale_truth") or view.get("stale_mavlink")
+                    or view.get("error") or not view.get("mode_controls_ready", True)):
+                raise RuntimeError("Mode controls require a live interactive flight after calibration and arming")
+            if self.pending_command and self.pending_command["status"] in ("queued", "sent", "accepted"):
+                raise RuntimeError("Wait for the current mode change to complete")
+            ident = uuid.uuid4().hex
+            directory = self.observer.directory / "commands"
+            directory.mkdir(exist_ok=True)
+            request = {"id": ident, "kind": "set_mode", "mode": mode, "created_at": time.monotonic()}
+            path = directory / (ident+".tmp")
+            path.write_text(json.dumps(request))
+            path.replace(directory / (ident+".json"))
+            self.pending_command = {"command_id": ident, "mode": mode, "status": "queued",
+                                    "text": f"Queued {MODE_NAMES[mode]}"}
+            self.cached["command"] = deepcopy(self.pending_command)
+            return ident
 
     def completed_runs(self):
         return {path.parent.name: path.parent.name for path in
@@ -244,6 +366,7 @@ class SITLManager:
                     or manifest.get("config", {}).get("aerodynamics") != "tail_update_2026_10_07"):
                 raise ValueError("Recording requires 4.7.1 and the October AeroDB")
             self.observer = observer
+            self.pending_command = None
             self.stopped, self.error = False, None
             session_path = self.root / (run_id+".session.json")
             cancelled = session_path.exists() and json.loads(session_path.read_text())["cancelled"]

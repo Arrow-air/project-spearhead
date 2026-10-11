@@ -50,7 +50,10 @@ def predefined_maneuvers(config: SimulationConfig | None = None) -> list[Maneuve
                 description="Use the input schedule from the selected scenario.",
             )
         )
-    if config is not None and not config.params.pusher_installed:
+    hover_control = None if config is None else control_at(0, config.control_override)
+    if config is not None and (not config.params.pusher_installed or
+                               (not config.start_from_trim and config.params.lift_system is not None
+                                and (hover_control.lift_throttle > 0 or hover_control.lift_motor_throttles is not None))):
         maneuvers.append(ManeuverDefinition(
             key="lift_step", label="Lift collective step",
             commands=(ControlInputCommand(surface="lift_throttle", kind="step", amplitude=0.03, start_time=2.0),),
@@ -236,7 +239,8 @@ def control_telemetry(simulation: RealtimeSimulation | None, t: float = 0.0) -> 
         "rudder_deg": degrees(control.dr),
         "throttle_pct": 100.0 * control.throttle,
         "lift_throttle_pct": 100.0 * (float(np.mean(control.lift_motor_throttles)) if control.lift_motor_throttles is not None else control.lift_throttle),
-        **({} if simulation is None else propulsion_telemetry(control, simulation.config.params)),
+        **({} if simulation is None else propulsion_telemetry(control, simulation.config.params,
+                                                              float(simulation.state.vector[3]))),
     }
 
 

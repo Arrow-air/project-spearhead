@@ -61,6 +61,10 @@ def trim_fixed_wing_longitudinal(
     if not params.pusher_installed:
         raise ValueError("Fixed-wing trim requires an installed pusher; use an untrimmed lift scenario for PT1")
     x0 = _parse_initial_guess(initial_guess)
+    if initial_guess is None and params.pusher_system is not None:
+        # At cruise speed, low duty can lie outside the positive-thrust APC
+        # envelope. Start with thrust authority rather than a flat zero-Ct branch.
+        x0[-1] = .85
     lower_bounds = np.array([np.deg2rad(-10.0), np.deg2rad(-10.0), np.deg2rad(-25.0), 0.0])
     upper_bounds = np.array([np.deg2rad(20.0), np.deg2rad(20.0), np.deg2rad(25.0), 1.0])
     if params.deflection_database_path is not None:

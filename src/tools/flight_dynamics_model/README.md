@@ -1,6 +1,6 @@
 # Flight Dynamics Model
 
-Minimal Python 6-DOF flight dynamics and simulation tool for Project Spearhead.
+Python 6-DOF flight dynamics, stability analysis and ArduPilot simulation for Project Spearhead.
 
 The external ArduPilot JSON backend is pinned to **ArduPlane 4.7.1** and
 requires the October tail-update AeroDB. See the
@@ -10,12 +10,39 @@ The bootstrap smoke test verifies the real firmware connection. Normal arming,
 MANUAL direction checks, nominal FBWA, small steps and combined disturbances
 are exercised by `python -m spearhead.sitl.flight`; the
 [fixed-wing control report](../../../artifacts/fdm_sitl_control_2026_10_08/assessment.md)
-records results and model limits. The web console at `/sitl` starts/stops
-owned runner processes, compares FDM and ArduPilot estimates, and opens
-completed recordings. See the
+records results and model limits. The main Flight Deck at `/` starts/stops
+owned runner processes, displays the FDM horizon alongside a third-person 3D
+aircraft view with follow/side/orbit cameras and a flight trail, and opens
+completed recordings. `/sitl` is a compatible link to the same console. See the
 [web integration and PWM replay report](../../../artifacts/fdm_sitl_flight_deck_2026_10_08/assessment.md).
-Envelope sensitivity, real-time performance, repeated-run determinism and
-PT1 hover remain separate acceptance checks.
+The interactive session adds real firmware mode commands, link/GPS/EKF/sensor
+status, and a timestamped warning/message feed. See the
+[ground-control guide](docs/flight_deck_ground_control.md) and
+[verification results](../../../artifacts/flight_deck_ground_control_2026_10_09/README.md).
+The **Elevator ±1° doublet** preset applies a physical MANUAL elevator input
+through ArduPlane at 32 m/s; its surface-angle trace shows the actual FDM input.
+See the [input and trim assessment](../../../artifacts/fdm_elevator_demo_2026_10_09/assessment.md).
+New SITL flights use provisional **±20° surface travel** over 1000–2000 µs,
+with linear continuation of the measured control slopes outside ±5°, bounded
+at the assumed travel. Alpha/beta endpoint assumptions remain. Travel values
+are configurable and marked uncalibrated in the UI and run manifest. See the
+[travel assessment](../../../artifacts/fdm_assumed_travel_2026_10_09/assessment.md).
+Pitch/roll step and disturbance acceptance with this wider travel is tracked
+in the [control revalidation report](../../../artifacts/fdm_control_revalidation_2026_10_09/assessment.md),
+including revised provisional firmware gains and the unsuccessful tuning trials.
+The [isolated-axis follow-up](../../../artifacts/fdm_sitl_envelope_2026_10_09/assessment.md)
+checks both signs of roll and pitch disturbances at 28 m/s with those same
+gains and records local mass/CG sensitivity. Higher-speed firmware tests are
+deferred at the user's request; the malformed expanded-control delivery is
+awaiting correction and remains inactive.
+The [trim sweep](../../../artifacts/fdm_trim_sweep_2026_10_08/assessment.md)
+examines speed/mass sensitivity at the same diagnostic CG. Broader
+envelope sensitivity, real-time performance, repeated-run determinism and
+long-duration hover remain separate acceptance checks. PT1 ground start now
+supports **takeoff → timed hover → landing**, with normal arming and physical
+gear contact. The [ground-start guide](docs/ground_start.md) describes the
+provisional gear and mission; the [validation report](artifacts/ground_start_2026_10_11/report.md)
+records successful 5, 10 and 20 m tests with ArduPlane 4.7.1.
 
 The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. Reference Spearhead retains the original ADB v1.1. PT1 KDE uses the October 2026 tail-update database with partial measured controls. Hardware and aerodynamic versions can be selected independently. The preserved original database is:
 
@@ -68,17 +95,18 @@ If the recommended ADB file is missing, the model falls back to the older placeh
 
 One FDM supports two bundled configurations in `aircraft_configs/`:
 
-- `reference_design.yaml`: planned MAD V8013 PRO IPE 150KV / AMPX 80A V2 /
+- `reference_design.yaml`: 25 kg planned MAD V8013 PRO IPE 150KV / AMPX 80A V2 /
   FLUXER PRO 26×7.8 lift hardware, with the original preliminary pusher model.
-- `pt1_as_built.yaml`: four KDE5215XF-220 / KDE-UAS75HVC+ / 21.5×7.3 two-blade
-  lift units, 12S at 44.4 V nominal, pusher absent per the KDE first-hover package.
+- `pt1_as_built.yaml`: 21 kg PT1 with four KDE5215XF-220 / KDE-UAS75HVC+ /
+  21.5×7.3 lift units and a MAD V8013 PRO IPE 150KV / AMPX 80A / APC 20×12
+  pusher estimate, using 12S at 44.4 V nominal. See the
+  [pusher estimate](../../../artifacts/pt1_pusher_2026_10_11/report.md) for sources and limits.
 
-In Flight Deck, use **Setup → Aircraft** to select **Reference Spearhead** or
-**PT1 KDE**. Switching clears the previous run and selects a compatible scenario.
-**Setup → Aerodynamics** selects the original or October dataset independently.
-Only scenarios with a successful bounded trim are offered for trimmed flight.
-The LIFT control bar and bench-estimate thrust/current/power readouts
-show the separately commanded lift system.
+The Flight Deck offers independent **Aircraft**, **Initial point**, **Maneuver**
+and duration choices. PT1 supports air-start hover or ground takeoff/hover/landing;
+Spearhead supports diagnostic forward trims. New ArduPilot sessions use the
+October AeroDB. The model-only **Model Lab** under **Analyze** also provides
+independent aircraft/aerodynamic selections and actuator/thrust readouts.
 
 The same profiles are available through the API and CLI:
 
@@ -97,7 +125,7 @@ PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
   src/tools/flight_dynamics_model/scenarios/pt1_hover.yaml --aircraft pt1_as_built
 ```
 
-PT1 mass, CG, inertia and rotor coordinates remain preliminary; the profile
+PT1 mass is configured as 21 kg; CG, inertia and rotor coordinates remain preliminary. The profile
 does not claim to model the wingless first-hover airframe. The original MAD lift
 hardware is preserved, but its lift performance curve is not yet available.
 Reference retains ADB v1.1 and its original 0.28 m tail chord. PT1 defaults to
@@ -105,8 +133,9 @@ the new database; its numeric updated tail chord/area are pending.
 See [profile data and model limits](docs/aircraft_profiles.md) before interpreting
 PT1 results or replacing the AeroDB.
 
-The new database includes 32,761 alpha/beta points and 17 partial deflection
-cases. Measured control increments replace provisional controls; rate damping
+The new database includes 32,761 alpha/beta points and 49 active control cases from the
+9 October results export. All three surfaces cover alpha −5…30° at beta=0
+and V=25 m/s; measured surface angles remain ±5°. Measured control increments replace provisional controls; rate damping
 remains provisional. Outside control coverage, endpoints are held and the GUI
 reports the approximation. At the existing CG, fixed-wing trim is not achieved
 within the measured ±5° elevator range. See the
@@ -183,33 +212,54 @@ dependencies:
 
 ```bash
 python -m pip install -r src/tools/flight_dynamics_model/requirements.txt
-python -m pip install -r src/tools/flight_dynamics_model/requirements-gui.txt
+python -m pip install -r src/tools/flight_dynamics_model/requirements-gui.txt \
+  -r src/tools/flight_dynamics_model/requirements-sitl.txt
 ```
 
 Run the GUI from the repository root:
 
 ```bash
 PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.gui --port 8081
+python -m spearhead.gui --port 8082
 ```
 
 For startup smoke checks without opening a browser:
 
 ```bash
 PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.gui --no-show --port 8081
+python -m spearhead.gui --no-show --port 8082
 ```
 
-Open `http://127.0.0.1:8081/` in a browser. The default route opens the
-**Flight Deck**, which is the realtime simulation console.
+Open `http://127.0.0.1:8082/` in a browser. The default route opens the
+ArduPilot-backed **Flight Deck**. Live firmware sessions require the pinned
+SITL executable; follow the [build quickstart](docs/ardupilot_sitl_quickstart.md).
+The Python model, web server and firmware run locally; the browser renders the
+instruments and 3D view. The default server owns one shared session.
+Docker packaging and hosted independent sessions remain future work.
 
 ### Flight Deck
 
+Select **Aircraft**, **Initial point**, **Maneuver** and simulation duration,
+then press **Start flight**. PT1 ground starts select **Takeoff → hover → land**;
+the time field becomes **Hover time**, and climb/landing add to that dwell.
+Normal calibration and arming happen before the flight sequence. **Stop run**
+terminates the local simulation processes. **Recordings** opens completed runs.
+
+The horizon and external 3D aircraft view show the shared FDM's physical state.
+Interactive flights enable firmware-confirmed mode changes after initialization.
+Automatic test sequences and recordings keep those commands disabled.
+GPS/EKF/system status and timestamped firmware warnings remain visible.
+The **Flight plots** and **Model & run details** tabs expose traces and provenance.
+See the [ground-control guide](docs/flight_deck_ground_control.md).
+
+### Model Lab
+
+Open **Analyze → Model Lab** (`/model-lab`) for model-only realtime experiments.
 Use the left setup rail to select a scenario and a predefined maneuver. Bundled
 scenario YAML files are loaded through the existing scenario adapter. Maneuver
 presets are represented with the existing `ControlInputCommand` model.
 
-Available Flight Deck controls:
+Available Model Lab controls:
 
 - **Play/Pause** starts or pauses realtime stepping through `RealtimeSimulation`.
 - **Reset** returns the selected scenario and maneuver to `t = 0`.
@@ -239,12 +289,12 @@ Control input bars show the resolved current control command:
 
 The lower response area contains live Plotly cards for attitude, rates, control
 inputs, and airspeed/altitude. These plots use a rolling display history so the
-Flight Deck remains responsive during playback.
+Model Lab remains responsive during playback.
 
 ### Analyze
 
 The **Analyze** page is secondary to the Flight Deck. It can review the latest
-Flight Deck run and provides access to the existing batch simulation, stability,
+Model Lab run and provides access to the existing batch simulation, stability,
 and CG sweep views. CG sweep remains an advanced analysis tool and is not part
 of the primary realtime workflow.
 
@@ -252,11 +302,14 @@ of the primary realtime workflow.
 
 - GUI dependencies are optional and are not required for backend simulations or
   stability analysis.
-- Realtime playback is timer-based inside NiceGUI, so browser/event-loop timing
-  can affect visual update cadence.
+- Model Lab playback is timer-based inside NiceGUI. The ArduPilot runner advances
+  physics in lockstep from sensor timestamps; browser timing only affects display updates.
 - Joystick, gamepad, and manual control input are not implemented yet.
 - Wind and disturbance editing are not implemented yet.
-- Full 3D aircraft rendering is not implemented yet.
+- The 3D view uses a schematic aircraft, with follow/side/orbit cameras; it is
+  not a detailed CAD rendering.
+- Ground contact uses provisional flat-ground gear. Forward transition, real
+  hardware tune, battery sag, rotor ground effect and propwash remain unvalidated.
 - CG sweep remains an advanced analysis tool rather than a Flight Deck workflow.
 - In restricted sandbox environments, NiceGUI startup can fail while creating a
   process pool because system semaphore queries are blocked. Run the GUI in a
@@ -266,6 +319,13 @@ of the primary realtime workflow.
 
 - Launch the GUI.
 - Confirm Flight Deck opens by default.
+- Select PT1, Ground, Takeoff → hover → land, 10 m and a 15 s hover dwell.
+- Press Start flight; confirm ground initialization, takeoff, hover and landing.
+- Confirm the completed run shows AUTO, disarmed and a validation result.
+- Open Recordings and confirm its controls are read-only.
+- Select an air-start Interactive flight and confirm mode controls unlock after calibration.
+- Confirm the FDM horizon, external view, health/messages and flight plots update.
+- Open Analyze → Model Lab for the model-only controls below.
 - Select the pitch doublet maneuver.
 - Press Play and confirm simulation time advances.
 - Confirm Pause works.
@@ -278,7 +338,7 @@ of the primary realtime workflow.
 - Confirm all four plot cards update.
 - Select a roll/aileron maneuver.
 - Select a rudder maneuver.
-- Open Analyze and confirm it sees the latest Flight Deck run.
+- Open Analyze and confirm it sees the latest Model Lab run.
 
 ## Test
 
@@ -323,7 +383,8 @@ model is used.
 
 Current limitations:
 
-- The tracked aerodynamic database is the nominal ADB only.
+- The original ADB and October tail-update dataset are versioned independently;
+  active ArduPilot sessions use the October dataset.
 - CG sweep changes `AircraftParams.cg_body_xyz` at runtime and relies on the
   existing moment-shift path; it does not recreate the missing Nondimit per-CG
   CSV cases from the historical information note.

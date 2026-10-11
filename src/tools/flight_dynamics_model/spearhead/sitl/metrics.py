@@ -8,6 +8,15 @@ import numpy as np
 
 STEPS = [(10+18*i, axis, amplitude) for i, (axis, amplitude) in enumerate(
     [(1, .2), (1, -.2), (1, .5), (1, -.5), (0, .5), (0, -.5)])]
+ELEVATOR_PULSES = [(10., 11.5, 1.), (11.5, 13., -1.)]
+
+
+def elevator_at(elapsed):
+    """Physical elevator increment in degrees; MANUAL, down then up."""
+    for start, end, delta in ELEVATOR_PULSES:
+        if start <= elapsed < end:
+            return delta
+    return 0.
 
 
 def command_at(elapsed):
@@ -95,4 +104,47 @@ def analyse_truth(path, initial, scenario, duration, perturbation=None):
             "alpha_range_deg": [min(r["alpha_deg"] for r in free), max(r["alpha_deg"] for r in free)],
             "beta_range_deg": [min(r["beta_deg"] for r in free), max(r["beta_deg"] for r in free)],
             "outside_control_coverage_fraction": float(np.mean([r["control_coverage_exceeded"] for r in free])),
+            "extrapolated_deflection_fraction": float(np.mean([bool((r.get("control_coverage") or {}).get("extrapolated_surfaces")) for r in free])),
             "disturbance_recovery_s": recovery, "steps": steps}
+
+
+def analyse_elevator_truth(path, initial, trim, duration, *, surface_limit_deg=5.):
+    """Separate input-demonstration checks, not nominal FBWA tracking criteria."""
+    report = analyse_truth(path, initial, "manual", duration)
+    rows = [json.loads(line) for line in Path(path).open()]
+    free = [r for r in rows if not r["hold"]]
+    t = np.array([r["time_s"] for r in free])
+    t -= t[0]
+    elevator = np.rad2deg([r["control"]["de"] for r in free])
+    baseline = float(np.rad2deg(trim.de))
+    pitch = np.rad2deg([r["state"][7] for r in free])
+    pulses = []
+    for start, end, delta in ELEVATOR_PULSES:
+        # RC updates at 20 Hz; assess the interior, excluding command latency.
+        selected = (t >= start+.2) & (t <= end-.1)
+        measured = None if not selected.any() else float(np.median(elevator[selected])-baseline)
+        ok = measured is not None and abs(measured-delta) < .03 and selected.sum() >= 100
+        pulses.append({"start_s": start, "end_s": end, "requested_delta_deg": delta,
+                       "measured_delta_deg": measured, "passed": bool(ok)})
+    after = t >= duration-5
+    final_error = float(np.max(abs(pitch[after]-np.rad2deg(initial[7])))) if after.any() else None
+    excursion = float(np.max(abs(pitch-np.rad2deg(initial[7]))))
+    neutral = ((t < 9.8) | (t > 13.2))
+    checks = {"complete_duration": report["free_flight_s"] >= duration-.05,
+              "both_physical_pulses": all(p["passed"] for p in pulses),
+              "neutral_surface_restored": bool(neutral.any() and np.max(abs(elevator[neutral]-baseline)) < .03),
+              "visible_pitch_excursion": excursion >= 2.,
+              "attitude_envelope": bool(np.max(abs(pitch)) < 15),
+              "common_alpha_coverage": report["alpha_range_deg"][0] >= -5 and report["alpha_range_deg"][1] <= 0,
+              "surface_travel": bool(np.max(abs(elevator)) <= surface_limit_deg),
+              "no_saturation": report["max_saturation_s"] == 0,
+              "returned_near_trim": final_error is not None and final_error < .5}
+    report.update(passed=bool(all(checks.values())), test_kind="manual_elevator_demo",
+                  demonstration_checks=checks, elevator_pulses=pulses,
+                  elevator_range_deg=[float(min(elevator)), float(max(elevator))],
+                  assumed_elevator_limit_deg=surface_limit_deg,
+                  pitch_range_deg=[float(min(pitch)), float(max(pitch))],
+                  pitch_excursion_deg=excursion, final_5s_pitch_error_deg=final_error,
+                  trim_attitude_deg=report.pop("target_attitude_deg"),
+                  attitude_excursion_rms_deg=report.pop("attitude_rms_error_deg"))
+    return report

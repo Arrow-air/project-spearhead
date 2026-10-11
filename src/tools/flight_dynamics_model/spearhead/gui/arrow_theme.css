@@ -1,0 +1,43 @@
+/* Arrow website tokens, reviewed against arrowair.com/css/main.css, 2026-10-10.
+   Scoped simulator styles: do not import the website's global Webflow rules. */
+@font-face { font-family: "Neue Haas Grotesk"; src: url("https://www.arrowair.com/fonts/NHaasGroteskTXPro-55Rg.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Galderglynn Esquire"; src: url("https://www.arrowair.com/fonts/GalderglynnEsquire-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Jetbrainsmono"; src: url("https://www.arrowair.com/fonts/JetBrainsMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+:root {
+  --arrow-blue: #0943bf;
+  --arrow-blue-light: #527bd2;
+  --arrow-background: #00030a;
+  --arrow-surface: #191c22;
+  --arrow-text: #fff;
+  --arrow-muted: #b2b3b5;
+  --arrow-border: #ffffff33;
+  --arrow-body-font: "Neue Haas Grotesk", Arial, sans-serif;
+  --arrow-heading-font: "Galderglynn Esquire", Arial, sans-serif;
+  --arrow-mono-font: "Jetbrainsmono", monospace;
+}
+body { background: var(--arrow-background); font-family: var(--arrow-body-font); }
+.fd-console.fd-workspace { background: var(--arrow-background); color: var(--arrow-text); padding: 24px; }
+.fd-workspace .fd-panel { background: var(--arrow-surface); border: 1px solid var(--arrow-border); border-radius: 4px; }
+.fd-workspace .fd-muted { color: var(--arrow-muted); }
+.fd-workspace .text-sky-100, .fd-workspace .text-sky-200 { color: var(--arrow-text); }
+.fd-workspace .font-mono { font-family: var(--arrow-mono-font); }
+.fd-workspace .q-btn { border-radius: 4px; }
+.fd-workspace .q-field--filled .q-field__control { background: #ffffff0d; border-radius: 4px; }
+.fd-workspace .q-field__label { color: var(--arrow-muted); }
+.fd-workspace .q-tab--active { color: #fff !important; background: #0943bf33; }
+.fd-workspace .q-tab__indicator { color: var(--arrow-blue-light); }
+.fd-workspace .q-table { background: var(--arrow-surface); }
+.fd-arrow-header { background: var(--arrow-blue) !important; border-bottom: 1px solid #ffffff33; }
+.fd-arrow-header .fd-nav a { color: #ffffffb3; border-radius: 4px; font-family: var(--arrow-mono-font); }
+.fd-arrow-header .fd-nav a[aria-current="page"] { background: #ffffff14; color: #fff; }
+.fd-arrow-brand { font-family: var(--arrow-heading-font); font-size: 26px; letter-spacing: -.5px; }
+.fd-title { font-family: var(--arrow-heading-font); font-weight: 400; }
+.fd-setup-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; width: 100%; }
+.fd-condition-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 180px)); gap: 12px; }
+.fd-embed { max-width: none; min-height: 0; }
+@media (max-width: 950px) { .fd-setup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .fd-console.fd-workspace { padding: 12px; }
+  .fd-setup-grid { grid-template-columns: minmax(0, 1fr); }
+  .fd-condition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+}

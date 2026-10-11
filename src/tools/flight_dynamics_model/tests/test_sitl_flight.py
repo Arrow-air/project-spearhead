@@ -9,8 +9,8 @@ import pytest
 from spearhead.controls import Control
 from spearhead.dynamics import dynamics
 from spearhead.sitl.backend import CONFIG_ROOT, Session, load_setup
-from spearhead.sitl.flight import bootstrap_mode, flight_parameters, parameters_match, startup_states, surface_pwm
-from spearhead.sitl.metrics import analyse_truth, command_at, step_response
+from spearhead.sitl.flight import bootstrap_mode, flight_parameters, manual_elevator_rc, parameters_match, startup_states, surface_pwm
+from spearhead.sitl.metrics import analyse_truth, analyse_elevator_truth, command_at, elevator_at, step_response
 from spearhead.sitl.physics import Physics
 from test_sitl import packet
 
@@ -54,7 +54,7 @@ def test_servo_trim_quantization_and_firmware_positive_command_moment(setup, axi
     c = getattr(mapping, channel)
     pwm = [1500] * 16
     pwm[c.number-1] = surface_pwm(c, getattr(trim, axis))
-    assert abs(c.surface(pwm)-getattr(trim, axis)) <= np.deg2rad(.0051)
+    assert abs(c.surface(pwm)-getattr(trim, axis)) <= np.deg2rad(c.travel_deg/1000+.0001)
     plus = pwm.copy()
     plus[c.number-1] += 20
     delta = c.surface(plus)-c.surface(pwm)
@@ -64,7 +64,7 @@ def test_servo_trim_quantization_and_firmware_positive_command_moment(setup, axi
     params = flight_parameters(mapping, physics.state, trim)
     assert params["ARMING_SKIPCHK"] == 0 and params["ARMING_REQUIRE"] == 1
     assert params["AHRS_EKF_TYPE"] == 3
-    assert params["SERVO2_TRIM"] == 1801
+    assert params["SERVO2_TRIM"] == 1575
 
 
 def test_quantized_roll_command_targets_match_rc_resolution():
@@ -72,6 +72,60 @@ def test_quantized_roll_command_targets_match_rc_resolution():
     assert command_at(101) == (0, -8, -.48)
     assert command_at(10) == (1, 10, .2)
     assert command_at(25) == (None, 0, 0.)
+
+
+def test_manual_elevator_input_accounts_for_asymmetric_servo_trim():
+    physics, mapping, manifest = load_setup(CONFIG_ROOT / "elevator_demo.yaml")
+    trim = Control(**manifest["trim_control"])
+    midpoint = surface_pwm(mapping.elevator, trim.de)
+    assert bootstrap_mode("elevator", 25, 50) == 0
+    assert elevator_at(9.99) == 0 and elevator_at(10) == 1
+    assert elevator_at(11.5) == -1 and elevator_at(13) == 0
+    for delta in (0, 1, -1):
+        rc = manual_elevator_rc(mapping, trim, midpoint, delta)
+        # Official SRV_Channel's MANUAL angle mapping uses the relevant
+        # servo endpoint span around SERVO2_TRIM, not an equal +/-500 PWM.
+        normalized = (rc-1500)/500
+        span = 2000-midpoint if normalized >= 0 else midpoint-1000
+        pwm = midpoint+int(normalized*span)
+        actual = mapping.elevator.surface([1500, pwm, 1300, 1500])
+        # One output PWM count is 0.04 deg with the provisional +/-20 travel.
+        assert np.rad2deg(actual-trim.de) == pytest.approx(delta, abs=mapping.elevator.travel_deg/500)
+    with pytest.raises(ValueError, match="travel"):
+        manual_elevator_rc(mapping, trim, midpoint, -21)
+
+
+def test_elevator_demo_requires_measured_pulses_and_recovery(tmp_path):
+    initial = np.array([0, 0, -100, 32, 0, -.5, 0, np.deg2rad(-1), 0, 0, 0, 0])
+    trim = Control(de=np.deg2rad(-3), da=0, dr=0, throttle=.3)
+    rows = []
+    for t in np.arange(0, 45.01, .01):
+        state = initial.copy()
+        # Test the evaluator with a visible excursion that returns by 20 s.
+        state[7] -= np.deg2rad(4*np.exp(-((t-12)/2)**2))
+        row = {"hold": False, "time_s": float(t), "state": state.tolist(),
+               "pwm": [1500, 1800, 1300, 1500],
+               "control": {"de": trim.de+np.deg2rad(elevator_at(t))},
+               "alpha_deg": -1., "beta_deg": 0., "control_coverage_exceeded": False}
+        rows.append(row)
+    path = tmp_path / "truth.jsonl"
+    def save():
+        path.write_text("\n".join(json.dumps(row) for row in rows))
+    save()
+    report = analyse_elevator_truth(path, initial, trim, 45)
+    assert report["passed"] and report["pitch_excursion_deg"] == pytest.approx(4)
+    assert "attitude_rms_error_deg" not in report
+    # A visible animation without the actual surface command must fail.
+    for row in rows:
+        row["control"]["de"] = trim.de
+    save()
+    assert not analyse_elevator_truth(path, initial, trim, 45)["passed"]
+    for row in rows:
+        row["control"]["de"] = trim.de+np.deg2rad(elevator_at(row["time_s"]))
+        if row["time_s"] > 40:
+            row["state"][7] = initial[7]+np.deg2rad(1)
+    save()
+    assert not analyse_elevator_truth(path, initial, trim, 45)["passed"]
 
 
 def test_initial_attitude_is_established_before_sensor_alignment(setup):
@@ -129,3 +183,22 @@ def test_nominal_metrics_exclude_hold_and_reject_sustained_saturation(tmp_path):
     report = analyse_truth(path, np.array(state), "fbwa", 2)
     assert report["max_altitude_deviation_m"] == 0
     assert report["max_altitude_deviation_from_air_start_m"] == 5
+
+
+def test_provisional_20_degree_pwm_mapping_and_control_gain_scaling(setup):
+    physics, mapping, manifest = setup
+    assert manifest['control_model']['travel_calibrated'] is False
+    assert manifest['control_model']['deflection_policy'] == 'linear'
+    for name in ('elevator', 'aileron', 'rudder'):
+        channel = getattr(mapping, name)
+        assert channel.travel_deg == 20
+    elevator = mapping.elevator
+    for pwm, angle in [(1000, 20), (1500, 0), (1575, -3), (1800, -12), (2000, -20)]:
+        assert np.rad2deg(elevator.surface([1500, pwm, 1300, 1500])) == pytest.approx(angle)
+    trim = Control(**manifest['trim_control'])
+    gains = flight_parameters(mapping, physics.state, trim)
+    assert gains['PTCH_RATE_FF'] == .45
+    assert gains['PTCH_RATE_P'] == .08
+    assert gains['PTCH_RATE_I'] == .15
+    assert gains['PTCH2SRV_TCONST'] == .2
+    assert gains['RLL_RATE_FF'] == pytest.approx(.08625)

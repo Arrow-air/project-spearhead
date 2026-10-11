@@ -15,19 +15,42 @@ All profile-relative file paths resolve from the profile directory.
 | Lift ESC | MAD AMPX 80A V2 DroneCAN | KDE-UAS75HVC+ (product ID KDE-UAS75HVC) |
 | Lift propeller | MAD FLUXER PRO 26×7.8, two blades | KDE-CF215-DP 21.5×7.3, two blades |
 | Battery | 12S, 44.4 V nominal, 22 Ah | 12S, 44.4 V nominal, 22 Ah |
-| Pusher | Existing 120 N × throttle placeholder | Absent |
+| Pusher | Existing 120 N × throttle placeholder | MAD V8013 150KV / AMPX 80A / APC Sport 20×12; provisional speed-dependent estimate |
 | Lift curve | Pending manufacturer/bench data | Official KDE static data, provisional for PT1 |
 
 The planned hardware is preserved from `docs/pt1-parts-list.md`; the KDE hardware
-request supersedes those lift components for PT1. The 12S/two-blade/pusher-absent
-setup follows `artifacts/firmware/spearhead-kde-first-hover/README.md`. Confirm
+request supersedes those lift components for PT1. The original 12S/two-blade/pusher-absent
+first-hover setup follows `artifacts/firmware/spearhead-kde-first-hover/README.md`.
+The user added the electric pusher and confirmed 150 KV on 11 October 2026. Confirm
 motor edition and the installed hardware against the real prototype.
 
-Aircraft mass (25 kg), CG, inertia, full reference geometry and nominal motor
-coordinates are inherited engineering assumptions until measured PT1 values
-arrive. Component masses are recorded as hardware metadata and are not silently
+PT1 mass is 21 kg and the planned finished reference is 25 kg, as supplied by
+the user. CG, inertia, full reference geometry and nominal motor coordinates
+remain engineering assumptions until measured PT1 values arrive.
+Component masses are recorded as hardware metadata and are not silently
 added to the total mass. This avoids double counting and inventing inertia/CG.
 This profile is not a reconstructed wingless vehicle or a flight controller.
+
+## PT1 electric pusher update — 11 October 2026
+
+`pt1_as_built.yaml` enables the user-selected MAD V8013 PRO IPE **150 KV** motor,
+AMPX 80A (5–14S) ESC and **APC LP20012 Sport 20×12** propeller. `pusher.py`
+solves quasi-steady motor RPM using a fit to all 15 official motor test-sheet
+RPM/torque/throttle points and APC's exact analytical Ct/Cp map. It uses body
+axial speed and FDM density; it does not reuse MAD 26-inch static thrust.
+
+At 44.4 V and density 1.021, estimated full-duty thrust is 62.9 N static and
+32.8 N at 26 m/s. These are short-run estimates: the corresponding currents
+are 29.0 A and 30.0 A, above the sheet's 24 A sustainable-current guideline.
+The operating flag does not impose an invented thermal derating model.
+Unknown pusher mounting and rotation direction are represented by thrust through
+CG and omitted reaction torque until measured inputs arrive.
+
+The exact manufacturer map and test-sheet image, transcription, fitted constants,
+assumptions and hashes live under `data/propulsion/pt1_pusher_source.json`.
+The report and performance plot are under `artifacts/pt1_pusher_2026_10_11/`.
+Reproduce them with `scripts/estimate_pt1_pusher.py`. PT1 hover starts still keep
+the pusher off; ground takeoff and transition sequences require separate validation.
 
 ## KDE source and interpolation
 
@@ -89,7 +112,7 @@ simulation history and dependent analysis results.
 
 Reference Spearhead retains **ADB v1.1** and its **0.28 m tail chord**. PT1 KDE
 defaults to **tail_update_2026_10_07**, using the delivered alpha/beta table and
-17 measured deflection cases. Numeric updated tail dimensions are pending.
+49 measured control cases from the 9 October results export, covering alpha −5…30° for each surface at beta=0 and V=25 m/s. Numeric updated tail dimensions are pending.
 The wing reference chord remains 0.457 m. Both datasets are selectable with
 either hardware profile through GUI, CLI and API. See the
 [comparison and integration report](aerodb_tail_update_2026_10_07.md) for coverage,

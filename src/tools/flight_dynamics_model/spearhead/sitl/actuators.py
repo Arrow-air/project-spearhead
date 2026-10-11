@@ -1,4 +1,4 @@
-"""Explicit synthetic surface travel and independent lift motor mapping."""
+"""Configurable provisional surface travel and independent lift motor mapping."""
 
 from dataclasses import dataclass
 import math
@@ -18,8 +18,8 @@ class Channel:
     def __post_init__(self):
         if not 1 <= self.number <= 32 or not 800 <= self.minimum < self.trim < self.maximum <= 2200:
             raise ValueError("Invalid PWM channel or limits")
-        if not math.isfinite(self.travel_deg) or not 0 < self.travel_deg <= 5:
-            raise ValueError("Initial SITL surface travel must be in (0, 5] degrees")
+        if not math.isfinite(self.travel_deg) or not 0 < self.travel_deg <= 45:
+            raise ValueError("SITL surface travel must be in (0, 45] degrees")
 
     def surface(self, pwm):
         value = pwm[self.number - 1]
