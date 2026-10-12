@@ -69,3 +69,19 @@ project-spearhead/
   technical call and active build discussion.
 - The original project proposal lives on the
   [Arrow DAO forum](https://dao.arrowair.com/t/project-spearhead-proposal-discussion/153).
+
+## License
+
+Hardware designs (CAD files, drawings, manufacturing files and design
+documentation) are licensed under the
+**[CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S v2)](LICENSE)**.
+
+Software (the engineering tools under `src/tools/`, such as the sizing,
+propulsion and flight dynamics models) is licensed under the
+**[GNU General Public License v3.0 (GPL-3.0)](LICENSE-SOFTWARE)**.
+
+Both licences require that derivative works remain open source under the same
+terms. Third-party components bundled with the packaged tools (the `_internal/`
+folders under `src/tools/`) keep their own licences.
+
+Source location: <https://github.com/Arrow-air/project-spearhead>

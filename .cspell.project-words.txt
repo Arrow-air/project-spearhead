@@ -45,3 +45,6 @@ tkinter
 untapered
 universal2
 x86_64
+Licence
+licence
+licences
