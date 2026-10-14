@@ -12,6 +12,10 @@ VALUE_LABELS = {
 }
 # Measured elevator coverage of the 11 October control delivery.
 MEASURED_ELEVATOR_DEG = 15.
+# The neutral (alpha, beta) table is from 25 m/s only. The 11 October neutral cases at
+# 10 and 15 m/s show markedly lower lift (CL at alpha 0: 0.08 and 0.27 vs 0.36), so
+# forward flight between these speeds rests on 25 m/s coefficients.
+LOW_SPEED_DATA_M_S = (3., 20.)
 # Per-cell voltage under load treated as low for the 12S lift pack.
 LOW_CELL_V = 3.5
 
@@ -90,6 +94,9 @@ def live_alerts(row, cells=12):
     pusher = row.get("pusher") or {}
     if pusher.get("above_sustainable_current"):
         alerts.append(f"Pusher above {pusher.get('sustainable_current_a', 24):g} A sustainable current")
+    airspeed = row.get("true_airspeed_m_s")
+    if isinstance(airspeed, (int, float)) and LOW_SPEED_DATA_M_S[0] <= airspeed < LOW_SPEED_DATA_M_S[1]:
+        alerts.append("Below 20 m/s: wing-body aero from 25 m/s data; 10–15 m/s CFD shows less lift")
     voltage = ((row.get("sensor") or {}).get("battery") or {}).get("voltage")
     if isinstance(voltage, (int, float)) and voltage < LOW_CELL_V*cells:
         alerts.append(f"Lift pack below {LOW_CELL_V:g} V/cell")

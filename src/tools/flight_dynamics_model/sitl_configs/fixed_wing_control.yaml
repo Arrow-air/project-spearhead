@@ -1,3 +1,5 @@
+# NOT PHYSICAL: CG z = +0.45 m lies below the 275 mm fuselage. It only gives the 25 kg
+# reference model a stable trim for software regression; not a PT1.5 or Spearhead result.
 # Diagnostic CG and assumed +/-20 degree virtual surfaces, not a hardware setup.
 firmware: Plane-4.7.1
 aircraft: reference_design

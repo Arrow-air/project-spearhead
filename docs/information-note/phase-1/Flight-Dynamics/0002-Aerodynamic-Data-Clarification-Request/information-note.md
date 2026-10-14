@@ -134,6 +134,19 @@ Moments about (0, 0, 0); dimensional loads Fx, Fy, Fz, Mx, My, Mz; lift rotors o
 
 - **Question:** Is the base table reliable at beta = 30–90° and low speed, given that it comes from a 25 m/s surrogate? Can the beta = 0 control increments be used at small sideslip (±5–10°)?
 
+#### AQ-18 — Speed dependence of the neutral cases (P0)
+
+- **Question:** Normalized with rho = 1.021 kg/m³ and the same reference values, the 11 October neutral cases (beta = 0, controls neutral) give:
+
+| Speed (m/s) | CL at alpha 0° | CL at alpha 10° | Cm about (0, 0, 0) at alpha 0° | CD at alpha 0° |
+|---|---:|---:|---:|---:|
+| 25 | 0.36 | 1.20 | −0.139 | 0.033 |
+| 15 | 0.27 | 1.05 | −0.042 | 0.024 |
+| 10 | 0.08 | 0.86 | −0.052 | 0.031 |
+
+  Lift and pitching moment change strongly with speed while drag does not, which suggests the direct actuator-disk thrust is excluded from the loads but its slipstream acts on the tail. Was the fixed 30 N pusher actuator disk active in these cases and in the base `database.csv`? Is the slipstream over the tail the cause, or are the low-speed cases not converged?
+- **Deliverable:** a short answer. If time allows, pusher-off neutral cases at 10, 15 and 25 m/s, alpha 0° and 10° (6 cases).
+
 ### E. Delivery Documentation
 
 #### AQ-15 — Convergence evidence (P1)
@@ -169,3 +182,4 @@ Moments about (0, 0, 0); dimensional loads Fx, Fy, Fz, Mx, My, Mz; lift rotors o
 | AQ-15 | P1 | | | |
 | AQ-16 | P1 | | | |
 | AQ-17 | P1 | | | |
+| AQ-18 | P0 | | | |

@@ -65,3 +65,10 @@ def test_new_values_use_air_relative_speed_battery_and_pusher_current():
     assert values["airspeed"] == "8.00" and values["pusher_current"] == "18.0"
     assert values["battery"] == "46.5 / 83" and values["battery_used"] == "1234" and values["wind"] == "5.0"
     assert values["elevator"] == "5.7"
+
+
+def test_low_speed_forward_flight_flags_25_m_s_base_data():
+    from spearhead.gui.flight_values import live_alerts
+    row = {"hold": False, "control": {"de": 0.}, "true_airspeed_m_s": 14.}
+    assert live_alerts(row) == ["Below 20 m/s: wing-body aero from 25 m/s data; 10–15 m/s CFD shows less lift"]
+    assert live_alerts({**row, "true_airspeed_m_s": 1.}) == [] and live_alerts({**row, "true_airspeed_m_s": 22.}) == []

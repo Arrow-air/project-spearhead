@@ -38,6 +38,16 @@ All four satisfy six-axis trim and level-flight residual checks. Elevator trim a
 
 Earlier recordings used the former rotor rectangle, a +10 mm CG and z = +150 mm; they do not validate the current geometry. Forward→hover and doublet runs were not repeated in this update.
 
+## Physical consistency review (14 October 2026)
+
+Checked against the September ADB questions, the delivery specification and the 30 September CFD request:
+
+- Control signs are physically consistent with the agreed convention (positive = trailing edge toward +z; left/right ruddervator = de ± dr). At alpha 0°, 25 m/s: +5° elevator gives −10.8 N·m (nose down); +5° aileron gives +44 N·m roll right with −4.5 N·m adverse yaw; +5° rudder gives +5.3 N·m nose right with −3.8 N side force. ArduPilot's elevator (reversed) and rudder mappings match.
+- The base table is antisymmetric in sideslip around beta = 0 (stable Cn_beta and Cl_beta), so zeroing Fy, Mx and Mz at beta = 0 adds no kink.
+- Drag in the 10–25 m/s control cases stays near CD 0.03, so the 30 N pusher actuator disk's direct thrust is not in the integrated loads; the FDM pusher thrust is not counted twice.
+- **Open:** the neutral 10 and 15 m/s cases show much lower lift and less nose-down moment than the 25 m/s base table (CL at alpha 0°: 0.08 / 0.27 / 0.36). The likely cause is the fixed 30 N slipstream over the tail. The FDM uses the 25 m/s base at all speeds, so wing-body lift between about 10 and 20 m/s is probably overpredicted; the Fly panel flags this range. The slipstream effect is also frozen at 30 N rather than following pusher thrust. Asked as AQ-18.
+- The reference design (ADB v1.1) is statically unstable at its stated CG (static margin about −17 %), and its SITL configurations use a CG 0.45 m below the origin, outside the fuselage. Both are labelled for software regression only.
+
 ## Remaining limits
 
 Measured PT1.5 CG and inertia, the pusher mount height and motor/propeller, and servo/PWM calibration remain open. Sparse control/sideslip coverage, provisional rate damping, absent rotor inflow/propwash/transients and a generic battery discharge curve (telemetry only; thrust uses nominal voltage) limit predictions. Physical placement must also account for the wing, not merely the sign relative to an arbitrary origin.
