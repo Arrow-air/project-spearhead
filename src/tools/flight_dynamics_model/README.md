@@ -27,7 +27,7 @@ Open **http://127.0.0.1:8080/**. The first build downloads the pinned ArduPilot 
 
 Select **PT1.5 → Hover · 20 m → Hover hold → 60 s**, then **Start flight**. Calibration, navigation checks, normal arming and motor startup usually take 1–2 minutes before the flight clock starts. Simulation may run slower than real time; the page shows its progress and speed. **Stop flight** ends the run; **Recorded flights** reopens results.
 
-Hover and forward-trim starts offer pitch/roll/yaw/throttle doublets. Transition tests support both hover → forward and forward → hover. **Interactive flight** allows mode changes with neutral pilot sticks. Advanced settings expose diagnostic CG and frozen forward-parameter choices. PT1.5 defaults to a provisional CG 10 mm forward of the October origin; its vertical offset remains unmeasured. The retained 3D view is disabled.
+Hover and forward-trim starts offer pitch/roll/yaw/throttle doublets. Transition tests support both hover → forward and forward → hover. **Interactive flight** allows mode changes with neutral pilot sticks. Advanced settings expose diagnostic CG and frozen forward-parameter choices. PT1.5 defaults to the target CG x = −40 mm, z = +65 mm from the October origin (a simulation target, not a measurement); rotor and pusher stations follow the 14 October drawing. The retained 3D view is disabled.
 
 ## Verify and troubleshoot
 
@@ -44,6 +44,6 @@ The integration checks the pinned **Plane-4.7.1 / dbe79216** identity and firmwa
 
 ## Model scope and details
 
-PT1.5 is a provisional 21 kg model using the October AeroDB/control revision. CG, inertia, motor geometry, pusher thrust line and servo calibration remain unconfirmed; ±30° travel is an aero-team proposal. Sparse aerodynamic data, unvalidated rate derivatives and omitted propwash/battery dynamics limit interpretation. Simulation passes do not validate the physical aircraft.
+PT1.5 is a provisional 21 kg model using the October AeroDB/control revision. Measured CG, inertia (currently a build-up estimate), the pusher mount height and motor/propeller, and servo calibration remain open; ±30° travel is an aero-team proposal. Sparse aerodynamic data, vortex-lattice rate derivatives, omitted propwash and a generic battery curve (telemetry only) limit interpretation. Simulation passes do not validate the physical aircraft.
 
 See the [validation summary](docs/validation_summary.md), [capabilities and diagrams](docs/capabilities.md), [SITL guide](docs/ardupilot_sitl_quickstart.md), and [model/API reference](docs/model_reference.md). The validation summary records the latest source-only regression and corrected-reference flight checks. Generated recordings, reports and plots remain local; repository formatting/spelling checks still require cleanup.
