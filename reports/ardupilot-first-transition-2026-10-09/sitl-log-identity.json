@@ -1,5 +1,5 @@
 {
-  "source": "/Users/zeynep/Desktop/Work/Spearhead/project-spearhead/src/tools/flight_dynamics_model/.sitl/envelope-20261009/roll_plus_28/logs/00000001.BIN",
+  "source": "src/tools/flight_dynamics_model/.sitl/envelope-20261009/roll_plus_28/logs/00000001.BIN",
   "sha256": "679f0d1c728d27c97ca29080facecac1c1bee7a01a0bfd71b196869615b01412",
   "messages": [
     "Throttle failsafe off",

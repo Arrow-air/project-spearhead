@@ -4,7 +4,7 @@ from pymavlink import DFReader
 import numpy as np
 
 root = pathlib.Path(__file__).parent
-source = pathlib.Path('/Users/zeynep/Downloads/00000017.BIN')
+source = pathlib.Path('~/Downloads/00000017.BIN')
 reader = DFReader.DFReader_binary(str(source))
 first, last, changes, counts, modes, arms, messages = {}, {}, [], collections.Counter(), [], [], []
 samples = collections.defaultdict(list)

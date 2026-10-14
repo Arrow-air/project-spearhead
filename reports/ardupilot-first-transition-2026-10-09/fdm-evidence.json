@@ -62,7 +62,7 @@
     "tail_chord_m": null,
     "geometry_version": "updated_tail_chord_value_pending",
     "aero_database_version": "tail_update_2026_10_07",
-    "aero_database_path": "/Users/zeynep/Desktop/Work/Spearhead/project-spearhead/src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/database.csv",
+    "aero_database_path": "src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/database.csv",
     "aero_dataset_id": "tail_update_2026_10_07",
     "rho_kg_m3": 1.021,
     "moment_center_body_xyz_m": [
@@ -70,7 +70,7 @@
       0.0,
       0.0
     ],
-    "deflection_database_path": "/Users/zeynep/Desktop/Work/Spearhead/project-spearhead/src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/sources/deflection.csv",
+    "deflection_database_path": "src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/sources/deflection.csv",
     "control_data": {
       "coverage": {
         "aileron": {
