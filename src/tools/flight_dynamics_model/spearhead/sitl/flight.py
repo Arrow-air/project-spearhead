@@ -508,7 +508,7 @@ def main():
     parser.add_argument("--binary", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--config")
-    parser.add_argument("--forward-parameters", choices=("first_transition_2026_10_09", "pt15"),
+    parser.add_argument("--forward-parameters", choices=("first_transition_2026_10_09",),
                         help="Saved forward baseline for a PT1.5 trim start; no gain tuning")
     parser.add_argument("--port", type=int, default=19002)
     parser.add_argument("--mavlink-port", type=int, default=15760)

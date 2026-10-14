@@ -306,7 +306,6 @@ def _render_page_shell(ui) -> None:
         .fd-workspace { max-width: 1600px; margin: 0 auto; background: none; }
         .fd-workspace .fd-panel { box-shadow: none; border-color: #26364a; border-radius: 12px; }
         .fd-workspace .fd-pfd { height: 330px; min-height: 330px; box-shadow: none; }
-        .fd-workspace .fd-scene { height: 330px !important; }
         .fd-workspace .q-btn { text-transform: none; border-radius: 8px; }
         .fd-session-select { width: 280px; max-width: 100%; }
         .fd-instruments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1153,9 +1152,9 @@ def _register_analyze_page(ui) -> None:
                     ui.label("Trim, linearization, modes, derivatives.").classes("text-slate-600")
                     ui.link("Open Stability", "/stability").classes("text-blue-700 no-underline")
                 with ui.card().classes("gap-2 p-4 shadow-sm"):
-                    ui.label("Advanced CG Sweep").classes("text-lg font-semibold")
-                    ui.label("Runtime CG stability sweep.").classes("text-slate-600")
-                    ui.link("Open CG Sweep", "/cg-sweep").classes("text-blue-700 no-underline")
+                    ui.label("CG window").classes("text-lg font-semibold")
+                    ui.label("PT1.5 static margin, elevator trim and hover headroom across CG.").classes("text-slate-600")
+                    ui.link("Open CG window", "/cg-sweep").classes("text-blue-700 no-underline")
 
             result = APP_STATE.simulation_result
             with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
@@ -1653,169 +1652,56 @@ def _register_stability_page(ui) -> None:
 def _register_cg_sweep_page(ui) -> None:
     @ui.page("/cg-sweep")
     def cg_sweep_page() -> None:
+        """PT1.5 CG window: the Flight Deck CG summary evaluated over a range of CG x."""
         _render_page_shell(ui)
-        scenario_options = _scenario_options()
-        selected_name = APP_STATE.scenario_source
-        if selected_name not in scenario_options:
-            selected_name = next(iter(scenario_options), None)
-
-        active_config = APP_STATE.config
-        if active_config is None and selected_name is not None:
-            active_config = load_scenario_config(scenario_options[selected_name])
-
+        from ..cg_card import TRIM_SPEEDS_M_S, cg_card
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
-            _page_intro(ui, "CG Sweep", "Run runtime center-of-gravity stability sweeps through the shared backend.")
-
-            if active_config is None:
-                _empty_state(ui, "Load a scenario first.")
-                return
-
+            _page_intro(ui, "CG window", "Static margin, elevator trim and hover headroom across CG positions for PT1.5.")
             with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Run CG Sweep", "Enter CG x positions and run the existing stability sweep.")
                 ui.label(
-                    "This sweep varies runtime `cg_body_xyz` with the nominal ADB. "
-                    "It does not use separate per-CG aerodynamic databases."
-                ).classes("text-slate-600")
-                status = ui.label(
-                    f"Loaded scenario: {APP_STATE.scenario_source or active_config.name}"
-                    if APP_STATE.config is not None
-                    else "Load a scenario first, or use the bundled example below."
+                    "October AeroDB with ±30° travel. Static margin is stick-fixed at 22 m/s trim. Elevator beyond "
+                    "±15° relies on extrapolated control data. Hover is the busiest rotor against its 95 % spin thrust. "
+                    "The lift-rotor centroid is at x = −37.5 mm. Estimates, not a measured envelope."
                 ).classes("text-slate-600")
                 with ui.row().classes("items-end gap-3"):
-                    selected = ui.select(
-                        options=list(scenario_options),
-                        value=selected_name,
-                        label="Example scenario",
-                    ).classes("min-w-80")
-                    ui.button("Load Scenario", on_click=lambda: load_selected_for_sweep())
-                    ui.button("Run CG Sweep", on_click=lambda: run_clicked()).props("color=primary")
+                    cg_x_input = ui.input("CG x values [mm, forward positive]", value="-70, -60, -50, -40, -30, -20, -10, 0").classes("min-w-96")
+                    cg_z_input = ui.number("CG z [mm, down positive]", value=65, step=5).classes("w-48")
+                    run_button = ui.button("Compute", on_click=lambda: compute()).props("color=primary")
+                status = ui.label("").classes("text-slate-600")
+                columns = [{"name": "x", "label": "CG x (mm)", "field": "x"},
+                           {"name": "sm", "label": "SM 22 m/s (%)", "field": "sm"},
+                           *[{"name": f"de{int(s)}", "label": f"Elevator {s:g} m/s (°)", "field": f"de{int(s)}"} for s in TRIM_SPEEDS_M_S],
+                           {"name": "hover", "label": "Hover busiest rotor (%)", "field": "hover"}]
+                table = ui.table(columns=columns, rows=[], row_key="x").classes("w-full")
 
-                cg_x_input = ui.input(
-                    "CG x values [m]",
-                    value="-0.15, -0.10, -0.05, 0.0",
-                    placeholder="-0.15, -0.10, -0.05, 0.0",
-                ).classes("w-full")
-
-                with ui.expansion("Advanced settings").classes("w-full"):
-                    with ui.grid(columns=2).classes("w-full gap-3"):
-                        state_perturbation_input = ui.number(
-                            "State perturbation",
-                            value=1e-5,
-                            min=1e-12,
-                        )
-                        control_perturbation_input = ui.number(
-                            "Control perturbation",
-                            value=1e-5,
-                            min=1e-12,
-                        )
-
-            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Sweep Results", "Per-point success, mode counts, and most unstable pole.")
-                results_empty = _empty_state(ui, "Run CG sweep to see results.")
-                result_columns = [
-                    {"name": "case", "label": "Case", "field": "case", "align": "left"},
-                    {"name": "cg_x", "label": "CG x [m]", "field": "cg_x", "align": "right"},
-                    {"name": "success", "label": "Success", "field": "success", "align": "left"},
-                    {"name": "total_modes", "label": "Modes", "field": "total_modes", "align": "right"},
-                    {
-                        "name": "most_unstable_real",
-                        "label": "Max Real",
-                        "field": "most_unstable_real",
-                        "align": "right",
-                    },
-                    {"name": "error", "label": "Error", "field": "error", "align": "left"},
-                ]
-                results_table = ui.table(columns=result_columns, rows=[], row_key="case").classes("w-full")
-                results_table.visible = False
-
-            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Trend and Exports", "Inspect CG sensitivity and download sweep outputs.")
-                trend_empty = _empty_state(ui, "Run CG sweep to see trend.")
-                trend_container = ui.column().classes("w-full")
-                export_row = ui.row().classes("gap-3")
-                export_row.visible = False
-
-            def load_selected_for_sweep() -> None:
+            async def compute():
+                from nicegui import run
                 try:
-                    if not selected.value:
-                        raise ValueError("No example scenario is selected.")
-                    _load_example_config(selected.value)
-                    results_table.rows = []
-                    results_table.visible = False
-                    results_table.update()
-                    results_empty.visible = True
-                    trend_container.clear()
-                    trend_empty.visible = True
-                    render_exports()
-                    status.text = f"Loaded scenario: {selected.value}"
-                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
-                    status.text = f"Failed to load scenario: {exc}"
-                    ui.notify(status.text, type="negative")
-
-            def render_exports() -> None:
-                export_row.clear()
-                result = APP_STATE.cg_sweep_result
-                if result is None:
-                    export_row.visible = False
+                    xs = [float(v)/1000 for v in cg_x_input.value.replace(";", ",").split(",") if v.strip()]
+                    z = float(cg_z_input.value)/1000
+                except ValueError:
+                    status.text = "Enter comma-separated CG x values in millimetres."
                     return
-                export_row.visible = True
-                with export_row:
-                    ui.button(
-                        "Export JSON",
-                        on_click=lambda: ui.download(
-                            export_stability_json_text(result),
-                            filename=f"{result.base_config.name}_cg_sweep.json",
-                        ),
-                    )
-                    ui.button(
-                        "Export CSV",
-                        on_click=lambda: ui.download(
-                            export_stability_modes_csv_text(result),
-                            filename=f"{result.base_config.name}_cg_sweep_modes.csv",
-                        ),
-                    )
-
-            def run_clicked() -> None:
+                if not xs or len(xs) > 20:
+                    status.text = "Enter 1–20 CG positions."
+                    return
+                run_button.disable()
+                rows = []
                 try:
-                    config = _active_or_example_config(selected.value if selected.value else None)
-                    x_values = parse_cg_x_values(str(cg_x_input.value))
-                    cg_positions = cg_positions_from_x_values(config, x_values)
-                    linearization_config = build_linearization_config(
-                        state_perturbation=float(state_perturbation_input.value),
-                        control_perturbation=float(control_perturbation_input.value),
-                    )
-                    status.text = "Running CG sweep..."
-                    result = run_cg_sweep_for_gui(
-                        config,
-                        cg_positions,
-                        linearization_config=linearization_config,
-                    )
-                    APP_STATE.set_cg_sweep_result(result)
-                    results_table.rows = cg_sweep_summary_rows(result)
-                    results_table.visible = True
-                    results_table.update()
-                    results_empty.visible = False
-                    trend_container.clear()
-                    with trend_container:
-                        ui.plotly(cg_sweep_trend_figure(result)).classes("w-full")
-                    trend_empty.visible = False
-                    render_exports()
-                    status.text = (
-                        f"CG sweep complete: successful={len(result.successful_points)} "
-                        f"total={len(result.points)}"
-                    )
-                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
-                    message = f"CG sweep failed: {exc}"
-                    APP_STATE.set_cg_sweep_error(message)
-                    results_table.rows = []
-                    results_table.visible = False
-                    results_table.update()
-                    results_empty.visible = True
-                    trend_container.clear()
-                    trend_empty.visible = True
-                    render_exports()
-                    status.text = message
-                    ui.notify(message, type="negative")
+                    for i, x in enumerate(xs, 1):
+                        status.text = f"Computing {i}/{len(xs)} (trims can take several seconds)…"
+                        card = await run.cpu_bound(cg_card, "pt15", x, z)
+                        row = {"x": f"{1000*x:+.1f}",
+                               "sm": "no trim" if card["static_margin_22"] is None else f"{100*card['static_margin_22']:+.1f}",
+                               "hover": "—" if card["hover_max_rotor_fraction"] is None else f"{100*card['hover_max_rotor_fraction']:.0f}"}
+                        for speed, trim in card["trims"].items():
+                            row[f"de{int(speed)}"] = "no trim" if trim is None else f"{trim['elevator_deg']:+.1f}" + (" *" if trim["beyond_measured"] else "")
+                        rows.append(row)
+                        table.rows = list(rows)
+                        table.update()
+                    status.text = "Done. * beyond the measured ±15° elevator data."
+                finally:
+                    run_button.enable()
 
 
 def create_app() -> None:

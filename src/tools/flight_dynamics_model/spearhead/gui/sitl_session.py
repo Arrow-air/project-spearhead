@@ -119,7 +119,7 @@ class RunObserver:
                     if saved.get("maneuver") == "transition" and "transition_parameters" not in saved:
                         # Older GUI transitions used the PT1.5 overlay; do not
                         # relabel those recordings with the new proposal default.
-                        saved["transition_parameters"] = (self.manifest or {}).get("transition_plan", {}).get("parameter_set", "pt15")
+                        saved["transition_parameters"] = (self.manifest or {}).get("transition_plan", {}).get("parameter_set", "first_transition_2026_10_09")
                     if saved.get("initial_point") == "hover30":
                         saved["initial_point"] = "custom_hover"
                     self.flight_setup = FlightSetup(**saved).validate().as_dict()
@@ -393,7 +393,7 @@ class SITLManager:
                 if path.parent.resolve().parent == root.resolve()}
 
     def completed_runs(self):
-        return {key: key for key in self._recording_paths()}
+        return {key: recording_label(key, directory) for key, directory in self._recording_paths().items()}
 
     def load_completed(self, run_id):
         """Passively view a finished managed session or local CLI diagnostic."""
@@ -452,3 +452,17 @@ class SITLManager:
             self.worker.join(timeout=3)
 
     close = stop
+
+
+def recording_label(run_id, directory):
+    """Mark recordings made before the 14 October drawing geometry (rotor x +0.675 / -0.750 m)."""
+    try:
+        aircraft = json.loads((Path(directory) / "manifest.json").read_text()).get("aircraft") or {}
+    except (OSError, ValueError):
+        return run_id
+    positions = aircraft.get("lift_positions_body_m")
+    if aircraft.get("id") in ("pt15", "pt1_as_built") and positions and abs(positions[0][0] - .675) < 1e-6:
+        return run_id
+    if aircraft.get("id") == "reference_design":
+        return run_id + " · reference design"
+    return run_id + " · legacy geometry (before 14 Oct)"

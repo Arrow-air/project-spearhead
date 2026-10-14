@@ -6,32 +6,30 @@ from pathlib import Path
 import numpy as np
 
 
-def transition_parameters(parameter_set="pt15"):
-    # Use firmware's simulated pitot, calibrated during the stationary bootstrap.
-    # Keep the current hover tune; forward surface trim is calculated separately.
-    if parameter_set == "first_transition_2026_10_09":
-        # Frozen earlier proposal, including the verified factory rate gains.
-        # These are a comparison baseline, not a new tune or hardware upload.
-        return {"ARSPD_TYPE": 100, "ARSPD_USE": 1,
-                "AIRSPEED_MIN": 18, "Q_ASSIST_SPEED": 15,
-                "AIRSPEED_CRUISE": 25, "AIRSPEED_MAX": 27, "SCALING_SPEED": 25,
-                "Q_TRANSITION_MS": 5000, "Q_TRANS_FAIL": 20, "Q_TRANS_FAIL_ACT": 1,
-                "Q_OPTIONS": 262177, "ROLL_LIMIT_DEG": 25,
-                "PTCH_LIM_MAX_DEG": 10, "PTCH_LIM_MIN_DEG": -10,
-                "PTCH2SRV_TCONST": .75, "RLL2SRV_RMAX": 45,
-                "PTCH2SRV_RMAX_UP": 22, "PTCH2SRV_RMAX_DN": 22,
-                "FLTMODE3": 19, "FLTMODE4": 5, "FLTMODE5": 21, "FLTMODE6": 20,
-                "FS_LONG_ACTN": 1, "Q_RTL_MODE": 1,
-                "BATT_FS_LOW_ACT": 6, "BATT_FS_CRT_ACT": 4, "BATT_ARM_VOLT": 46.8,
-                "RLL_RATE_FF": .345, "RLL_RATE_P": .08, "RLL_RATE_I": .15, "RLL_RATE_D": 0,
-                "PTCH_RATE_FF": .345, "PTCH_RATE_P": .04, "PTCH_RATE_I": .15, "PTCH_RATE_D": 0}
-    if parameter_set != "pt15":
+TRANSITION_PARAMETER_SET = "first_transition_2026_10_09"
+
+
+def transition_parameters(parameter_set=TRANSITION_PARAMETER_SET):
+    """The single frozen transition proposal (9 October), including factory rate gains.
+
+    Replace it with the aircraft's own parameters once they are aligned; this is a
+    comparison baseline, not a tune or a hardware upload.
+    """
+    if parameter_set != TRANSITION_PARAMETER_SET:
         raise ValueError("Unknown transition parameter set")
     return {"ARSPD_TYPE": 100, "ARSPD_USE": 1,
-            "AIRSPEED_MIN": 20, "AIRSPEED_CRUISE": 24, "AIRSPEED_MAX": 30,
-            "SCALING_SPEED": 24, "Q_TRANSITION_MS": 5000,
-            "ROLL_LIMIT_DEG": 30, "PTCH_LIM_MIN_DEG": -10,
-            "PTCH_LIM_MAX_DEG": 10}
+            "AIRSPEED_MIN": 18, "Q_ASSIST_SPEED": 15,
+            "AIRSPEED_CRUISE": 25, "AIRSPEED_MAX": 27, "SCALING_SPEED": 25,
+            "Q_TRANSITION_MS": 5000, "Q_TRANS_FAIL": 20, "Q_TRANS_FAIL_ACT": 1,
+            "Q_OPTIONS": 262177, "ROLL_LIMIT_DEG": 25,
+            "PTCH_LIM_MAX_DEG": 10, "PTCH_LIM_MIN_DEG": -10,
+            "PTCH2SRV_TCONST": .75, "RLL2SRV_RMAX": 45,
+            "PTCH2SRV_RMAX_UP": 22, "PTCH2SRV_RMAX_DN": 22,
+            "FLTMODE3": 19, "FLTMODE4": 5, "FLTMODE5": 21, "FLTMODE6": 20,
+            "FS_LONG_ACTN": 1, "Q_RTL_MODE": 1,
+            "BATT_FS_LOW_ACT": 6, "BATT_FS_CRT_ACT": 4, "BATT_ARM_VOLT": 46.8,
+            "RLL_RATE_FF": .345, "RLL_RATE_P": .08, "RLL_RATE_I": .15, "RLL_RATE_D": 0,
+            "PTCH_RATE_FF": .345, "PTCH_RATE_P": .04, "PTCH_RATE_I": .15, "PTCH_RATE_D": 0}
 
 
 def forward_trim_parameters(params, mapping, altitude, *, include_simulation_gains=True):
@@ -105,7 +103,9 @@ def analyse_transition(path, release_at, duration, initial_altitude, final_mode,
     t = times - release_at
     x = np.array([r["state"] for r in rows])
     pwm = np.array([r["pwm"] for r in rows])
-    speed = np.linalg.norm(x[:, 3:6], axis=1)
+    # Air-relative speed when recorded (wind runs); inertial speed for older recordings.
+    speed = np.array([r["true_airspeed_m_s"] if r.get("true_airspeed_m_s") is not None else float(np.linalg.norm(r["state"][3:6]))
+                      for r in rows])
     altitude = -x[:, 2]
     tilt = np.rad2deg(x[:, 6:8])
     confirmed, evidence = confirmed_forward_samples(

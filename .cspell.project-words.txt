@@ -70,3 +70,4 @@ recentering
 ruddervator
 ruddervators
 weathervane
+pitot

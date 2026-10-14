@@ -46,7 +46,7 @@ def test_transition_requires_prototype_air_start_and_altitude_margin():
     assert setup.config()['cg_body_xyz_m'] == [-.04, 0, .065]
     with pytest.raises(ValueError, match='80 m'):
         FlightSetup(maneuver='transition').validate()
-    with pytest.raises(ValueError, match='maneuver'):
+    with pytest.raises(ValueError, match='aircraft'):
         FlightSetup(aircraft='reference_design', initial_point='trim28', maneuver='transition', speed_m_s=28, altitude_m=100).validate()
 
 
@@ -101,3 +101,15 @@ def test_forward_mode_join_never_uses_future_confirmation(tmp_path):
         'message':{'mavpackettype':'HEARTBEAT','custom_mode':5}})+'\n')
     mask, evidence = confirmed_forward_samples(np.array([9.99,10.,12.,12.01]),path)
     assert evidence and mask.tolist() == [False,True,True,False]
+
+
+def test_forward_acceptance_uses_air_relative_speed_in_wind(tmp_path):
+    path = tmp_path/'truth.jsonl'
+    # 18 m/s over the ground into a 6 m/s headwind is 24 m/s through the air.
+    rows = [{'time_s': t, 'hold': False, 'state': [0,0,-80,18,0,0,0,0,0,0,0,0], 'true_airspeed_m_s': 24.,
+             'pwm': [1500,1500,1900,1500]+[1100]*4} for t in range(61)]
+    path.write_text(''.join(json.dumps(r)+'\n' for r in rows))
+    (tmp_path/'telemetry.jsonl').write_text(''.join(json.dumps({
+        'fdm_time_s': t, 'message': {'mavpackettype': 'HEARTBEAT', 'custom_mode': 5}})+'\n' for t in range(61)))
+    report = analyse_transition(path, 0, 60, 80, 5)
+    assert report['passed'] and report['max_true_airspeed_m_s'] == 24

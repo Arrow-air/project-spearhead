@@ -11,7 +11,6 @@ from spearhead.gui import sitl_session
 from spearhead.gui.sitl_page import (sitl_figures, control_coverage_text, transition_result_text,
                                      arming_badge, startup_activity, flight_story, SimulationPace, transition_metrics)
 from spearhead.gui.sitl_session import JsonlTail, RunObserver, SITLManager, body_attitude
-from spearhead.gui.external_view import camera_pose, scene_pose, trail_points
 
 
 def truth(t=1, hold=False):
@@ -19,54 +18,6 @@ def truth(t=1, hold=False):
             "control": {"de": math.radians(-3), "da": 0., "dr": 0., "throttle": .3},
             "hold": hold, "pwm": [1500, 1801, 1254, 1495], "physics_rate_hz": 200,
             "alpha_deg": -.1, "beta_deg": 0, "control_coverage_exceeded": False}
-
-
-@pytest.mark.parametrize("angles, body_axis, expected", [
-    ([0, 0, 0], [1, 0, 0], [1, 0, 0]),
-    ([0, 30, 0], [1, 0, 0], [np.sqrt(3)/2, 0, .5]),  # nose up
-    ([30, 0, 0], [0, 1, 0], [0, -np.sqrt(3)/2, -.5]),  # right wing down
-    ([0, 0, 90], [1, 0, 0], [0, -1, 0]),  # east is scene -Y
-])
-def test_external_view_preserves_physical_attitude_signs(angles, body_axis, expected):
-    state = truth()["state"]
-    state[6:9] = np.deg2rad(angles).tolist()
-    matrix = np.array(scene_pose(state)["rotation"])
-    np.testing.assert_allclose(matrix @ body_axis, expected, atol=1e-12)
-    np.testing.assert_allclose(matrix.T @ matrix, np.eye(3), atol=1e-12)
-    assert np.linalg.det(matrix) == pytest.approx(1)
-
-
-def test_external_view_rebases_large_positions_without_changing_altitude_or_path():
-    rows = []
-    for i in range(1000):
-        row = truth(i*.05, hold=i < 5)
-        row["state"][:3] = [1e7+i, 2e7+2*i, -100-i*.01]
-        rows.append(row)
-    current = rows[-1]
-    pose = scene_pose(current["state"])
-    points = trail_points(rows, current)
-    assert pose["position"] == pytest.approx([0, 0, 109.99])
-    assert len(points) <= 121
-    assert points[-1] == pytest.approx(pose["position"])
-    assert all(p[0] <= 0 and p[1] >= 0 for p in points)
-    assert np.linalg.norm(np.array(points[-1])-points[0]) < 1500
-    assert all(0 <= v < 25 for v in pose["ground_offset"][:2])
-    assert trail_points(rows[:5], rows[4]) == []
-    # Neither coordinate conversion nor display history changes FDM samples.
-    assert current["state"][:3] == [10000999., 20001998., -109.99]
-
-
-def test_external_camera_follows_heading_with_world_up_and_rejects_bad_state():
-    state = truth()["state"]
-    state[8] = 0
-    north = camera_pose(state, "chase")
-    state[8] = math.pi/2
-    east = camera_pose(state, "chase")
-    assert east == pytest.approx([north[1], -north[0], north[2]])
-    assert east[2] > -state[2]
-    state[0] = float("nan")
-    with pytest.raises(ValueError, match="finite"):
-        scene_pose(state)
 
 
 def append(path, row):

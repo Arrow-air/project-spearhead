@@ -115,7 +115,7 @@ def run(args):
     doublet = getattr(args, "doublet", None)
     if doublet and (interactive or transition or args.duration < 45):
         raise ValueError("Hover doublets require 45 s and cannot be interactive or transitions")
-    parameter_set = getattr(args, "transition_parameters", "pt15")
+    parameter_set = getattr(args, "transition_parameters", "first_transition_2026_10_09")
     if interactive and transition:
         raise ValueError("Choose an interactive session or an automated transition")
     default = "quad_transition.yaml" if transition else "quad_hover.yaml"
@@ -134,7 +134,7 @@ def run(args):
     if transition:
         params.update(transition_parameters(parameter_set))
         forward_params, forward_state, forward_control = forward_trim_parameters(
-            physics.params, mapping, -physics.state[2], include_simulation_gains=parameter_set == "pt15")
+            physics.params, mapping, -physics.state[2], include_simulation_gains=False)
         params.update(forward_params)
     params.update(SERVO3_FUNCTION=70, SERVO3_MIN=mapping.pusher.minimum,
                   SERVO3_MAX=mapping.pusher.maximum, SERVO3_TRIM=mapping.pusher.minimum)
@@ -158,13 +158,13 @@ def run(args):
         manifest.update(test_kind="quad_transition", transition_plan={
             "hover_settle_s": 10, "forward_mode": "FBWA", "rc3_ramp_s": 5,
             "rc3_target_us": 1900, "parameter_set": parameter_set,
-            "forward_gains": "existing provisional simulation gains" if parameter_set == "pt15" else "frozen 9 October proposal and factory rate gains; no tuning",
+            "forward_gains": "frozen 9 October proposal and factory rate gains; no tuning",
             "cg_policy": "retain configured prototype CG; no diagnostic trim relocation"})
         manifest["forward_trim"] = {"speed_m_s": 24, "state": forward_state.tolist(),
                                     "control": asdict(forward_control), "firmware_parameters": forward_params}
     curve = load_static_performance(physics.params.lift_system.performance_path)
     manifest["static_lift_to_weight"] = 4*curve.lookup(44.4, 1)["thrust_n"]/(physics.params.mass*physics.params.g)
-    manifest["limitations"] += ["No ground/contact, battery sag, rotor transient or propwash model; air-start only",
+    manifest["limitations"] += ["No ground/contact, battery sag on thrust, rotor transient or propwash model; air-start only",
                                  "Logged VTOL gains are a simulation starting point, not a PT1.5 hardware tune"]
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
     session = Session(physics, mapping)
@@ -383,7 +383,7 @@ def main():
     parser.add_argument("--doublet", choices=tuple(HOVER_DOUBLETS), help="Hover pilot-input doublet; frozen VTOL gains")
     parser.add_argument("--interactive", action="store_true", help="Enable Flight Deck mode commands after QHOVER bootstrap")
     parser.add_argument("--transition", action="store_true", help="PT1.5 hover-to-FBWA diagnostic; no CG substitution")
-    parser.add_argument("--transition-parameters", choices=("pt15", "first_transition_2026_10_09"), default="pt15",
+    parser.add_argument("--transition-parameters", choices=("first_transition_2026_10_09",), default="first_transition_2026_10_09",
                         help="Frozen transition proposal; this option does not tune gains")
     parser.add_argument("--binary", required=True)
     parser.add_argument("--output", required=True)

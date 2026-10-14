@@ -3,21 +3,21 @@
 import asyncio
 from collections import deque
 import math
+from pathlib import Path
 import time
 
 from .flight_deck import attitude_html
-# 3D aircraft view is temporarily disabled to reduce browser rendering work.
-# from .external_view import ExternalView
 from .plotting import _flight_deck_base_figure
 from .flight_setup import (AIRCRAFT, POINTS, MANEUVERS, MIN_DURATION, FlightSetup,
                            TRANSITION_CGS, TRANSITION_CG_X, TRANSITION_CG_Z, TRANSITION_PARAMETERS,
+                           FAILURES, GUST_START_S,
                            forward_start, maneuver_options)
 from ..aircraft import aircraft_summary, load_aircraft_config
 from ..sitl.ground_control import QUADPLANE_MODES, PLANE_MODES, MODE_HELP, MODE_NAMES, session_modes
 from ..sitl.doublets import DOUBLETS, doublet_delta
 from ..sitl.hover_doublets import HOVER_DOUBLETS
 from .flight_setup import HOVER_DOUBLET_LABELS
-from .flight_values import VALUE_LABELS, numeric_flight_values, flight_values_status
+from .flight_values import VALUE_LABELS, numeric_flight_values, flight_values_status, live_alerts
 
 
 def info_note(ui, label, text=""):
@@ -141,6 +141,18 @@ def flight_story(view):
 
 
 def flight_plan_text(setup):
+    text = _flight_plan_base(setup)
+    extras = []
+    if setup.wind_speed_m_s:
+        extras.append(f"Wind {setup.wind_speed_m_s:g} m/s from {setup.wind_from_deg:g}°")
+    if setup.gust_m_s:
+        extras.append(f"{setup.gust_m_s:g} m/s gust at {GUST_START_S:g} s")
+    if setup.failure != "none":
+        extras.append(f"{FAILURES[setup.failure]} at {setup.failure_time_s:g} s")
+    return text + (" " + " · ".join(extras) + "." if extras else "")
+
+
+def _flight_plan_base(setup):
     if setup.initial_point == "ground":
         return f"Take off to {setup.altitude_m:g} m, hover for {setup.duration_s:g} s, then land automatically."
     if setup.maneuver == "transition":
@@ -255,6 +267,60 @@ def lift_pwm_limits(manifest):
     if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in (low, high)) or low >= high:
         return None
     return low, high
+
+
+def comparison_figures(result):
+    """Aircraft log (solid) against the SITL run (dotted), both from takeoff / release."""
+    traces = result.get("traces")
+    if not traces:
+        return {}
+    sim, real = traces["simulation"], traces["aircraft"]
+    figures = {}
+    go, figure = _flight_deck_base_figure("Lift outputs · aircraft vs SITL")
+    for name, color in (("FR", "#38bdf8"), ("RL", "#a78bfa"), ("FL", "#fbbf24"), ("RR", "#34d399")):
+        key = f"lift_{name}"
+        if key in real:
+            figure.add_trace(go.Scatter(x=real["time_s"], y=real[key], name=f"{name} aircraft", line={"color": color}))
+        figure.add_trace(go.Scatter(x=sim["time_s"], y=sim[key], name=f"{name} SITL", line={"color": color, "dash": "dot"}))
+    figure.update_yaxes(title_text="PWM · µs")
+    figures["lift"] = figure
+    go, figure = _flight_deck_base_figure("Attitude · aircraft vs SITL")
+    for key, label, color in (("roll_deg", "Roll", "#38bdf8"), ("pitch_deg", "Pitch", "#fbbf24")):
+        if key in real:
+            figure.add_trace(go.Scatter(x=real["time_s"], y=real[key], name=f"{label} aircraft", line={"color": color}))
+        figure.add_trace(go.Scatter(x=sim["time_s"], y=sim[key], name=f"{label} SITL", line={"color": color, "dash": "dot"}))
+    figure.update_yaxes(title_text="deg")
+    figures["attitude"] = figure
+    go, figure = _flight_deck_base_figure("Altitude and pack voltage · aircraft vs SITL")
+    for key, label, color in (("altitude_m", "Altitude · m", "#34d399"), ("battery_v", "Pack · V", "#f87171")):
+        if key in real:
+            figure.add_trace(go.Scatter(x=real["time_s"], y=real[key], name=f"{label} aircraft", line={"color": color}))
+        figure.add_trace(go.Scatter(x=sim["time_s"], y=sim[key], name=f"{label} SITL", line={"color": color, "dash": "dot"}))
+    figures["altitude"] = figure
+    for figure in figures.values():
+        figure.update_xaxes(title_text="s from takeoff / release")
+    return figures
+
+
+def comparison_text(result):
+    lines = [f"{result['log']}: {result['aircraft_parameter_count']} aircraft parameters; SITL values from the {result['simulation_parameter_source']}."]
+    flights = result.get("flights") or []
+    if flights:
+        chosen = result.get("takeoff_s")
+        listing = ", ".join(f"#{i} at {f['takeoff_s']:.0f} s ({f['airborne_s']:.0f} s)" + (" ← shown" if f["takeoff_s"] == chosen else "")
+                            for i, f in enumerate(flights, 1))
+        lines.append("Flights in log: " + listing + ".")
+    hover = result.get("hover") or {}
+    if hover.get("aircraft") and hover.get("simulation"):
+        a, s = hover["aircraft"], hover["simulation"]
+        lines.append("Median lift PWM after 5 s · aircraft FR/RL/FL/RR " + "/".join(f"{a['median_pwm'][k]:.0f}" for k in ("FR", "RL", "FL", "RR"))
+                     + " vs SITL " + "/".join(f"{s['median_pwm'][k]:.0f}" for k in ("FR", "RL", "FL", "RR"))
+                     + f" · front share of PWM above idle {100*a['front_share_pwm']:.1f} % vs {100*s['front_share_pwm']:.1f} %.")
+    elif result.get("traces") is None and flights == []:
+        lines.append("Parameter comparison only (no flight data in this file).")
+    lines.append(f"{len(result['parameter_diff'])} flight-relevant parameters differ or exist only in SITL "
+                 "(calibration, telemetry, hardware and simulator settings are left out).")
+    return " ".join(lines)
 
 
 def sitl_figures(snapshot):
@@ -475,6 +541,17 @@ def register_sitl_page(ui, manager, render_shell):
                         with ui.row().classes("w-full gap-3 mt-3") as transition_choices:
                             cg_case = ui.select(TRANSITION_CGS, value=preset.cg_case, label="Transition CG").props("dark outlined dense").classes("grow min-w-0")
                             transition_parameters = ui.select(TRANSITION_PARAMETERS, value=preset.transition_parameters, label="Transition parameters").props("dark outlined dense").classes("grow min-w-0")
+                        with ui.row().classes("w-full items-center gap-1 mt-2") as cg_card_row:
+                            cg_card_label = ui.label("").classes("text-xs text-sky-100")
+                            info_note(ui, "CG summary information", "For the selected CG with the October AeroDB: stick-fixed static margin at 22 m/s trim, elevator trim at 20/22/24 m/s with ±30° travel, and the busiest lift rotor's thrust as a fraction of its thrust at 95 % spin in static hover. Elevator beyond ±15° relies on extrapolated control data. These are model estimates, not a measured CG envelope.")
+                        ui.label("Wind and failures · times count from release (ground starts: from motor spin-up)").classes("fd-muted text-xs mt-3")
+                        with ui.element("div").classes("fd-condition-grid w-full") as condition_choices:
+                            wind_speed = ui.number("Wind (m/s)", value=preset.wind_speed_m_s, min=0, max=15, step=1).props("dark outlined dense").classes("w-full")
+                            wind_from = ui.number("Wind from (°)", value=preset.wind_from_deg, min=0, max=359, step=15).props("dark outlined dense").classes("w-full")
+                            gust = ui.number(f"Gust at {GUST_START_S:g} s (m/s)", value=preset.gust_m_s, min=0, max=10, step=1).props("dark outlined dense").classes("w-full")
+                        with ui.row().classes("w-full gap-3 mt-3"):
+                            failure = ui.select(FAILURES, value=preset.failure, label="Failure").props("dark outlined dense").classes("grow min-w-0")
+                            failure_time = ui.number("Failure at (s)", value=preset.failure_time_s, min=0, max=600, step=1).props("dark outlined dense").classes("w-40")
                     with ui.row().classes("w-full items-center gap-3 fd-flight-actions"):
                         start = ui.button("Start flight", icon="play_arrow")
                         ui.space()
@@ -510,6 +587,7 @@ def register_sitl_page(ui, manager, render_shell):
                         apply_mode = ui.button("Change mode", icon="swap_horiz")
                     command_status = ui.label("").classes("text-sm text-sky-200")
                 control_hint = ui.label("").classes("text-xs text-slate-300")
+                live_alert = ui.label("").classes("w-full fd-alert text-amber-200 text-sm").props('role="status" aria-live="polite"')
             with ui.row().classes("w-full fd-health gap-x-5 gap-y-1 items-center px-1") as readiness_panel:
                 link_status = ui.label("Link: offline").classes("text-slate-300")
                 gps_status = ui.label("GPS: unknown").classes("text-slate-300")
@@ -542,17 +620,13 @@ def register_sitl_page(ui, manager, render_shell):
                             with ui.column().classes("fd-value gap-0"):
                                 ui.label(label).classes("fd-value-label")
                                 value_readouts[key] = ui.label("—").classes("fd-value-number")
-                # Temporarily disabled at the user's request; retain for restoration.
-                # with ui.column().classes("fd-panel p-3 w-full min-w-0 gap-2"):
-                #     ui.label("Aircraft view").classes("fd-section-title")
-                #     external_view = ExternalView(ui)
-                #     external_view.scene.classes("fd-scene")
             with ui.column().classes("w-full fd-panel gap-0"):
                 with ui.tabs().props("no-caps inline-label align=left active-color=light-blue-3").classes("w-full") as detail_tabs:
                     overview_tab = ui.tab("Overview", icon="fact_check")
                     messages_tab = ui.tab("Messages", icon="chat_bubble_outline")
                     plots_tab = ui.tab("Flight plots", icon="show_chart")
                     model_tab = ui.tab("Technical details", icon="tune")
+                    compare_tab = ui.tab("Compare with aircraft", icon="compare_arrows")
                 with ui.tab_panels(detail_tabs, value=overview_tab).props("animated=false").classes("w-full bg-transparent text-slate-200"):
                     with ui.tab_panel(overview_tab).classes("p-4 gap-3"):
                         ui.label("Understanding this flight").classes("fd-section-title")
@@ -589,6 +663,29 @@ def register_sitl_page(ui, manager, render_shell):
                             plots = {name: VisiblePlotly(figure).classes("w-full")
                                      for name, figure in sitl_figures(manager.snapshot()).items()}
                             plots["Doublet input"].set_visibility(False)
+                    with ui.tab_panel(compare_tab).classes("p-4 gap-3"):
+                        ui.label("Compare this run with the real aircraft").classes("fd-section-title")
+                        ui.label("Give a DataFlash log (.BIN) to overlay lift outputs, attitude and altitude from takeoff and to compare parameters, "
+                                 "or a .param file for parameters only. Open the SITL run to compare first (current or Recorded flights).").classes("fd-muted text-xs")
+                        with ui.row().classes("w-full items-end gap-3"):
+                            compare_path = ui.input("File path on this computer", placeholder="~/Downloads/00000017.BIN").props("dark outlined dense").classes("grow min-w-0")
+                            compare_flight = ui.number("Flight in log (0 = last)", value=0, min=0, max=50, step=1).props("dark outlined dense").classes("w-48")
+                            compare_button = ui.button("Compare", icon="compare_arrows")
+                        compare_upload = ui.upload(label="…or upload a .BIN / .param file", auto_upload=True,
+                                                   max_file_size=600_000_000).props("dark flat bordered accept=.bin,.BIN,.param,.parm,.params,.txt").classes("w-full")
+                        compare_status = ui.label("").classes("text-sm text-sky-100")
+                        with ui.element("div").classes("grid grid-cols-1 lg:grid-cols-2 w-full gap-3"):
+                            from .visible_plotly import VisiblePlotly
+                            compare_plots = {name: VisiblePlotly({"data": [], "layout": {}}).classes("w-full") for name in ("lift", "attitude", "altitude")}
+                        for plot in compare_plots.values():
+                            plot.set_visibility(False)
+                        compare_table = ui.table(columns=[
+                            {"name": "name", "label": "Parameter", "field": "name", "align": "left", "sortable": True},
+                            {"name": "aircraft", "label": "Aircraft", "field": "aircraft", "align": "right"},
+                            {"name": "simulation", "label": "SITL run", "field": "simulation", "align": "right"},
+                            {"name": "status", "label": "", "field": "status", "align": "left"},
+                        ], rows=[], row_key="name", pagination=15).props("dark flat dense").classes("w-full")
+                        compare_table.set_visibility(False)
                     with ui.tab_panel(model_tab).classes("p-4 gap-3"):
                         ui.label("Simulator & data versions").classes("font-semibold")
                         aircraft_readout = ui.label("").classes("fd-muted text-sm break-all")
@@ -627,10 +724,77 @@ def register_sitl_page(ui, manager, render_shell):
         def selected_setup():
             return FlightSetup(aircraft.value, initial_point.value, maneuver.value,
                                duration.value, altitude.value, speed.value,
-                               cg_case.value, transition_parameters.value).validate()
+                               cg_case.value, transition_parameters.value,
+                               wind_speed.value or 0, wind_from.value or 0, gust.value or 0,
+                               failure.value, failure_time.value or 0).validate()
 
         syncing_setup = [False]
         setup_run = [None]
+        displayed_directory = [None]
+
+        async def compare_file(path):
+            from nicegui import run
+            from ..flight_log import compare_log_with_run
+            from pathlib import Path as _Path
+            directory = displayed_directory[0]
+            if directory is None or not (_Path(directory) / "truth.jsonl").is_file():
+                compare_status.text = "Open a SITL run first (start one or pick it from Recorded flights)."
+                return
+            path = _Path(path).expanduser()
+            if not path.is_file():
+                compare_status.text = f"File not found: {path}"
+                return
+            flight = int(compare_flight.value or 0)
+            compare_button.disable()
+            compare_status.text = f"Reading {path.name}… large logs take a minute."
+            try:
+                result = await run.cpu_bound(compare_log_with_run, str(path), str(directory), flight - 1 if flight else -1)
+            except Exception as exc:
+                compare_status.text = f"Could not compare {path.name}: {exc}"
+                return
+            finally:
+                compare_button.enable()
+            compare_status.text = comparison_text(result)
+            figures = comparison_figures(result)
+            for name, plot in compare_plots.items():
+                if name in figures:
+                    plot.figure = figures[name]
+                    plot.update()
+                plot.set_visibility(name in figures)
+            compare_table.rows = result["parameter_diff"]
+            compare_table.update()
+            compare_table.set_visibility(True)
+
+        async def compare_uploaded(event):
+            target_dir = manager.root / "aircraft_logs"
+            target_dir.mkdir(parents=True, exist_ok=True)
+            target = target_dir / Path(event.file.name).name
+            await event.file.save(target)
+            compare_path.value = str(target)
+            await compare_file(target)
+        cg_card_key = [None]
+
+        async def update_cg_card():
+            from nicegui import run
+            from ..cg_card import cg_card, cg_card_text
+            if aircraft.value != "pt15":
+                return
+            key = (aircraft.value, TRANSITION_CG_X[cg_case.value], TRANSITION_CG_Z)
+            if key == cg_card_key[0]:
+                return
+            cg_card_key[0] = key
+            cg_card_label.text = "Computing static margin, elevator trim and hover headroom for this CG…"
+            try:
+                card = await run.cpu_bound(cg_card, *key)
+                text = cg_card_text(card)
+            except Exception as exc:
+                text = f"CG summary unavailable: {exc}"
+            if cg_card_key[0] == key:
+                cg_card_label.text = text
+
+        def schedule_cg_card():
+            from nicegui import background_tasks
+            background_tasks.create(update_cg_card(), name="cg-card")
 
         def aircraft_changed():
             if syncing_setup[0]:
@@ -758,6 +922,8 @@ def register_sitl_page(ui, manager, render_shell):
                     speed.value = recipe.speed_m_s
                     cg_case.value = recipe.cg_case
                     transition_parameters.value = recipe.transition_parameters
+                    wind_speed.value, wind_from.value, gust.value = recipe.wind_speed_m_s, recipe.wind_from_deg, recipe.gust_m_s
+                    failure.value, failure_time.value = recipe.failure, recipe.failure_time_s
                     setup_run[0] = view.get("run_id")
                     plan_panel.value = False
                 finally:
@@ -776,14 +942,20 @@ def register_sitl_page(ui, manager, render_shell):
             start.set_enabled(not locked and not setup_error.text)
             stop.set_enabled(active)
             stop.set_visibility(active)
-            for field in (aircraft, initial_point, maneuver, duration, altitude, cg_case, transition_parameters):
+            for field in (aircraft, initial_point, maneuver, duration, altitude, cg_case, transition_parameters,
+                          wind_speed, wind_from, gust, failure, failure_time):
                 field.set_enabled(not locked)
             forward_choices = aircraft.value == "pt15"
             transition_choices.set_visibility(forward_choices)
-            cg_case.label = "Diagnostic CG"
+            cg_card_row.set_visibility(forward_choices)
+            cg_case.label = "Simulation CG (target, not measured)"
             transition_parameters.label = "Forward parameters"
             caption = (TRANSITION_CGS[cg_case.value] + " · " + TRANSITION_PARAMETERS[transition_parameters.value]
                        if forward_choices else "Altitude and airspeed")
+            if wind_speed.value or gust.value:
+                caption += f" · wind {wind_speed.value or 0:g} m/s" + (f" + {gust.value:g} m/s gust" if gust.value else "")
+            if failure.value != "none":
+                caption += " · " + FAILURES[failure.value]
             advanced_settings.props(f'caption="{caption}"')
             speed.set_enabled(not locked and not hover_setup)
             # Keep numeric limits numeric; props strings also reach server-side sanitization.
@@ -797,7 +969,7 @@ def register_sitl_page(ui, manager, render_shell):
             setup_hint.text = ("Air-start hover · KDE lift · MAD 150KV / APC 20×12 pusher estimate." if hover_setup else
                                "Air-start at six-axis trim · provisional pusher · Spearhead hover awaits MAD performance data.")
             if prototype_forward:
-                setup_hint.text = "PT1.5 forward air start at computed six-axis trim for the selected speed and diagnostic CG. ±30° proposed travel; frozen forward parameters. Lift motors remain off; fixed-wing modes are available. Physical CG is unconfirmed."
+                setup_hint.text = "PT1.5 forward air start at computed six-axis trim for the selected speed and simulation CG. ±30° proposed travel; frozen forward parameters. Lift motors remain off; fixed-wing modes are available. Physical CG is unconfirmed."
             if maneuver.value == "interactive":
                 setup_hint.text += " Interactive means you can request mode changes. Pilot sticks remain neutral; no scripted input is applied."
             if maneuver.value == "back_transition":
@@ -837,10 +1009,10 @@ def register_sitl_page(ui, manager, render_shell):
             if not manifest and forward_choices:
                 cg = [TRANSITION_CG_X[cg_case.value], 0, TRANSITION_CG_Z]
             origin = displayed_aircraft.get("moment_center_body_xyz_m")
-            cg_readout.text = f"Diagnostic CG body xyz (m): {cg} · Source moment center (m): {origin} · x forward / z down"
+            cg_readout.text = f"Simulation CG body xyz (m, target, not measured): {cg} · Source moment center (m): {origin} · x forward / z down"
             cg_summary.set_visibility(cg is not None and (bool(manifest) or forward_choices))
             if cg is not None:
-                cg_summary.text = ("Recorded diagnostic CG" if manifest and not active else "Diagnostic CG") + ": " + \
+                cg_summary.text = ("Recorded simulation CG" if manifest and not active else "Simulation CG (target, not measured)") + ": " + \
                     " · ".join(f"{axis} {1000*value:+g} mm" for axis, value in zip("xyz", cg)) + " · body axes"
             is_back = manifest.get("test_kind") == "back_transition"
             is_transition = manifest.get("test_kind") in ("quad_transition", "back_transition")
@@ -868,7 +1040,7 @@ def register_sitl_page(ui, manager, render_shell):
             mode_help.text = MODE_HELP.get(mode_select.value, "Choose a flight mode.")
             forward_mode = 18 in mode_options and (mode_select.value in PLANE_MODES or mode_select.value == 25)
             if forward_mode:
-                mode_help.text += " PT1.5 electric pusher is estimated; forward-flight results depend on the diagnostic CG."
+                mode_help.text += " PT1.5 electric pusher is estimated; forward-flight results depend on the simulation CG."
             mass = manifest.get("aircraft", {}).get("mass_kg", 21)
             mode_scope.text = (f"PT1.5 Quad-X · {mass:g} kg · four KDE lift motors · neutral pilot sticks" if 18 in mode_options else
                                f"PT1.5 fixed-wing · {mass:g} kg · lift motors off · neutral pilot sticks" if displayed_aircraft.get("id") == "pt15" else
@@ -882,7 +1054,7 @@ def register_sitl_page(ui, manager, render_shell):
                 mode_limits.text = "AUTO flies the built-in takeoff, hover and landing mission. Flat-ground gear is provisional; forward transition remains unvalidated."
                 if mode_select.value in (10, 13, 20, 21):
                     mode_help.text = "This ground session includes physical gear contact and an uploaded VTOL mission. Mode changes are disabled while the automatic sequence runs."
-            mode_limits.text += " Diagnostic CG and provisional aircraft model. Control data cover β=0 only; flight outside that plane uses endpoint assumptions."
+            mode_limits.text += " Simulation CG (target, not measured) and provisional aircraft model. Control data cover β=0 only; flight outside that plane uses endpoint assumptions."
             error.text = view.get("error") or ""
             error.set_visibility(bool(error.text))
             historical = not active and view.get("run_id") is not None
@@ -986,8 +1158,10 @@ def register_sitl_page(ui, manager, render_shell):
             else:
                 travel_readout.text = (f"Assumed surface travel ±{30 if prototype_setup else 20}° · linear extrapolation · uncalibrated. "
                                        + control_coverage_text(displayed_aircraft))
-            # external_view.update(view)  # Disabled with the 3D view above.
             attitude_empty.set_visibility(row is None)
+            alerts = live_alerts(row)
+            live_alert.text = ("" if not alerts else ("Recorded · " if historical else "") + " · ".join(alerts))
+            live_alert.set_visibility(bool(alerts))
             if row is None:
                 progress.text = activity["title"] if activity else "Select a flight test to begin."
                 connection.text = "Waiting for firmware" if active else "Firmware not running"
@@ -1012,7 +1186,7 @@ def register_sitl_page(ui, manager, render_shell):
                 fdm_display.content = attitude_html(pitch_deg=pitch, roll_deg=roll)
                 fdm_display.update()
                 last_attitude[0] = attitude_stamp
-            tas = math.sqrt(sum(v*v for v in x[3:6]))
+            tas = row.get("true_airspeed_m_s") or math.sqrt(sum(v*v for v in x[3:6]))
             truth_readout.text = f"Airspeed {tas:.2f} m/s · Altitude {-x[2]:.2f} m"
             aero_readout.text = f"α {row['alpha_deg']:.3f}° · β {row['beta_deg']:.3f}° · Elevator {math.degrees(row['control']['de']):+.2f}°"
             connection.text = (("LIVE · " if active else "RUN ENDED · Last sample: ") +
@@ -1035,6 +1209,7 @@ def register_sitl_page(ui, manager, render_shell):
                 warning.text = "Recorded model warning · " + warning.text
             warning.set_visibility(bool(warning.text))
             run_label.text = f"Run: {view['run_id']} · Logs: {view['directory']}"
+            displayed_directory[0] = view.get("directory")
             result = view["report"]
             if result is not None:
                 rms = result.get("attitude_rms_error_deg")
@@ -1069,8 +1244,13 @@ def register_sitl_page(ui, manager, render_shell):
         altitude.on_value_change(lambda: conditions_changed())
         speed.on_value_change(lambda: conditions_changed())
         duration.on_value_change(lambda: refresh())
-        cg_case.on_value_change(lambda: refresh())
+        cg_case.on_value_change(lambda: (refresh(), schedule_cg_card()))
+        compare_button.on_click(lambda: compare_file(compare_path.value or ""))
+        compare_upload.on_upload(compare_uploaded)
+        ui.timer(.5, schedule_cg_card, once=True)
         transition_parameters.on_value_change(lambda: refresh())
+        for field in (wind_speed, wind_from, gust, failure, failure_time):
+            field.on_value_change(lambda: refresh())
         refresh()
         # The passive observer publishes at 10 Hz. Hidden plots are not rebuilt,
         # and an unchanged attitude sample is not sent to the browser again.

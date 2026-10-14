@@ -6,8 +6,10 @@ import math
 import yaml
 
 from ..sitl.backend import CONFIG_ROOT
+from ..sitl import failures as failure_model
 
-AIRCRAFT = {"pt15": "PT1.5 · 21 kg", "reference_design": "Spearhead · 25 kg"}
+# Flight Deck flies PT1.5 only; the 25 kg reference design stays in Model Lab (old AeroDB and geometry).
+AIRCRAFT = {"pt15": "PT1.5 · 21 kg"}
 DOUBLET_LABELS = {"pitch_doublet": "Pitch doublet · elevator ±3°", "roll_doublet": "Roll doublet · aileron ±5°",
                   "yaw_doublet": "Yaw doublet · rudder ±5°", "throttle_doublet": "Throttle doublet · up to ±10 points"}
 HOVER_DOUBLET_LABELS = {"pitch_doublet": "Pitch doublet · attitude ±8°", "roll_doublet": "Roll doublet · attitude ±8°",
@@ -43,9 +45,19 @@ TRANSITION_CGS = {
 TRANSITION_CG_X = {"target40": -.040, "pt1_log": -.0475, "aft60": -.060, "forward25": -.025, "forward0": 0.}
 # Build-up estimate of the CG height below the origin; unmeasured.
 TRANSITION_CG_Z = .065
+FAILURES = {
+    "none": "No failure",
+    "lift_fr_out": "Lift motor FR (motor 1) out",
+    "lift_rr_out": "Lift motor RR (motor 4) out",
+    "lift_rl_out": "Lift motor RL (motor 2) out",
+    "lift_fl_out": "Lift motor FL (motor 3) out",
+    "pusher_out": "Pusher cut",
+    "battery_low": "Low battery (awaits BATT parameter approval)",
+}
+# A gust reaches its peak 1.5 s after it starts; same direction as the steady wind.
+GUST_START_S, GUST_DURATION_S = 20., 3.
 TRANSITION_PARAMETERS = {
     "first_transition_2026_10_09": "9 October proposal · frozen factory rate gains",
-    "pt15": "PT1.5 comparison · later simulation gains",
 }
 
 
@@ -72,6 +84,11 @@ class FlightSetup:
     speed_m_s: float = 0
     cg_case: str = "target40"
     transition_parameters: str = "first_transition_2026_10_09"
+    wind_speed_m_s: float = 0
+    wind_from_deg: float = 0
+    gust_m_s: float = 0
+    failure: str = "none"
+    failure_time_s: float = 20
 
     def validate(self):
         if self.aircraft not in AIRCRAFT or self.initial_point not in POINTS[self.aircraft]:
@@ -80,6 +97,24 @@ class FlightSetup:
             raise ValueError("Choose a maneuver supported by the selected aircraft")
         if self.cg_case not in TRANSITION_CGS or self.transition_parameters not in TRANSITION_PARAMETERS:
             raise ValueError("Choose a supported transition CG and parameter set")
+        conditions = (self.wind_speed_m_s, self.wind_from_deg, self.gust_m_s, self.failure_time_s)
+        if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in conditions):
+            raise ValueError("Wind, gust and failure time must be finite numbers")
+        if not (0 <= self.wind_speed_m_s <= 15 and 0 <= self.gust_m_s <= 10 and 0 <= self.wind_from_deg < 360):
+            raise ValueError("Wind 0–15 m/s from 0–359°, gust 0–10 m/s")
+        if self.failure not in FAILURES:
+            raise ValueError("Choose a supported failure")
+        if self.failure != "none":
+            if self.aircraft != "pt15":
+                raise ValueError("Failure injection is available for PT1.5")
+            if self.failure == "battery_low" and not failure_model.BATTERY_FAILSAFE_PARAMETERS_APPROVED:
+                raise ValueError("Low-battery failure awaits approval of the SITL battery parameters")
+            if self.failure.startswith("lift_") and self.is_forward and self.maneuver != "back_transition":
+                raise ValueError("Lift-motor failures need a hover, ground or forward → hover start")
+            if self.failure == "pusher_out" and not (self.is_forward or self.maneuver == "transition"):
+                raise ValueError("Pusher failures need a forward start or a hover → forward transition")
+            if not 0 <= self.failure_time_s < self.duration_s:
+                raise ValueError("Failure time must fall inside the flight")
         ground = self.initial_point == "ground"
         if ground != (self.maneuver == "takeoff_hover_land"):
             raise ValueError("Ground starts use Takeoff → hover → land; air starts use a flight maneuver")
@@ -137,6 +172,13 @@ class FlightSetup:
             # This air start uses the fixed-wing runner; lift remains off.
             if self.maneuver != "back_transition":
                 data["channels"].pop("lift")
+        if self.wind_speed_m_s or self.gust_m_s:
+            data["wind"] = {"speed_m_s": float(self.wind_speed_m_s), "from_deg": float(self.wind_from_deg),
+                            "gusts": [{"start_s": GUST_START_S, "duration_s": GUST_DURATION_S,
+                                       "speed_m_s": float(self.gust_m_s), "from_deg": float(self.wind_from_deg)}]
+                            if self.gust_m_s else []}
+        if self.failure != "none":
+            data["failure"] = {"kind": self.failure, "start_s": float(self.failure_time_s)}
         if self.aircraft == "pt15":
             data["cg_body_xyz_m"] = [TRANSITION_CG_X[self.cg_case], 0., TRANSITION_CG_Z]
             if not self.is_forward:

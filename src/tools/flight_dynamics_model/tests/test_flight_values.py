@@ -40,3 +40,28 @@ def test_live_bootstrap_saved_and_stale_readings_have_distinct_status():
     assert flight_values_status(dict(view, stale_truth=True))[1] is True
     assert flight_values_status(dict(view, stale_mavlink=True))[1] is True
     assert flight_values_status(dict(view, active=False)) == ('RECORDED · LAST SAMPLE', False)
+
+
+def test_live_alerts_cover_coverage_pusher_battery_and_failure():
+    import math
+    from spearhead.gui.flight_values import live_alerts
+    base = {"hold": False, "control": {"de": math.radians(-10)}, "control_coverage_exceeded": False}
+    assert live_alerts(base) == [] and live_alerts(None) == [] and live_alerts({**base, "hold": True, "failure_active": True}) == []
+    alerts = live_alerts({**base, "control": {"de": math.radians(-18)}, "failure_active": True,
+                          "pusher": {"above_sustainable_current": True, "sustainable_current_a": 24},
+                          "sensor": {"battery": {"voltage": 41.0, "current": 90}}})
+    assert alerts == ["Failure injected", "Elevator beyond measured ±15° CFD data",
+                      "Pusher above 24 A sustainable current", "Lift pack below 3.5 V/cell"]
+    assert live_alerts({**base, "control_coverage_exceeded": True}) == ["Outside measured aerodynamic data"]
+
+
+def test_new_values_use_air_relative_speed_battery_and_pusher_current():
+    from spearhead.gui.flight_values import numeric_flight_values
+    row = {"state": [0, 0, -20, 3, 0, 0, 0, 0, 0, 0, 0, 0], "true_airspeed_m_s": 8.0,
+           "control": {"de": 0.1, "throttle": .5}, "pusher": {"current_a": 18.04},
+           "sensor": {"battery": {"voltage": 46.53, "current": 83.2}}, "battery_consumed_mah": 1234.4,
+           "wind_ned_m_s": [-3., -4., 0.], "pwm": []}
+    values = numeric_flight_values({"truth": row})
+    assert values["airspeed"] == "8.00" and values["pusher_current"] == "18.0"
+    assert values["battery"] == "46.5 / 83" and values["battery_used"] == "1234" and values["wind"] == "5.0"
+    assert values["elevator"] == "5.7"

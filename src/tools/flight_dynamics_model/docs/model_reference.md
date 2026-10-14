@@ -265,7 +265,7 @@ Open `http://127.0.0.1:8082/` in a browser. The default route opens the
 ArduPilot-backed **Flight Deck**. Live firmware sessions require the pinned
 SITL executable; follow the [build quickstart](ardupilot_sitl_quickstart.md).
 The Python model, web server and firmware run locally; the browser renders the
-instruments. The retained 3D view is disabled. The default server owns one shared session.
+instruments. The default server owns one shared session.
 Docker packaging and hosted independent sessions remain future work.
 
 ### Flight Deck
@@ -280,8 +280,7 @@ For the transition diagnostic select **PT1.5 → Hover · 80 m (transition) →
 Hover → forward flight test → 60 s**. Choose **Transition CG** explicitly:
 PT1.5 target x=−40 mm (default), PT1 logged x=−47.5 mm, aft x=−60 mm, or forward
 x=−25 mm / 0 mm; y=0 and z=+65 mm in body axes (x forward, z down). The source moment center stays at (0,0,0).
-The default **Transition parameters** choice is the frozen 9 October proposal;
-the later PT1.5 simulation overlay is available for comparison. Forward trim
+**Transition parameters** is the frozen 9 October proposal, the only remaining set. Forward trim
 is recomputed for the chosen CG without changing gains. **Technical details**
 shows the actual recorded CG, control coverage and forward trim; the elevator
 plot marks that forward trim. Transition results distinguish firmware handover
@@ -290,7 +289,7 @@ CLI diagnostics under the local `.sitl` directory, with read-only controls.
 See the CG comparison (local report)
 and Flight Deck review (local report).
 
-The attitude horizon shows the shared FDM's physical state. The 3D aircraft view is temporarily disabled: its import, construction and updates are commented out, while its implementation remains available for restoration.
+The attitude horizon shows the shared FDM's physical state. Wind, failure injection, live alerts, the CG summary and the aircraft-log comparison are described in [Flight Deck test tools](flight_deck_test_tools.md).
 The page follows **Plan → Fly → Review**. Starting conditions and frozen parameter choices are collapsible; firmware/database identifiers remain in Technical details. Startup shows observed stages, elapsed wall time and a rough wait estimate. Flight duration uses simulated time; measured simulation speed is displayed separately. UI updates at 10 Hz, with charts refreshed only while the plots tab is visible.
 
 The five-second forward-throttle ramp begins at confirmed FBWA, including delayed confirmations; losing that mode returns throttle to neutral and requires fresh confirmation. Forward acceptance now requires fresh recorded FBWA heartbeats (maximum age 2 simulated seconds) throughout the accepted interval, plus the existing speed, lift-idle, attitude, altitude and duration checks. A passing interval does not imply that the entire maneuver stayed within those limits. The result summary separately shows peak pitch magnitude, altitude loss and the first 10 s hover peak. Plots include alpha (hidden below 1 m/s), pitch rate, pusher command and surface travel with assumed limits.
@@ -367,8 +366,7 @@ Model Lab remains responsive during playback.
 
 The **Analyze** page is secondary to the Flight Deck. It can review the latest
 Model Lab run and provides access to the existing batch simulation, stability,
-and CG sweep views. CG sweep remains an advanced analysis tool and is not part
-of the primary realtime workflow.
+and the PT1.5 CG window (static margin, elevator trim and hover headroom across CG).
 
 ### GUI Limitations
 
@@ -377,12 +375,9 @@ of the primary realtime workflow.
 - Model Lab playback is timer-based inside NiceGUI. The ArduPilot runner advances
   physics in lockstep from sensor timestamps; browser timing only affects display updates.
 - Joystick, gamepad, and manual control input are not implemented yet.
-- Wind and disturbance editing are not implemented yet.
-- The retained, disabled 3D implementation uses a schematic aircraft with
-  follow/side/orbit cameras.
+- Wind is uniform steady wind plus 1-cosine gusts; no turbulence, shear or rotor wake.
 - Ground contact uses provisional flat-ground gear. Forward transition, real
   hardware tune, battery sag, rotor ground effect and propwash remain unvalidated.
-- CG sweep remains an advanced analysis tool rather than a Flight Deck workflow.
 - In restricted sandbox environments, NiceGUI startup can fail while creating a
   process pool because system semaphore queries are blocked. Run the GUI in a
   normal local shell when this occurs.

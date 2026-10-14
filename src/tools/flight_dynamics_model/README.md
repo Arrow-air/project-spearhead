@@ -27,7 +27,7 @@ Open **http://127.0.0.1:8080/**. The first build downloads the pinned ArduPilot 
 
 Select **PT1.5 → Hover · 20 m → Hover hold → 60 s**, then **Start flight**. Calibration, navigation checks, normal arming and motor startup usually take 1–2 minutes before the flight clock starts. Simulation may run slower than real time; the page shows its progress and speed. **Stop flight** ends the run; **Recorded flights** reopens results.
 
-Hover and forward-trim starts offer pitch/roll/yaw/throttle doublets. Transition tests support both hover → forward and forward → hover. **Interactive flight** allows mode changes with neutral pilot sticks. Advanced settings expose diagnostic CG and frozen forward-parameter choices. PT1.5 defaults to the target CG x = −40 mm, z = +65 mm from the October origin (a simulation target, not a measurement); rotor and pusher stations follow the 14 October drawing. The retained 3D view is disabled.
+Hover and forward-trim starts offer pitch/roll/yaw/throttle doublets. Transition tests support both hover → forward and forward → hover. **Interactive flight** allows mode changes with neutral pilot sticks. Advanced settings choose the simulation CG (with its static margin, elevator trim and hover headroom), wind and gusts, and an injected failure. PT1.5 defaults to the target CG x = −40 mm, z = +65 mm from the October origin (a simulation target, not a measurement); rotor and pusher stations follow the 14 October drawing. **Review → Compare with aircraft** overlays a real DataFlash log and lists parameter differences. See [Flight Deck test tools](docs/flight_deck_test_tools.md).
 
 ## Verify and troubleshoot
 

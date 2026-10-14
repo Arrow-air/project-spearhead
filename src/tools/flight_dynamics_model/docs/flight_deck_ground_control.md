@@ -34,7 +34,7 @@ The single native runner owns the firmware connection and physics clock. Browser
 
 PT1 **Hover hold** remains a scripted air-start test with selectable altitude/duration. It uses normal arming and logged VTOL gains, then QSTABILIZE → QHOVER. Mode commands are disabled. QHOVER holds altitude and attitude, not horizontal position, so horizontal drift is expected. Current 21 kg static hover demand is about 67% of the motor PWM range; the firmware thrust setting is separately calculated through motor linearization. Historical recordings retain their original mass and hover demand.
 
-The FDM horizon and external 3D view continue to display physical truth. Estimator status and firmware messages remain separate diagnostics.
+The FDM horizon continues to display physical truth. Estimator status and firmware messages remain separate diagnostics.
 
 ## Sources
 

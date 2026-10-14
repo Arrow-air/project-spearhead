@@ -63,8 +63,8 @@ def test_forward_and_hover_maneuvers_are_separate_and_old_hover_recording_surviv
 @pytest.mark.parametrize("setup,aircraft,speed,altitude,scenario", [
     (FlightSetup(), "pt15", 0, 20, "quad_interactive"),
     (FlightSetup(initial_point="custom_hover", altitude_m=32, duration_s=30, maneuver="hold"), "pt15", 0, 32, "quad_hover"),
-    (FlightSetup("reference_design", "trim26", "steps", 118, 120, 26), "reference_design", 26, 120, "steps"),
-    (FlightSetup("reference_design", "custom_trim", "elevator", 45, 100, 27), "reference_design", 27, 100, "elevator"),
+    (FlightSetup("pt15", "trim26", "hold", 60, 120, 26), "pt15", 26, 120, "fbwa"),
+    (FlightSetup("pt15", "custom_trim", "roll_doublet", 45, 100, 25), "pt15", 25, 100, "roll_doublet"),
 ])
 def test_selection_becomes_authoritative_runner_configuration(setup, aircraft, speed, altitude, scenario):
     config = setup.config()
@@ -86,10 +86,12 @@ def test_invalid_or_unmodelled_choices_are_rejected(changes):
 
 
 def test_named_trim_and_maneuver_duration_are_not_silently_overridden():
-    with pytest.raises(ValueError, match="118"):
-        FlightSetup("reference_design", "trim28", "steps", 60, 100, 28).validate()
+    with pytest.raises(ValueError, match="45"):
+        FlightSetup("pt15", "trim24", "pitch_doublet", 30, 100, 24).validate()
     with pytest.raises(ValueError, match="Custom forward"):
-        FlightSetup("reference_design", "trim28", "hold", 60, 100, 26).validate()
+        FlightSetup("pt15", "trim24", "hold", 60, 100, 22).validate()
+    with pytest.raises(ValueError, match="aircraft"):
+        FlightSetup("reference_design", "trim28", "hold", 60, 100, 28).validate()
 
 
 def test_custom_hover_reaches_physics_and_manifest(tmp_path):
@@ -172,7 +174,7 @@ def test_transition_cg_reaches_physics_without_changing_source_origin(tmp_path, 
     assert manifest["aircraft"]["moment_center_body_xyz_m"] == [0, 0, 0]
 
 
-@pytest.mark.parametrize("parameters", ["first_transition_2026_10_09", "pt15"])
+@pytest.mark.parametrize("parameters", ["first_transition_2026_10_09"])
 def test_manager_launches_exact_transition_parameter_choice(tmp_path, monkeypatch, parameters):
     from types import SimpleNamespace
     calls = []
@@ -220,10 +222,10 @@ def test_older_transition_recording_retains_its_parameter_identity(tmp_path):
     saved.pop("transition_parameters")
     saved.pop("cg_case")
     (tmp_path / "flight.session.json").write_text(json.dumps({"flight_setup": saved}))
-    (directory / "manifest.json").write_text(json.dumps({"transition_plan": {"parameter_set": "pt15"}}))
+    (directory / "manifest.json").write_text(json.dumps({"transition_plan": {}}))
     observer = RunObserver(directory)
     observer.poll()
-    assert observer.snapshot()["flight_setup"]["transition_parameters"] == "pt15"
+    assert observer.snapshot()["flight_setup"]["transition_parameters"] == "first_transition_2026_10_09"
 
 
 @pytest.mark.parametrize("point,maneuver,altitude,speed", [
@@ -249,3 +251,40 @@ def test_forward_default_cg_is_used_for_every_prototype_start(tmp_path, point, m
     if not setup.is_forward:
         assert setup.config()["hover_trim"] == "independent_rotors"
         assert control.lift_motor_throttles is not None
+
+
+def test_wind_gust_and_failure_reach_the_runner_configuration(tmp_path):
+    setup = FlightSetup(initial_point="hover20", maneuver="hold", wind_speed_m_s=6, wind_from_deg=270,
+                        gust_m_s=3, failure="lift_fr_out", failure_time_s=30)
+    config = setup.config()
+    assert config["wind"] == {"speed_m_s": 6., "from_deg": 270., "gusts": [
+        {"start_s": 20., "duration_s": 3., "speed_m_s": 3., "from_deg": 270.}]}
+    assert config["failure"] == {"kind": "lift_fr_out", "start_s": 30.}
+    path = tmp_path / "conditions.yaml"; path.write_text(yaml.safe_dump(config))
+    physics, _, manifest = load_setup(path)
+    assert physics.wind.speed_m_s == 6 and physics.failure.kind == "lift_fr_out"
+    calm = FlightSetup().config()
+    assert "wind" not in calm and "failure" not in calm
+
+
+@pytest.mark.parametrize("changes,message", [
+    ({"wind_speed_m_s": 20}, "Wind"),
+    ({"failure": "battery_low"}, "approval"),
+    ({"failure": "pusher_out", "maneuver": "hold"}, "Pusher"),
+    ({"failure": "lift_fr_out", "initial_point": "trim24", "speed_m_s": 24, "altitude_m": 100, "maneuver": "hold"}, "Lift-motor"),
+    ({"failure": "lift_fr_out", "failure_time_s": 70}, "inside the flight"),
+])
+def test_invalid_conditions_rejected(changes, message):
+    with pytest.raises(ValueError, match=message):
+        FlightSetup(**changes).validate()
+
+
+def test_recordings_with_old_geometry_are_labelled(tmp_path):
+    from spearhead.gui.sitl_session import recording_label
+    new = tmp_path / "new"; new.mkdir()
+    (new / "manifest.json").write_text(json.dumps({"aircraft": {"id": "pt15", "lift_positions_body_m": [[.675, .55, -.043]]}}))
+    old = tmp_path / "old"; old.mkdir()
+    (old / "manifest.json").write_text(json.dumps({"aircraft": {"id": "pt1_as_built"}}))
+    assert recording_label("new", new) == "new"
+    assert recording_label("old", old) == "old · legacy geometry (before 14 Oct)"
+    assert recording_label("missing", tmp_path / "none") == "missing"

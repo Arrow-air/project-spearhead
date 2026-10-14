@@ -43,7 +43,7 @@ def load_setup(path=None):
     config = yaml.safe_load(path.read_text())
     required = {"firmware", "aircraft", "aerodynamics", "cg_body_xyz_m", "speed_m_s",
                 "altitude_m", "max_step_s", "physics_rate_hz", "channels"}
-    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact", "hover_trim"}:
+    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact", "hover_trim", "wind", "failure"}:
         raise ValueError("Invalid SITL configuration fields")
     if config["firmware"] != FIRMWARE_TAG or config["aerodynamics"] != DATASET:
         raise ValueError("This integration requires Plane-4.7.1 and the new AeroDB")
@@ -99,8 +99,15 @@ def load_setup(path=None):
     if regime != "ground" and "ground_contact" in config:
         raise ValueError("Ground-contact settings require a ground initial point")
     from .battery import BatteryModel
+    from ..wind import WindField
+    wind = WindField.from_config(config.get("wind"))
     physics = Physics(params, state, hold=regime != "ground", max_step=config["max_step_s"], ground=ground,
-                      battery=BatteryModel.from_params(params) if params.lift_system is not None else None)
+                      battery=BatteryModel.from_params(params) if params.lift_system is not None else None,
+                      wind=wind)
+    from .failures import Failure
+    physics.failure = Failure.from_config(config.get("failure"))
+    if physics.failure is not None and physics.failure.kind.startswith("lift_") and not mapping.lift:
+        raise ValueError("Lift-motor failure requires mapped lift motors")
     physics.rate_hz = rate
     manifest = {"config": config, "config_sha256": sha256(path), "aircraft": aircraft_summary(params),
                 "database_sha256": sha256(params.aero_database_path),
@@ -111,14 +118,17 @@ def load_setup(path=None):
                                                          for name in ("elevator", "aileron", "rudder")},
                                   "travel_calibrated": False,
                                   "extrapolation": "continue measured endpoint slopes; alpha/beta held"},
-                "limitations": ["diagnostic CG; not a physical flight recommendation",
+                "failure": None if physics.failure is None else {**physics.failure.as_config(), "time_reference": "seconds after release (ground: after lift spin-up)"},
+                "wind": None if wind is None or wind.calm else {**wind.as_config(), "time_reference": "seconds after release (ground: after lift spin-up)",
+                                                                 "model": "uniform steady wind plus 1-cosine gusts; no turbulence or shear"},
+                "limitations": ["simulation CG (target, not measured); not a physical flight recommendation",
                                 "assumed unmeasured servo travel; provisional rates/inertia/pusher",
                                 "bootstrap hold is a protocol test, not controlled flight",
                                 "AP atmosphere is standard; FDM rho is fixed at 1.021"]}
     source_root = Path(__file__).resolve().parents[1]
     if ground is not None:
         manifest["ground_contact"] = {"provisional": True, "datum_ned_z_m": 0, **asdict(ground)}
-        manifest["limitations"] = [item for item in manifest["limitations"] if "bootstrap" not in item and "diagnostic CG" not in item]
+        manifest["limitations"] = [item for item in manifest["limitations"] if "bootstrap" not in item and "simulation CG" not in item]
         manifest["limitations"].append("PT1 CG, inertia and motor coordinates are provisional; simulation does not validate hardware")
         manifest["limitations"].append("Assumed gear footprint/compliance/friction; flat ground only; no rotor ground effect")
     manifest["fdm_source_sha256"] = {str(p.relative_to(source_root)): sha256(p)
@@ -172,14 +182,23 @@ class Session:
             self.physics.hold = False
         # JSON 4.7.1 advertises its adaptive rate (which tends toward the
         # controller rate). Sensor timestamps own the external physics clock.
+        failure = getattr(self.physics, "failure", None)
+        commanded = control
+        if failure is not None:
+            control = failure.apply(control, self.physics)
         sensor = self.physics.advance(1 / getattr(self.physics, "rate_hz", 200), control)
         reply = encode_sensor(sensor)
         self.peer, self.last_frame = peer, frame
         self.last_packet, self.last_reply = packet, reply
         self.accepted += 1
-        speed = np.linalg.norm(self.physics.state[3:6])
-        alpha = float(np.rad2deg(np.arctan2(self.physics.state[5], self.physics.state[3])))
-        beta = float(np.rad2deg(np.arcsin(np.clip(self.physics.state[4]/max(speed, 1e-12), -1, 1))))
+        wind_ned = self.physics.wind_ned(self.physics.time)
+        v_air = self.physics.state[3:6].copy()
+        if wind_ned is not None:
+            from ..rotations import euler_body_to_ned
+            v_air -= euler_body_to_ned(*self.physics.state[6:9]).T @ wind_ned
+        speed = np.linalg.norm(v_air)
+        alpha = float(np.rad2deg(np.arctan2(v_air[2], v_air[0])))
+        beta = float(np.rad2deg(np.arcsin(np.clip(v_air[1]/max(speed, 1e-12), -1, 1))))
         from ..deflections import load_deflection_database_cached
         coverage = None
         params = self.physics.params
@@ -195,7 +214,19 @@ class Session:
                             "state": self.physics.state.tolist(), "sensor": sensor,
                             "control_coverage": coverage,
                             "control_coverage_exceeded": coverage is not None and not coverage["within_measured_coverage"],
-                            "alpha_deg": alpha, "beta_deg": beta}
+                            "alpha_deg": alpha, "beta_deg": beta, "true_airspeed_m_s": float(speed),
+                            "wind_ned_m_s": None if wind_ned is None else wind_ned.tolist(),
+                            "failure_active": failure is not None and failure.active(self.physics),
+                            "battery_consumed_mah": None if self.physics.battery is None else self.physics.battery.consumed_ah*1000}
+        if control is not commanded:
+            self.last_record["commanded_control"] = asdict(commanded)
+        if params.pusher_installed and params.pusher_system is not None:
+            from ..propulsion import pusher_performance
+            pusher = pusher_performance(control, params, float(v_air[0]))
+            self.last_record["pusher"] = {
+                "thrust_n": pusher["thrust_n"], "current_a": pusher["current_a"],
+                "sustainable_current_a": params.pusher_system.sustainable_current_a,
+                "above_sustainable_current": bool(pusher.get("above_sustainable_current", False))}
         if self.physics.ground is not None:
             self.last_record["ground"] = self.physics.ground.loads(self.physics.state)[2]
         return reply
