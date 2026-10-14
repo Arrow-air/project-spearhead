@@ -21,7 +21,7 @@ CASES = [r for r in ROWS if float(r["beta"]) == 0]
 
 @pytest.mark.parametrize("row", CASES, ids=[r["case_id"] for r in CASES])
 def test_every_new_measured_case_reproduces_all_six_load_increments(row):
-    params = replace(load_aircraft_config("pt1_as_built"), cg_body_xyz=np.zeros(3),
+    params = replace(load_aircraft_config("pt15"), cg_body_xyz=np.zeros(3),
                      control_deflection_policy="linear", control_surface_limits_deg=(30,30,30))
     r = {k: float(v) for k,v in row.items() if k != "case_id"}
     base = next(b for b in ROWS if all(float(b[k]) == r[k] for k in ("alpha", "beta", "velocity"))
@@ -37,7 +37,7 @@ def test_every_new_measured_case_reproduces_all_six_load_increments(row):
 
 
 def test_speed_planes_interpolate_coefficients_only_inside_shared_coverage():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt15")
     db = load_deflection_database(p.deflection_database_path,p.aerodb_reference)
     command = Control(np.deg2rad(5),0,0,0)
     low,_ = db.increments_at(10,0,command,velocity_m_s=10)
@@ -59,7 +59,7 @@ def test_speed_planes_interpolate_coefficients_only_inside_shared_coverage():
 
 @pytest.mark.parametrize("alpha,angle", [(0.,5.),(0.,12.),(10.,5.)])
 def test_low_speed_sparse_lookup_has_no_force_jump_at_coverage_boundary(alpha,angle):
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt15")
     db = load_deflection_database(p.deflection_database_path,p.aerodb_reference)
     def query(a,d):
         values,_ = db.increments_at(a,0,Control(np.deg2rad(d),0,0,0),velocity_m_s=20,
@@ -70,7 +70,7 @@ def test_low_speed_sparse_lookup_has_no_force_jump_at_coverage_boundary(alpha,an
 
 
 def test_sparse_hull_extrapolation_and_assumed_travel_are_visible():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt15")
     db = load_deflection_database(p.deflection_database_path,p.aerodb_reference)
     outside,coverage = db.increments_at(-5,0,Control(np.deg2rad(15),0,0,0),
                                        deflection_policy="linear",limits_deg=(20,20,20),velocity_m_s=25)
@@ -85,7 +85,7 @@ def test_sparse_hull_extrapolation_and_assumed_travel_are_visible():
 
 
 def test_sideslip_baselines_are_preserved_without_replacing_base_database():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt15")
     db = load_deflection_database(p.deflection_database_path,p.aerodb_reference)
     assert db.case_count == 103 and db.audit_cases == [f"Case{n:03d}" for n in range(50,56)]
     value,cov = db.increments_at(20,5,Control(0,0,0,0),velocity_m_s=25)
@@ -95,7 +95,7 @@ def test_sideslip_baselines_are_preserved_without_replacing_base_database():
 
 
 def test_interaction_residual_vanishes_when_either_control_is_neutral():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt15")
     db = load_deflection_database(p.deflection_database_path,p.aerodb_reference)
     for control in (Control(0,0,np.deg2rad(15),0),Control(np.deg2rad(-10),0,0,0)):
         _,coverage = db.increments_at(0,0,control,velocity_m_s=25)

@@ -10,7 +10,7 @@ from .flight_deck import attitude_html
 # from .external_view import ExternalView
 from .plotting import _flight_deck_base_figure
 from .flight_setup import (AIRCRAFT, POINTS, MANEUVERS, MIN_DURATION, FlightSetup,
-                           TRANSITION_CGS, TRANSITION_CG_X, TRANSITION_PARAMETERS,
+                           TRANSITION_CGS, TRANSITION_CG_X, TRANSITION_CG_Z, TRANSITION_PARAMETERS,
                            forward_start, maneuver_options)
 from ..aircraft import aircraft_summary, load_aircraft_config
 from ..sitl.ground_control import QUADPLANE_MODES, PLANE_MODES, MODE_HELP, MODE_NAMES, session_modes
@@ -153,7 +153,7 @@ def flight_plan_text(setup):
         plan = DOUBLETS[setup.maneuver]
         amplitude = "up to ±10 throttle points" if plan["unit"] == "fraction" else f"±{plan['amplitude']:g}° {plan['channel']}"
         return f"Start at {setup.speed_m_s:g} m/s trim → {amplitude}, {plan['pulse_s']:g} s per pulse → observe FBWA recovery. {setup.duration_s:g} s of flight."
-    if setup.aircraft == "pt1_as_built" and not setup.is_forward:
+    if setup.aircraft == "pt15" and not setup.is_forward:
         return f"Start hovering at {setup.altitude_m:g} m. " + (
             f"Change flight modes during a {setup.duration_s:g} s session." if setup.maneuver == "interactive" else
             f"Hold hover automatically for {setup.duration_s:g} s.")
@@ -637,7 +637,7 @@ def register_sitl_page(ui, manager, render_shell):
                 return
             syncing_setup[0] = True
             try:
-                hover = aircraft.value == "pt1_as_built"
+                hover = aircraft.value == "pt15"
                 initial_point.set_options(POINTS[aircraft.value], value="hover20" if hover else "trim28")
                 maneuver.set_options(maneuver_options(aircraft.value, initial_point.value), value="interactive")
                 altitude.value, speed.value = (20, 0) if hover else (100, 28)
@@ -762,7 +762,7 @@ def register_sitl_page(ui, manager, render_shell):
                     plan_panel.value = False
                 finally:
                     syncing_setup[0] = False
-            prototype_setup = aircraft.value == "pt1_as_built"
+            prototype_setup = aircraft.value == "pt15"
             hover_setup = not forward_start(initial_point.value)
             prototype_forward = prototype_setup and not hover_setup
             ground_setup = initial_point.value == "ground"
@@ -778,7 +778,7 @@ def register_sitl_page(ui, manager, render_shell):
             stop.set_visibility(active)
             for field in (aircraft, initial_point, maneuver, duration, altitude, cg_case, transition_parameters):
                 field.set_enabled(not locked)
-            forward_choices = aircraft.value == "pt1_as_built"
+            forward_choices = aircraft.value == "pt15"
             transition_choices.set_visibility(forward_choices)
             cg_case.label = "Diagnostic CG"
             transition_parameters.label = "Forward parameters"
@@ -835,7 +835,7 @@ def register_sitl_page(ui, manager, render_shell):
             aircraft_readout.text += " · " + displayed_aircraft.get("aero_database_version", "version unknown")
             cg = displayed_aircraft["cg_body_xyz_m"] if "cg_body_xyz_m" in displayed_aircraft else None
             if not manifest and forward_choices:
-                cg = [TRANSITION_CG_X[cg_case.value], 0, .15]
+                cg = [TRANSITION_CG_X[cg_case.value], 0, TRANSITION_CG_Z]
             origin = displayed_aircraft.get("moment_center_body_xyz_m")
             cg_readout.text = f"Diagnostic CG body xyz (m): {cg} · Source moment center (m): {origin} · x forward / z down"
             cg_summary.set_visibility(cg is not None and (bool(manifest) or forward_choices))
@@ -871,12 +871,12 @@ def register_sitl_page(ui, manager, render_shell):
                 mode_help.text += " PT1.5 electric pusher is estimated; forward-flight results depend on the diagnostic CG."
             mass = manifest.get("aircraft", {}).get("mass_kg", 21)
             mode_scope.text = (f"PT1.5 Quad-X · {mass:g} kg · four KDE lift motors · neutral pilot sticks" if 18 in mode_options else
-                               f"PT1.5 fixed-wing · {mass:g} kg · lift motors off · neutral pilot sticks" if displayed_aircraft.get("id") == "pt1_as_built" else
+                               f"PT1.5 fixed-wing · {mass:g} kg · lift motors off · neutral pilot sticks" if displayed_aircraft.get("id") == "pt15" else
                                "Fixed-wing reference aircraft · neutral pilot sticks")
             mode_limits.text = ("PT1.5 pusher: simulation estimate; physical motor and thrust-line placement are not finalized. CG and inertia remain unconfirmed. Servo travel is proposed at ±30°, with uncalibrated linkage. Earlier forward-CG passes used ±20° travel. "
                                 "No ground contact or mission upload. AUTOLAND is unavailable for QuadPlane." if 18 in mode_options else
                                 "Air-start simulation: no runway/contact model, mission upload or guided-target entry.")
-            if 18 not in mode_options and displayed_aircraft.get("id") == "pt1_as_built":
+            if 18 not in mode_options and displayed_aircraft.get("id") == "pt15":
                 mode_limits.text = "PT1.5 forward trim air start · lift off · fixed-wing modes only. Pusher hardware, CG and inertia remain provisional; no runway/contact model."
             if manifest.get("ground_contact"):
                 mode_limits.text = "AUTO flies the built-in takeoff, hover and landing mission. Flat-ground gear is provisional; forward transition remains unvalidated."

@@ -1,17 +1,22 @@
 id: pt1_as_built
-label: PT1.5 KDE + MAD pusher
-description: 21 kg prototype with KDE lift hardware and October AeroDB. CG envelope awaits assembly; inertia is unavailable; existing lift coordinates await the latest drawing. MAD V8013 150KV / AMPX 80A / APC 20x12 is a simulation pusher estimate; physical motor and thrust-line placement are not finalized. Aero-team servo travel proposal is ±30° per surface; PWM/linkage calibration and tail dimensions remain unconfirmed.
+label: PT1 as flown (wings on, no pusher)
+description: PT1 as flown on 19 September 2026 (second hover test, wings attached, no pusher, surface servos not installed). Mass is the log-derived 17.9 kg. CG x is derived from the hover front/rear thrust share (49.3 % front) with the 14 October 2026 drawing rotor positions. CG z, inertia and rate damping are build-up and vortex-lattice estimates. Use this profile to compare with the PT1 hover logs; PT1.5 flight simulation uses pt15.
 aircraft:
-  mass: 21.0
-  # Simulation candidate: x forward of the October CFD origin; z remains unmeasured.
-  cg_body_xyz: [0.01, 0.0, 0.15]
-  inertia: [[2.5, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 5.0]]
+  mass: 17.9
+  # Body axes from the CFD origin (wing root quarter-chord): x forward, z down.
+  # x from the logged hover thrust share and drawing rotor stations; z is an estimate.
+  cg_body_xyz: [-0.0475, 0.0, 0.065]
+  # Component build-up estimate about this CG (14 October 2026), +/-20 %.
+  inertia: [[4.30, 0.0, -0.29], [0.0, 3.73, 0.0], [-0.29, 0.0, 7.66]]
   rho: 1.021
 geometry:
   tail_chord: null
   tail_area: null
 aerodynamics:
   dataset: tail_update_2026_10_07
+  # Wing + inverse-V-tail vortex-lattice estimates (no fuselage/booms), per radian
+  # with p*b/2V, q*c/2V, r*b/2V. Cmq is for this CG; it scales with tail arm.
+  rate_derivatives: {Cmq: -9.6, Clp: -0.58, Clr: 0.10, Cnp: -0.04, Cnr: -0.04}
 battery:
   cells: 12
   voltage_v: 44.4
@@ -19,45 +24,8 @@ battery:
   mass_kg: 3.709
 propulsion:
   pusher:
-    # Enabled in this simulation; the physical pusher is not yet installed.
-    installed: true
-    # User-confirmed 150 KV on 2026-10-11. Analytical estimate, not bench validation.
-    # Loader derives Tmax at nominal battery voltage and the selected FDM density.
-    estimate:
-      motor:
-        model: MAD V8013 PRO IPE 150KV
-        kv_rpm_per_v: 150
-        no_load_current_a: 2.35
-        no_load_test_voltage_v: 30
-        phase_resistance_ohm: 0.037
-        source: https://www.mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor
-        electrical_data: ../data/propulsion/mad_v8013_150_bench.json
-        data_edition: MAD V8013 IPE 150KV manufacturer test sheet; confirm installed PRO edition
-      esc:
-        model: MAD AMPX 80A (5-14S)
-        continuous_current_a: 80
-        voltage_cells_min: 5
-        voltage_cells_max: 14
-        source: https://www.mad-motor.com/products/mad-ampx-80a-5-14s-esc
-      propeller:
-        model: APC 20x12 Sport LP20012
-        diameter_in: 20.0
-        pitch_in: 12.0
-        blades: 2
-        # Conservative Sport limit 190000 / diameter; actual 12S motor RPM is lower.
-        max_rpm: 9500
-        source: https://www.apcprop.com/product/20x12/
-      performance_path: ../data/propulsion/sources/PER3_20x12.dat
-      equivalent_resistance_ohm: 0.1056886284068577
-      esc_efficiency: 0.97
-      voltage_min_v: 36.0
-      voltage_max_v: 50.4
-      max_current_a: 77.8
-      max_input_power_w: 3569.0
-      sustainable_current_a: 24.0
-      # CG-aligned thrust is a simulation assumption, not a selected installation.
-      position_body_m: null
-      reaction_torque_sign: 0
+    # PT1 flew without a pusher.
+    installed: false
   lift:
     motor:
       model: KDE5215XF-220
@@ -91,7 +59,8 @@ propulsion:
       blades: 2
       mass_kg_per_blade: 0.0258
       source: https://www.kdedirect.com/products/kde-cf215-dp
-    # Same nominal rectangle as reference; not measured PT1.5 motor coordinates.
-    positions_body_m: [[0.55, 0.55, 0.15], [-0.85, 0.55, 0.15], [-0.85, -0.55, 0.15], [0.55, -0.55, 0.15]]
+    # 14 October 2026 drawing (X aft, Z up from the CFD origin) converted to body axes.
+    # Order FR, RR, RL, FL = ArduPilot motors 1, 4, 2, 3.
+    positions_body_m: [[0.675, 0.55, -0.043], [-0.750, 0.55, -0.043], [-0.750, -0.55, -0.043], [0.675, -0.55, -0.043]]
     reaction_torque_signs: [1, -1, 1, -1]
     performance_path: ../data/propulsion/kde5215xf_220_cf215_dp.csv

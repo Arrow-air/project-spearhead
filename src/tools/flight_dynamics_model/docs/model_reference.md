@@ -10,7 +10,7 @@ These notes retain the detailed model/API documentation and dated validation his
 
 Python 6-DOF flight dynamics, stability analysis and ArduPilot simulation for Project Spearhead.
 
-The prototype is displayed as **PT1.5**; its compatible configuration ID remains `pt1_as_built`.
+The prototype is displayed as **PT1.5** (`pt15`). `pt1_as_built` is PT1 as flown in the 19 September logs (17.9 kg, wings on, no pusher).
 The **Hover → forward flight test** starts at 80 m and uses the prototype’s calculated 24 m/s servo trim.
 The 11 October `deflection-3.csv` delivery is now the active October control revision.
 Its integration and flight mechanics review (local report)
@@ -20,7 +20,7 @@ compares explicit CG variants with the same model and older controller proposal.
 The CG/reference audit (local report)
 verifies runtime moment transfer against native Nondimit exports and distinguishes
 the October source origin from the inherited provisional aircraft CG.
-Historical forward-CG cases passed with the former reference handling. The corrected model defaults to x=+10 mm forward; z=+150 mm remains unmeasured. Physical CG and the flight envelope remain unconfirmed.
+Historical forward-CG cases passed with the former reference handling and the former nominal rotor rectangle. Since 14 October the PT1.5 default CG is the target x=−40 mm, z=+65 mm (estimate); rotor and pusher stations follow the 14 October drawing. Physical CG and the flight envelope remain unconfirmed.
 See the PT1.5 transition report (local report) for both trials, parameter changes and plots.
 The pitch diagnosis (local report)
 replays the recorded handover, separates pitch-moment contributions and quantifies
@@ -49,7 +49,7 @@ See the input and trim assessment (local report).
 New PT1.5 hover, ground and transition flights use the aero team's proposed **±30° surface travel** over 1000–2000 µs (11 October update). The reference fixed-wing presets retain **±20°**, matching their earlier checks.
 with linear continuation of measured control slopes outside the local measured coverage, bounded
 at the assumed travel. Alpha/beta endpoint assumptions remain. Travel values
-are configurable and marked uncalibrated in the UI and run manifest. The proposal does not establish measured linkage or aerodynamic coverage, and older ±20° transition passes do not validate ±30°. CG awaits assembly; inertia is unavailable; the latest motor-coordinate drawing is pending. The physical pusher is not yet installed and its thrust-line placement is undecided; CG-aligned thrust remains a simulation assumption. See the
+are configurable and marked uncalibrated in the UI and run manifest. The proposal does not establish measured linkage or aerodynamic coverage, and older ±20° transition passes do not validate ±30°. CG awaits weighing of the built PT1.5; inertia is a build-up estimate. The pusher thrust acts at the drawing station x=−374 mm with the lowest candidate height; the installed motor and propeller are undecided. See the
 travel assessment (local report).
 Pitch/roll step and disturbance acceptance with this wider travel is tracked
 in the control revalidation report (local report),
@@ -117,14 +117,17 @@ If the recommended ADB file is missing, the model falls back to the older placeh
 
 ## Aircraft Profiles
 
-One FDM supports two bundled configurations in `aircraft_configs/`:
+Bundled configurations in `aircraft_configs/`:
 
 - `reference_design.yaml`: 25 kg planned MAD V8013 PRO IPE 150KV / AMPX 80A V2 /
   FLUXER PRO 26×7.8 lift hardware, with the original preliminary pusher model.
-- `pt1_as_built.yaml`: 21 kg PT1.5 with four KDE5215XF-220 / KDE-UAS75HVC+ /
+- `pt15.yaml`: 21 kg PT1.5 with four KDE5215XF-220 / KDE-UAS75HVC+ /
   21.5×7.3 lift units and a MAD V8013 PRO IPE 150KV / AMPX 80A / APC 20×12
   pusher estimate, using 12S at 44.4 V nominal. See the
   pusher estimate (local report) for sources and limits.
+- `pt1_as_built.yaml`: PT1 as flown (17.9 kg, wings on, no pusher) for log comparison.
+
+See [aircraft profiles](aircraft_profiles.md) for geometry, CG and inertia sources.
 
 The Flight Deck offers independent **Aircraft**, **Initial point**, **Maneuver**
 and duration choices. PT1.5 supports air-start hover or ground takeoff/hover/landing;
@@ -149,7 +152,7 @@ PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
   src/tools/flight_dynamics_model/scenarios/pt1_hover.yaml --aircraft pt1_as_built
 ```
 
-PT1.5 mass is configured as 21 kg; CG, inertia and rotor coordinates remain preliminary. The profile
+PT1.5 mass is configured as 21 kg; CG is the simulation target and inertia an estimate. Rotor coordinates follow the 14 October drawing. The profile
 does not claim to model the wingless first-hover airframe. The original MAD lift
 hardware is preserved, but its lift performance curve is not yet available.
 Reference retains ADB v1.1 and its original 0.28 m tail chord. PT1.5 defaults to
@@ -175,7 +178,7 @@ PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
   --aircraft reference_design --aerodynamics tail_update_2026_10_07
 ```
 
-API: `load_aircraft_config("pt1_as_built", aerodynamics="adb_v1_1")` restores
+API: `load_aircraft_config("pt15", aerodynamics="adb_v1_1")` restores
 old aerodynamics with KDE hardware. Scenario YAML accepts `aerodynamics`; both
 simulation and stability CLIs accept `--aerodynamics`. Explicit selections win.
 
@@ -275,8 +278,8 @@ terminates the local simulation processes. **Recorded flights** opens completed 
 
 For the transition diagnostic select **PT1.5 → Hover · 80 m (transition) →
 Hover → forward flight test → 60 s**. Choose **Transition CG** explicitly:
-default forward x=+10 mm, comparison x=+25/+50 mm, or the historical aft x=−150 mm; y=0 and z=+150 mm
-in body axes (x forward, z down). The source moment center stays at (0,0,0).
+PT1.5 target x=−40 mm (default), PT1 logged x=−47.5 mm, aft x=−60 mm, or forward
+x=−25 mm / 0 mm; y=0 and z=+65 mm in body axes (x forward, z down). The source moment center stays at (0,0,0).
 The default **Transition parameters** choice is the frozen 9 October proposal;
 the later PT1.5 simulation overlay is available for comparison. Forward trim
 is recomputed for the chosen CG without changing gains. **Technical details**
@@ -299,7 +302,7 @@ cp src/tools/flight_dynamics_model/sitl_configs/quad_transition.yaml \
   src/tools/flight_dynamics_model/.sitl/forward-cg.yaml
 ```
 
-Set `cg_body_xyz_m: [0.01, 0.0, 0.15]` in that local copy. This selects a diagnostic CG, not a measured aircraft CG. Then run:
+Set `cg_body_xyz_m: [-0.025, 0.0, 0.065]` in that local copy. This selects a diagnostic CG, not a measured aircraft CG. Then run:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/tools/flight_dynamics_model \

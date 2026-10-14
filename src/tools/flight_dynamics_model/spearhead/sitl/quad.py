@@ -122,7 +122,7 @@ def run(args):
     physics, mapping, manifest = load_setup(getattr(args, "config", None) or CONFIG_ROOT / default)
     if manifest["config"].get("flight_regime") != "hover":
         raise ValueError("Quad runner requires a hover initial point")
-    if transition and (physics.params.aircraft_id != "pt1_as_built" or -physics.state[2] < 40):
+    if transition and (physics.params.aircraft_id != "pt15" or -physics.state[2] < 40):
         raise ValueError("Transition diagnostic requires PT1.5 and at least 40 m initial altitude")
     output = Path(args.output).resolve(); output.mkdir(parents=True, exist_ok=False)
     firmware = verify_firmware(args.binary)

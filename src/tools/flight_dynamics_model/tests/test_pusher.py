@@ -17,7 +17,7 @@ from spearhead.pusher import estimate_pusher, load_propeller_map
 
 @pytest.fixture
 def pt1():
-    return load_aircraft_config("pt1_as_built")
+    return load_aircraft_config("pt15")
 
 
 def test_motor_fit_matches_manufacturer_operating_points(pt1):

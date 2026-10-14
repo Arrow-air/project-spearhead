@@ -15,7 +15,7 @@ def test_hover_selection_keeps_lift_mapping_and_uses_quad_runner(name):
     assert setup.scenario == "quad_"+name
     assert setup.config()["flight_regime"] == "hover"
     assert len(setup.config()["channels"]["lift"]) == 4
-    assert "elevator" not in maneuver_options("pt1_as_built", "hover20")["pitch_doublet"]
+    assert "elevator" not in maneuver_options("pt15", "hover20")["pitch_doublet"]
     with pytest.raises(ValueError, match="45"):
         FlightSetup(maneuver=name, duration_s=44).validate()
 

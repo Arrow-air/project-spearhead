@@ -29,7 +29,7 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("artifacts/pt1_pusher_2026_10_11"))
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    pt1 = load_aircraft_config("pt1_as_built")
+    pt1 = load_aircraft_config("pt15")
     system = pt1.pusher_system
     speeds = [0, 10, 20, 22, 24, 26, 28]
     grid = []

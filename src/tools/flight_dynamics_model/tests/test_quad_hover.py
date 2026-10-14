@@ -31,7 +31,7 @@ def test_prototype_proposed_travel_reaches_physical_limits_without_changing_moto
 def test_hover_setup_balances_actual_four_motor_wrench_with_pusher_off():
     physics, mapping, manifest = load_setup(CONFIG_ROOT / "quad_hover.yaml")
     control = Control(**manifest["trim_control"])
-    assert physics.params.aircraft_id == "pt1_as_built" and physics.params.pusher_installed
+    assert physics.params.aircraft_id == "pt15" and physics.params.pusher_installed
     assert control.throttle == 0
     assert [channel.number for channel in mapping.lift] == [5, 8, 6, 7]
     assert physics.params.mass == 21.0
@@ -61,7 +61,7 @@ def test_explicit_per_rotor_hover_trim_balances_shifted_cg(tmp_path, cg_x):
     assert np.ptp(control.lift_motor_throttles) > 0
     assert control.throttle == 0
     np.testing.assert_allclose(dynamics(0, physics.state, physics.params, control), 0, atol=1e-8)
-    np.testing.assert_allclose(physics.params.cg_body_xyz, [cg_x, 0, .15])
+    np.testing.assert_allclose(physics.params.cg_body_xyz, [cg_x, 0, .065])
 
 
 def test_per_rotor_hover_trim_rejects_unreachable_cg(tmp_path):

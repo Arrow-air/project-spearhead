@@ -12,7 +12,7 @@ def test_forward_trim_preserves_hover_rc_mapping_and_actual_prototype_cg():
     physics, mapping, manifest = load_setup(CONFIG_ROOT/'quad_transition.yaml')
     cg = physics.params.cg_body_xyz.copy()
     parameters, _, control = forward_trim_parameters(physics.params, mapping, 80)
-    assert list(physics.params.cg_body_xyz) == list(cg) == [.01, 0, .15]
+    assert list(physics.params.cg_body_xyz) == list(cg) == [-.04, 0, .065]
     assert 'RC3_TRIM' not in parameters and 'Q_M_THST_HOVER' not in parameters
     # Reference correction changes the solved elevator sign, not its mapping.
     pwm = [1500] * 16
@@ -40,10 +40,10 @@ def test_delayed_confirmation_gets_the_full_five_second_ramp():
 
 
 def test_transition_requires_prototype_air_start_and_altitude_margin():
-    assert AIRCRAFT['pt1_as_built'] == 'PT1.5 · 21 kg'
+    assert AIRCRAFT['pt15'] == 'PT1.5 · 21 kg'
     setup = FlightSetup(initial_point='hover80', maneuver='transition', altitude_m=80)
     assert setup.validate().scenario == 'quad_transition'
-    assert setup.config()['cg_body_xyz_m'] == [.01, 0, .15]
+    assert setup.config()['cg_body_xyz_m'] == [-.04, 0, .065]
     with pytest.raises(ValueError, match='80 m'):
         FlightSetup(maneuver='transition').validate()
     with pytest.raises(ValueError, match='maneuver'):

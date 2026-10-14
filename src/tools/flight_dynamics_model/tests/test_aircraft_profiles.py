@@ -46,7 +46,7 @@ def test_manufacturer_csv_matches_all_28_workbook_samples():
 def test_profiles_are_independent_and_preserve_original_parameters():
     original = AircraftParams()
     reference = load_aircraft_config("reference_design")
-    pt1 = load_aircraft_config("pt1_as_built")
+    pt1 = load_aircraft_config("pt15")
     assert pt1.mass == 21.0 and reference.mass == 25.0
     assert reference.lift_system.motor["model"] == "MAD V8013 PRO IPE"
     assert pt1.lift_system.motor["model"] == "KDE5215XF-220"
@@ -59,7 +59,35 @@ def test_profiles_are_independent_and_preserve_original_parameters():
     assert reference.geometry == original.geometry
     np.testing.assert_equal(reference.cg_body_xyz, original.cg_body_xyz)
     reference.cg_body_xyz[0] = -0.2
-    assert pt1.cg_body_xyz[0] == .01
+    assert pt1.cg_body_xyz.tolist() == [-.04, 0, .065]
+
+
+def test_pt1_as_flown_and_pt15_share_drawing_rotors_but_not_mass_cg_or_pusher():
+    pt1 = load_aircraft_config("pt1_as_built")
+    pt15 = load_aircraft_config("pt15")
+    assert pt1.mass == 17.9 and pt15.mass == 21.0
+    assert pt1.cg_body_xyz.tolist() == [-.0475, 0, .065]
+    assert not pt1.pusher_installed and pt15.pusher_installed
+    assert pt15.pusher_system.position_body_m == (-.374, 0., .05)
+    # 14 October drawing, X aft / Z up converted to body x forward / z down.
+    expected = ((.675, .55, -.043), (-.75, .55, -.043), (-.75, -.55, -.043), (.675, -.55, -.043))
+    assert pt1.lift_system.positions_body_m == pt15.lift_system.positions_body_m == expected
+    centroid = np.mean(np.array(expected), axis=0)
+    assert centroid[0] == pytest.approx(-.0375)
+    # The logged 49.3 % front hover share maps to the PT1 CG with these stations.
+    assert .493*.675 + .507*-.75 == pytest.approx(pt1.cg_body_xyz[0], abs=5e-4)
+    assert pt1.aero.Cmq == -9.6 and pt15.aero.Cnr == -.04
+    assert aircraft_summary(pt15)["rate_derivatives"]["Clp"] == -.58
+
+
+def test_profile_rate_derivatives_are_validated(tmp_path):
+    data = yaml.safe_load((AIRCRAFT_CONFIGS / "pt1_as_built.yaml").read_text())
+    data["propulsion"]["lift"]["performance_path"] = str(load_aircraft_config("pt1_as_built").lift_system.performance_path)
+    data["aerodynamics"]["rate_derivatives"] = {"Cmalpha": -1.}
+    profile = tmp_path / "bad.yaml"
+    profile.write_text(yaml.safe_dump(data))
+    with pytest.raises(ValueError, match="rate derivatives"):
+        load_aircraft_config(profile)
 
 
 def test_zero_lift_reference_loads_equal_legacy_forward_propulsion():
@@ -73,7 +101,7 @@ def test_zero_lift_reference_loads_equal_legacy_forward_propulsion():
 
 
 def test_static_curve_exact_points_interpolation_and_voltage_bounds():
-    pt1 = load_aircraft_config("pt1_as_built")
+    pt1 = load_aircraft_config("pt15")
     curve = load_static_performance(pt1.lift_system.performance_path)
     point = curve.lookup(50.4, 0.5)
     assert point == {"thrust_n": 42.39, "current_a": 13.4, "power_w": 676.0, "rpm": 4460.0, "torque_nm": 1.11}
@@ -86,12 +114,13 @@ def test_static_curve_exact_points_interpolation_and_voltage_bounds():
 
 
 def test_lift_force_body_sign_moment_balance_and_cg_transfer():
-    pt1 = load_aircraft_config("pt1_as_built")
+    pt1 = load_aircraft_config("pt15")
     pt1 = replace(pt1, battery=replace(pt1.battery, voltage_v=50.4))
     control = Control(0, 0, 0, 0, lift_throttle=0.5)
     force, moment = propulsion_model(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -4 * 42.39])
-    np.testing.assert_allclose(moment, [0, -.16 * 4 * 42.39, 0], atol=1e-12)
+    # Rotor centroid x = -37.5 mm is 2.5 mm ahead of the -40 mm PT1.5 target CG.
+    np.testing.assert_allclose(moment, [0, (-.0375 - -.04) * 4 * 42.39, 0], atol=1e-12)
     shifted = replace(pt1, cg_body_xyz=pt1.cg_body_xyz + [0.1, 0.0, 0.0])
     shifted_force, shifted_moment = propulsion_model(control, shifted)
     np.testing.assert_allclose(shifted_force, force)
@@ -101,12 +130,12 @@ def test_lift_force_body_sign_moment_balance_and_cg_transfer():
 
 
 def test_single_rotor_has_expected_roll_pitch_and_reaction_yaw_moment():
-    pt1 = load_aircraft_config("pt1_as_built")
+    pt1 = load_aircraft_config("pt15")
     pt1 = replace(pt1, battery=replace(pt1.battery, voltage_v=50.4))
     control = Control(0, 0, 0, 0, lift_motor_throttles=(0.5, 0, 0, 0))
     force, moment, samples = lift_propulsion(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -42.39])
-    np.testing.assert_allclose(moment, [-0.55 * 42.39, 0.54 * 42.39, 1.11])
+    np.testing.assert_allclose(moment, [-0.55 * 42.39, (.675 + .04) * 42.39, 1.11])
     assert samples[0]["rpm"] == 4460
     with pytest.raises(ValueError, match="one finite lift throttle"):
         lift_propulsion(replace(control, lift_motor_throttles=(0.5,)), pt1)
@@ -119,7 +148,7 @@ def test_pt1_scenario_recomputes_collective_for_mass_and_preserves_control_comma
     assert not config.start_from_trim
     force, _ = propulsion_model(config.control_override, config.params)
     assert -force[2] == pytest.approx(config.params.mass * config.params.g)
-    lighter = replace(config.params, mass=20)
+    lighter = replace(config.params, mass=config.params.mass - 1)
     assert hover_collective(lighter) < config.control_override.lift_throttle
     config = replace(config, duration=0.1, dt=0.02)
     result = run_simulation(config)
@@ -137,7 +166,7 @@ def test_pt1_scenario_recomputes_collective_for_mass_and_preserves_control_comma
 
 @pytest.mark.parametrize("use_database", [False, True])
 def test_aerodynamic_loads_vanish_at_rest_even_with_rate_regularization(use_database):
-    params = replace(load_aircraft_config("pt1_as_built"), use_aero_database=use_database)
+    params = replace(load_aircraft_config("pt15"), use_aero_database=use_database)
     force, moment, info = aero_model(np.zeros(3), np.array([0.1, 0.2, 0.3]), Control(0.1, 0.1, 0.1, 0), params)
     np.testing.assert_allclose(force, 0)
     np.testing.assert_allclose(moment, 0)
@@ -166,9 +195,10 @@ def test_gui_profile_switch_resets_simulation_and_filters_incompatible_scenarios
     assert session.current_state.time == 0
     assert session.base_config.params.aircraft_id == "pt1_as_built"
     assert session.controls()["pusher_thrust_n"] == 0
-    assert session.controls()["lift_thrust_n"] == pytest.approx(21 * 9.80665)
+    assert session.controls()["lift_thrust_n"] == pytest.approx(17.9 * 9.80665)
     assert "lift_step" in maneuver_options(pt1_config)
     assert "pt1_hover.yaml" in scenario_options_for_aircraft("pt1_as_built")
+    assert "pt1_hover.yaml" in scenario_options_for_aircraft("pt15")
     assert "pitch_doublet.yaml" in scenario_options_for_aircraft("reference_design")
     session.set_scenario("reference", reference_config)
     assert session.base_config.params.lift_system.motor["model"] == "MAD V8013 PRO IPE"
@@ -178,11 +208,11 @@ def test_gui_profile_switch_resets_simulation_and_filters_incompatible_scenarios
 
 
 def test_new_geometry_and_aerodb_can_be_selected_without_overwriting_old_profile(tmp_path):
-    data = yaml.safe_load((AIRCRAFT_CONFIGS / "pt1_as_built.yaml").read_text())
+    data = yaml.safe_load((AIRCRAFT_CONFIGS / "pt15.yaml").read_text())
     data["geometry"]["tail_chord"] = 0.30
     data["aerodynamics"] = {"version": "future-test-db", "geometry_version": "test_tail_0.30m", "path": "new.csv"}
-    data["propulsion"]["lift"]["performance_path"] = str(load_aircraft_config("pt1_as_built").lift_system.performance_path)
-    data["propulsion"]["pusher"]["estimate"]["performance_path"] = str(load_aircraft_config("pt1_as_built").pusher_system.performance_path)
+    data["propulsion"]["lift"]["performance_path"] = str(load_aircraft_config("pt15").lift_system.performance_path)
+    data["propulsion"]["pusher"]["estimate"]["performance_path"] = str(load_aircraft_config("pt15").pusher_system.performance_path)
     (tmp_path / "new.csv").write_text("source supplied later\n")
     profile = tmp_path / "new.yaml"
     profile.write_text(yaml.safe_dump(data))
@@ -190,6 +220,6 @@ def test_new_geometry_and_aerodb_can_be_selected_without_overwriting_old_profile
     assert updated.geometry.tail_chord == 0.30
     assert updated.aero_database_path == tmp_path / "new.csv"
     assert aircraft_summary(updated)["geometry_version"] == "test_tail_0.30m"
-    old = load_aircraft_config("pt1_as_built", aerodynamics="adb_v1_1")
+    old = load_aircraft_config("pt15", aerodynamics="adb_v1_1")
     assert old.geometry.tail_chord == 0.28
     assert old.aero_database_version == "adb_v1.1"

@@ -160,7 +160,7 @@ def run(args):
     interactive = getattr(args, "interactive", False)
     if interactive:
         (output / "commands").mkdir()
-    prototype = physics.params.aircraft_id == "pt1_as_built"
+    prototype = physics.params.aircraft_id == "pt15"
     back_transition = args.scenario == "back_transition"
     is_doublet = args.scenario in DOUBLETS
     plan = doublet_plan(args.scenario, trim, mapping) if is_doublet else None

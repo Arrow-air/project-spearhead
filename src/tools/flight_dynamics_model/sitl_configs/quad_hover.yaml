@@ -1,10 +1,10 @@
-# Simulation-only PT1.5 air-start hover; mass, CG, inertia and motor positions provisional.
+# Simulation-only PT1.5 air-start hover; mass, CG and inertia are estimates; rotor positions from the 14 Oct drawing.
 firmware: Plane-4.7.1
-aircraft: pt1_as_built
+aircraft: pt15
 aerodynamics: tail_update_2026_10_07
 flight_regime: hover
-# Forward simulation candidate; z is retained provisionally, not inferred from CAD.
-cg_body_xyz_m: [0.01, 0.0, 0.15]
+# PT1.5 target CG (pt15 profile): inside the 22 m/s window; z is a build-up estimate.
+cg_body_xyz_m: [-0.040, 0.0, 0.065]
 hover_trim: independent_rotors
 speed_m_s: 0
 altitude_m: 20

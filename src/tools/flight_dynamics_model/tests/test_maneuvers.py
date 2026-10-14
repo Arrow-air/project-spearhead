@@ -50,8 +50,8 @@ def test_forward_maneuver_routes_correct_start_and_motor_mapping(name):
     config = setup.config()
     assert config["flight_regime"] == "fixed_wing" and config["speed_m_s"] == 24
     assert ("lift" in config["channels"]) == (name == "back_transition")
-    assert name in maneuver_options("pt1_as_built", "trim24")
-    assert (name in maneuver_options("pt1_as_built", "hover20")) == (name in DOUBLETS)
+    assert name in maneuver_options("pt15", "trim24")
+    assert (name in maneuver_options("pt15", "hover20")) == (name in DOUBLETS)
 
 
 def test_back_transition_arms_normally_in_q_mode_then_releases_fw_and_retains_throttle_until_confirmation():

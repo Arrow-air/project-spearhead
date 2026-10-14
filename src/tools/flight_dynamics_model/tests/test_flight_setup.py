@@ -9,7 +9,7 @@ from spearhead.sitl.backend import load_setup
 
 
 @pytest.mark.parametrize("speed", [22, 24, 26])
-@pytest.mark.parametrize("cg_case", ["legacy", "forward10", "forward25", "forward50"])
+@pytest.mark.parametrize("cg_case", ["target40", "pt1_log", "aft60", "forward25", "forward0"])
 def test_prototype_forward_start_solves_actual_trim_with_requested_actuators(tmp_path, speed, cg_case):
     import numpy as np
     from spearhead.controls import Control
@@ -21,10 +21,6 @@ def test_prototype_forward_start_solves_actual_trim_with_requested_actuators(tmp
     assert setup.scenario == "fbwa"
     path = tmp_path / "forward.yaml"
     path.write_text(yaml.safe_dump(setup.config()))
-    if cg_case == "forward50" and speed == 22:
-        with pytest.raises(ValueError, match="No full six-axis trim"):
-            load_setup(path)
-        return
     physics, mapping, manifest = load_setup(path)
     trim = Control(**manifest["trim_control"])
     residual = dynamics(0, physics.state, physics.params, trim)
@@ -47,8 +43,8 @@ def test_prototype_forward_start_solves_actual_trim_with_requested_actuators(tmp
 def test_forward_and_hover_maneuvers_are_separate_and_old_hover_recording_survives(tmp_path):
     from spearhead.gui.flight_setup import POINTS, maneuver_options
     from spearhead.gui.sitl_session import RunObserver
-    assert "hover30" not in POINTS["pt1_as_built"]
-    assert maneuver_options("pt1_as_built", "trim24")["hold"] == "Straight & level hold"
+    assert "hover30" not in POINTS["pt15"]
+    assert maneuver_options("pt15", "trim24")["hold"] == "Straight & level hold"
     with pytest.raises(ValueError, match="maneuver"):
         FlightSetup(initial_point="trim24", speed_m_s=24, altitude_m=100, maneuver="transition").validate()
     with pytest.raises(ValueError, match="26"):
@@ -65,8 +61,8 @@ def test_forward_and_hover_maneuvers_are_separate_and_old_hover_recording_surviv
 
 
 @pytest.mark.parametrize("setup,aircraft,speed,altitude,scenario", [
-    (FlightSetup(), "pt1_as_built", 0, 20, "quad_interactive"),
-    (FlightSetup(initial_point="custom_hover", altitude_m=32, duration_s=30, maneuver="hold"), "pt1_as_built", 0, 32, "quad_hover"),
+    (FlightSetup(), "pt15", 0, 20, "quad_interactive"),
+    (FlightSetup(initial_point="custom_hover", altitude_m=32, duration_s=30, maneuver="hold"), "pt15", 0, 32, "quad_hover"),
     (FlightSetup("reference_design", "trim26", "steps", 118, 120, 26), "reference_design", 26, 120, "steps"),
     (FlightSetup("reference_design", "custom_trim", "elevator", 45, 100, 27), "reference_design", 27, 100, "elevator"),
 ])
@@ -163,16 +159,16 @@ def test_manager_rejects_mismatched_setup_before_launch(tmp_path):
         manager.start("fbwa", setup=FlightSetup())
 
 
-@pytest.mark.parametrize("cg_case,x", [("legacy", -.15), ("forward25", .025), ("forward50", .05)])
+@pytest.mark.parametrize("cg_case,x", [("pt1_log", -.0475), ("aft60", -.06), ("forward25", -.025), ("forward0", 0.)])
 def test_transition_cg_reaches_physics_without_changing_source_origin(tmp_path, cg_case, x):
     setup = FlightSetup(initial_point="hover80", altitude_m=80, maneuver="transition", cg_case=cg_case)
     config = setup.config()
-    assert config["cg_body_xyz_m"] == [x, 0, .15]
-    assert config.get("hover_trim", "collective") == ("collective" if cg_case == "legacy" else "independent_rotors")
+    assert config["cg_body_xyz_m"] == [x, 0, .065]
+    assert config["hover_trim"] == "independent_rotors"
     path = tmp_path / "transition.yaml"
     path.write_text(yaml.safe_dump(config))
     physics, _, manifest = load_setup(path)
-    assert physics.params.cg_body_xyz.tolist() == [x, 0, .15]
+    assert physics.params.cg_body_xyz.tolist() == [x, 0, .065]
     assert manifest["aircraft"]["moment_center_body_xyz_m"] == [0, 0, 0]
 
 
@@ -241,11 +237,11 @@ def test_forward_default_cg_is_used_for_every_prototype_start(tmp_path, point, m
     from spearhead.controls import Control
     from spearhead.dynamics import dynamics
     setup = FlightSetup(initial_point=point, maneuver=maneuver, altitude_m=altitude, speed_m_s=speed)
-    assert setup.cg_case == "forward10"
+    assert setup.cg_case == "target40"
     path = tmp_path / "setup.yaml"
     path.write_text(yaml.safe_dump(setup.config()))
     physics, _, manifest = load_setup(path)
-    assert physics.params.cg_body_xyz.tolist() == [.01, 0, .15]
+    assert physics.params.cg_body_xyz.tolist() == [-.04, 0, .065]
     assert manifest["aircraft"]["moment_center_body_xyz_m"] == [0, 0, 0]
     control = Control(**manifest["trim_control"])
     if point != "ground":

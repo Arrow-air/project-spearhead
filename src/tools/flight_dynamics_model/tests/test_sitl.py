@@ -90,7 +90,7 @@ def test_surface_endpoints_reverse_and_motor_off():
 
 @pytest.mark.parametrize("channel,rotor", [(5, 0), (8, 1), (6, 2), (7, 3)])
 def test_quad_x_independent_rotor_wrench(channel, rotor):
-    params = load_aircraft_config("pt1_as_built", aerodynamics="tail_update_2026_10_07")
+    params = load_aircraft_config("pt15", aerodynamics="tail_update_2026_10_07")
     mapping = ActuatorMap(lift=tuple(Channel(i, minimum=1100, maximum=1940) for i in [5, 8, 6, 7]))
     pwm = [0] * 16
     pwm[channel-1] = 1520

@@ -104,7 +104,7 @@ def main():
     if reference.old_center != (0.0, 0.0, 0.0) or reference.rho != 1.021:
         raise ValueError("Source must use the user-confirmed origin and density")
     mapping = nd.default_mapping(headers)
-    control_source = load_aircraft_config("pt1_as_built").deflection_database_path
+    control_source = load_aircraft_config("pt15").deflection_database_path
     _, def_headers, def_rows = nd.read_csv_table_with_metadata(control_source)
     def_headers = [column.strip() for column in def_headers]
     def_rows = [{key.strip(): value.strip() for key, value in row.items()} for row in def_rows]

@@ -287,7 +287,7 @@ class SITLManager:
                 config_path = self.root / (directory.name+".setup.yaml")
                 config_path.write_text(yaml.safe_dump(setup.config(), sort_keys=False))
                 command += ["--config", str(config_path)]
-                if setup.aircraft == "pt1_as_built" and setup.is_forward:
+                if setup.aircraft == "pt15" and setup.is_forward:
                     command += ["--forward-parameters", setup.transition_parameters]
                 if "--duration" in command:
                     command[command.index("--duration")+1] = str(setup.duration_s)

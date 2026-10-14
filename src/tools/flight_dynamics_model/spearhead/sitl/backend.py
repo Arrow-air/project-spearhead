@@ -85,7 +85,7 @@ def load_setup(path=None):
             raise ValueError("Symmetric collective does not balance the configured hover CG")
         if regime == "ground":
             from .ground import GroundContact
-            if config["aircraft"] != "pt1_as_built" or not 3 <= config["altitude_m"] <= 30:
+            if config["aircraft"] != "pt15" or not 3 <= config["altitude_m"] <= 30:
                 raise ValueError("Ground start supports PT1 takeoff targets of 3–30 m")
             ground = GroundContact(**config.get("ground_contact", {}))
             state = ground.rest_state(params)
@@ -98,7 +98,9 @@ def load_setup(path=None):
         raise ValueError("Physics rate must be an integer in [100, 1000] Hz")
     if regime != "ground" and "ground_contact" in config:
         raise ValueError("Ground-contact settings require a ground initial point")
-    physics = Physics(params, state, hold=regime != "ground", max_step=config["max_step_s"], ground=ground)
+    from .battery import BatteryModel
+    physics = Physics(params, state, hold=regime != "ground", max_step=config["max_step_s"], ground=ground,
+                      battery=BatteryModel.from_params(params) if params.lift_system is not None else None)
     physics.rate_hz = rate
     manifest = {"config": config, "config_sha256": sha256(path), "aircraft": aircraft_summary(params),
                 "database_sha256": sha256(params.aero_database_path),

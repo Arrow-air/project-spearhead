@@ -119,13 +119,17 @@ def aircraft_options() -> dict[str, str]:
     return options
 
 
+# Damping/cross-rate terms a profile may override; static and control terms come from the AeroDB.
+RATE_DERIVATIVES = frozenset({"Clp", "Clr", "Cmq", "Cnp", "Cnr"})
+
+
 def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerodynamics: str | None = None):
     """Build independent parameters from a bundled profile or a YAML file.
 
     Relative AeroDB and propulsion paths are resolved against the profile's
     directory. Geometry changes and new databases remain explicit profile inputs.
     """
-    from .params import AircraftGeometry, AircraftParams
+    from .params import AeroDerivatives, AircraftGeometry, AircraftParams
 
     path = Path(name_or_path)
     if not path.is_file():
@@ -153,6 +157,14 @@ def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerod
     if set(geometry) - {item.name for item in fields(AircraftGeometry)}:
         raise ValueError("Unsupported aircraft geometry field")
     aero = data.get("aerodynamics", {})
+    rates = aero.get("rate_derivatives")
+    if rates is not None:
+        if not isinstance(rates, dict) or set(rates) - RATE_DERIVATIVES:
+            raise ValueError(f"Profile rate derivatives must be a subset of {sorted(RATE_DERIVATIVES)}")
+        rates = {key: float(value) for key, value in rates.items()}
+        if not np.all(np.isfinite(list(rates.values()))):
+            raise ValueError("Profile rate derivatives must be finite")
+        values["aero"] = replace(AeroDerivatives(), **rates)
     propulsion = data.get("propulsion", {})
     pusher = propulsion.get("pusher", {})
     pusher_system = dict(pusher.get("estimate", {}))
@@ -215,6 +227,8 @@ def aircraft_summary(params) -> dict[str, Any]:
         "mass_kg": params.mass,
         "cg_body_xyz_m": params.cg_body_xyz.tolist(),
         "inertia_kg_m2": params.inertia.tolist(),
+        "rate_derivatives": {key: getattr(params.aero, key) for key in sorted(RATE_DERIVATIVES)},
+        "lift_positions_body_m": None if lift is None else [list(row) for row in lift.positions_body_m],
         "tail_chord_m": params.geometry.tail_chord,
         "geometry_version": params.geometry_version,
         "aero_database_version": params.aero_database_version,

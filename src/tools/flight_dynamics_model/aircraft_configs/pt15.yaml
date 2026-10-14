@@ -1,0 +1,105 @@
+id: pt15
+label: PT1.5 KDE + pusher (estimate)
+description: PT1.5 build estimate at 21 kg (PT1 plus pusher, pusher battery, servos, tail electronics and skin) with KDE lift hardware and the October AeroDB. Lift-rotor and pusher x/y come from the 14 October 2026 drawing table. CG is the simulation target inside the 22 m/s stability window, not a measurement; the PT1.5 build must be weighed and ballasted to it. Inertia and rate damping are component build-up and vortex-lattice estimates. The pusher model is MAD V8013 150KV / AMPX 80A / APC 20x12 Sport; the installed motor (KDE or MAD) and wooden 20x12 propeller are not yet characterized.
+aircraft:
+  mass: 21.0
+  # Body axes from the CFD origin (wing root quarter-chord): x forward, z down.
+  # x: target inside the 22 m/s window (SM about 6 %, elevator trim about -18 deg);
+  # PT1.5 build-up estimate without ballast is about -0.08 m. z: build-up estimate, unmeasured.
+  cg_body_xyz: [-0.040, 0.0, 0.065]
+  # Component build-up estimate about the estimated PT1.5 CG (14 October 2026), +/-20 %.
+  inertia: [[4.42, 0.0, -0.31], [0.0, 4.07, 0.0], [-0.31, 0.0, 8.11]]
+  rho: 1.021
+geometry:
+  tail_chord: null
+  tail_area: null
+aerodynamics:
+  dataset: tail_update_2026_10_07
+  # Wing + inverse-V-tail vortex-lattice estimates (no fuselage/booms), per radian
+  # with p*b/2V, q*c/2V, r*b/2V. Cmq is for the target CG; it scales with tail arm.
+  rate_derivatives: {Cmq: -9.7, Clp: -0.58, Clr: 0.10, Cnp: -0.04, Cnr: -0.04}
+battery:
+  cells: 12
+  voltage_v: 44.4
+  capacity_ah: 22.0
+  mass_kg: 3.709
+propulsion:
+  pusher:
+    # PT1.5 adds the pusher; motor (KDE or MAD) and wooden 20x12 propeller are undecided.
+    installed: true
+    # User-confirmed 150 KV on 2026-10-11. Analytical estimate, not bench validation.
+    # Loader derives Tmax at nominal battery voltage and the selected FDM density.
+    estimate:
+      motor:
+        model: MAD V8013 PRO IPE 150KV
+        kv_rpm_per_v: 150
+        no_load_current_a: 2.35
+        no_load_test_voltage_v: 30
+        phase_resistance_ohm: 0.037
+        source: https://www.mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor
+        electrical_data: ../data/propulsion/mad_v8013_150_bench.json
+        data_edition: MAD V8013 IPE 150KV manufacturer test sheet; confirm installed PRO edition
+      esc:
+        model: MAD AMPX 80A (5-14S)
+        continuous_current_a: 80
+        voltage_cells_min: 5
+        voltage_cells_max: 14
+        source: https://www.mad-motor.com/products/mad-ampx-80a-5-14s-esc
+      propeller:
+        model: APC 20x12 Sport LP20012
+        diameter_in: 20.0
+        pitch_in: 12.0
+        blades: 2
+        # Conservative Sport limit 190000 / diameter; actual 12S motor RPM is lower.
+        max_rpm: 9500
+        source: https://www.apcprop.com/product/20x12/
+      performance_path: ../data/propulsion/sources/PER3_20x12.dat
+      equivalent_resistance_ohm: 0.1056886284068577
+      esc_efficiency: 0.97
+      voltage_min_v: 36.0
+      voltage_max_v: 50.4
+      max_current_a: 77.8
+      max_input_power_w: 3569.0
+      sustainable_current_a: 24.0
+      # Drawing x = 374 mm aft of the origin. Mount height is open (+40 to -50 mm, z up);
+      # the candidate is the lowest option, closest to the estimated CG height.
+      position_body_m: [-0.374, 0.0, 0.050]
+      reaction_torque_sign: 0
+  lift:
+    motor:
+      model: KDE5215XF-220
+      data_edition: HE manufacturer data
+      kv_rpm_per_v: 220
+      torque_constant_nm_per_a: 0.0434
+      resistance_ohm: 0.078
+      no_load_current_a_at_10v: 0.5
+      magnetic_poles: 28
+      rotor_inertia_kg_m2: 0.0000632
+      mass_kg_with_wires: 0.360
+      continuous_current_a_180s: 44
+      continuous_power_w_180s: 1955
+      source: https://www.kdedirect.com/products/kde5215xf-220
+    esc:
+      model: KDE-UAS75HVC+
+      manufacturer_product_id: KDE-UAS75HVC
+      continuous_current_a_180s: 75
+      peak_current_a_5s: 130
+      continuous_power_w_180s: 3330
+      peak_power_w_5s: 5770
+      voltage_min_v: 11.1
+      voltage_max_v: 52.2
+      refresh_rate_hz: 600
+      mass_kg_with_wires: 0.114
+      source: https://www.kdedirect.com/products/kde-uas75hvc
+    propeller:
+      model: KDE-CF215-DP
+      diameter_in: 21.5
+      pitch_in: 7.3
+      blades: 2
+      mass_kg_per_blade: 0.0258
+      source: https://www.kdedirect.com/products/kde-cf215-dp
+    # 14 October 2026 drawing (X aft, Z up from the CFD origin) converted to body axes.
+    # Order FR, RR, RL, FL = ArduPilot motors 1, 4, 2, 3.
+    positions_body_m: [[0.675, 0.55, -0.043], [-0.750, 0.55, -0.043], [-0.750, -0.55, -0.043], [0.675, -0.55, -0.043]]
+    reaction_torque_signs: [1, -1, 1, -1]
+    performance_path: ../data/propulsion/kde5215xf_220_cf215_dp.csv

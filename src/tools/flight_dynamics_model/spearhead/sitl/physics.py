@@ -47,18 +47,22 @@ def full_trim(params, speed=28., altitude=100.):
               np.r_[np.deg2rad([alpha_max, 10, 10]), np.deg2rad(limits), 1])
     initial_alpha = float(np.clip(-.15, alpha_min, alpha_max))
     initial_throttle = .85 if params.pusher_system is not None else .25
-    fit = least_squares(residual, np.r_[np.deg2rad([initial_alpha, -.15, 0, -3, 0, 0]), initial_throttle],
-                        bounds=bounds, xtol=1e-12, ftol=1e-12, gtol=1e-12)
-    x, control = unpack(fit.x)
-    loads = compute_force_moment_breakdown(0, x, params, control)
-    if (not fit.success or np.linalg.norm(loads["total"]["force_b"]) >= .01
-            or np.linalg.norm(loads["total"]["moment_b"]) >= .01
-            or abs(dynamics(0, x, params, control)[2]) >= .001):
-        raise ValueError("No full six-axis trim within configured surface travel and common measured alpha range")
-    return x, control
+    # The elevator branch is strongly nonlinear outside measured coverage; a single
+    # start can stall between solvable neighbours. Try a few elevator starts in order.
+    starts = [-3.] + [value for value in (-12., -20., -28.) if value >= -limits[0]]
+    for start_de in starts:
+        fit = least_squares(residual, np.r_[np.deg2rad([initial_alpha, -.15, 0, start_de, 0, 0]), initial_throttle],
+                            bounds=bounds, xtol=1e-12, ftol=1e-12, gtol=1e-12)
+        x, control = unpack(fit.x)
+        loads = compute_force_moment_breakdown(0, x, params, control)
+        if (fit.success and np.linalg.norm(loads["total"]["force_b"]) < .01
+                and np.linalg.norm(loads["total"]["moment_b"]) < .01
+                and abs(dynamics(0, x, params, control)[2]) < .001):
+            return x, control
+    raise ValueError("No full six-axis trim within configured surface travel and common measured alpha range")
 
 
-def sensor_state(t, x, params, control, *, hold=False, ground=None):
+def sensor_state(t, x, params, control, *, hold=False, ground=None, battery=None):
     rotation = euler_body_to_ned(*x[6:9])
     if hold:
         accel = -rotation.T @ np.array([0., 0., params.g])
@@ -67,9 +71,12 @@ def sensor_state(t, x, params, control, *, hold=False, ground=None):
         accel = (loads["total"]["force_b"] - loads["gravity"]["force_b"]) / params.mass
         if ground is not None:
             accel += ground.loads(x)[0] / params.mass
-    return {"timestamp": t, "imu": {"gyro": x[9:12].tolist(), "accel_body": accel.tolist()},
-            "position": x[:3].tolist(), "velocity": (rotation @ x[3:6]).tolist(),
-            "attitude": x[6:9].tolist(), "airspeed": ardupilot_pitot_airspeed(x, params)}
+    sample = {"timestamp": t, "imu": {"gyro": x[9:12].tolist(), "accel_body": accel.tolist()},
+              "position": x[:3].tolist(), "velocity": (rotation @ x[3:6]).tolist(),
+              "attitude": x[6:9].tolist(), "airspeed": ardupilot_pitot_airspeed(x, params)}
+    if battery is not None:
+        sample["battery"] = battery
+    return sample
 
 
 def ardupilot_pitot_airspeed(x, params):
@@ -94,7 +101,7 @@ def ardupilot_pitot_airspeed(x, params):
 
 
 class Physics:
-    def __init__(self, params, state, *, hold=True, max_step=.0025, ground=None):
+    def __init__(self, params, state, *, hold=True, max_step=.0025, ground=None, battery=None):
         if not np.isfinite(state).all() or np.shape(state) != (12,):
             raise ValueError("State must contain 12 finite values")
         if not math.isfinite(max_step) or not 0 < max_step <= .0025:
@@ -102,6 +109,7 @@ class Physics:
         self.params, self.state = params, np.array(state, dtype=float, copy=True)
         self.time, self.hold, self.max_step = 0., hold, max_step
         self.ground = ground
+        self.battery = battery
 
     def derivative(self, t, x, control):
         result = dynamics(t, x, self.params, control)
@@ -130,4 +138,11 @@ class Physics:
                 if not np.isfinite(x).all() or abs(x[7]) >= math.radians(85) or x[2] >= (0 if self.ground is None else .05):
                     raise ValueError("Physics diverged, reached ground, or approached Euler singularity")
         self.state, self.time = x, self.time + dt
-        return sensor_state(self.time, x, self.params, control, hold=self.hold, ground=self.ground)
+        reading = None
+        if self.battery is not None:
+            # Lift commands are held over the frame, so the frame current is constant.
+            current = self.battery.pack_current(control, self.params)
+            self.battery.consume(current, dt)
+            reading = self.battery.reading(current)
+        return sensor_state(self.time, x, self.params, control, hold=self.hold, ground=self.ground,
+                            battery=reading)
