@@ -1,0 +1,10 @@
+# Simulation recordings and generated diagnostic reports stay local.
+/artifacts/
+# macOS and Python caches.
+.DS_Store
+__pycache__/
+*.pyc
+# Local tool state, scratch space and build environments.
+.claude/
+/tmp/
+.venv*/
