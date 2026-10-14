@@ -14,7 +14,7 @@ Runtime then applies `M_CG = M_source + (r_source − r_CG) × F` once, after ad
 
 Body axes are x forward, y right, z down, from the CFD origin (wing root quarter-chord). Lift-rotor and pusher stations follow the 14 October drawing: rotors at x = +0.675/−0.750 m, y = ±0.55 m, z = −0.043 m (centroid x = −0.0375 m); pusher at (−0.374, 0, +0.050) m, the lowest of the open mount heights. The former nominal rectangle (+0.55/−0.85 m) is withdrawn.
 
-PT1.5 (`pt15`, 21 kg) uses the target CG **[−0.040, 0, +0.065] m**: inside the 22 m/s window (static margin about 6 %). The PT1.5 build-up estimate without ballast is about −0.08 m, so the built aircraft must be weighed and ballasted to the target. PT1 as flown (`pt1_as_built`, 17.9 kg, wings on, no pusher) uses x = −0.0475 m from the logged 49.3 % front hover share; separate hover segments vary by about ±10 mm. CG z (+0.065 m), inertia and rate damping are build-up and vortex-lattice estimates.
+PT1.5 (`pt15`, 21 kg) uses the target CG **[−0.040, 0, +0.065] m**: inside the 22 m/s window (static margin about 6 %). The PT1.5 build-up estimate without ballast is about −0.08 m, so the built aircraft must be weighed and ballasted to the target. PT1 as flown (`pt1_as_built`, 17.9 kg, wings on, no pusher) uses x = −0.0475 m from the logged 49.3 % front hover share; from a single wings-on segment, and wingless segments spread from −0.067 to −0.008 m, so it is good to about ±20 mm. CG z (+0.065 m), inertia and rate damping are build-up and vortex-lattice estimates.
 
 | TAS | Alpha | Elevator | Pusher command | Estimated pusher current | Max real part, longitudinal |
 |---|---:|---:|---:|---:|---:|

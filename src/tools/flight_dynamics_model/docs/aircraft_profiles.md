@@ -39,7 +39,7 @@ and also set the logged-hover CG interpretation; it is withdrawn.
 | Item | `pt1_as_built` (PT1 as flown) | `pt15` (PT1.5) |
 | --- | --- | --- |
 | Mass | 17.9 kg (log-derived, wings on) | 21.0 kg build estimate |
-| CG x | −0.0475 m from the logged 49.3 % front hover share (±10 mm between hover segments) | −0.040 m target inside the 22 m/s window; the build-up estimate without ballast is about −0.08 m |
+| CG x | −0.0475 m from the logged 49.3 % front hover share (single wings-on segment; about ±20 mm) | −0.040 m target inside the 22 m/s window; the build-up estimate without ballast is about −0.08 m |
 | CG z | +0.065 m build-up estimate | +0.065 m build-up estimate |
 | Inertia Ixx/Iyy/Izz/Ixz (kg·m²) | 4.30 / 3.73 / 7.66 / −0.29 | 4.42 / 4.07 / 8.11 / −0.31 |
 | Pusher | none | MAD V8013 150KV / AMPX 80A / APC 20×12 estimate at (−0.374, 0, +0.050) m |

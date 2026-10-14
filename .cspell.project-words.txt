@@ -71,3 +71,7 @@ ruddervator
 ruddervators
 weathervane
 pitot
+weathervaning
+WVANE
+SCHED
+phugoid
