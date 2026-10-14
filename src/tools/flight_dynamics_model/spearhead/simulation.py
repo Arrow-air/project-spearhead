@@ -87,7 +87,13 @@ def _control_with_commands(
             "lift_motor_throttles": base.lift_motor_throttles,
         }
         for channel, command in channels:
-            values[channel] += command.value_at(t)
+            increment = command.value_at(t)
+            values[channel] += increment
+            if channel == "lift_throttle" and values["lift_motor_throttles"] is not None:
+                # Open-loop collective perturbation preserves the initial rotor bias.
+                values["lift_motor_throttles"] = tuple(
+                    value + increment for value in values["lift_motor_throttles"]
+                )
         return Control(**values)
 
     return scheduled_control

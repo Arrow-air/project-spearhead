@@ -313,10 +313,22 @@ def _render_page_shell(ui) -> None:
         .fd-health { font-size: 12px; color: #94a3b8; }
         .fd-alert { border-left: 3px solid #f59e0b; background: #332b1b; padding: 8px 12px; border-radius: 6px; }
         .fd-error { border-left-color: #ef4444; background: #361f2b; }
+        .fd-info { color: #94a3b8; min-width: 28px; min-height: 28px; }
+        .fd-info:hover, .fd-info:focus-visible { color: #bae6fd; }
+        .fd-info-tooltip { max-width: min(440px, calc(100vw - 32px)); font-size: 13px; line-height: 1.6;
+                           white-space: normal; background: #172334; color: #e2e8f0; padding: 12px 16px;
+                           border: 1px solid #334155; border-radius: 8px; }
+        .fd-arm-badge { font-size: 15px; font-weight: 700; letter-spacing: .06em; padding: 8px 14px;
+                        border: 1px solid; border-radius: 8px; }
+        .fd-arm-armed { color: #6ee7b7; background: #064e3b; border-color: #10b981; }
+        .fd-arm-disarmed { color: #cbd5e1; background: #1e293b; border-color: #64748b; }
+        .fd-arm-unknown { color: #fcd34d; background: #332b1b; border-color: #a16207; }
+        .fd-startup { background: #10243a; border: 1px solid #2d597a; border-radius: 10px; }
         @media (max-width: 760px) {
             .fd-instruments { grid-template-columns: minmax(0, 1fr); }
             .fd-nav a { padding: 6px 9px; font-size: 13px; }
             .fd-session-select { width: 100%; }
+            .fd-startup-time { align-items: flex-start; width: 100%; padding-left: 36px; }
         }
         .fd-console {
             background: radial-gradient(circle at 50% 20%, #172554 0, #0f172a 38%, #08111f 100%);
@@ -661,7 +673,9 @@ def _render_page_shell(ui) -> None:
     if path == "/embed":
         return
     with ui.header().classes("items-center justify-between fd-arrow-header text-white"):
-        ui.html('<img src="https://www.arrowair.com/images/arrow-flint_logo-lockup-white2x.png" alt="Arrow" style="width:132px;height:40px;object-fit:contain">')
+        with ui.row().classes("items-center gap-2"):
+            ui.html('<img src="https://www.arrowair.com/images/arrow-flint_logo-lockup-white2x.png" alt="Arrow" style="width:118px;height:36px;object-fit:contain">')
+            ui.label("SPEARHEAD").classes("fd-brand-caption")
         with ui.row().classes("items-center fd-nav"):
             for label, target, active in [
                 ("Flight Deck", "/", path in ("/", "/sitl")),
@@ -1812,6 +1826,7 @@ def create_app() -> None:
     ui = _require_nicegui()
     from nicegui import app as nicegui_app
     nicegui_app.add_static_file(url_path="/embed-preview", local_file=Path(__file__).with_name("embed_preview.html"))
+    nicegui_app.add_static_files(url_path="/flight-deck-assets", local_directory=Path(__file__).with_name("assets"))
     from .sitl_page import register_sitl_page
     from .sitl_session import SITLManager
     global _sitl_manager

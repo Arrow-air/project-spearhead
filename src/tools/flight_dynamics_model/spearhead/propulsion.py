@@ -150,6 +150,31 @@ def hover_collective(params: AircraftParams) -> float:
     return float(np.interp(per_rotor_weight, thrust, curve.throttles))
 
 
+def hover_trim_control(params: AircraftParams) -> Control:
+    """Solve physical per-rotor static hover loads for an explicit CG trial.
+
+    This is an initial-condition diagnostic, not a mixer or feedback tune.
+    Firmware still owns all actual motor outputs during a SITL run.
+    """
+    from scipy.optimize import least_squares
+    collective = hover_collective(params)
+    count = len(params.lift_system.positions_body_m)
+
+    def control(commands):
+        return Control(0, 0, 0, 0, lift_throttle=collective,
+                       lift_motor_throttles=tuple(float(v) for v in commands))
+
+    def residual(commands):
+        force, moment, _ = lift_propulsion(control(commands), params)
+        return np.r_[force[2]+params.mass*params.g, moment]
+
+    fit = least_squares(residual, np.full(count, collective), bounds=(0, 1),
+                        xtol=1e-12, ftol=1e-12, gtol=1e-12)
+    if not fit.success or np.linalg.norm(residual(fit.x)) > 1e-6:
+        raise ValueError("Configured CG has no balanced per-rotor hover trim")
+    return control(fit.x)
+
+
 def propulsion_telemetry(control: Control, params: AircraftParams, axial_speed_m_s: float = 0.0) -> dict[str, float]:
     """Report static bench estimates, without a battery or voltage-sag model."""
     _, _, samples = lift_propulsion(control, params)

@@ -10,6 +10,23 @@ from spearhead.controls import Control
 from spearhead.dynamics import dynamics
 from spearhead.sitl.backend import CONFIG_ROOT, Session, load_setup
 from spearhead.sitl.flight import bootstrap_mode, flight_parameters, manual_elevator_rc, parameters_match, startup_states, surface_pwm
+
+
+def test_prototype_pitot_check_accepts_fresh_hud_only_with_verified_sensor_health():
+    from spearhead.sitl.flight import firmware_pitot_speed
+    status = {key: 16 for key in ("onboard_control_sensors_present", "onboard_control_sensors_enabled", "onboard_control_sensors_health")}
+    telemetry = {"SYS_STATUS": status, "VFR_HUD": {"airspeed": 23.3}}
+    stamps = {"SYS_STATUS": 10, "VFR_HUD": 10}
+    params = {"ARSPD_TYPE": 100, "ARSPD_USE": 1}
+    assert firmware_pitot_speed(telemetry, stamps, params, 10.1) == 23.3
+    assert firmware_pitot_speed(telemetry, stamps, params, 13) is None
+    assert firmware_pitot_speed(telemetry, stamps, {**params, "ARSPD_USE": 0}, 10.1) is None
+    assert firmware_pitot_speed(telemetry, stamps, params, 9) is None
+    for key in status:
+        unhealthy = {**telemetry, "SYS_STATUS": {**status, key: 0}}
+        assert firmware_pitot_speed(unhealthy, stamps, params, 10.1) is None
+    assert firmware_pitot_speed(telemetry, {**stamps, "SYS_STATUS": 7}, params, 10.1) is None
+    assert firmware_pitot_speed({**telemetry, "VFR_HUD": {"airspeed": float("nan")}}, stamps, params, 10.1) is None
 from spearhead.sitl.metrics import analyse_truth, analyse_elevator_truth, command_at, elevator_at, step_response
 from spearhead.sitl.physics import Physics
 from test_sitl import packet
@@ -64,7 +81,7 @@ def test_servo_trim_quantization_and_firmware_positive_command_moment(setup, axi
     params = flight_parameters(mapping, physics.state, trim)
     assert params["ARMING_SKIPCHK"] == 0 and params["ARMING_REQUIRE"] == 1
     assert params["AHRS_EKF_TYPE"] == 3
-    assert params["SERVO2_TRIM"] == 1575
+    assert params["SERVO2_TRIM"] == surface_pwm(mapping.elevator, trim.de)
 
 
 def test_quantized_roll_command_targets_match_rc_resolution():

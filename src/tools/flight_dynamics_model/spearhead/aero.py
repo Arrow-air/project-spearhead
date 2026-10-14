@@ -141,6 +141,7 @@ def aero_model_adb(
             float(np.rad2deg(alpha)), float(np.rad2deg(beta)), control,
             deflection_policy=params.control_deflection_policy,
             limits_deg=params.control_surface_limits_deg,
+            velocity_m_s=V_raw,
         )
         for key, value in control_coefficients.items():
             total_coefficients[key] += value

@@ -1,20 +1,24 @@
-# PT1 flat-ground start; landing gear constants are provisional.
+# PT1.5 flat-ground start; landing gear constants are provisional.
 firmware: Plane-4.7.1
 aircraft: pt1_as_built
 aerodynamics: tail_update_2026_10_07
 flight_regime: ground
-cg_body_xyz_m: [-0.15, 0.0, 0.15]
+# Forward simulation candidate; z is retained provisionally, not inferred from CAD.
+cg_body_xyz_m: [0.01, 0.0, 0.15]
+hover_trim: independent_rotors
 speed_m_s: 0
 altitude_m: 20
 max_step_s: 0.0025
 physics_rate_hz: 200
 control_deflection_policy: linear
+# Aero-team proposal relayed by user on 2026-10-11: ±30° for all surfaces.
+# Linear PWM mapping is still uncalibrated; measured AeroDB coverage is separate.
 channels:
-  aileron: {number: 1, travel_deg: 20}
-  elevator: {number: 2, reverse: true, travel_deg: 20}
+  aileron: {number: 1, travel_deg: 30}
+  elevator: {number: 2, reverse: true, travel_deg: 30}
   # MAD AMPX factory PWM envelope; actual aircraft ESC still requires calibration.
   pusher: {number: 3, minimum: 1050, maximum: 1940}
-  rudder: {number: 4, travel_deg: 20}
+  rudder: {number: 4, travel_deg: 30}
   # FDM order FR, RR, RL, FL; ArduPilot motor outputs 5, 8, 6, 7.
   lift:
     - {number: 5, minimum: 1100, maximum: 1940}

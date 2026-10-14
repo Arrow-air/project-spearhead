@@ -13,6 +13,7 @@ import numpy as np
 from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_firmware
 from .__main__ import telemetry_record
 from .flight import parameters_match
+from . import ardupilot_density_ratio, sitl_home_argument
 from .quad import GROUND_HOME, quad_parameters, ground_home_matches
 
 
@@ -85,7 +86,8 @@ def run(args):
         raise ValueError("Ground flight requires a ground initial point")
     output = Path(args.output).resolve(); output.mkdir(parents=True, exist_ok=False)
     firmware = verify_firmware(args.binary)
-    params = quad_parameters(manifest["trim_control"]["lift_throttle"], CONFIG_ROOT / "quad_hover_controller.json")
+    params = quad_parameters(manifest["trim_control"]["lift_throttle"], CONFIG_ROOT / "quad_hover_controller.json",
+                            ardupilot_density_ratio(-physics.state[2]))
     params.update(SERVO3_FUNCTION=70, SERVO3_MIN=mapping.pusher.minimum,
                   SERVO3_MAX=mapping.pusher.maximum, SERVO3_TRIM=mapping.pusher.minimum,
                   Q_GUIDED_MODE=1, Q_OPTIONS=65536, Q_NAVALT_MIN=2,
@@ -136,7 +138,7 @@ def run(args):
         worker = threading.Thread(target=backend, daemon=True); worker.start()
         try:
             with (output / "sitl.log").open("x") as slog, (output / "telemetry.jsonl").open("x") as tlog:
-                command = [str(Path(args.binary).resolve()), "--model", "JSON:127.0.0.1", "--home", "47.397742,8.545594,500,0",
+                command = [str(Path(args.binary).resolve()), "--model", "JSON:127.0.0.1", "--home", sitl_home_argument(),
                            "--rate", "200", "--speedup", "1", "--sim-port-out", str(args.port),
                            "--base-port", str(args.mavlink_port), "--defaults", str(overlay), "--wipe"]
                 manifest["sitl_command"] = command

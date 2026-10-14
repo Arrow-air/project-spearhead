@@ -8,6 +8,7 @@ from ..controls import Control
 from ..dynamics import dynamics
 from ..force_moment import compute_force_moment_breakdown
 from ..rotations import euler_body_to_ned
+from . import SITL_HOME, ardupilot_isa_density
 
 
 def common_control_alpha_bounds(params):
@@ -66,11 +67,30 @@ def sensor_state(t, x, params, control, *, hold=False, ground=None):
         accel = (loads["total"]["force_b"] - loads["gravity"]["force_b"]) / params.mass
         if ground is not None:
             accel += ground.loads(x)[0] / params.mass
-    # Airspeed is omitted: 4.7.1 derives EAS/pitot from velocity and atmosphere.
-    # No TAS value is injected into the pitot/EAS field at the wrong density.
     return {"timestamp": t, "imu": {"gyro": x[9:12].tolist(), "accel_body": accel.tolist()},
             "position": x[:3].tolist(), "velocity": (rotation @ x[3:6]).tolist(),
-            "attitude": x[6:9].tolist()}
+            "attitude": x[6:9].tolist(), "airspeed": ardupilot_pitot_airspeed(x, params)}
+
+
+def ardupilot_pitot_airspeed(x, params):
+    """JSON airspeed that makes ArduPilot indicate the FDM's equivalent airspeed.
+
+    Without this field, 4.7.1 JSON passes body TAS to its pitot model and converts it
+    with its own standard-atmosphere density at the vehicle AMSL altitude, not the FDM
+    density. 4.7.1 treats this field as true airspeed and divides it by that same ISA
+    EAS2TAS, so scaling by sqrt(rho_FDM/rho_ISA) yields TAS*sqrt(rho_FDM/1.225). The
+    20-degree pitot cone and cosine roll-off copy Aircraft::update_eas_airspeed.
+    """
+    u, v, w = (float(value) for value in x[3:6])
+    pitot = math.sqrt(u*u + v*v + w*w)
+    pitot_aoa = math.atan2(math.hypot(v, w), u)
+    max_pitot_aoa = math.radians(20)
+    if pitot_aoa > math.radians(90):
+        pitot = 0.
+    elif pitot_aoa > max_pitot_aoa:
+        pitot *= math.cos((pitot_aoa - max_pitot_aoa)*(math.pi/2)/(math.radians(90) - max_pitot_aoa))
+    altitude_amsl = SITL_HOME[2] - float(x[2])
+    return pitot*math.sqrt(params.rho/ardupilot_isa_density(altitude_amsl))
 
 
 class Physics:

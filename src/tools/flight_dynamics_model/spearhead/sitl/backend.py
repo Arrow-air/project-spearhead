@@ -43,7 +43,7 @@ def load_setup(path=None):
     config = yaml.safe_load(path.read_text())
     required = {"firmware", "aircraft", "aerodynamics", "cg_body_xyz_m", "speed_m_s",
                 "altitude_m", "max_step_s", "physics_rate_hz", "channels"}
-    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact"}:
+    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact", "hover_trim"}:
         raise ValueError("Invalid SITL configuration fields")
     if config["firmware"] != FIRMWARE_TAG or config["aerodynamics"] != DATASET:
         raise ValueError("This integration requires Plane-4.7.1 and the new AeroDB")
@@ -67,16 +67,20 @@ def load_setup(path=None):
                      control_surface_limits_deg=tuple(getattr(mapping, name).travel_deg
                                                       for name in ("elevator", "aileron", "rudder")))
     regime = config.get("flight_regime", "fixed_wing")
+    hover_trim = config.get("hover_trim", "collective")
+    if hover_trim not in ("collective", "independent_rotors") or ("hover_trim" in config and regime not in ("hover", "ground")):
+        raise ValueError("Hover trim must select collective or independent_rotors for a hover or ground start")
     ground = None
     if regime in ("hover", "ground"):
-        from ..propulsion import hover_collective
+        from ..propulsion import hover_collective, hover_trim_control
         from ..controls import Control
         from ..dynamics import dynamics
         if len(mapping.lift) != 4 or config["speed_m_s"] != 0 or not np.isfinite(config["altitude_m"]) or config["altitude_m"] <= 0:
             raise ValueError("Hover requires four lift channels, zero initial speed and positive altitude")
         state = np.zeros(12)
         state[2] = -config["altitude_m"]
-        control = Control(0, 0, 0, 0, lift_throttle=hover_collective(params))
+        control = (hover_trim_control(params) if hover_trim == "independent_rotors" else
+                   Control(0, 0, 0, 0, lift_throttle=hover_collective(params)))
         if np.linalg.norm(dynamics(0, state, params, control)[3:]) > 1e-6:
             raise ValueError("Symmetric collective does not balance the configured hover CG")
         if regime == "ground":
@@ -180,7 +184,7 @@ class Session:
         if params.deflection_database_path is not None and speed >= 1e-6:
             _, coverage = load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).increments_at(
                 alpha, beta, control, deflection_policy=params.control_deflection_policy,
-                limits_deg=params.control_surface_limits_deg)
+                limits_deg=params.control_surface_limits_deg, velocity_m_s=float(speed))
         self.last_record = {"frame": frame.count, "advertised_rate_hz": frame.rate,
                             "physics_rate_hz": getattr(self.physics, "rate_hz", 200), "time_s": self.physics.time,
                             "hold": self.physics.hold, "pwm": frame.pwm, "control": asdict(control),

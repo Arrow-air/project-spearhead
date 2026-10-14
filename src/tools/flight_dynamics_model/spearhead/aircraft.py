@@ -205,7 +205,8 @@ def aircraft_summary(params) -> dict[str, Any]:
         _, control_data = database.increments_at(0, 0, Control(0, 0, 0, 0))
         control_data = {"coverage": control_data["coverage"], "beta_deg": database.beta_deg,
                         "outside_coverage_policy": "hold endpoint and report",
-                        "combined_surfaces_policy": "add independent increments; interactions unmeasured",
+                        "velocity_policy": "interpolate normalized plane coefficients after flagged alpha hold / bounded deflection extrapolation; hold speed endpoints" if hasattr(database, "planes") else "constant coefficients scaled by dynamic pressure",
+                        "combined_surfaces_policy": "measured elevator/rudder residual with bounded interpolation; other combinations additive" if hasattr(database, "interactions") else "add independent increments; interactions unmeasured",
                         "rate_derivatives": "provisional"}
     return {
         "id": params.aircraft_id,

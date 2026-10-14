@@ -22,31 +22,48 @@ from spearhead.trim import trim_fixed_wing_longitudinal
 from spearhead.sitl.physics import common_control_alpha_bounds
 
 ROOT = FDM_ROOT / "data/aerodynamics/tail_update_2026_10_07"
+# Pin these historical intake/extrapolation checks to their original delivery.
+LEGACY = "tail_update_2026_10_07_controls_2026_10_09"
 
 
 def source_rows():
-    with load_aircraft_config("pt1_as_built").deflection_database_path.open() as stream:
+    with load_aircraft_config("pt1_as_built", aerodynamics=LEGACY).deflection_database_path.open() as stream:
         reader = csv.DictReader(stream)
         reader.fieldnames = [name.strip() for name in reader.fieldnames]
         return [{key: float(value) for key, value in row.items() if key != "case_id"} for row in reader]
 
 
-def test_preserves_original_deliveries_and_overrides_only_the_conflicting_header():
+def test_preserves_deliveries_and_recovers_the_exported_origin_numerically():
     source = json.loads((ROOT / "source.json").read_text())
     for name, info in source["sources"].items():
         assert hashlib.sha256((ROOT / info["path"]).read_bytes()).hexdigest() == info["sha256"]
-    raw = (ROOT / "sources/database.csv").read_text()
-    assert (ROOT / "database.csv").read_text() == raw.replace(
-        "moment_center_body_xyz=(-0.1,0,0.15)", "moment_center_body_xyz=(0,0,0)", 1,
+    def rows(path):
+        with path.open() as stream:
+            return list(csv.DictReader(line for line in stream if not line.startswith("#")))
+    original = rows(ROOT / "sources/database.csv")
+    normalized = rows(ROOT / "database.csv")
+    force = np.array([[float(row[k]) for k in ("Fx", "Fy", "Fz")] for row in original])
+    moment = np.array([[float(row[k]) for k in ("Mx", "My", "Mz")] for row in original])
+    output_force = np.array([
+        [float(row[k]) for k in ("Fx", "Fy", "Fz")] for row in normalized
+    ])
+    output_moment = np.array([
+        [float(row[k]) for k in ("Mx", "My", "Mz")] for row in normalized
+    ])
+    np.testing.assert_array_equal(output_force, force)
+    np.testing.assert_allclose(
+        output_moment, moment + np.cross([-.1, 0, .15], force), atol=1e-9,
     )
-    p = load_aircraft_config("pt1_as_built")
+    assert len(original) == len(normalized) == 32761
+    assert hashlib.sha256((ROOT / "database.csv").read_bytes()).hexdigest() == source["active_base"]["active_sha256"]
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     database = load_aerodynamic_database(p.aero_database_path)
     assert len(database.alpha_grid_deg) * len(database.beta_grid_deg) == 32761
     assert p.rho == database.reference.rho == 1.021
     np.testing.assert_equal(database.reference.moment_center_body_xyz, [0, 0, 0])
     assert p.cref == 0.457  # Wing reference chord, not the updated tail chord.
     assert p.geometry.tail_chord is None
-    active = source["active_controls"]
+    active = source["previous_active_controls"]
     assert hashlib.sha256(p.deflection_database_path.read_bytes()).hexdigest() == active["sha256"]
 
 
@@ -58,10 +75,10 @@ def test_results_intake_preserves_loads_and_excludes_only_sideslip_baselines(tmp
     assert report["source_cases"] == 54 and report["active_cases"] == 49
     assert report["overlap_cases"] == 17 and report["overlap_fields"] == 204
     assert not report["changed_overlap_fields"]
-    assert output.read_bytes() == load_aircraft_config("pt1_as_built").deflection_database_path.read_bytes()
+    assert output.read_bytes() == load_aircraft_config("pt1_as_built", aerodynamics=LEGACY).deflection_database_path.read_bytes()
     assert all(float(r["beta"]) != 0 and all(float(r[k]) == 0 for k in ("aileron", "elevator", "rudder"))
                for r in report["audit_only_sideslip_baselines"])
-    assert common_control_alpha_bounds(load_aircraft_config("pt1_as_built")) == (-5., 30.)
+    assert common_control_alpha_bounds(load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)) == (-5., 30.)
 
 
 def test_results_intake_cannot_silently_discard_a_nonzero_beta_control_case(tmp_path):
@@ -81,7 +98,7 @@ def test_results_intake_cannot_silently_discard_a_nonzero_beta_control_case(tmp_
 
 @pytest.mark.parametrize("speed", [18., 22., 25., 28.])
 def test_new_positive_alpha_control_increments_scale_speed_and_shift_moments_once(speed):
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     rows = source_rows()
     base = next(r for r in rows if r["alpha"] == 10 and all(r[k] == 0 for k in ("aileron", "elevator", "rudder")))
     row = next(r for r in rows if r["alpha"] == 10 and r["elevator"] == 5)
@@ -98,7 +115,7 @@ def test_new_positive_alpha_control_increments_scale_speed_and_shift_moments_onc
 
 @pytest.mark.parametrize("row", source_rows())
 def test_all_delivered_cases_reproduce_measured_load_increments(row):
-    p = replace(load_aircraft_config("pt1_as_built"), cg_body_xyz=np.zeros(3))
+    p = replace(load_aircraft_config("pt1_as_built", aerodynamics=LEGACY), cg_body_xyz=np.zeros(3))
     alpha = np.deg2rad(row["alpha"])
     velocity = row["velocity"] * np.array([np.cos(alpha), 0, np.sin(alpha)])
     zero = Control(0, 0, 0, 0)
@@ -115,7 +132,7 @@ def test_all_delivered_cases_reproduce_measured_load_increments(row):
 
 
 def test_interpolates_sparse_controls_without_double_counting_and_scales_density_speed_cg():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     zero = Control(0, 0, 0, 0)
     half = replace(zero, da=np.deg2rad(2.5))
     full = replace(zero, da=np.deg2rad(5))
@@ -134,7 +151,7 @@ def test_interpolates_sparse_controls_without_double_counting_and_scales_density
 
 
 def test_outside_coverage_holds_endpoints_and_exposes_assumptions():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     database = load_deflection_database(p.deflection_database_path, p.aerodb_reference)
     query = Control(np.deg2rad(20), np.deg2rad(5), 0, 0)
     values, coverage = database.increments_at(40, 2, query)
@@ -149,7 +166,7 @@ def test_outside_coverage_holds_endpoints_and_exposes_assumptions():
 
 
 def test_rate_derivatives_remain_provisional_with_measured_controls():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     control = Control(0, np.deg2rad(3), 0, 0)
     velocity = np.array([25, 0, 0])
     rates = np.array([0.1, -0.2, 0.3])
@@ -164,7 +181,7 @@ def test_rate_derivatives_remain_provisional_with_measured_controls():
 @pytest.mark.parametrize("surface,field", [("elevator", "de"), ("aileron", "da"), ("rudder", "dr")])
 @pytest.mark.parametrize("sign", [-1, 1])
 def test_assumed_travel_extrapolates_each_measured_side_and_stops_at_limit(surface, field, sign):
-    p = replace(load_aircraft_config("pt1_as_built"), cg_body_xyz=np.zeros(3),
+    p = replace(load_aircraft_config("pt1_as_built", aerodynamics=LEGACY), cg_body_xyz=np.zeros(3),
                 control_deflection_policy="linear", control_surface_limits_deg=(20., 20., 20.))
     zero = Control(0, 0, 0, 0)
     velocity = np.array([25., 0, 0])
@@ -187,7 +204,7 @@ def test_assumed_travel_extrapolates_each_measured_side_and_stops_at_limit(surfa
 
 
 def test_extrapolation_keeps_alpha_and_beta_at_measured_endpoints():
-    p = load_aircraft_config("pt1_as_built")
+    p = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY)
     db = load_deflection_database(p.deflection_database_path, p.aerodb_reference)
     command = Control(0, np.deg2rad(10), 0, 0)
     outside, coverage = db.increments_at(40, 2, command, deflection_policy="linear", limits_deg=(20, 20, 20))
@@ -199,7 +216,7 @@ def test_extrapolation_keeps_alpha_and_beta_at_measured_endpoints():
 
 def test_hardware_and_databases_can_be_switched_independently():
     reference = load_aircraft_config("reference_design")
-    new = select_aerodynamics(reference, "tail_update_2026_10_07")
+    new = select_aerodynamics(reference, LEGACY)
     old = select_aerodynamics(new, "adb_v1_1")
     assert new.lift_system == reference.lift_system
     assert new.pusher_installed
@@ -208,25 +225,28 @@ def test_hardware_and_databases_can_be_switched_independently():
     assert old.geometry == reference.geometry
     assert old.deflection_database_path is None
     assert aircraft_summary(new)["control_data"]["coverage"]["elevator"]["alpha_deg"] == [-5, 30]
-    assert "pitch_doublet.yaml" not in scenario_options_for_aircraft("reference_design", "tail_update_2026_10_07")
+    # The corrected moment reference now admits this longitudinal trim.
+    assert "pitch_doublet.yaml" in scenario_options_for_aircraft("reference_design", "tail_update_2026_10_07")
 
 
 def test_new_trim_does_not_accept_solver_termination_without_balance():
-    p = load_aircraft_config("reference_design", aerodynamics="tail_update_2026_10_07")
-    trim = trim_fixed_wing_longitudinal(p, target_speed=25)
+    p = load_aircraft_config("reference_design", aerodynamics=LEGACY)
+    # A genuinely unreachable low-speed equilibrium must still be rejected.
+    trim = trim_fixed_wing_longitudinal(p, target_speed=5)
     assert not trim["success"]
     assert -5 <= trim["de_deg"] <= 5
     assert "balance" in trim["message"]
-    config = load_scenario(FDM_ROOT / "scenarios/pitch_doublet.yaml", aerodynamics="tail_update_2026_10_07")
+    config = load_scenario(FDM_ROOT / "scenarios/pitch_doublet.yaml", aerodynamics=LEGACY)
+    config = replace(config, trim_target_speed=5)
     with pytest.raises(ValueError, match="Trim failed"):
         run_simulation(config)
 
 
 def test_open_loop_new_database_runs_and_gui_switch_resets_history():
-    config = load_scenario(FDM_ROOT / "scenarios/aero_database_check.yaml")
+    config = load_scenario(FDM_ROOT / "scenarios/aero_database_check.yaml", aerodynamics=LEGACY)
     result = run_simulation(config)
     assert result.success and np.all(np.isfinite(result.states))
-    assert config.params.aero_dataset_id == "tail_update_2026_10_07"
+    assert config.params.aero_dataset_id == LEGACY
     session = FlightDeckSession("new", config)
     session.step_once()
     assert session.aerodynamic_coverage() is not None
@@ -237,11 +257,11 @@ def test_open_loop_new_database_runs_and_gui_switch_resets_history():
 
 
 def test_missing_zero_baseline_is_rejected(tmp_path):
-    text = load_aircraft_config("pt1_as_built").deflection_database_path.read_text()
+    text = load_aircraft_config("pt1_as_built", aerodynamics=LEGACY).deflection_database_path.read_text()
     path = tmp_path / "bad.csv"
     path.write_text('\n'.join(line for line in text.splitlines() if not line.startswith('Case008,')))
     with pytest.raises(ValueError, match="zero-deflection baseline"):
-        load_deflection_database(path, load_aircraft_config("pt1_as_built").aerodb_reference)
+        load_deflection_database(path, load_aircraft_config("pt1_as_built", aerodynamics=LEGACY).aerodb_reference)
 
 
 def test_malformed_delivery_identifies_case_and_field_without_guessing_decimals(tmp_path):
@@ -249,4 +269,4 @@ def test_malformed_delivery_identifies_case_and_field_without_guessing_decimals(
     path.write_text("case_id,alpha,beta,velocity,aileron,elevator,rudder,Fx,Fy,Fz,Mx,My,Mz\n"
                     "Case008,0,0,25,0,0,0,-189.448,974,-2.072.462,-589,-365.681,-3.135\n")
     with pytest.raises(ValueError, match=r"line 2 \(Case008\): invalid Fz=.*Decimal positions must not be guessed"):
-        load_deflection_database(path, load_aircraft_config("pt1_as_built").aerodb_reference)
+        load_deflection_database(path, load_aircraft_config("pt1_as_built", aerodynamics=LEGACY).aerodb_reference)

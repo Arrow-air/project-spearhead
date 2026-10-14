@@ -1,12 +1,25 @@
 # October 2026 AeroDB comparison and integration
 
-Received `database.csv` and `deflection.csv` on 2026-10-07. Both use user-confirmed body-axis moment center (0,0,0) m and density 1.021 kg/m³. Original source bytes are preserved in `sources/`, with SHA-256 hashes in `source.json`. The runtime database changes only the contradictory moment-center metadata; coefficients and dimensional loads are unchanged.
+Dated validation reports and recordings referenced below are retained locally and excluded from Git.
 
-The later `results.csv` control expansion is integrated as of 9 October. See the [update assessment and multi-speed validation](../../../../artifacts/control_results_2026_10_09/assessment.md) for current results, provenance and limitations.
+**Current control revision: 11 October 2026.** `deflection-3.csv` supersedes the
+49-case control revision discussed below. Its preserved source and explicit sparse
+lookup sidecar are versioned in `data/aerodynamics/tail_update_2026_10_07/`.
+See the new intake, transition and flight mechanics review (local report).
+The historical 9 October selector is `tail_update_2026_10_07_controls_2026_10_09`.
+The following numerical comparisons describe their original deliveries and historical intake interpretation.
 
-## Quick comparison
+**14 October confirmation:** the Aero team confirmed that the Nondimit export center of `database.csv` was (-0.1,0,+0.15) and that the deflection tables are referenced to (0,0,0). The base table carries the 1.3 wind-axis drag multiplier and the deflection tables do not (Fx at alpha=0: -24.5 vs -18.9 N). Nondimit applies force corrections before the moment-center shift (Nondimit README, "Force and Moment Corrections"), so restoring `database.csv` to (0,0,0) with its own corrected forces is an exact inverse and the multiplier adds no pitching moment at the origin; the extra drag is in effect applied through (0,0,0). The 0.97 N·m neutral residual at alpha=0 is therefore not explained by the multiplier; base-surrogate versus control-run differences at other alphas are 0.5 to 3.3 N·m (alpha=-5, 5, 10°).
 
-Both base databases contain the complete 181 × 181 alpha/beta grid, −90..90° at 1° steps. The table compares coefficients directly. Moments are evaluated at the same origin, density 1.021 kg/m³ and speed 25 m/s; the old moments are transferred from their documented (−0.15,0,0.15) m center. Density alone does not explain coefficient differences. Updated tail geometry is expected to change loads, but these files do not isolate its effect from export/correction differences.
+**12 October correction:** Nondimit writes the final processed moment center in the export header. The active base is now numerically restored from (-0.1,0,+0.15) to the user-confirmed raw CFD origin (0,0,0). Earlier header-only comparisons and flight results are historical; see the [current validation summary](validation_summary.md).
+
+Received `database.csv` and `deflection.csv` on 2026-10-07. The user confirms raw CFD body-axis moment center (0,0,0) m and density 1.021 kg/m³. The delivered base is a processed Nondimit export at (-0.1,0,+0.15); the control loads inherit the raw origin. Original source bytes are preserved in `sources/`, with SHA-256 hashes in `source.json`. The active base changes dimensional moments and derived moment coefficients by the documented reference transfer; dimensional forces are unchanged, and already-applied drag correction/zeroing is not repeated.
+
+The later `results.csv` control expansion is integrated as of 9 October. See the update assessment and multi-speed validation (local report) for current results, provenance and limitations.
+
+## Historical quick comparison
+
+Both base databases contain the complete 181 × 181 alpha/beta grid, −90..90° at 1° steps. The table compares coefficients directly. This historical table treated the new moments as origin-referenced without restoring the processed export first. That assumption was corrected on 12 October. Both datasets use density 1.021 kg/m³ and speed 25 m/s here; the old moments are transferred from their documented (−0.15,0,0.15) m center. Density alone does not explain coefficient differences. Updated tail geometry is expected to change loads, but these files do not isolate its effect from export/correction differences.
 
 | α (β=0) | Old CL | New CL | Old CD | New CD | Old My at origin (N·m) | New My at origin (N·m) |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -24,9 +37,9 @@ Measured increments are computed by subtracting the matching zero-deflection row
 
 Outside measured alpha bounds, hold the nearest endpoint and flag the approximation. The default deflection policy holds measured endpoints; the configured linear policy extrapolates each measured side up to the assumed mechanical travel limit and flags it. At nonzero beta, use the measured beta=0 plane and flag it. Multiple controls add independent increments; interactions have not been measured. No additional 1.3 drag correction is applied to these measured increments. GUI labels and exported aircraft metadata expose coverage and model assumptions. This is a partial local surrogate, not a complete deflection database.
 
-## Export discrepancy
+## Processed export reference
 
-The base CSV header says moment center (−0.1,0,0.15), contrary to the user-confirmed (0,0,0). At α=0°, the base table gives My≈−13.21 N·m, while the raw zero-deflection row gives −36.57 N·m; similar discrepancies occur at ±5°. The header center and force lever arm could account for much of this difference, but no unrequested moment transformation is applied. The user-confirmed origin is authoritative. Baseline subtraction prevents the deflection file from introducing a second base moment. Reconcile this export discrepancy before treating the new database as a validated stability baseline.
+The base header records a final Nondimit export center (−0.1,0,+0.15). Native Nondimit documentation and source confirm that its header describes the output reference. Restoring the same loads to the raw CFD origin gives `M_origin = M_export + r_export × F`. At V=25 m/s and α=β=0, My changes from −13.2069 to −37.540345 N·m; the control neutral is −36.5681 N·m. The residual is about 0.972 N·m, rather than 23.36 N·m. A reference shift explains most of this discrepancy, but the original CFD/postprocessing history is not independently available and the remaining difference is unresolved. SakeDB supplies dimensional loads; the inspected template does not perform a CG-reference transfer. Baseline subtraction still prevents adding a second neutral base moment. `scripts/recenter_october_database.py` reproduces the 32761-row conversion and verifies it independently.
 
 ## Trim and geometry status
 

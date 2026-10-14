@@ -32,6 +32,9 @@ living engineering record and is published to the Arrow docs site.
 
 | Resource | Description |
 |----------|-------------|
+| [Flight Deck setup](src/tools/flight_dynamics_model/README.md) | Run the local ArduPilot 4.7.1 simulator and aircraft model |
+| [Flight Deck validation](src/tools/flight_dynamics_model/docs/validation_summary.md) | Concise simulator results, tested cases and remaining limits |
+| [Flight Deck capabilities](src/tools/flight_dynamics_model/docs/capabilities.md) | Architecture diagrams, experiments, results and model limits |
 | [Electrical Master Document](docs/electrical-master.md) | Full electrical architecture (SPH-E-001) |
 | [PT1 Parts List](docs/pt1-parts-list.md) | Electrical procurement for the PT1 build |
 | [Information Notes](docs/information-note/) | Aerodynamics and flight-dynamics design notes |

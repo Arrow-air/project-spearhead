@@ -9,8 +9,8 @@ simulation:
 initial_state: [0, 0, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 control:
   throttle: 0
-  # Static weight-support estimate for the selected mass/voltage, not a hover controller.
-  lift_throttle: hover
+  # Independent-rotor static balance for the selected mass/CG, not a hover controller.
+  lift_throttle: balanced_hover
 inputs:
   lift_throttle:
     type: doublet

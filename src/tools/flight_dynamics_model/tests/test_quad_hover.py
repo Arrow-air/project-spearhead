@@ -11,6 +11,23 @@ from spearhead.sitl.quad import hover_thrust_setting, quad_parameters, analyse_h
 from spearhead.gui.sitl_page import sitl_figures
 
 
+@pytest.mark.parametrize("config_name", ["quad_hover.yaml", "quad_ground.yaml", "quad_transition.yaml"])
+def test_prototype_proposed_travel_reaches_physical_limits_without_changing_motor_mapping(config_name):
+    physics, mapping, manifest = load_setup(CONFIG_ROOT / config_name)
+    neutral = [1500] * 8
+    neutral[2] = 1050
+    for index, sign, surface in [(0, 1, "da"), (1, -1, "de"), (3, 1, "dr")]:
+        for pwm, expected in [(800, -30), (1000, -30), (1500, 0), (2000, 30), (2200, 30)]:
+            command = neutral.copy()
+            command[index] = pwm
+            control = mapping.control(command)
+            assert np.rad2deg(getattr(control, surface)) == pytest.approx(sign * expected)
+            assert control.throttle == 0
+            assert control.lift_motor_throttles == mapping.control(neutral).lift_motor_throttles
+    assert physics.params.control_surface_limits_deg == (30, 30, 30)
+    assert manifest["control_model"]["travel_calibrated"] is False
+
+
 def test_hover_setup_balances_actual_four_motor_wrench_with_pusher_off():
     physics, mapping, manifest = load_setup(CONFIG_ROOT / "quad_hover.yaml")
     control = Control(**manifest["trim_control"])
@@ -26,8 +43,33 @@ def test_hover_setup_balances_actual_four_motor_wrench_with_pusher_off():
 def test_unbalanced_hover_cg_is_rejected_instead_of_hidden_compensation(tmp_path):
     config = yaml.safe_load((CONFIG_ROOT / "quad_hover.yaml").read_text())
     config["cg_body_xyz_m"][0] += .1
+    config["hover_trim"] = "collective"
     path = tmp_path / "shifted.yaml"; path.write_text(yaml.safe_dump(config))
     with pytest.raises(ValueError, match="does not balance"):
+        load_setup(path)
+
+
+@pytest.mark.parametrize("cg_x", [-.10, .025, .05])
+def test_explicit_per_rotor_hover_trim_balances_shifted_cg(tmp_path, cg_x):
+    config = yaml.safe_load((CONFIG_ROOT / "quad_hover.yaml").read_text())
+    config["cg_body_xyz_m"][0] = cg_x
+    config["hover_trim"] = "independent_rotors"
+    path = tmp_path / "shifted.yaml"; path.write_text(yaml.safe_dump(config))
+    physics, _, manifest = load_setup(path)
+    control = Control(**manifest["trim_control"])
+    assert control.lift_motor_throttles is not None
+    assert np.ptp(control.lift_motor_throttles) > 0
+    assert control.throttle == 0
+    np.testing.assert_allclose(dynamics(0, physics.state, physics.params, control), 0, atol=1e-8)
+    np.testing.assert_allclose(physics.params.cg_body_xyz, [cg_x, 0, .15])
+
+
+def test_per_rotor_hover_trim_rejects_unreachable_cg(tmp_path):
+    config = yaml.safe_load((CONFIG_ROOT / "quad_hover.yaml").read_text())
+    config["cg_body_xyz_m"][0] = 2
+    config["hover_trim"] = "independent_rotors"
+    path = tmp_path / "unreachable.yaml"; path.write_text(yaml.safe_dump(config))
+    with pytest.raises(ValueError, match="no balanced"):
         load_setup(path)
 
 
@@ -87,8 +129,32 @@ def test_quad_manual_throttle_follows_selected_mode_not_bootstrap_target():
 
 def test_ground_home_rejects_air_start_altitude_and_wrong_position():
     from spearhead.sitl.quad import ground_home_matches
-    home = {"latitude": 473977432, "longitude": 85455940, "altitude": 500000}
+    home = {"latitude": 398582000, "longitude": 325460000, "altitude": 1125000}
     assert ground_home_matches(home)
-    assert not ground_home_matches({**home, "altitude": 520000})
-    assert not ground_home_matches({**home, "latitude": 483977420})
+    assert not ground_home_matches({**home, "altitude": 1145000})
+    assert not ground_home_matches({**home, "latitude": 408582000})
     assert not ground_home_matches({})
+
+
+def test_lift_plot_uses_motor_endpoints_instead_of_servo_limits_or_startup_zero(tmp_path):
+    rows = hover_records(tmp_path/'truth.jsonl')[:3]
+    rows[0]['hold'] = True; rows[0]['pwm'][4:8] = [0]*4
+    rows[1]['pwm'][4:8] = [1100, 1610, 1740, 1940]
+    rows[2]['pwm'][4] = 2005
+    manifest = {'config': {'flight_regime': 'hover'}, 'trim_control': {'de': 0},
+                'parameter_overlay': {'Q_M_PWM_MIN': 1100, 'Q_M_PWM_MAX': 1940,
+                                      'SERVO5_MIN': 1100, 'SERVO5_MAX': 1900}}
+    figure = sitl_figures({'history': rows, 'manifest': manifest})['PWM']
+    assert figure.layout.yaxis.range == (1100, 1940)
+    assert figure.layout.yaxis.autorange is False
+    assert figure.data[0].y == (None, 1100, 2005)  # preserve actual out-of-range values
+    assert [shape.y0 for shape in figure.layout.shapes] == [1100, 1940]
+    assert any('1 motor samples outside limits' in a.text for a in figure.layout.annotations)
+    assert rows[0]['pwm'][4] == 0  # plotting never changes the physical recording
+
+
+def test_lift_plot_reads_archived_config_limits_without_guessing_missing_metadata():
+    from spearhead.gui.sitl_page import lift_pwm_limits
+    assert lift_pwm_limits({'config': {'channels': {'lift': [{'minimum': 1100, 'maximum': 1940}]}}}) == (1100, 1940)
+    assert lift_pwm_limits({}) is None
+    assert lift_pwm_limits({'parameter_overlay': {'Q_M_PWM_MIN': 1940, 'Q_M_PWM_MAX': 1100}}) is None

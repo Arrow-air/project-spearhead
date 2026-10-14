@@ -9,29 +9,29 @@ All profile-relative file paths resolve from the profile directory.
 
 ## Hardware baseline
 
-| Item | Reference Spearhead | PT1 KDE |
+| Item | Reference Spearhead | PT1.5 KDE |
 | --- | --- | --- |
 | Lift motors, four | MAD V8013 PRO IPE 150KV | KDE5215XF-220, 220 RPM/V |
 | Lift ESC | MAD AMPX 80A V2 DroneCAN | KDE-UAS75HVC+ (product ID KDE-UAS75HVC) |
 | Lift propeller | MAD FLUXER PRO 26×7.8, two blades | KDE-CF215-DP 21.5×7.3, two blades |
 | Battery | 12S, 44.4 V nominal, 22 Ah | 12S, 44.4 V nominal, 22 Ah |
 | Pusher | Existing 120 N × throttle placeholder | MAD V8013 150KV / AMPX 80A / APC Sport 20×12; provisional speed-dependent estimate |
-| Lift curve | Pending manufacturer/bench data | Official KDE static data, provisional for PT1 |
+| Lift curve | Pending manufacturer/bench data | Official KDE static data, provisional for PT1.5 |
 
 The planned hardware is preserved from `docs/pt1-parts-list.md`; the KDE hardware
-request supersedes those lift components for PT1. The original 12S/two-blade/pusher-absent
-first-hover setup follows `artifacts/firmware/spearhead-kde-first-hover/README.md`.
+request supersedes those lift components for PT1.5. The original 12S/two-blade/pusher-absent
+first-hover setup is retained as local development history; its diagnostic report is excluded from Git.
 The user added the electric pusher and confirmed 150 KV on 11 October 2026. Confirm
 motor edition and the installed hardware against the real prototype.
 
-PT1 mass is 21 kg and the planned finished reference is 25 kg, as supplied by
+PT1.5 mass is 21 kg and the planned finished reference is 25 kg, as supplied by
 the user. CG, inertia, full reference geometry and nominal motor coordinates
-remain engineering assumptions until measured PT1 values arrive.
+remain engineering assumptions until measured PT1.5 values arrive.
 Component masses are recorded as hardware metadata and are not silently
 added to the total mass. This avoids double counting and inventing inertia/CG.
 This profile is not a reconstructed wingless vehicle or a flight controller.
 
-## PT1 electric pusher update — 11 October 2026
+## PT1.5 electric pusher update — 11 October 2026
 
 `pt1_as_built.yaml` enables the user-selected MAD V8013 PRO IPE **150 KV** motor,
 AMPX 80A (5–14S) ESC and **APC LP20012 Sport 20×12** propeller. `pusher.py`
@@ -48,8 +48,8 @@ CG and omitted reaction torque until measured inputs arrive.
 
 The exact manufacturer map and test-sheet image, transcription, fitted constants,
 assumptions and hashes live under `data/propulsion/pt1_pusher_source.json`.
-The report and performance plot are under `artifacts/pt1_pusher_2026_10_11/`.
-Reproduce them with `scripts/estimate_pt1_pusher.py`. PT1 hover starts still keep
+Generated reports and performance plots remain in local, ignored `artifacts/` folders.
+Reproduce them with `scripts/estimate_pt1_pusher.py`. PT1.5 hover starts still keep
 the pusher off; ground takeoff and transition sequences require separate validation.
 
 ## KDE source and interpolation
@@ -77,7 +77,7 @@ ESC loss, spool dynamics or thermal-duration corrections are applied. Electrical
 readouts are bench estimates at the selected voltage and throttle.
 
 The source test used a **KDE-UAS125UVC** on firmware **D460337**, with synchronous
-rectification deactivated, rather than the PT1 UAS75HVC+. The resulting map is
+rectification deactivated, rather than the PT1.5 UAS75HVC+. The resulting map is
 a static surrogate until the exact installed combination is bench validated.
 Some source points exceed the motor's published 44 A / 1955 W 180-second rating;
 the full test map is not a continuous-duty operating envelope. Ratings are
@@ -110,9 +110,13 @@ simulation history and dependent analysis results.
 
 ## AeroDB selection and changed tail chord
 
-Reference Spearhead retains **ADB v1.1** and its **0.28 m tail chord**. PT1 KDE
+Reference Spearhead retains **ADB v1.1** and its **0.28 m tail chord**. PT1.5 KDE
 defaults to **tail_update_2026_10_07**, using the delivered alpha/beta table and
-49 measured control cases from the 9 October results export, covering alpha −5…30° for each surface at beta=0 and V=25 m/s. Numeric updated tail dimensions are pending.
+the 103-case `deflection-3.csv` control delivery received 11 October. Sparse
+beta-zero samples cover all three surfaces at 25 m/s, including wider travel,
+two additional elevator speed planes and four elevator/rudder combinations.
+Six neutral sideslip cases remain audit data. The 49-case 9 October revision is
+preserved as `tail_update_2026_10_07_controls_2026_10_09`. Numeric updated tail dimensions are pending.
 The wing reference chord remains 0.457 m. Both datasets are selectable with
 either hardware profile through GUI, CLI and API. See the
 [comparison and integration report](aerodb_tail_update_2026_10_07.md) for coverage,
@@ -120,9 +124,10 @@ the corrected moment-center metadata and the unresolved export discrepancy.
 
 Keep the old CSV and versioned `aerodynamic_configs/`. New deliveries should
 add a dataset configuration with paths, geometry version and supplied geometry
-values. The current deflection loader interpolates independent surface increments
-within one beta plane; more beta planes or combined-surface interactions need
-an explicit model extension. Preserve the database's
+values. The current expanded loader triangulates sparse alpha/deflection planes,
+interpolates normalized elevator coefficients across speed with explicit endpoint
+assumptions, and adds a bounded residual for the measured elevator/rudder pairs.
+Control beta dependence and other surface interactions remain unmeasured. Preserve the database's
 reference-area/chord/moment-centre metadata rather than substituting tail chord
 for the aircraft reference chord. Database-provided control effects must replace
 the corresponding provisional increments to avoid counting them twice.

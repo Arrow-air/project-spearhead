@@ -15,22 +15,31 @@ from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_fir
 from .__main__ import telemetry_record
 from .flight import parameters_match
 from .ground_control import ModeCommands, QUADPLANE_MODES
+from .transition import transition_parameters, transition_command, analyse_transition, forward_trim_parameters
 from ..propulsion import load_static_performance, lift_propulsion
 
-GROUND_HOME = (47.397742, 8.545594, 500.0)
+from .hover_doublets import HOVER_DOUBLETS, hover_doublet_plan, hover_doublet_command, analyse_hover_doublet
+
+from . import SITL_HOME, ardupilot_density_ratio, sitl_home_argument
+
+GROUND_HOME = SITL_HOME
 
 PARAMETER_RENAMES = {"Q_P_JERK_NE": "Q_P_NE_JERK", "Q_P_JERK_D": "Q_P_D_JERK"}
 
 
-def hover_thrust_setting(actuator, spin_min=.15, spin_max=.95, expo=.75):
-    """Inverse 4.7.1 motor linearization at fixed voltage, not PWM percentage."""
+def hover_thrust_setting(actuator, spin_min=.15, spin_max=.95, expo=.75, air_density_ratio=1.):
+    """Inverse 4.7.1 motor linearization at fixed voltage, not PWM percentage.
+
+    4.7.1 divides VTOL throttle by the AHRS air-density ratio before linearization, so
+    the parameter that reproduces a physical actuator command is thrust*ratio.
+    """
     ratio = (actuator-spin_min)/(spin_max-spin_min)
     if not 0 < ratio < 1:
         raise ValueError("Hover command outside usable motor range")
-    return (1-expo)*ratio + expo*ratio**2
+    return ((1-expo)*ratio + expo*ratio**2)*air_density_ratio
 
 
-def quad_parameters(collective, baseline):
+def quad_parameters(collective, baseline, air_density_ratio=1.):
     # Preserve supplied log's VTOL controller gains; do not copy board/CAN wiring.
     logged = json.loads(Path(baseline).read_text())["parameters"]
     params = {PARAMETER_RENAMES.get(key, key): value for key, value in logged.items()
@@ -39,7 +48,7 @@ def quad_parameters(collective, baseline):
                   SERVO5_FUNCTION=33, SERVO6_FUNCTION=34, SERVO7_FUNCTION=35, SERVO8_FUNCTION=36,
                   Q_M_PWM_MIN=1100, Q_M_PWM_MAX=1940, Q_M_SPIN_MIN=.15, Q_M_SPIN_MAX=.95,
                   Q_M_SPIN_ARM=.1, Q_M_THST_EXPO=.75, Q_M_HOVER_LEARN=0,
-                  Q_M_THST_HOVER=hover_thrust_setting(collective), Q_THROTTLE_EXPO=0,
+                  Q_M_THST_HOVER=hover_thrust_setting(collective, air_density_ratio=air_density_ratio), Q_THROTTLE_EXPO=0,
                   Q_M_BAT_VOLT_MAX=0, Q_M_BAT_VOLT_MIN=0,
                   ARMING_REQUIRE=1, ARMING_SKIPCHK=0, AHRS_EKF_TYPE=3, EK3_ENABLE=1,
                   FLTMODE_CH=0, RC1_DZ=0, RC2_DZ=0, RC4_DZ=0, RC3_DZ=60,
@@ -52,7 +61,7 @@ def quad_parameters(collective, baseline):
 def quad_throttle_pwm(mode, hover_thrust, *, minimum=1000, maximum=2000, dead_zone=60):
     """Keep neutral climb input in altitude modes, calculated throttle in manual Q modes.
 
-    Fixed-wing modes retain centre throttle input; PT1 now has an estimated
+    Fixed-wing modes retain centre throttle input; PT1.5 now has an estimated
     electric pusher. This helper does not validate a transition or tune throttle.
     This is a pilot input only. Firmware remains the owner of all motor outputs.
     """
@@ -102,14 +111,31 @@ def analyse_hover(path, initial_altitude, duration):
 def run(args):
     from pymavlink import mavutil
     interactive = getattr(args, "interactive", False)
-    physics, mapping, manifest = load_setup(getattr(args, "config", None) or CONFIG_ROOT / "quad_hover.yaml")
+    transition = getattr(args, "transition", False)
+    doublet = getattr(args, "doublet", None)
+    if doublet and (interactive or transition or args.duration < 45):
+        raise ValueError("Hover doublets require 45 s and cannot be interactive or transitions")
+    parameter_set = getattr(args, "transition_parameters", "pt15")
+    if interactive and transition:
+        raise ValueError("Choose an interactive session or an automated transition")
+    default = "quad_transition.yaml" if transition else "quad_hover.yaml"
+    physics, mapping, manifest = load_setup(getattr(args, "config", None) or CONFIG_ROOT / default)
     if manifest["config"].get("flight_regime") != "hover":
         raise ValueError("Quad runner requires a hover initial point")
+    if transition and (physics.params.aircraft_id != "pt1_as_built" or -physics.state[2] < 40):
+        raise ValueError("Transition diagnostic requires PT1.5 and at least 40 m initial altitude")
     output = Path(args.output).resolve(); output.mkdir(parents=True, exist_ok=False)
     firmware = verify_firmware(args.binary)
     collective = manifest["trim_control"]["lift_throttle"]
     baseline = CONFIG_ROOT / "quad_hover_controller.json"
-    params = quad_parameters(collective, baseline)
+    params = quad_parameters(collective, baseline, ardupilot_density_ratio(-physics.state[2]))
+    plan = hover_doublet_plan(doublet, params) if doublet else None
+    forward_params = {}
+    if transition:
+        params.update(transition_parameters(parameter_set))
+        forward_params, forward_state, forward_control = forward_trim_parameters(
+            physics.params, mapping, -physics.state[2], include_simulation_gains=parameter_set == "pt15")
+        params.update(forward_params)
     params.update(SERVO3_FUNCTION=70, SERVO3_MIN=mapping.pusher.minimum,
                   SERVO3_MAX=mapping.pusher.maximum, SERVO3_TRIM=mapping.pusher.minimum)
     overlay = output / "quad.parm"
@@ -126,25 +152,46 @@ def run(args):
                     hover_firmware_thrust_fraction=params["Q_M_THST_HOVER"],
                     bootstrap="stationary airborne hold; normal arm in QSTABILIZE; spool at hover; explicit release; QHOVER",
                     fdm_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=CONFIG_ROOT, text=True).strip())
+    if plan:
+        manifest.update(test_kind="control_doublet", doublet_plan=plan)
+    if transition:
+        manifest.update(test_kind="quad_transition", transition_plan={
+            "hover_settle_s": 10, "forward_mode": "FBWA", "rc3_ramp_s": 5,
+            "rc3_target_us": 1900, "parameter_set": parameter_set,
+            "forward_gains": "existing provisional simulation gains" if parameter_set == "pt15" else "frozen 9 October proposal and factory rate gains; no tuning",
+            "cg_policy": "retain configured prototype CG; no diagnostic trim relocation"})
+        manifest["forward_trim"] = {"speed_m_s": 24, "state": forward_state.tolist(),
+                                    "control": asdict(forward_control), "firmware_parameters": forward_params}
     curve = load_static_performance(physics.params.lift_system.performance_path)
     manifest["static_lift_to_weight"] = 4*curve.lookup(44.4, 1)["thrust_n"]/(physics.params.mass*physics.params.g)
     manifest["limitations"] += ["No ground/contact, battery sag, rotor transient or propwash model; air-start only",
-                                 "Logged VTOL gains are a simulation starting point, not a PT1 hardware tune"]
+                                 "Logged VTOL gains are a simulation starting point, not a PT1.5 hardware tune"]
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
     session = Session(physics, mapping)
     stop, errors = threading.Event(), []
     telemetry, observed, events = {}, {}, []
     link = process = None
     armed_at = release_at = None
+    forward_confirmed_at = None
     version = arm_ack = controls_ready = False
     home_requested = home_confirmed = False
     last_rc = last_arm = last_mode = -100.
     critical = {key: params[key] for key in ("Q_ENABLE", "Q_FRAME_CLASS", "Q_FRAME_TYPE", "Q_M_PWM_MIN", "Q_M_PWM_MAX", "Q_M_THST_HOVER", "ARMING_REQUIRE", "ARMING_SKIPCHK", "AHRS_EKF_TYPE", "RC3_MIN", "RC3_MAX", "RC3_REVERSED", "RC3_DZ", "Q_THROTTLE_EXPO")}
     critical.update({key: value for key, value in params.items() if key.startswith(("Q_A_", "Q_P_"))})
-    critical.update(SCHED_LOOP_RATE=100, Q_ASSIST_SPEED=-1, SERVO5_FUNCTION=33, SERVO6_FUNCTION=34, SERVO7_FUNCTION=35, SERVO8_FUNCTION=36)
+    critical.update(SCHED_LOOP_RATE=100, Q_ASSIST_SPEED=params["Q_ASSIST_SPEED"], SERVO5_FUNCTION=33, SERVO6_FUNCTION=34, SERVO7_FUNCTION=35, SERVO8_FUNCTION=36)
     critical.update({key: params[key] for key in ("SERVO3_FUNCTION", "SERVO3_MIN", "SERVO3_MAX", "SERVO3_TRIM")})
+    if plan:
+        critical.update({f"RC{channel}_{field}": value for channel in (1, 2, 4)
+                         for field, value in (("MIN", 1000), ("MAX", 2000), ("TRIM", 1500), ("REVERSED", 0), ("DZ", 0))})
+    if transition:
+        critical.update(transition_parameters(parameter_set))
+        critical.update(forward_params)
     report = {"passed": False, "scenario": "quad_interactive" if interactive else "quad_hover", "test_kind": "interactive_session" if interactive else "quad_hover",
               "interactive": interactive, "validation_run": not interactive, "forced_arm": False}
+    if plan:
+        report.update(scenario="quad_"+doublet, test_kind="control_doublet")
+    if transition:
+        report.update(scenario="quad_transition", test_kind="quad_transition")
     started = time.monotonic()
 
     def event(name, **data):
@@ -169,13 +216,13 @@ def run(args):
         try:
             with (output / "sitl.log").open("x") as slog, (output / "telemetry.jsonl").open("x") as tlog:
                 command = [str(Path(args.binary).resolve()), "--model", "JSON:127.0.0.1",
-                           "--home", "47.397742,8.545594,500,0", "--rate", "200", "--speedup", "1",
+                           "--home", sitl_home_argument(), "--rate", "200", "--speedup", "1",
                            "--sim-port-out", str(args.port), "--base-port", str(args.mavlink_port),
                            "--defaults", str(overlay), "--wipe"]
                 manifest["sitl_command"] = command
                 (output / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
                 process = subprocess.Popen(command, cwd=output, stdout=slog, stderr=subprocess.STDOUT)
-                while time.monotonic()-started < max(150, args.duration*5):
+                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or max(150, args.duration*5)):
                     if errors or not worker.is_alive():
                         raise RuntimeError("Physics backend stopped: "+str(errors))
                     if process.poll() is not None:
@@ -193,6 +240,14 @@ def run(args):
                             link.target_system, link.target_component = msg.get_srcSystem(), msg.get_srcComponent()
                             link.mav.heartbeat_send(6,8,0,0,4)
                             link.mav.request_data_stream_send(link.target_system, link.target_component, 0, 10, 1)
+                            if transition and release_at is not None and physics.time-release_at >= 10:
+                                if msg.custom_mode == 5 and forward_confirmed_at is None:
+                                    forward_confirmed_at = physics.time-release_at
+                                    event("forward_mode_confirmed", mode=5,
+                                          free_time_s=forward_confirmed_at)
+                                elif msg.custom_mode != 5:
+                                    # A fresh confirmation starts a fresh ramp after mode loss.
+                                    forward_confirmed_at = None
                             if not version:
                                 link.mav.command_long_send(link.target_system, link.target_component, 512, 0, 148,0,0,0,0,0,0)
                             for key in critical:
@@ -230,6 +285,10 @@ def run(args):
                         home_requested = True
                         event("ground_home_requested", latitude=GROUND_HOME[0], longitude=GROUND_HOME[1], altitude_m=GROUND_HOME[2])
                     desired_mode = 18 if release_at is not None and now-release_at >= 3 else 17
+                    if transition and release_at is not None and now-release_at >= 3:
+                        desired_mode, _ = transition_command(now-release_at, telemetry["HEARTBEAT"]["custom_mode"], forward_confirmed_at)
+                    if plan and release_at is not None and now-release_at >= 3:
+                        desired_mode, _ = hover_doublet_command(plan, now-release_at, telemetry["HEARTBEAT"]["custom_mode"])
                     if (interactive and not controls_ready and release_at is not None
                             and now-release_at >= 3 and telemetry["HEARTBEAT"]["custom_mode"] == 18):
                         controls_ready = True
@@ -253,6 +312,10 @@ def run(args):
                     if armed_at is not None:
                         rc[2] = quad_throttle_pwm(telemetry["HEARTBEAT"]["custom_mode"] if controls_ready else desired_mode, params["Q_M_THST_HOVER"],
                                                   minimum=params["RC3_MIN"], maximum=params["RC3_MAX"], dead_zone=params["RC3_DZ"])
+                    if transition and release_at is not None and now-release_at >= 3:
+                        _, rc[2] = transition_command(now-release_at, telemetry["HEARTBEAT"]["custom_mode"], forward_confirmed_at)
+                    if plan and release_at is not None and now-release_at >= 3:
+                        _, rc = hover_doublet_command(plan, now-release_at, telemetry["HEARTBEAT"]["custom_mode"])
                     if now-last_rc >= .05:
                         link.mav.rc_channels_override_send(link.target_system,link.target_component,*rc); last_rc = now
                     if armed_at is not None and release_at is None and now-armed_at >= 4:
@@ -267,8 +330,10 @@ def run(args):
                         event("release", pwm=list(session.last_frame.pwm), lift_force_n=force.tolist(), lift_moment_nm=moment.tolist())
                     if release_at is not None:
                         x = physics.state.copy()
-                        if np.max(abs(np.rad2deg(x[6:8]))) > (60 if interactive else 20) or not 5 < -x[2] < (120 if interactive else 40):
+                        if np.max(abs(np.rad2deg(x[6:8]))) > (60 if interactive or transition else 20) or not 5 < -x[2] < (120 if interactive or transition or plan else 40):
                             raise RuntimeError("QuadPlane diagnostic envelope exceeded (attitude or altitude; ground contact is not modelled)")
+                        if transition and np.linalg.norm(x[3:6]) > 30:
+                            raise RuntimeError("Transition diagnostic exceeded the 30 m/s test-speed limit")
                         if now-release_at >= args.duration:
                             break
                 else:
@@ -278,8 +343,8 @@ def run(args):
                 raise RuntimeError("Physics log did not close cleanly")
             report.update({"passed": True, "test_kind": "interactive_session", "validation_run": False,
                            "free_duration_s": physics.time-release_at} if interactive else
-                          analyse_hover(output / "truth.jsonl", -manifest["initial_state"][2], args.duration))
-            if not interactive and telemetry.get("HEARTBEAT",{}).get("custom_mode") != 18:
+                          {} if transition or plan else analyse_hover(output / "truth.jsonl", -manifest["initial_state"][2], args.duration))
+            if not interactive and not transition and not plan and telemetry.get("HEARTBEAT",{}).get("custom_mode") != 18:
                 report["passed"] = False; report["mode_error"] = "QHOVER not confirmed"
         except Exception as exc:
             report["error"] = repr(exc); event("failed", error=repr(exc))
@@ -294,6 +359,19 @@ def run(args):
             report.update(normal_arm=arm_ack, ground_home_confirmed=home_confirmed, observed_parameters=observed, release_at_s=release_at,
                           final_mode=telemetry.get("HEARTBEAT",{}).get("custom_mode"), errors=errors,
                           wall_s=time.monotonic()-started, simulated_s=physics.time)
+            if plan:
+                report.update(analyse_hover_doublet(output / "truth.jsonl", release_at, args.duration, manifest["initial_state"], plan))
+                if report.get("error") or errors:
+                    report["passed"] = False
+            if transition:
+                idle_pwm = int(np.ceil(params["Q_M_PWM_MIN"] + params["Q_M_SPIN_ARM"] *
+                                       (params["Q_M_PWM_MAX"] - params["Q_M_PWM_MIN"]))) + 1
+                analysis = analyse_transition(output / "truth.jsonl", release_at, args.duration,
+                                              -manifest["initial_state"][2], report["final_mode"], idle_pwm)
+                report.update(analysis)
+                report["firmware_transition_done"] = any(e.get("text") == "Transition done" for e in events)
+                if report.get("error") or errors:
+                    report.update(passed=False, transition_completed=False)
             (output / "events.json").write_text(json.dumps(events,indent=2)+"\n")
             (output / "report.json").write_text(json.dumps(report,indent=2)+"\n")
             print(json.dumps(report,indent=2),flush=True)
@@ -302,16 +380,27 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--doublet", choices=tuple(HOVER_DOUBLETS), help="Hover pilot-input doublet; frozen VTOL gains")
     parser.add_argument("--interactive", action="store_true", help="Enable Flight Deck mode commands after QHOVER bootstrap")
+    parser.add_argument("--transition", action="store_true", help="PT1.5 hover-to-FBWA diagnostic; no CG substitution")
+    parser.add_argument("--transition-parameters", choices=("pt15", "first_transition_2026_10_09"), default="pt15",
+                        help="Frozen transition proposal; this option does not tune gains")
     parser.add_argument("--binary", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--config", help="Validated aircraft and initial-condition configuration")
     parser.add_argument("--duration", type=float, default=60)
+    parser.add_argument("--wall-timeout", type=float, help="Host runtime allowance; leaves physics and controller timing unchanged")
     parser.add_argument("--port", type=int, default=19602)
     parser.add_argument("--mavlink-port", type=int, default=16360)
     args = parser.parse_args()
     if not np.isfinite(args.duration) or args.duration < 15:
         parser.error("hover duration must be finite and at least 15 seconds")
+    if args.wall_timeout is not None and (not np.isfinite(args.wall_timeout) or args.wall_timeout <= 0):
+        parser.error("wall timeout must be finite and positive")
+    if args.transition and (args.interactive or args.duration < 60):
+        parser.error("transition requires at least 60 seconds and cannot be interactive")
+    if args.doublet and (args.interactive or args.transition or args.duration < 45):
+        parser.error("hover doublets require at least 45 seconds and cannot be interactive or transitions")
     raise SystemExit(0 if run(args) else 1)
 
 

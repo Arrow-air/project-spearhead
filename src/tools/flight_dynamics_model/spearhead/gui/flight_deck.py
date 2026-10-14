@@ -377,7 +377,7 @@ class FlightDeckSession:
         alpha = float(np.rad2deg(np.arctan2(velocity[2], velocity[0])))
         beta = float(np.rad2deg(np.arcsin(np.clip(velocity[1] / speed, -1, 1))))
         control = control_at(state.time, self.simulation.control_override)
-        return load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).increments_at(alpha, beta, control)[1]
+        return load_deflection_database_cached(params.deflection_database_path, params.aerodb_reference).increments_at(alpha, beta, control, velocity_m_s=float(np.linalg.norm(velocity)))[1]
 
     def latest_result(self) -> SimulationResult | None:
         """Return a completed result, or a partial result if history exists."""

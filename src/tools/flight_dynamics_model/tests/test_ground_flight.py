@@ -1,7 +1,10 @@
+from dataclasses import replace
+
 import numpy as np
 import pytest
 
 from spearhead.controls import Control
+from spearhead.propulsion import hover_trim_control
 from spearhead.sitl.backend import CONFIG_ROOT, load_setup
 from spearhead.sitl.physics import sensor_state
 
@@ -21,8 +24,8 @@ def test_ground_equilibrium_and_accelerometer():
 def test_liftoff_and_landing_are_free_physics():
     physics, _, _ = load_setup(CONFIG_ROOT / "quad_ground.yaml")
     rest = physics.state.copy()
-    control = Control(0, 0, 0, 0, lift_throttle=.9)
-    for _ in range(140):
+    control = hover_trim_control(replace(physics.params, mass=physics.params.mass * 1.2))
+    for _ in range(200):
         physics.advance(.005, control)
     assert -physics.state[2] > 1
     assert not physics.ground.loads(physics.state)[2]["contact"]
@@ -48,7 +51,7 @@ def test_no_ground_loads_in_air_and_friction_is_bounded():
 
 def test_subweight_lift_stays_grounded():
     physics, _, manifest = load_setup(CONFIG_ROOT / "quad_ground.yaml")
-    control = Control(0, 0, 0, 0, lift_throttle=manifest["trim_control"]["lift_throttle"]*.8)
+    control = hover_trim_control(replace(physics.params, mass=physics.params.mass * .8))
     for _ in range(100):
         physics.advance(.005, control)
     assert physics.ground.loads(physics.state)[2]["contact"]

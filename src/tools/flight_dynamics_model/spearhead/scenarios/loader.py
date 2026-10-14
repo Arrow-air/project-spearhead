@@ -11,7 +11,7 @@ from ..config import ControlInputCommand, SimulationConfig
 from ..params import AircraftParams
 from ..aircraft import load_aircraft_config, select_aerodynamics
 from ..controls import as_control
-from ..propulsion import hover_collective
+from ..propulsion import hover_collective, hover_trim_control
 
 
 _ANGLE_SURFACES = {"elevator", "de", "aileron", "da", "rudder", "ruddervator", "dr"}
@@ -69,7 +69,11 @@ def load_scenario(path: str | Path, params: AircraftParams | None = None, *, aer
     control = data.get("control")
     if control is not None:
         control = dict(control)
-        if control.get("lift_throttle") == "hover":
+        if control.get("lift_throttle") == "balanced_hover":
+            balanced = hover_trim_control(params)
+            control["lift_throttle"] = balanced.lift_throttle
+            control["lift_motor_throttles"] = balanced.lift_motor_throttles
+        elif control.get("lift_throttle") == "hover":
             control["lift_throttle"] = hover_collective(params)
         control = as_control({"de": 0.0, "da": 0.0, "dr": 0.0, "throttle": 0.0, **control})
     return SimulationConfig(

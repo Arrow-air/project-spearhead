@@ -11,6 +11,7 @@ import time
 
 import numpy as np
 
+from . import sitl_home_argument
 from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_firmware
 
 
@@ -78,7 +79,7 @@ def run(args):
         try:
             with (output / "sitl.log").open("x") as sitl_log, (output / "telemetry.jsonl").open("x") as telemetry:
                 command = [str(Path(args.binary).resolve()), "--model", "JSON:127.0.0.1",
-                           "--home", "47.397742,8.545594,500,0", "--speedup", "1", "--rate", "200",
+                           "--home", sitl_home_argument(), "--speedup", "1", "--rate", "200",
                            "--sim-port-out", str(args.port), "--base-port", str(args.mavlink_port),
                            "--defaults", str(CONFIG_ROOT / "plane_4_7_1.parm"), "--wipe"]
                 process = subprocess.Popen(command, cwd=output, stdout=sitl_log, stderr=subprocess.STDOUT)

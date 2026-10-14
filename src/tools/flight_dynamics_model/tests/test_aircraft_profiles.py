@@ -59,7 +59,7 @@ def test_profiles_are_independent_and_preserve_original_parameters():
     assert reference.geometry == original.geometry
     np.testing.assert_equal(reference.cg_body_xyz, original.cg_body_xyz)
     reference.cg_body_xyz[0] = -0.2
-    assert pt1.cg_body_xyz[0] == -0.15
+    assert pt1.cg_body_xyz[0] == .01
 
 
 def test_zero_lift_reference_loads_equal_legacy_forward_propulsion():
@@ -91,11 +91,11 @@ def test_lift_force_body_sign_moment_balance_and_cg_transfer():
     control = Control(0, 0, 0, 0, lift_throttle=0.5)
     force, moment = propulsion_model(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -4 * 42.39])
-    np.testing.assert_allclose(moment, [0, 0, 0], atol=1e-12)
+    np.testing.assert_allclose(moment, [0, -.16 * 4 * 42.39, 0], atol=1e-12)
     shifted = replace(pt1, cg_body_xyz=pt1.cg_body_xyz + [0.1, 0.0, 0.0])
     shifted_force, shifted_moment = propulsion_model(control, shifted)
     np.testing.assert_allclose(shifted_force, force)
-    np.testing.assert_allclose(shifted_moment, np.cross([-0.1, 0.0, 0.0], force), atol=1e-12)
+    np.testing.assert_allclose(shifted_moment - moment, np.cross([-0.1, 0.0, 0.0], force), atol=1e-12)
     breakdown = compute_force_moment_breakdown(0, np.zeros(12), pt1, control_override=control)
     np.testing.assert_allclose(breakdown["propulsion"]["force_b"], force)
 
@@ -106,7 +106,7 @@ def test_single_rotor_has_expected_roll_pitch_and_reaction_yaw_moment():
     control = Control(0, 0, 0, 0, lift_motor_throttles=(0.5, 0, 0, 0))
     force, moment, samples = lift_propulsion(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -42.39])
-    np.testing.assert_allclose(moment, [-0.55 * 42.39, 0.70 * 42.39, 1.11])
+    np.testing.assert_allclose(moment, [-0.55 * 42.39, 0.54 * 42.39, 1.11])
     assert samples[0]["rpm"] == 4460
     with pytest.raises(ValueError, match="one finite lift throttle"):
         lift_propulsion(replace(control, lift_motor_throttles=(0.5,)), pt1)
@@ -126,6 +126,13 @@ def test_pt1_scenario_recomputes_collective_for_mass_and_preserves_control_comma
     assert result.success and np.all(np.isfinite(result.states))
     assert result.control_override(0).lift_throttle == config.control_override.lift_throttle
     assert result.control_override(2.1).lift_throttle == pytest.approx(config.control_override.lift_throttle + 0.03)
+    initial_rotors = np.array(config.control_override.lift_motor_throttles)
+    for time, delta in [(0, 0), (2.1, .03), (3.1, -.03), (4.1, 0)]:
+        command = result.control_override(time)
+        np.testing.assert_allclose(command.lift_motor_throttles, initial_rotors + delta)
+        actual_force, _, _ = lift_propulsion(command, config.params)
+        if delta:
+            assert (-actual_force[2] - config.params.mass * config.params.g) * delta > 0
 
 
 @pytest.mark.parametrize("use_database", [False, True])

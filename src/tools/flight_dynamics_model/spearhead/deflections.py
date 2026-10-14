@@ -49,7 +49,7 @@ class DeflectionDatabase:
     case_count: int
 
     def increments_at(self, alpha_deg: float, beta_deg: float, control, *,
-                      deflection_policy="hold", limits_deg=(5., 5., 5.)):
+                      deflection_policy="hold", limits_deg=(5., 5., 5.), velocity_m_s=None):
         if deflection_policy not in ("hold", "linear"):
             raise ValueError("Deflection policy must be hold or linear")
         if len(limits_deg) != 3 or not np.isfinite(limits_deg).all() or not all(0 < v <= 45 for v in limits_deg):
@@ -97,6 +97,9 @@ class DeflectionDatabase:
 
 
 def load_deflection_database(path: str | Path, reference: AeroDBReference) -> DeflectionDatabase:
+    if Path(path).suffix == ".json":
+        from .expanded_deflections import load_expanded_deflections
+        return load_expanded_deflections(path, reference)
     with Path(path).open(newline="") as stream:
         reader = csv.DictReader(stream)
         reader.fieldnames = [name.strip() for name in reader.fieldnames or []]

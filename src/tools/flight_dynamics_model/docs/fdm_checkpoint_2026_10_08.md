@@ -1,5 +1,10 @@
 # FDM checkpoint — 8 October 2026
 
+Historical checkpoint: the active October moment reference was numerically corrected on 12 October. Earlier trim/flight results here do not validate the corrected model; see the [current validation summary](validation_summary.md).
+
+
+Dated validation reports and recordings referenced below are retained locally and excluded from Git.
+
 This checkpoint captures the aircraft-profile and October AeroDB work before
 adding an ArduPilot SITL connection. It is an implementation and analysis
 checkpoint, not a validated flight baseline.
@@ -16,7 +21,7 @@ checkpoint, not a validated flight baseline.
 - Measured control increments, coverage diagnostics and bounded trim rejection
   when the force/moment balance cannot be achieved.
 - Reproducible moment-comparison, Nondimit recentering and CG-search scripts.
-- [CG search, full-equilibrium checks and small-disturbance results](../../../../artifacts/fdm_cg_search_2026_10_07/assessment.md).
+- CG search, full-equilibrium checks and small-disturbance results (local report).
 
 The latest CG calculations use only `tail_update_2026_10_07`, including its
 deflection data. Original aerodynamics remain available for compatibility;
@@ -45,8 +50,8 @@ beta measurements are limited to zero. PT1 currently has no installed pusher.
 
 ## Generated outputs
 
-The source databases and compact CG assessment are versioned. The large
-per-center Nondimit database copies and ZIP are reproducible local outputs:
+The source databases are versioned. CG assessments, per-center Nondimit
+database copies and ZIP files are reproducible local outputs, excluded from Git:
 
 ```sh
 PYTHONPATH=src/tools/flight_dynamics_model python \
@@ -54,8 +59,7 @@ PYTHONPATH=src/tools/flight_dynamics_model python \
   --output-dir artifacts/aerodb_tail_update_2026_10_07_moment_centers
 ```
 
-Their compact manifests, references and validation results are retained with
-this checkpoint. Firmware packages, unrelated flight-review data, Python
+Their manifests, references and validation results are retained locally. Firmware packages, unrelated flight-review data, Python
 bytecode and Finder metadata are not part of this change.
 
 ## Next implementation boundary
