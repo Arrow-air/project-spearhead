@@ -148,7 +148,7 @@ def test_lift_plot_uses_motor_endpoints_instead_of_servo_limits_or_startup_zero(
     assert figure.layout.yaxis.range == (1100, 1940)
     assert figure.layout.yaxis.autorange is False
     assert figure.data[0].y == (None, 1100, 2005)  # preserve actual out-of-range values
-    assert [shape.y0 for shape in figure.layout.shapes] == [1100, 1940]
+    assert [shape.y0 for shape in figure.layout.shapes if shape.x0 != shape.x1] == [1100, 1940]  # release marker is vertical
     assert any('1 motor samples outside limits' in a.text for a in figure.layout.annotations)
     assert rows[0]['pwm'][4] == 0  # plotting never changes the physical recording
 
