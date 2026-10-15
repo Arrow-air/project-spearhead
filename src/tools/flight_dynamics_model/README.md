@@ -4,24 +4,20 @@ Local 6-DOF aircraft simulation with **ArduPilot / ArduPlane 4.7.1** running as 
 
 ## Install and run
 
-Tested on macOS with Python 3.10. You need Git, Python, and native C/C++ build tools: Xcode Command Line Tools on macOS; `build-essential`, `python3-dev` and `python3-venv` on Ubuntu. The Linux build recipe is provided but has not been verified end to end here. Internet access is required for dependencies and the first firmware build.
+macOS, Linux and Windows (through WSL2) are supported; see the [setup guide](docs/setup_guide.md)
+for prerequisites per platform. With Git, Python 3.10+ and a C/C++ compiler installed:
 
 ```sh
-git clone --branch codex/ardupilot-sitl https://github.com/Arrow-air/project-spearhead.git
+git clone https://github.com/Arrow-air/project-spearhead.git
 cd project-spearhead/src/tools/flight_dynamics_model
-
-python3 -m venv .sitl/venv
-. .sitl/venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements-gui.txt -r requirements-sitl.txt
-
-SITL_PYTHON="$PWD/.sitl/venv/bin/python" sh scripts/build_ardupilot_sitl.sh
-
-export PYTHONPATH="$PWD"
-OPENBLAS_NUM_THREADS=1 python -m spearhead.gui --host 127.0.0.1 --port 8080 --no-show
+sh scripts/run_flight_deck.sh
 ```
 
-Open **http://127.0.0.1:8080/**. The first build downloads the pinned ArduPilot source/submodules and can take several minutes. It creates `.sitl/arduplane-4.7.1`; local binaries, environments and flight recordings stay outside Git. It does not flash flight-controller hardware.
+The first run creates `.sitl/venv`, installs the Python packages, builds the pinned ArduPlane 4.7.1
+SITL into `.sitl/arduplane-4.7.1` (several minutes) and starts the Flight Deck; later runs start in
+seconds. Open the printed address, normally **http://127.0.0.1:8080/**. Local binaries,
+environments and flight recordings stay under `.sitl/`, outside Git. Nothing is flashed to
+flight-controller hardware.
 
 ## First flight
 
@@ -38,7 +34,7 @@ PYTHONPATH=. python -m spearhead.sitl validate --config sitl_configs/quad_hover.
 PYTHONPATH=. python -m pytest tests -q
 ```
 
-If port 8080 is occupied, start the GUI with `--port 8081`. Local UDP/TCP connections must be allowed. Run in a normal local terminal; restricted sandboxes can block simulator sockets/process startup. Logs and manifests are saved under `.sitl/flight-deck/`.
+`sh scripts/run_flight_deck.sh --check` runs both. If port 8080 is occupied, the script takes the next free port (or set `PORT`). Local UDP/TCP connections must be allowed. Run in a normal local terminal; restricted sandboxes can block simulator sockets/process startup. Logs and manifests are saved under `.sitl/flight-deck/`.
 
 The integration checks the pinned **Plane-4.7.1 / dbe79216** identity and firmware version. A newer binary requires an explicit compatibility review and fresh flight checks.
 
@@ -46,4 +42,4 @@ The integration checks the pinned **Plane-4.7.1 / dbe79216** identity and firmwa
 
 PT1.5 is a provisional 21 kg model using the October AeroDB/control revision. Measured CG, inertia (currently a build-up estimate), the pusher mount height and motor/propeller, and servo calibration remain open; ±30° travel is an aero-team proposal. Sparse aerodynamic data, vortex-lattice rate derivatives, omitted propwash and a generic battery curve (telemetry only) limit interpretation. Simulation passes do not validate the physical aircraft.
 
-See the [14 October update](docs/update_2026_10_14.md), the [validation summary](docs/validation_summary.md), [capabilities and diagrams](docs/capabilities.md), [SITL guide](docs/ardupilot_sitl_quickstart.md), and [model/API reference](docs/model_reference.md). The validation summary records the latest source-only regression and corrected-reference flight checks. Generated recordings, reports and plots remain local; repository formatting/spelling checks still require cleanup.
+See the [changes relative to main](docs/update_2026_10_14.md), the [setup guide](docs/setup_guide.md), the [validation summary](docs/validation_summary.md), [capabilities and diagrams](docs/capabilities.md), [SITL guide](docs/ardupilot_sitl_quickstart.md), and [model/API reference](docs/model_reference.md). The validation summary records the latest source-only regression and corrected-reference flight checks. Generated recordings, reports and plots remain local; repository formatting/spelling checks still require cleanup.
