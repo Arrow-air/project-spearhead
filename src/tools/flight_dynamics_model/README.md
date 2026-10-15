@@ -1,11 +1,15 @@
-# Spearhead Flight Deck
+# Spearhead flight dynamics model and Flight Deck
 
-Local 6-DOF aircraft simulation with **ArduPilot / ArduPlane 4.7.1** running as a native Software-in-the-Loop (SITL) executable. ArduPilot supplies the motor/servo commands; the Spearhead FDM supplies physics and simulated sensors. Flight Deck provides flight tests, numeric instruments, plots and saved recordings.
+A six-degree-of-freedom model of the Spearhead quadplane, run either on its own (open-loop
+simulation, trim, stability) or with the real **ArduPlane 4.7.1** firmware as software in the
+loop (SITL). ArduPilot supplies the motor and servo commands; the model supplies the physics and
+simulated sensors. The browser-based Flight Deck plans tests, shows the flight and keeps the
+recordings. Nothing is flashed to flight-controller hardware.
 
-## Install and run
+## Quick start
 
-macOS, Linux and Windows (through WSL2) are supported; see the [setup guide](docs/setup_guide.md)
-for prerequisites per platform. With Git, Python 3.10+ and a C/C++ compiler installed:
+macOS, Linux and Windows (WSL2) are supported; prerequisites per platform are in the
+[setup guide](docs/setup_guide.md). With Git, Python 3.10+ and a C/C++ compiler installed:
 
 ```sh
 git clone https://github.com/Arrow-air/project-spearhead.git
@@ -13,33 +17,32 @@ cd project-spearhead/src/tools/flight_dynamics_model
 sh scripts/run_flight_deck.sh
 ```
 
-The first run creates `.sitl/venv`, installs the Python packages, builds the pinned ArduPlane 4.7.1
-SITL into `.sitl/arduplane-4.7.1` (several minutes) and starts the Flight Deck; later runs start in
-seconds. Open the printed address, normally **http://127.0.0.1:8080/**. Local binaries,
-environments and flight recordings stay under `.sitl/`, outside Git. Nothing is flashed to
-flight-controller hardware.
+The first run creates `.sitl/venv`, installs the Python packages, builds the pinned firmware
+into `.sitl/arduplane-4.7.1` (several minutes) and starts the Flight Deck; later runs start in
+seconds. Open the printed address, normally **http://127.0.0.1:8080/**, and fly **PT1.5 →
+Hover · 20 m → Hover hold → 60 s**. `sh scripts/run_flight_deck.sh --check` runs the
+configuration check and the test suite. Everything local stays under `.sitl/`, which Git
+ignores.
 
-## First flight
+## Documentation
 
-Select **PT1.5 → Hover · 20 m → Hover hold → 60 s**, then **Start flight**. Calibration, navigation checks, normal arming and motor startup usually take 1–2 minutes before the flight clock starts. Simulation may run slower than real time; the page shows its progress and speed. **Stop flight** ends the run; **Recorded flights** reopens results.
+| Document | Content |
+|---|---|
+| [Setup guide](docs/setup_guide.md) | Installation on macOS, Linux and Windows; options; troubleshooting |
+| [Flight Deck guide](docs/flight_deck.md) | Tests, starting conditions (CG, wind, failures), live values and alerts, review, comparison with aircraft logs, Model Lab |
+| [SITL integration](docs/sitl_integration.md) | Firmware pinning, protocol and timing, channels, sensors, startup, command-line runners and pass criteria, recorded files |
+| [Model reference](docs/model_reference.md) | Axes, aerodynamic data and moment reference, aircraft profiles, propulsion, CG and stability analysis, Python and CLI use |
+| [Validation summary](docs/validation_summary.md) | What has been checked, results, and what is not validated |
+| [Changes relative to main](docs/update_2026_10_14.md) | What this work adds to the July model, with migration notes |
 
-Hover and forward-trim starts offer pitch/roll/yaw/throttle doublets. Transition tests support both hover → forward and forward → hover. **Interactive flight** allows mode changes with neutral pilot sticks. Advanced settings choose the simulation CG (with its static margin, elevator trim and hover headroom), wind and gusts, and an injected failure. PT1.5 defaults to the target CG x = −40 mm, z = +65 mm from the October origin (a simulation target, not a measurement); rotor and pusher stations follow the 14 October drawing. **Review → Compare with aircraft** overlays a real DataFlash log and lists parameter differences. See [Flight Deck test tools](docs/flight_deck_test_tools.md).
+Engineering results for PT1 and PT1.5 are in the Flight Dynamics information notes under
+[`docs/information-note/phase-1/Flight-Dynamics/`](../../../docs/information-note/phase-1/Flight-Dynamics/).
 
-## Verify and troubleshoot
+## Model scope
 
-From the same folder and activated environment:
-
-```sh
-PYTHONPATH=. python -m spearhead.sitl validate --config sitl_configs/quad_hover.yaml
-PYTHONPATH=. python -m pytest tests -q
-```
-
-`sh scripts/run_flight_deck.sh --check` runs both. If port 8080 is occupied, the script takes the next free port (or set `PORT`). Local UDP/TCP connections must be allowed. Run in a normal local terminal; restricted sandboxes can block simulator sockets/process startup. Logs and manifests are saved under `.sitl/flight-deck/`.
-
-The integration checks the pinned **Plane-4.7.1 / dbe79216** identity and firmware version. A newer binary requires an explicit compatibility review and fresh flight checks.
-
-## Model scope and details
-
-PT1.5 is a provisional 21 kg model using the October AeroDB/control revision. Measured CG, inertia (currently a build-up estimate), the pusher mount height and motor/propeller, and servo calibration remain open; ±30° travel is an aero-team proposal. Sparse aerodynamic data, vortex-lattice rate derivatives, omitted propwash and a generic battery curve (telemetry only) limit interpretation. Simulation passes do not validate the physical aircraft.
-
-See the [changes relative to main](docs/update_2026_10_14.md), the [setup guide](docs/setup_guide.md), the [validation summary](docs/validation_summary.md), [capabilities and diagrams](docs/capabilities.md), [SITL guide](docs/ardupilot_sitl_quickstart.md), and [model/API reference](docs/model_reference.md). The validation summary records the latest source-only regression and corrected-reference flight checks. Generated recordings, reports and plots remain local; repository formatting/spelling checks still require cleanup.
+PT1.5 is a provisional 21 kg model on the October aerodynamic database. The simulation CG
+(x −40 mm, z +65 mm) is a target, not a measurement; inertia and rate damping are estimates;
+rotor and pusher stations follow the 14 October drawing; ±30° surface travel is a proposal.
+Sparse control data, the low-speed aerodynamic data, missing propwash and the generic battery
+curve limit interpretation. Simulation passes support test planning; they do not validate the
+physical aircraft.

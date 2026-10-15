@@ -1,473 +1,255 @@
-# Model reference and development notes
+# Model reference
 
-Dated validation reports and recordings referenced below are retained locally and excluded from Git.
+The Spearhead flight dynamics model (FDM): axes, aerodynamic data, aircraft profiles,
+propulsion, CG handling, analyses and the Python/CLI interfaces. One engine serves the
+simulation API, the stability tools, Model Lab and the ArduPilot SITL; none of them has its own
+physics. For results see the [validation summary](validation_summary.md); for running the
+firmware see [SITL integration](sitl_integration.md).
 
-For installation and the current Flight Deck, start with the [setup README](../README.md).
-These notes retain the detailed model/API documentation and dated validation history.
+## Axes and state
 
-**12 October reference correction:** earlier recorded results below used header-only origin handling. The active base now numerically restores the Nondimit export from (-0.1,0,+0.15) to (0,0,0), then transfers moments once to the selected CG. Those earlier results do not validate this corrected model. See the [current validation summary](validation_summary.md).
+- Inertial axes NED; body axes x forward, y right, z down.
+- Origin at the CFD origin, assumed to be the wing root quarter-chord (open question AQ-01 in
+  [Flight Dynamics note 0002](../../../../docs/information-note/phase-1/Flight-Dynamics/0002-Aerodynamic-Data-Clarification-Request/information-note.md)).
+  The 14 October drawing uses X aft and Z up, so body = (−X, Y, −Z).
+- State: NED position, body velocity, Euler angles (roll, pitch, yaw), body rates. Offline runs
+  integrate with `scipy.integrate.solve_ivp`; the SITL stepper uses fixed-step RK4 on the same
+  equations of motion (tests compare the two).
+- Air-relative velocity `v_air = v_body − Rᵀ·wind_ned` drives aerodynamics, pusher inflow and
+  the simulated pitot.
 
+## Aerodynamic data
 
-Python 6-DOF flight dynamics, stability analysis and ArduPilot simulation for Project Spearhead.
+Two datasets are versioned under `aerodynamic_configs/`; aircraft and aerodynamics are chosen
+independently (`load_aircraft_config(id, aerodynamics=...)`, `--aerodynamics` on the CLIs,
+`aerodynamics:` in scenario YAML; an explicit choice wins).
 
-The prototype is displayed as **PT1.5** (`pt15`). `pt1_as_built` is PT1 as flown in the 19 September logs (17.9 kg, wings on, no pusher).
-The **Hover → forward flight test** starts at 80 m and uses the prototype’s calculated 24 m/s servo trim.
-The 11 October `deflection-3.csv` delivery is now the active October control revision.
-Its integration and flight mechanics review (local report)
-records the trim checks and the frozen earlier transition proposal, without controller tuning.
-The CG sensitivity campaign (local report)
-compares explicit CG variants with the same model and older controller proposal.
-The CG/reference audit (local report)
-verifies runtime moment transfer against native Nondimit exports and distinguishes
-the October source origin from the inherited provisional aircraft CG.
-Historical forward-CG cases passed with the former reference handling and the former nominal rotor rectangle. Since 14 October the PT1.5 default CG is the target x=−40 mm, z=+65 mm (estimate); rotor and pusher stations follow the 14 October drawing. Physical CG and the flight envelope remain unconfirmed.
-See the PT1.5 transition report (local report) for both trials, parameter changes and plots.
-The pitch diagnosis (local report)
-replays the recorded handover, separates pitch-moment contributions and quantifies
-the current model's unstable mode and limited elevator recovery authority.
+| Dataset | Used by | Content |
+|---|---|---|
+| `adb_v1_1` | `reference_design` | Drag-corrected ADB v1.1 (`docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv`), alpha/beta only, moment center (−0.15, 0, +0.15) m, rho 1.09 kg/m³; provisional control derivatives |
+| `tail_update_2026_10_07` | `pt15`, `pt1_as_built`, SITL | October base table with the updated tail and the 11 October control delivery, rho 1.021 kg/m³ (Ankara test field, hot day) |
+| `tail_update_2026_10_07_controls_2026_10_09` | archive | Same base with the earlier 49-case control revision |
 
-The external ArduPilot JSON backend is pinned to **ArduPlane 4.7.1** and
-requires the October tail-update AeroDB. See the
-[SITL quickstart](ardupilot_sitl_quickstart.md) for build/run commands
-and the [integration plan](ardupilot_sitl_plan.md) for staged acceptance.
-The bootstrap smoke test verifies the real firmware connection. Normal arming,
-MANUAL direction checks, nominal FBWA, small steps and combined disturbances
-are exercised by `python -m spearhead.sitl.flight`; the
-fixed-wing control report (local report)
-records results and model limits. The main Flight Deck at `/` starts/stops
-owned runner processes, displays the FDM horizon alongside numeric flight values,
-and opens
-completed recordings. `/sitl` is a compatible link to the same console. See the
-web integration and PWM replay report (local report).
-The interactive session adds real firmware mode commands, link/GPS/EKF/sensor
-status, and a timestamped warning/message feed. See the
-[ground-control guide](flight_deck_ground_control.md) and
-verification results (local report).
-The **Elevator ±1° doublet** preset applies a physical MANUAL elevator input
-through ArduPlane at 32 m/s; its surface-angle trace shows the actual FDM input.
-See the input and trim assessment (local report).
-New PT1.5 hover, ground and transition flights use the aero team's proposed **±30° surface travel** over 1000–2000 µs (11 October update). The reference fixed-wing presets retain **±20°**, matching their earlier checks.
-with linear continuation of measured control slopes outside the local measured coverage, bounded
-at the assumed travel. Alpha/beta endpoint assumptions remain. Travel values
-are configurable and marked uncalibrated in the UI and run manifest. The proposal does not establish measured linkage or aerodynamic coverage, and older ±20° transition passes do not validate ±30°. CG awaits weighing of the built PT1.5; inertia is a build-up estimate. The pusher thrust acts at the drawing station x=−374 mm with the lowest candidate height; the installed motor and propeller are undecided. See the
-travel assessment (local report).
-Pitch/roll step and disturbance acceptance with this wider travel is tracked
-in the control revalidation report (local report),
-including revised provisional firmware gains and the unsuccessful tuning trials.
-The isolated-axis follow-up (local report)
-checks both signs of roll and pitch disturbances at 28 m/s with those same
-gains and records local mass/CG sensitivity. Higher-speed firmware tests are
-deferred at the user's request. The earlier malformed `deflection-2.csv` remains
-inactive; the corrected `deflection-3.csv` is integrated separately with provenance.
-The trim sweep (local report)
-examines speed/mass sensitivity at the same diagnostic CG. Broader
-envelope sensitivity, real-time performance, repeated-run determinism and
-long-duration hover remain separate acceptance checks. PT1.5 ground start now
-supports **takeoff → timed hover → landing**, with normal arming and physical
-gear contact. The [ground-start guide](ground_start.md) describes the
-provisional gear and mission; the validation report (local report)
-records successful 5, 10 and 20 m tests with ArduPlane 4.7.1.
+Reference geometry for both: S = 1.805 m², b = 3.95 m, c = 0.457 m. The updated tail chord and
+area were not supplied and are marked pending.
 
-The model uses NED inertial axes and aircraft body axes with `x` forward, `y` right, and `z` down. Reference Spearhead retains the original ADB v1.1. PT1.5 KDE uses the October 2026 tail-update database with partial measured controls. Hardware and aerodynamic versions can be selected independently. The preserved original database is:
+### Coefficients and moment reference
+
+The base table is a full 181 × 181 alpha/beta grid (−90° to +90°, 1° steps). The FDM reads the
+body-axis coefficients (`cfx … cmz`), dimensionalises them at the current dynamic pressure and
+transfers the moment once to the CG:
 
 ```text
-docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv
+M_cg = M_ref + (r_ref − r_cg) × F
 ```
 
-The selected ADB CSV metadata defines aerodynamic reference values. Explicit user corrections are recorded in a versioned runtime copy, with original source files preserved. For the October delivery, the user confirmed raw CFD rho=1.021 kg/m³ and source moment center=(0,0,0). The preserved Nondimit export header records its final processed moment center (-0.1,0,+0.15), rather than the raw CFD origin. The active table numerically restores its moments to (0,0,0); force corrections already present in the delivery are retained without applying them again. `scripts/recenter_october_database.py` reproduces this conversion from the preserved source, with independent wrench and hash checks.
+![Aerodynamic loads, one CG moment transfer, trim and analysis.](diagrams/cg_trim.svg)
 
-## ADB Reference Handling
+The October `database.csv` is a Nondimit export about (−0.1, 0, +0.15) m; the control tables are
+about (0, 0, 0). The Aero team confirmed both on 14 October. The active base table is restored
+numerically to (0, 0, 0) with its own forces before any CG transfer (`scripts/recenter_october_database.py`
+reproduces it from the preserved source and checks all 32 761 rows within 6×10⁻¹⁴ N·m). Nondimit
+applies its 1.3 wind-axis drag multiplier before the moment shift, so the restore is exact. At
+25 m/s and alpha = beta = 0 the restored base pitching moment is −37.54 N·m against −36.57 N·m
+in the neutral control case; the 0.97 N·m residual (0.5–3.3 N·m at other alphas) is a
+surrogate/run difference that remains open. Fy, Mx and Mz at beta = 0 are set to zero; the table
+is antisymmetric in beta, so this adds no kink.
 
-The delivered Nondimit export contains both nondimensional coefficient columns and dimensional force/moment columns. The FDM currently consumes the body-axis nondimensional coefficient columns:
+Changing the CG recomputes the moment arm and the trim; the database is never re-exported or
+shifted twice. Preserved source files and SHA-256 hashes are in
+`data/aerodynamics/tail_update_2026_10_07/source.json`.
 
-```text
-cfx, cfy, cfz, cmx, cmy, cmz
-```
+### Control increments
 
-It dimensionalizes those coefficients at the current simulation dynamic pressure using the selected ADB reference geometry. The preserved v1.1 reference is:
+The 11 October delivery has 103 cases: 97 at beta = 0 (including four elevator/rudder
+combinations) and six neutral sideslip cases kept for audit only. Measured ranges: elevator and
+rudder ±15°, aileron ±30° at selected alphas, 25 m/s; elevator also ±5° at 10 and 15 m/s.
 
-```text
-rho = 1.09 kg/m^3
-V_ref = 25 m/s
-S = 1.805 m^2
-b = 3.95 m
-c = 0.457 m
-moment_center_body_xyz = (-0.15, 0.0, 0.15) m
-```
+- Increments are the loads minus the matching zero-deflection case, normalised and added to the
+  base before the single CG transfer, so the base is unchanged at zero deflection.
+- Sparse alpha/deflection points are triangulated per surface and speed plane; elevator is
+  interpolated across 10, 15 and 25 m/s and held at the end speeds.
+- Outside the measured alpha range the nearest end is held. Beyond the measured deflection the
+  `linear` policy continues the measured slope to the configured travel (PT1.5: ±30°); `hold`
+  keeps the end value. At nonzero beta the beta = 0 plane is used.
+- Surfaces add independently, except a bounded residual from the measured elevator/rudder pairs.
+- Every lookup reports held, extrapolated or travel-limited surfaces and whether the point is
+  within measured coverage; the Flight Deck alerts on it.
 
-The CSV also includes wind-axis coefficient columns (`cd`, `cs`, `cl`, `cr`, `cm`, `cn`) and dimensional body/wind columns (`Fx`, `Fy`, `Fz`, `Mx`, `My`, `Mz`, `D`, `S`, `L`, `R`, `M`, `N`) for review and regeneration checks. The runtime FDM path uses body-axis coefficients because the equations of motion expect body-axis loads.
+Measured increments replace the provisional control derivatives; rate damping stays separate.
+Control signs follow the agreed convention (positive = trailing edge toward +z; left/right
+ruddervator = de ± dr): at 25 m/s, alpha 0°, +5° elevator gives −10.8 N·m (nose down), +5°
+aileron +44 N·m roll right with −4.5 N·m adverse yaw, +5° rudder +5.3 N·m nose right.
 
-## CG Handling
+### Rate damping
 
-`AircraftParams.cg_body_xyz` is the target center of gravity in the same body-axis coordinate system as the ADB moment reference. The default CG is the documented nominal/reference CG:
+Profiles may set `aerodynamics.rate_derivatives` (`Clp`, `Clr`, `Cmq`, `Cnp`, `Cnr`). Both PT
+profiles use wing and inverted-V-tail vortex-lattice values without fuselage or booms: Cmq −9.6
+(PT1) / −9.7 (PT1.5), Clp −0.58, Clr +0.10, Cnp −0.04, Cnr −0.04. `reference_design` keeps the
+original defaults (Cmq −8.0, Clp −0.45, Cnr −0.25), which have no documented source.
 
-```text
-(-0.15, 0.0, 0.15) m
-```
+### Known data issues
 
-For each aerodynamic lookup, the model converts the ADB coefficients into dimensional body-axis force and moment about the database reference center, then shifts moments to `cg_body_xyz`:
+- **Low speed (AQ-18):** the neutral 10 and 15 m/s cases give much lower lift than the 25 m/s
+  base (CL at alpha 0°: 0.08 / 0.27 / 0.36), probably the fixed 30 N pusher slipstream over the
+  tail. The FDM uses the 25 m/s base at all speeds, so wing-body lift is likely overpredicted
+  between about 10 and 20 m/s, and the slipstream effect does not follow pusher thrust.
+- **Elevator lateral loads:** the elevator increments carry yaw and roll loads from the 15 m/s
+  cases (−0.65 N·m yaw for −5°), extrapolated to large deflections. At the 22 m/s PT1.5 trim they
+  need 2.1° of rudder. A symmetric elevator should give almost no yaw; removing lateral loads from
+  elevator increments is proposed, not applied.
+- **Elevator beyond ±15° (AQ-12):** every stable PT1.5 CG trims beyond the measured elevator
+  range.
+- Drag in the control cases stays near CD 0.03, so the 30 N actuator disk's direct thrust is not
+  in the integrated loads and the FDM pusher thrust is not counted twice.
+- The preliminary design note gives a NACA 0015 tail airfoil; the PR #7 geometry script uses
+  NACA 0018.
 
-```text
-M_CG = M_ref + cross(reference.moment_center_body_xyz - cg_body_xyz, F_body)
-```
+## Aircraft profiles
 
-This runtime transfer is the correct path for CG-dependent stability studies using one delivered database. Nondimit regeneration can still be used for manual reference checks or official re-exporting at a new moment center, but the runtime FDM must remain consistent with the delivered DB metadata.
+Profiles are YAML files in `aircraft_configs/`, loaded with `load_aircraft_config(id)`.
+Scenario YAML accepts `aircraft_config:`; an explicit `params` argument or `--aircraft` wins.
+Paths inside a profile resolve from the profile folder. `AircraftParams()` without a profile is
+the original 25 kg ADB v1.1 parameter set.
 
-If the recommended ADB file is missing, the model falls back to the older placeholder derivative model so scripts remain runnable.
+| | `pt1_as_built` | `pt15` | `reference_design` |
+|---|---|---|---|
+| Use | PT1 as flown in log 17; log comparison | PT1.5 as it will be built; SITL and Flight Deck | Planned 25 kg aircraft; software regression only |
+| Mass | 17.9 kg (stated; the hover thrust model gives 17.8 kg) | 21.0 kg build estimate | 25 kg |
+| CG (x, y, z) | (−0.0475, 0, +0.065) m from the logged front hover share, about ±20 mm | (−0.040, 0, +0.065) m target inside the 22 m/s window; unballasted estimate about −0.08 m | (−0.15, 0, +0.15) m; statically unstable with ADB v1.1 (static margin about −17 %) |
+| Ixx / Iyy / Izz / Ixz (kg·m²) | 4.30 / 3.73 / 7.66 / −0.29 | 4.42 / 4.07 / 8.11 / −0.31 | diag(2.5, 4.0, 5.0) placeholder |
+| Lift system | 4 × KDE5215XF-220, KDE-UAS75HVC+, KDE-CF215-DP 21.5×7.3, 12S | same | 4 × MAD V8013 PRO IPE 150KV, AMPX 80A V2, FLUXER PRO 26×7.8 (no performance data; nonzero commands are rejected) |
+| Pusher | not installed | MAD V8013 150KV / AMPX 80A / APC 20×12 Sport estimate at (−0.374, 0, +0.050) m | 120 N × throttle placeholder through the CG |
 
-## Aircraft Profiles
+Geometry from the 14 October drawing (body axes): lift rotors at x +0.675 / −0.750 m,
+y ±0.55 m, z −0.043 m (centroid x −0.0375 m); pusher at x −0.374 m, height open between z +0.050
+and −0.040 m, profile uses +0.050 m (the lowest mount). CG z and inertia are build-up estimates
+(inertia ±20 %). The PT1.5 CG must be set by weighing and ballasting the built aircraft.
+Component masses in a profile are metadata; they are not added to the total.
 
-Bundled configurations in `aircraft_configs/`:
+## Propulsion
 
-- `reference_design.yaml`: 25 kg planned MAD V8013 PRO IPE 150KV / AMPX 80A V2 /
-  FLUXER PRO 26×7.8 lift hardware, with the original preliminary pusher model.
-- `pt15.yaml`: 21 kg PT1.5 with four KDE5215XF-220 / KDE-UAS75HVC+ /
-  21.5×7.3 lift units and a MAD V8013 PRO IPE 150KV / AMPX 80A / APC 20×12
-  pusher estimate, using 12S at 44.4 V nominal. See the
-  pusher estimate (local report) for sources and limits.
-- `pt1_as_built.yaml`: PT1 as flown (17.9 kg, wings on, no pusher) for log comparison.
+### Lift rotors
 
-See [aircraft profiles](aircraft_profiles.md) for geometry, CG and inertia sources.
+- Static thrust, current, power, RPM and torque from the official KDE5215XF-220 /
+  KDE-CF215-DP test data (`data/propulsion/sources/KDE5215-220kV_rev2.xlsx`; source, hashes and
+  column mapping in `data/propulsion/kde5215xf_220_source.json`): 28 points at 25.2, 33.6, 42.0
+  and 50.4 V, throttle 25–100 %.
+- Linear interpolation in voltage and throttle (44.4 V nominal lies between 42.0 and 50.4 V);
+  voltage outside the test range is rejected, throttle saturates at 0–1, and below 25 % a
+  linear ramp from zero fills the untested region. Measured thrust is used, not the
+  manufacturer's sea-level estimate.
+- The test used a KDE-UAS125UVC ESC (firmware D460337), not the UAS75HVC+, and some points
+  exceed the motor's 180 s rating. No density, inflow, wake, ESC loss, spool dynamics or thermal
+  corrections are applied.
+- Each rotor thrusts along body −z at its station; moment `(r_rotor − r_cg) × F` plus the signed
+  reaction torque from the table. Order: front-right, rear-right, rear-left, front-left
+  (ArduPilot motors 1, 4, 2, 3). `Control.lift_throttle` is collective; `lift_motor_throttles`
+  sets each rotor.
+- The PT1 logs check the model: hover thrust from the KDE curve at the logged pack voltage gives
+  17.8 kg against the stated 17.9 kg.
 
-The Flight Deck offers independent **Aircraft**, **Initial point**, **Maneuver**
-and duration choices. PT1.5 supports air-start hover or ground takeoff/hover/landing;
-Spearhead supports diagnostic forward trims. New ArduPilot sessions use the
-October AeroDB. The model-only **Model Lab** under **Analyze** also provides
-independent aircraft/aerodynamic selections and actuator/thrust readouts.
+### Pusher
 
-The same profiles are available through the API and CLI:
+`Control.throttle` commands the pusher. `spearhead/pusher.py` solves quasi-steady motor RPM from a
+fit to the 15 points of the MAD V8013 150KV test sheet and APC's analytical Ct/Cp map for the
+20×12 Sport, using body axial airspeed and FDM density. At 44.4 V and 1.021 kg/m³: 62.9 N static
+and 32.8 N at 26 m/s at full command; the 24 A sustainable current is passed between 24 and
+26 m/s, which is flagged but not limited. Thrust acts at the drawing station; rotation direction
+is undecided, so reaction torque is omitted. Sources and fitted constants are in
+`data/propulsion/pt1_pusher_source.json`; `scripts/estimate_pt1_pusher.py` reproduces the
+estimate. The installed motor (KDE or MAD) and the wooden 20×12 propeller are not yet tested.
+
+### Battery
+
+`spearhead/sitl/battery.py` models the lift pack for telemetry: generic LiPo open-circuit curve,
+45 mΩ, lift-motor current plus 1.5 A avionics, charge used. Thrust still uses nominal voltage.
+
+## CG, trim and analysis
+
+- **Trim:** `spearhead/trim.py` (longitudinal) and `spearhead/sitl/physics.full_trim` (six-axis,
+  used by SITL starts). The six-axis trim tries several elevator starting points and rejects a
+  result whose force/moment residuals are not balanced, even if the optimiser reports success.
+- **CG summary** (`spearhead/cg_card.py`): stick-fixed static margin at the 22 m/s trim from a
+  ±0.001 rad alpha change at constant speed (wing, tail and fuselage loads), elevator trim at
+  20/22/24 m/s, and hover headroom as the busiest rotor's thrust against its thrust at 95 % spin
+  (`Q_M_SPIN_MAX`). The Flight Deck CG panel and Analyze → CG window use it.
+- **Stability** (`spearhead.stability`): trims through `run_simulation`, linearises `dynamics()`
+  by central differences, reports longitudinal and lateral modes and static derivatives, and
+  sweeps CG by changing `cg_body_xyz` at runtime. Results are local to the trim point.
+
+The wing/tail/fuselage split in the force breakdown apportions the database total; it is
+bookkeeping, not separate component physics.
+
+## Other models
+
+- **Wind** (`spearhead/wind.py`): uniform steady wind plus 1-cosine gusts, meteorological "from"
+  direction, up to 20 m/s. No turbulence, shear or rotor wake.
+- **Landing gear** (`spearhead/sitl/ground.py`): four compliant feet at ±0.40 m x, ±0.35 m y,
+  0.30 m below the CG; 20 000 N/m, 650 N·s/m vertical and 100 N·s/m tangential damping, friction
+  0.5. Assumed, not measured.
+- **Failures** (`spearhead/sitl/failures.py`): zero one lift rotor or the pusher between the
+  firmware outputs and the physics.
+- **At rest:** dynamic pressure is zero; `Vmin` only regularises the rate normalisation.
+
+## Using the model
+
+From `src/tools/flight_dynamics_model` with `PYTHONPATH=$PWD`:
 
 ```python
-from spearhead import load_aircraft_config, SimulationConfig, run_simulation
+from spearhead import load_aircraft_config, SimulationConfig, run_simulation, RealtimeSimulation
 
 params = load_aircraft_config("reference_design")
-result = run_simulation(SimulationConfig(params=params))
-```
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
-  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml --aircraft reference_design
-
-PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
-  src/tools/flight_dynamics_model/scenarios/pt1_hover.yaml --aircraft pt1_as_built
-```
-
-PT1.5 mass is configured as 21 kg; CG is the simulation target and inertia an estimate. Rotor coordinates follow the 14 October drawing. The profile
-does not claim to model the wingless first-hover airframe. The original MAD lift
-hardware is preserved, but its lift performance curve is not yet available.
-Reference retains ADB v1.1 and its original 0.28 m tail chord. PT1.5 defaults to
-the new database; its numeric updated tail chord/area are pending.
-See [profile data and model limits](aircraft_profiles.md) before interpreting
-PT1.5 results or replacing the AeroDB.
-
-The base database retains 32,761 alpha/beta points. The active 11 October control
-delivery contains 103 cases: 97 beta-zero cases, including four elevator/rudder
-combinations, and six neutral sideslip cases preserved for audit. Sparse control
-samples extend to ±15° elevator/rudder and ±30° aileron at selected alpha values;
-elevator also has ±5° samples at 10 and 15 m/s. This is not rectangular coverage.
-Measured increments replace provisional control terms; rate damping remains
-provisional. Alpha/speed endpoint holds, deflection extrapolation and interaction
-assumptions are reported explicitly. The previous 49-case revision is selectable
-as `tail_update_2026_10_07_controls_2026_10_09`.
-See the current review (local report)
-and [reference handling](aerodb_tail_update_2026_10_07.md).
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model python -m spearhead.sim run \
-  src/tools/flight_dynamics_model/scenarios/aero_database_check.yaml \
-  --aircraft reference_design --aerodynamics tail_update_2026_10_07
-```
-
-API: `load_aircraft_config("pt15", aerodynamics="adb_v1_1")` restores
-old aerodynamics with KDE hardware. Scenario YAML accepts `aerodynamics`; both
-simulation and stability CLIs accept `--aerodynamics`. Explicit selections win.
-
-## Install Dependencies
-
-From the repository root:
-
-```bash
-python -m pip install -r src/tools/flight_dynamics_model/requirements.txt
-```
-
-## Run
-
-From the repository root:
-
-```bash
-python src/tools/flight_dynamics_model/scripts/run_open_loop.py
-python src/tools/flight_dynamics_model/scripts/run_trim.py
-```
-
-The shared simulation backend is also available as a typed API:
-
-```python
-from spearhead import SimulationConfig, run_simulation
-
-config = SimulationConfig(duration=20.0, dt=0.01, n_points=None)
-result = run_simulation(config)
-```
-
-Future GUIs, notebooks, batch scripts, and report generators should call this
-same backend API. They should not implement their own flight dynamics model.
-
-Scenario YAML files can be run through the thin CLI wrapper:
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.sim run src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml
-
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.sim run src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
-  --csv output.csv --json output.json
-```
-
-For future real-time frontends, use `RealtimeSimulation`:
-
-```python
-from spearhead import RealtimeSimulation, SimulationConfig
+result = run_simulation(SimulationConfig(params=params, duration=20.0, dt=0.01, n_points=None))
 
 sim = RealtimeSimulation(SimulationConfig(duration=20.0, dt=0.01, n_points=None))
 while sim.running:
     state = sim.step()
 ```
 
-## Optional GUI
-
-The Spearhead FDM includes an optional NiceGUI/Plotly frontend. The GUI is a
-frontend layer over the shared backend APIs; it does not duplicate trim,
-dynamics, aerodynamics, propulsion, stability, CG sweep, or export logic.
-
-Install the core FDM dependencies first, then install the optional GUI
-dependencies:
-
-```bash
-python -m pip install -r src/tools/flight_dynamics_model/requirements.txt
-python -m pip install -r src/tools/flight_dynamics_model/requirements-gui.txt \
-  -r src/tools/flight_dynamics_model/requirements-sitl.txt
-```
-
-Run the GUI from the repository root:
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.gui --port 8082
-```
-
-For startup smoke checks without opening a browser:
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.gui --no-show --port 8082
-```
-
-Open `http://127.0.0.1:8082/` in a browser. The default route opens the
-ArduPilot-backed **Flight Deck**. Live firmware sessions require the pinned
-SITL executable; follow the [build quickstart](ardupilot_sitl_quickstart.md).
-The Python model, web server and firmware run locally; the browser renders the
-instruments. The default server owns one shared session.
-Docker packaging and hosted independent sessions remain future work.
-
-### Flight Deck
-
-Select **Aircraft**, **Initial point**, **Maneuver** and simulation duration,
-then press **Start flight**. PT1.5 ground starts select **Takeoff → hover → land**;
-the time field becomes **Hover time**, and climb/landing add to that dwell.
-Normal calibration and arming happen before the flight sequence. **Stop flight**
-terminates the local simulation processes. **Recorded flights** opens completed runs.
-
-For the transition diagnostic select **PT1.5 → Hover · 80 m (transition) →
-Hover → forward flight test → 60 s**. Choose **Transition CG** explicitly:
-PT1.5 target x=−40 mm (default), PT1 logged x=−47.5 mm, aft x=−60 mm, or forward
-x=−25 mm / 0 mm; y=0 and z=+65 mm in body axes (x forward, z down). The source moment center stays at (0,0,0).
-**Transition parameters** is the frozen 9 October proposal, the only remaining set. Forward trim
-is recomputed for the chosen CG without changing gains. **Technical details**
-shows the actual recorded CG, control coverage and forward trim; the elevator
-plot marks that forward trim. Transition results distinguish firmware handover
-from sustained-flight acceptance. The recording picker also includes completed
-CLI diagnostics under the local `.sitl` directory, with read-only controls.
-See the CG comparison (local report)
-and Flight Deck review (local report).
-
-The attitude horizon shows the shared FDM's physical state. Wind, failure injection, live alerts, the CG summary and the aircraft-log comparison are described in [Flight Deck test tools](flight_deck_test_tools.md).
-The page follows **Plan → Fly → Review**. Starting conditions and frozen parameter choices are collapsible; firmware/database identifiers remain in Technical details. Startup shows observed stages, elapsed wall time and a rough wait estimate. Flight duration uses simulated time; measured simulation speed is displayed separately. UI updates at 10 Hz, with charts refreshed only while the plots tab is visible.
-
-The five-second forward-throttle ramp begins at confirmed FBWA, including delayed confirmations; losing that mode returns throttle to neutral and requires fresh confirmation. Forward acceptance now requires fresh recorded FBWA heartbeats (maximum age 2 simulated seconds) throughout the accepted interval, plus the existing speed, lift-idle, attitude, altitude and duration checks. A passing interval does not imply that the entire maneuver stayed within those limits. The result summary separately shows peak pitch magnitude, altitude loss and the first 10 s hover peak. Plots include alpha (hidden below 1 m/s), pitch rate, pusher command and surface travel with assumed limits.
-
-For an explicit forward-CG diagnostic, first create a local configuration from the bundled template. From the repository root, after installing/building SITL:
-
 ```sh
-cp src/tools/flight_dynamics_model/sitl_configs/quad_transition.yaml \
-  src/tools/flight_dynamics_model/.sitl/forward-cg.yaml
+python scripts/run_open_loop.py                     # default 20 s open-loop run (main-compatible)
+python scripts/run_trim.py                          # longitudinal trim and trimmed run
+python -m spearhead.sim run scenarios/pitch_doublet.yaml --csv out.csv --json out.json
+python -m spearhead.sim run scenarios/pt1_hover.yaml --aircraft pt1_as_built
+python -m spearhead.stability analyze scenarios/pitch_doublet.yaml --json stability.json --markdown stability.md
+python -m spearhead.stability cg-sweep scenarios/pitch_doublet.yaml --cg-x -0.15 -0.10 -0.05 --json cg_sweep.json
 ```
 
-Set `cg_body_xyz_m: [-0.025, 0.0, 0.065]` in that local copy. This selects a diagnostic CG, not a measured aircraft CG. Then run:
+| Scenario | Content |
+|---|---|
+| `scenarios/pitch_doublet.yaml` | Original 25 kg ADB v1.1 regression: 25 m/s trim, 5° elevator doublet |
+| `scenarios/pt1_hover.yaml` | PT1 static lift at 20 m with a 3 % collective doublet; open loop, no controller or ground |
+| `scenarios/aero_database_check.yaml` | 0.4 s untrimmed response on the October data |
 
-```sh
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/tools/flight_dynamics_model \
-  python -m spearhead.sitl.quad --transition \
-  --transition-parameters first_transition_2026_10_09 \
-  --config src/tools/flight_dynamics_model/.sitl/forward-cg.yaml \
-  --binary src/tools/flight_dynamics_model/.sitl/arduplane-4.7.1 \
-  --output src/tools/flight_dynamics_model/.sitl/forward-cg-check \
-  --duration 60 --wall-timeout 900 --port 19712 --mavlink-port 16470
-```
+| Script | Purpose |
+|---|---|
+| `recenter_october_database.py` | Restore the October base export to the CFD origin, with checks |
+| `import_control_results.py` | Normalise a control-results export without changing loads |
+| `compare_aerodb_moments.py` | Overlay ADB v1.1 and October moments at a common center |
+| `export_nondimit_moment_centers.py` | Batch Nondimit at the moment centers of the earlier study |
+| `estimate_pt1_pusher.py` | Reproduce the pusher estimate and forward-trim checks |
+| `sweep_sitl_trim.py` | Six-axis trims over speed and CG with the SITL data |
+| `analyse_input_responses.py` | Metrics and figures from SITL doublet runs |
+| `report_ground_start.py` | Summary and traces of a ground-start run |
+| `compare_run_open_loop_compatibility.py` | Compare open-loop results between two checkouts |
 
-Use a new output directory and free ports for each run. Source data, physical parameters and controller gains are unchanged by the ramp/acceptance corrections. See the repository preparation results (local report).
+`run_simulation` trims longitudinally with the elevator limited to its measured range (±15°),
+which the PT1.5 forward trim exceeds at its target CG; for PT1.5 forward flight use `spearhead.sitl.physics.full_trim`
+(±30° linear travel) or a scenario with an explicit initial state, as in `pt1_hover.yaml`.
 
-Typography uses locally installed Neue Haas Grotesk with Arial/system fallbacks; proprietary font bytes are not bundled. JetBrains Mono v2.304 is distributed with its OFL notice in `spearhead/gui/assets/fonts/`.
+JSON exports identify the aircraft, AeroDB, geometry and hardware; CSV exports append the
+aircraft and AeroDB identity after the state columns.
 
-Interactive flights enable firmware-confirmed mode changes after initialization.
-Automatic test sequences and recordings keep those commands disabled.
-GPS/EKF/system status and timestamped firmware warnings remain visible.
-The **Flight plots** and **Technical details** tabs expose traces and provenance.
-See the [ground-control guide](flight_deck_ground_control.md).
+## Limitations
 
-### Model Lab
-
-Open **Analyze → Model Lab** (`/model-lab`) for model-only realtime experiments.
-Use the left setup rail to select a scenario and a predefined maneuver. Bundled
-scenario YAML files are loaded through the existing scenario adapter. Maneuver
-presets are represented with the existing `ControlInputCommand` model.
-
-Available Model Lab controls:
-
-- **Play/Pause** starts or pauses realtime stepping through `RealtimeSimulation`.
-- **Reset** returns the selected scenario and maneuver to `t = 0`.
-- **Step** advances one simulation step while paused.
-- **Speed** selects the playback multiplier (`0.5x`, `1x`, `2x`, `5x`).
-- The transport strip shows elapsed time, total scenario time, status, and a
-  timeline progress bar.
-
-The primary flight display is a PFD-style artificial horizon. The aircraft
-symbol remains fixed while the sky/ground world and pitch ladder move with the
-simulated attitude.
-
-Telemetry cards show large-value readouts for:
-
-- IAS: body-speed magnitude in `m/s`
-- ALT: altitude derived from NED down position in `m`
-- PITCH, ROLL, HDG: Euler angles in degrees
-- ALPHA: angle of attack in degrees
-- BETA: sideslip angle in degrees
-
-Control input bars show the resolved current control command:
-
-- ELEV: elevator deflection in degrees, centered at zero
-- AIL: aileron deflection in degrees, centered at zero
-- RUD: rudder deflection in degrees, centered at zero
-- THR: throttle command as percent, from zero to full scale
-
-The lower response area contains live Plotly cards for attitude, rates, control
-inputs, and airspeed/altitude. These plots use a rolling display history so the
-Model Lab remains responsive during playback.
-
-### Analyze
-
-The **Analyze** page is secondary to the Flight Deck. It can review the latest
-Model Lab run and provides access to the existing batch simulation, stability,
-and the PT1.5 CG window (static margin, elevator trim and hover headroom across CG).
-
-### GUI Limitations
-
-- GUI dependencies are optional and are not required for backend simulations or
-  stability analysis.
-- Model Lab playback is timer-based inside NiceGUI. The ArduPilot runner advances
-  physics in lockstep from sensor timestamps; browser timing only affects display updates.
-- Joystick, gamepad, and manual control input are not implemented yet.
-- Wind is uniform steady wind plus 1-cosine gusts; no turbulence, shear or rotor wake.
-- Ground contact uses provisional flat-ground gear. Forward transition, real
-  hardware tune, battery sag, rotor ground effect and propwash remain unvalidated.
-- In restricted sandbox environments, NiceGUI startup can fail while creating a
-  process pool because system semaphore queries are blocked. Run the GUI in a
-  normal local shell when this occurs.
-
-### Manual GUI Checklist
-
-- Launch the GUI.
-- Confirm Flight Deck opens by default.
-- Select PT1.5, Ground, Takeoff → hover → land, 10 m and a 15 s hover dwell.
-- Press Start flight; confirm ground initialization, takeoff, hover and landing.
-- Confirm the completed run shows AUTO, disarmed and a validation result.
-- Open Recordings and confirm its controls are read-only.
-- Select an air-start Interactive flight and confirm mode controls unlock after calibration.
-- Confirm the FDM horizon, external view, health/messages and flight plots update.
-- Open Analyze → Model Lab for the model-only controls below.
-- Select the pitch doublet maneuver.
-- Press Play and confirm simulation time advances.
-- Confirm Pause works.
-- Confirm Reset returns the run to `t = 0`.
-- Confirm Step advances while paused.
-- Confirm the speed multiplier changes playback rate.
-- Confirm the PFD attitude display updates.
-- Confirm telemetry cards update.
-- Confirm control input bars update.
-- Confirm all four plot cards update.
-- Select a roll/aileron maneuver.
-- Select a rudder maneuver.
-- Open Analyze and confirm it sees the latest Model Lab run.
-
-## Test
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model pytest src/tools/flight_dynamics_model/tests
-```
-
-The current stability model is preliminary. ADB v1.1 uses provisional controls; the October dataset uses partial measured control increments. Rate derivatives remain provisional for both. Failed force/moment balance is rejected even when the optimizer terminates successfully.
-
-## Stability Analysis Reproducibility
-
-The restored stability pipeline lives under `spearhead.stability` and consumes
-the same backend as simulations:
-
-```python
-from spearhead.scenarios import load_scenario
-from spearhead.stability import analyze_stability
-
-config = load_scenario("src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml")
-result = analyze_stability(config)
-```
-
-CLI examples:
-
-```bash
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.stability analyze \
-  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
-  --json stability.json --csv stability_modes.csv --markdown stability.md
-
-PYTHONPATH=src/tools/flight_dynamics_model \
-python -m spearhead.stability cg-sweep \
-  src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml \
-  --cg-x -0.15 -0.10 -0.05 \
-  --json cg_sweep.json --csv cg_sweep_modes.csv
-```
-
-The analysis trims through `run_simulation(config)`, then linearizes the existing
-`dynamics()` function with central finite differences. Static derivatives are
-estimated from the existing force/moment breakdown path. No separate aircraft
-model is used.
-
-Current limitations:
-
-- The original ADB and October tail-update dataset are versioned independently;
-  active ArduPilot sessions use the October dataset.
-- CG sweep changes `AircraftParams.cg_body_xyz` at runtime and relies on the
-  existing moment-shift path; it does not recreate the missing Nondimit per-CG
-  CSV cases from the historical information note.
-- The inertia matrix, propulsion model, rate damping, and control increments
-  remain preliminary.
-
-### PT1.5 forward-trim starts
-
-PT1.5 now offers **Forward trim · 22 / 24 / 26 m/s** and **Custom forward trim** (22–26 m/s), alongside Ground, Hover · 20 m, Hover · 80 m and Custom hover. The Hover · 30 m shortcut is removed; old recordings remain readable as Custom hover at their original altitude. Reference-aircraft trim points are unchanged.
-
-Forward starts compute full six-axis trim for the selected speed and diagnostic CG, retain ±30° proposed travel and the MAD pusher PWM envelope, and expose Interactive flight or Straight & level hold. Lift motors remain off and fixed-wing modes are available. Forward parameters use the selected saved baseline, with the frozen 9 October proposal as default; only the trim PWM values are derived from the computed physical trim. CG selection is explicit. The present pusher estimate does not yield a balanced PT1.5 trim at 28 m/s, so that shortcut is not offered.
-
-Forward-start verification (local report).
-
-### Forward-to-hover and analysis doublets
-
-The PT1.5 FW-trim menu includes **Forward → hover transition** (10 s FBWA settlement followed by firmware-managed QLOITER braking/position hold) and **Pitch / Roll / Yaw / Throttle doublets**. They command physical elevator ±3° for 0.75 s per lobe, aileron ±5° for 0.5 s, rudder ±5° for 0.75 s, or up to ±10 throttle points for 2 s. Throttle amplitude is limited symmetrically by trim headroom and recorded. Excitation is in MANUAL, followed by FBWA recovery; frozen controller gains are retained. Run durations are at least 60 s for reverse transition and 45 s for doublets.
-
-Interactive flight means neutral pilot sticks with user-requested mode changes, rather than a scripted maneuver. Input delivery is checked separately from recovery near trim. Body-rate, yaw/sideslip and requested/actual input plots support reviewing each experiment. Nonzero sideslip remains outside measured β=0 coverage. Maneuver verification (local report).
+- CG z, inertia and rate damping are estimates; Cnr covers lifting surfaces only.
+- Sparse control data, mostly at beta = 0; interactions other than the measured
+  elevator/rudder pairs are assumed additive.
+- No rotor inflow, propwash, ground effect, lift-rotor drag in forward flight, actuator dynamics
+  or battery sag on thrust.
+- The pusher model is MAD V8013 / APC 20×12 Sport, not the planned wooden propeller.
+- New aerodynamic deliveries should be added as new versioned datasets with their source files
+  and hashes; validate coefficients, trim, derivatives, modes and control effectiveness before
+  adopting them. Equality with the previous dataset at zero deflection is not the criterion,
+  since the tail geometry changed.

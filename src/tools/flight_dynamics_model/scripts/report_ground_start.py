@@ -68,7 +68,7 @@ def main():
               "Startup messages about AHRS/pre-arm checks are preserved: normal arming waits for EKF3 navigation readiness. "
               "The runner does not bypass checks or force-disarm. Raw telemetry, actuator outputs, FDM truth, manifests and firmware logs "
               "are retained in each run folder. Original reports remain unchanged; `validation_summary.json` applies the final analysis consistently to all runs.", "",
-              "See [ground-start setup and parameter rationale](../../docs/ground_start.md) for the configuration and official sources."]
+              "See the Flight Deck guide and SITL integration documents (docs/flight_deck.md, docs/sitl_integration.md) for the configuration."]
     (root / "report.md").write_text("\n".join(lines)+"\n")
     print(json.dumps({height: result["passed"] for height, result in summary.items()}))
 

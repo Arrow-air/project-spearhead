@@ -33,9 +33,8 @@ living engineering record and is published to the Arrow docs site.
 | Resource | Description |
 |----------|-------------|
 | [Flight Deck setup guide](src/tools/flight_dynamics_model/docs/setup_guide.md) | Install and run the aircraft model, ArduPilot 4.7.1 SITL and Flight Deck on macOS, Linux or Windows (WSL2) |
-| [Flight Deck overview](src/tools/flight_dynamics_model/README.md) | What the simulator does, first flight, verification and model scope |
+| [Flight dynamics model](src/tools/flight_dynamics_model/README.md) | Overview of the model, the Flight Deck and their documentation |
 | [Flight Deck validation](src/tools/flight_dynamics_model/docs/validation_summary.md) | Concise simulator results, tested cases and remaining limits |
-| [Flight Deck capabilities](src/tools/flight_dynamics_model/docs/capabilities.md) | Architecture diagrams, experiments, results and model limits |
 | [Electrical Master Document](docs/electrical-master.md) | Full electrical architecture (SPH-E-001) |
 | [PT1 Parts List](docs/pt1-parts-list.md) | Electrical procurement for the PT1 build |
 | [Information Notes](docs/information-note/) | Aerodynamics and flight-dynamics design notes |

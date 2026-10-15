@@ -93,8 +93,7 @@ Calibration, EKF checks, normal arming and motor start take one to two minutes o
 before the flight clock starts. On a slow computer the simulation runs slower than real time; the
 page shows its speed. **Recorded flights** reopens finished runs.
 
-The [Flight Deck guide](flight_deck_ground_control.md) and the
-[test tools](flight_deck_test_tools.md) describe the other tests (doublets, transitions, wind,
+The [Flight Deck guide](flight_deck.md) describes the other tests (doublets, transitions, wind,
 failures, comparison with an aircraft log).
 
 ## 5. Command-line runs (optional)
@@ -116,7 +115,7 @@ python -m pytest tests -q
 
 Each run writes a new folder with `manifest.json`, `truth.jsonl` (FDM state at 200 Hz),
 `telemetry.jsonl` (MAVLink), the firmware's DataFlash log under `logs/` and `report.json`.
-More commands are in the [SITL guide](ardupilot_sitl_quickstart.md).
+More runners, their pass criteria and the recorded files are in [SITL integration](sitl_integration.md).
 
 ## Troubleshooting
 

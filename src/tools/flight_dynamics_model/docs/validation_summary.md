@@ -1,55 +1,77 @@
-# Flight Deck validation summary
+# Validation summary
 
-**14 October 2026 · Provisional engineering baseline.** This is the single public validation report. Recordings, logs and dated diagnostic folders remain local and excluded from Git.
+**15 October 2026 · provisional engineering baseline.** What has been checked, with which
+result, and what is not validated. Engineering conclusions for PT1.5 are in
+[Flight Dynamics note 0003](../../../../docs/information-note/phase-1/Flight-Dynamics/0003-PT1-5-Hover-and-Fixed-Wing-Assessment/information-note.md);
+the model itself is described in the [model reference](model_reference.md).
 
-## Configuration and moment reference
+## Configuration
 
-Native **ArduPlane 4.7.1** (`dbe792162d06cab66c3475fd5556bf7a120f119e`) controls the Spearhead 6-DOF FDM. Runs use normal arming, verified parameters and fresh mode evidence. PT1.5 uses 21 kg, KDE lift hardware, an estimated MAD 150KV/APC 20×12 pusher and proposed ±30° surface travel. SITL home is the Ankara test field (1125 m above sea level). Controller gains and flight acceptance limits remain frozen.
+- ArduPlane 4.7.1 (`dbe79216`) in JSON SITL lockstep with the FDM; normal arming, frozen gains
+  (PT1 logged VTOL gains, 9 October fixed-wing proposal), Ankara home (1125 m above sea level).
+- PT1.5 (`pt15`): 21 kg, KDE lift rotors at the 14 October drawing stations, MAD 150KV / APC
+  20×12 pusher estimate, proposed ±30° surface travel, October AeroDB at 1.021 kg/m³.
+- Simulation CG (−0.040, 0, +0.065) m: the target inside the 22 m/s window, not a measurement.
+  PT1.5 without ballast is estimated at about −0.08 m.
 
-The aero team confirms raw CFD origin `(0,0,0)` and density 1.021 kg/m³. The delivered Nondimit base export records its **processed** center `(-0.1,0,+0.15)`. On 12 October the active table was numerically restored to the raw origin, replacing the former header-only handling. Dimensional forces are unchanged; previously applied corrections are not repeated. All 32761 rows match an independent wrench transfer within 5.7×10⁻¹⁴ N·m. The preserved delivery and reproducible conversion are hashed in `source.json`.
+## Trim at the target CG
 
-Runtime then applies `M_CG = M_source + (r_source − r_CG) × F` once, after adding origin-referenced control increments. At V=25 m/s, α=β=0, corrected base My is −37.540345 N·m versus control-neutral −36.5681 N·m. The Aero team confirmed the (−0.1,0,+0.15) export center on 14 October. Nondimit applies the 1.3 drag multiplier before the moment shift, so the restore is exact and the multiplier does not cause the remaining 0.972 N·m; base-surrogate and control-run differences at other alphas are 0.5–3.3 N·m.
-
-## Geometry, CG and trim (14 October 2026)
-
-Body axes are x forward, y right, z down, from the CFD origin (wing root quarter-chord). Lift-rotor and pusher stations follow the 14 October drawing: rotors at x = +0.675/−0.750 m, y = ±0.55 m, z = −0.043 m (centroid x = −0.0375 m); pusher at (−0.374, 0, +0.050) m, the lowest of the open mount heights. The former nominal rectangle (+0.55/−0.85 m) is withdrawn.
-
-PT1.5 (`pt15`, 21 kg) uses the target CG **[−0.040, 0, +0.065] m**: inside the 22 m/s window (static margin about 6 %). The PT1.5 build-up estimate without ballast is about −0.08 m, so the built aircraft must be weighed and ballasted to the target. PT1 as flown (`pt1_as_built`, 17.9 kg, wings on, no pusher) uses x = −0.0475 m from the logged 49.3 % front hover share; from a single wings-on segment, and wingless segments spread from −0.067 to −0.008 m, so it is good to about ±20 mm. CG z (+0.065 m), inertia and rate damping are build-up and vortex-lattice estimates.
-
-| TAS | Alpha | Elevator | Pusher command | Estimated pusher current | Max real part, longitudinal |
+| TAS | Alpha | Elevator | Pusher command | Pusher current | Max real part, longitudinal |
 |---|---:|---:|---:|---:|---:|
-| 20 m/s | 2.541° | −21.085° | 77.23 % | 15.03 A | −0.052 |
-| 22 m/s | 1.494° | −18.206° | 83.09 % | 18.00 A | −0.062 |
-| 24 m/s | 0.699° | −15.824° | 89.51 % | 21.78 A | −0.073 |
-| 26 m/s | 0.079° | −14.552° | 96.20 % | 26.31 A | −0.090 |
+| 20 m/s | 2.54° | −21.1° | 77 % | 15.0 A | −0.052 |
+| 22 m/s | 1.49° | −18.2° | 83 % | 18.0 A | −0.062 |
+| 24 m/s | 0.70° | −15.8° | 90 % | 21.8 A | −0.073 |
+| 26 m/s | 0.08° | −14.6° | 96 % | 26.3 A | −0.090 |
 
-All four satisfy six-axis trim and level-flight residual checks. Elevator trim at every stable CG lies beyond the measured ±15° coverage, so it rests on linear extrapolation until the AQ-12 cases (−20°, −30°) arrive. Above about 24 m/s the pusher exceeds its 24 A sustainable-current guideline. Forward trim now tries several elevator starting points; the former single start failed between solvable neighboring points.
+All four meet the six-axis trim and level-flight residual checks. Elevator trim is beyond the
+measured ±15° at every stable CG (linear extrapolation until the AQ-12 cases arrive), and above
+about 24 m/s the pusher exceeds its 24 A sustainable current.
 
-## Current verification
+## Checks
 
-| Check | Result and limits |
+| Check | Result |
 |---|---|
-| Source-only regression | **539 passed**, from the repository root |
-| PT1.5 hover hold, target CG | **Passed:** normal arm; 60.005 s free flight; max tilt 0.61°; settled altitude error 0.39 m; QHOVER drifted 71 m horizontally without position hold |
-| PT1.5 hover → forward, 9 October parameters | **Passed:** 60.010 s free flight; 30.35 s sustained accepted FBWA with lift idle; final TAS 24.16 m/s; peak pitch 2.11°; altitude loss 2.99 m |
-| PT1.5 hover → forward, PT1.5 parameter set | **Passed:** 60.010 s free flight; 26.06 s sustained accepted FBWA; final TAS 24.20 m/s; peak pitch 0.75°; altitude loss 0.94 m |
-| Lift-battery telemetry | ArduPilot read the JSON pack voltage and current (46.6 V, 83.2 A in hover) with a temporary `BATT_MONITOR = 4` overlay; the repository SITL parameters still have the monitor off |
-| Performance | About 340–445 s wall time for 107 s of simulation with three runs sharing two CPU cores |
+| Model tests | 562 passed, from the repository root and from the FDM folder |
+| Fresh setup | The [setup guide](setup_guide.md) followed from a clean clone on Ubuntu 24.04 / Python 3.13: packages, firmware build, tests, a 60 s hover and the Flight Deck page |
+| Default model on `main` | The default 20 s open-loop run, `run_trim.py` and the pitch-doublet scenario give results identical to `main` |
+| Moment reference | Restored October base matches an independent wrench transfer for all 32 761 rows within 6×10⁻¹⁴ N·m |
+| Hover hold, calm | Passed: 60 s free flight, max tilt 0.61°, settled altitude error 0.39 m; QHOVER drift 71 m (no position hold) |
+| Hover hold, 6 m/s wind + 3 m/s gust | Passed: max tilt 0.8°, altitude error 1.0 m |
+| Hover → FBWA, calm | Passed: 30.4 s sustained FBWA without lift, 24.2 m/s, peak pitch 2.1°, altitude loss 3.0 m |
+| Hover → FBWA, 6 m/s headwind | Passed on airspeed: 32.5 s sustained FBWA, 24.2 m/s |
+| Hover doublets (pitch, roll, yaw, collective) | All passed; pitch/roll well damped, yaw sluggish and lightly damped (note 0003) |
+| 22 m/s doublets (elevator, aileron, rudder, pusher) | All passed; Dutch roll period 2.50–2.53 s and damping ratio 0.22–0.24 against the linear 0.41 Hz / 0.24 |
+| Front-right lift motor out at 20 s | Left the attitude envelope 0.4 s later, as expected for a quad-X |
+| Lift-pack telemetry | The firmware read 46.6 V and 83 A in hover with a temporary `BATT_MONITOR = 4` overlay |
+| Speed | About 0.3× real time on a two-core cloud machine running several simulations or a build at once |
 
-Earlier recordings used the former rotor rectangle, a +10 mm CG and z = +150 mm; they do not validate the current geometry. Forward→hover and doublet runs were not repeated in this update.
+Recordings made before 14 October used the former rotor rectangle and CG and do not validate
+the current geometry. Forward → hover and ground-start runs were not repeated after the drawing
+update.
 
-## Physical consistency review (14 October 2026)
+## Physical consistency review
 
-Checked against the September ADB questions, the delivery specification and the 30 September CFD request:
+Checked against the September aerodynamic questions, the delivery specification and the
+30 September CFD request:
 
-- Control signs are physically consistent with the agreed convention (positive = trailing edge toward +z; left/right ruddervator = de ± dr). At alpha 0°, 25 m/s: +5° elevator gives −10.8 N·m (nose down); +5° aileron gives +44 N·m roll right with −4.5 N·m adverse yaw; +5° rudder gives +5.3 N·m nose right with −3.8 N side force. ArduPilot's elevator (reversed) and rudder mappings match.
-- The base table is antisymmetric in sideslip around beta = 0 (stable Cn_beta and Cl_beta), so zeroing Fy, Mx and Mz at beta = 0 adds no kink.
-- Drag in the 10–25 m/s control cases stays near CD 0.03, so the 30 N pusher actuator disk's direct thrust is not in the integrated loads; the FDM pusher thrust is not counted twice.
-- **Open:** the neutral 10 and 15 m/s cases show much lower lift and less nose-down moment than the 25 m/s base table (CL at alpha 0°: 0.08 / 0.27 / 0.36). The likely cause is the fixed 30 N slipstream over the tail. The FDM uses the 25 m/s base at all speeds, so wing-body lift between about 10 and 20 m/s is probably overpredicted; the Fly panel flags this range. The slipstream effect is also frozen at 30 N rather than following pusher thrust. Asked as AQ-18.
-- The reference design (ADB v1.1) is statically unstable at its stated CG (static margin about −17 %), and its SITL configurations use a CG 0.45 m below the origin, outside the fuselage. Both are labelled for software regression only.
+- Control signs match the agreed convention, and the firmware's elevator (reversed) and rudder
+  mappings match them.
+- The base table is antisymmetric in sideslip (stable Cn_beta and Cl_beta), so zeroing Fy, Mx and
+  Mz at beta = 0 adds no kink.
+- Control-case drag stays near CD 0.03, so the 30 N actuator disk's direct thrust is not in the
+  integrated loads and the pusher thrust is not counted twice.
+- Open: the speed dependence of the neutral cases (AQ-18), lateral loads in the elevator
+  increments, and the 0.97 N·m neutral pitching-moment residual. See the
+  [model reference](model_reference.md#known-data-issues).
+- The reference design is statically unstable with ADB v1.1 at its stated CG (static margin
+  about −17 %); its fixed-wing SITL configurations use a CG 0.45 m below the origin and are for
+  software regression only.
 
-## Remaining limits
+## Not validated
 
-Measured PT1.5 CG and inertia, the pusher mount height and motor/propeller, and servo/PWM calibration remain open. Sparse control/sideslip coverage, provisional rate damping, absent rotor inflow/propwash/transients and a generic battery discharge curve (telemetry only; thrust uses nominal voltage) limit predictions. Physical placement must also account for the wing, not merely the sign relative to an arbitrary origin.
-
-The display shows numeric FL/FR/RL/RR lift values and logged 1100–1940 µs limits. Documentation diagrams and local links are checked. Broader formatting/spelling findings remain; provisioned Docker checks were not run because its daemon was unavailable. This is a reviewable provisional simulation baseline, not hardware flight readiness. See the [capabilities](capabilities.md), [model reference](model_reference.md) and [setup README](../README.md).
+- Measured PT1.5 mass, CG and inertia; the pusher motor, propeller and mount height; servo and PWM
+  calibration and the ±30° travel; the V-tail mixer outputs.
+- Sparse control and sideslip coverage, provisional rate damping, the low-speed aerodynamic data.
+- Rotor inflow, propwash, ground effect, actuator dynamics, battery sag on thrust, detailed wind.
+- Any physical flight envelope. Simulation passes support test planning; they are not flight
+  clearance.
