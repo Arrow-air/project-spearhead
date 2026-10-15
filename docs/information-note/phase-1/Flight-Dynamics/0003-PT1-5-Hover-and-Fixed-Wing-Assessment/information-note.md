@@ -10,7 +10,7 @@ sidebar_position: 1
 
 "Preliminary"
 
-"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793)"
+"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 15 October 2026, hover and fixed-wing input responses added"
 
 "Replacement Log: Supersedes the CG conclusions of [note 0001](../0001-Preliminary-Fixed-Wing-Stability-Analysis/information-note.md) for the October aerodynamic database; note 0001 remains the record of the ADB v1.1 study."
 
@@ -124,6 +124,67 @@ Recommended: cant the lift motors 3–5° outboard to gain yaw authority from th
 | Hover hold, 6 m/s headwind + 3 m/s gust | Passed: max tilt 0.8°, altitude error 1.0 m |
 | Front-right lift motor out at 20 s | Left the attitude envelope 0.4 s after the failure (quad-X has no single-motor-out capability) |
 
+#### Hover input responses (SITL)
+
+Pilot doublets at 20 m in calm air with the PT1 VTOL gains as logged: attitude ±8° in QHOVER, yaw
+stick ±20 % in QHOVER, collective ±10 points in QSTABILIZE; each half lasts 2 s, then sticks
+return to neutral. Response is measured against the firmware's own desired attitude and rate
+(DataFlash `ATT`, `RATE`).
+
+![Hover input responses](figures/hover_input_responses.png)
+
+| Input | Rise to 90 % | Peak | After neutral | Peak rate | Coupling |
+|---|---:|---|---|---:|---|
+| Pitch ±8° | 0.60 s | +8.9° (11 % over); −10.9° on the 16° reversal (36 % over) | 1.0° past zero; within 1° after 0.6 s | 44°/s | roll 0.6°, heading 1.6° |
+| Roll ±8° | 0.65 s | +9.4° (17 %); −9.9° (24 %) | 1.1° past zero; within 1° after 1.1 s | 35°/s | pitch 0.9°, heading 6.4° |
+| Yaw stick ±20 % (demand up to 43–47°/s) | not reached | +14.9 / −14.6°/s, 1.3 s behind the demand | heading oscillates, period 8.0 s, damping ratio about 0.11; within 2° only after 28 s | — | roll/pitch < 0.1° |
+| Collective ±10 points | — | vertical acceleration +1.1 / −1.6 m/s², climb 2.2 m/s, +3.7 m | QHOVER holds the new height (+1.6 m) | — | attitude 0.6° |
+
+Lift outputs stayed between 1525 and 1796 µs in every run, clear of the 1100–1940 µs range ends.
+Height stayed within 0.4 m during the attitude doublets.
+
+- Pitch and roll follow the demand quickly and settle without oscillation. The overshoot on the
+  reversal (24–36 %) is the largest feature and is worth comparing with the first PT1.5 hover log.
+- Yaw is the weak hover axis. The yaw-rate loop output peaks at 0.44 of full scale
+  (`Q_A_RAT_YAW_P` 0.5, `Q_A_RAT_YAW_I` 0.018) against an estimated yaw inertia of 8.1 kg·m²: the
+  aircraft reaches a third of the demanded rate, and the heading-hold loop then oscillates with
+  little damping. A roll input also turns the heading by 6°. This matches the yaw findings from
+  the PT1 logs above. Yaw inertia and rotor reaction torque (static KDE data, no motor dynamics)
+  are estimates, so the numbers are indicative.
+- QHOVER does not hold position. All runs drifted 43–45 m in 45 s at about 1.4 m/s because the
+  model aircraft sits 0.15–0.25° from level while the firmware estimates it level; a pilot or
+  QLOITER removes this in flight.
+
+#### Fixed-wing input responses at 22 m/s (SITL)
+
+Open-loop surface and pusher doublets in MANUAL from the 22 m/s trim at 100 m, followed by FBWA
+with the 9 October transition parameters. Elevator trim is −18.2°, so every frame uses elevator
+data beyond the measured ±15°.
+
+![Forward-flight input responses](figures/forward_input_responses.png)
+
+| Input | Primary response | Coupling | Recovery |
+|---|---|---|---|
+| Elevator ±3°, 0.75 s each | q 7.3°/s in the first half (2.4°/s per degree), 9.5°/s on the reversal; pitch 4.7°, alpha 1.5°, load factor 0.36 g | speed 0.5 m/s, height 1.2 m | rates within 1°/s 1.9 s after the input, no oscillation |
+| Aileron ±5°, 0.5 s each | p 20°/s in the first half (4.0°/s per degree), 21°/s on the reversal; bank 9.1° | adverse yaw: r 21°/s, sideslip 5.5°, heading 7.6° | Dutch roll, period 2.53 s, damping ratio 0.24; rates within 1°/s after 5.2 s |
+| Rudder ±5°, 0.75 s each | r 16°/s, sideslip 5.7° | bank 1.5° | Dutch roll, period 2.50 s, damping ratio 0.22; 4.9 s |
+| Pusher ±10 points, 2 s each | speed 0.8 m/s | pitch 2.2°, height 1.9 m | rates 1.7 s; FBWA keeps +0.9 m |
+
+All four runs passed their input and recovery checks.
+
+- The pitch response is heavily damped, as the linear short period predicts (1.06 Hz, damping
+  ratio 0.78).
+- The Dutch roll seen after the aileron and rudder inputs (0.39–0.40 Hz, damping ratio 0.22–0.24)
+  agrees with the linear mode (0.41 Hz, 0.24). The nonlinear model with the firmware in the loop
+  confirms the linear lateral analysis.
+- Aileron gives strong adverse yaw: sideslip reaches 5.5° from 5° of aileron and the yaw rate
+  equals the roll rate. With Cnr from the lifting surfaces only, real yaw damping is probably
+  higher, but turns will need rudder coordination.
+- The trim needs 2.1° of rudder against a yaw moment of 1.5 N·m and a roll moment of 0.4 N·m. They come from the lateral
+  loads in the elevator increments of the 15 m/s plane (−0.65 N·m yaw for −5°, measured), which the
+  model extrapolates to −18° and blends into 22 m/s. A symmetric elevator deflection should give
+  almost no yaw, so these loads are likely numerical; see the limitations.
+
 ### Fixed-wing flight
 
 #### Static stability and CG window
@@ -207,6 +268,13 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 - No rotor inflow, ground effect, propwash or lift-rotor drag in forward flight.
 - Pusher model is MAD V8013 / APC 20×12 Sport, not the planned wooden propeller.
 - Wind is uniform steady wind with 1-cosine gusts.
+- The elevator increments carry lateral loads (yaw and roll) from the 15 m/s cases, extrapolated
+  beyond ±5°. At 22 m/s trim they require 2.1° of rudder. Removing lateral loads from symmetric
+  elevator increments is proposed but not applied.
+- The hover yaw response depends on the estimated yaw inertia and on static rotor torque; motor
+  and rotor speed dynamics are not modelled.
+- In near-hover, the firmware's attitude estimate differs from the model attitude by about 0.2°,
+  which causes the QHOVER drift reported above.
 
 ## Recommendations
 
@@ -216,6 +284,10 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 - Align the aircraft parameters (battery failsafe actions, airspeeds, mixing gain, weathervane) and the
   SITL parameters, then repeat the transition runs.
 - Fit lift-current sensing; enable and tune the harmonic notch before pusher flights.
+- On the first PT1.5 hover, fly small pitch, roll and yaw stick doublets and compare them with
+  the hover responses above; yaw is the axis to watch. Review the yaw rate and heading gains
+  after the motor cant and weathervane settings.
+- Include aileron-to-rudder mixing in the aircraft parameter alignment before fixed-wing flight.
 
 ## Traceability
 
@@ -226,6 +298,7 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 | Aircraft profiles | `src/tools/flight_dynamics_model/aircraft_configs/pt1_as_built.yaml`, `pt15.yaml` |
 | CG summary and window | `spearhead/cg_card.py`; Flight Deck Analyze → CG window |
 | SITL runs | ArduPlane 4.7.1 (dbe79216), `spearhead/sitl/quad.py` |
+| Input responses | `data/input_response_metrics.json`, `figures/`; runs from `spearhead.sitl.quad --doublet` and `spearhead.sitl.flight <axis>_doublet`, analysed with `src/tools/flight_dynamics_model/scripts/analyse_input_responses.py` (raw recordings are not kept in Git) |
 
 ## Quality Assurance
 
@@ -235,6 +308,8 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 - Control signs, sideslip symmetry and the absence of double-counted pusher thrust were checked
   against the September Aero notes.
 - The log-derived mass (17.8 kg) agrees with the stated mass (17.9 kg).
+- The Dutch roll measured in the SITL doublets agrees with the linear mode within 4 % in period
+  and 0.02 in damping ratio.
 
 ## Conclusion
 
@@ -243,4 +318,6 @@ constraint for PT1.5. The fixed-wing constraint is a narrow window, x −0.046 t
 static margin and elevator authority, and PT1.5 as built will sit aft of it unless masses are moved
 forward. Inside the window the aircraft is statically and dynamically stable in the model, and SITL
 transitions pass, but elevator trim and low-speed lift rest on extrapolated or unexplained data.
-The next flight should be hover-only.
+Input responses are well damped in pitch and roll; hover yaw is sluggish and lightly damped, and
+aileron inputs need rudder coordination. The next flight should be hover-only, with small doublets
+to check the hover responses.

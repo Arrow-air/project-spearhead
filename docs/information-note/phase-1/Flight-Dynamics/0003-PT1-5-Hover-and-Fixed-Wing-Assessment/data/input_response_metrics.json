@@ -1,0 +1,241 @@
+{
+ "description": "PT1.5 input-response metrics, ArduPlane 4.7.1 SITL (dbe79216) with the Spearhead FDM, 15 October 2026. pt15 profile, 21 kg, CG (-0.040, 0, +0.065) m, calm air, Ankara home, rho 1.021 kg/m^3. Hover: 20 m, QHOVER (collective: QSTABILIZE), PT1 logged VTOL gains. Forward: 22 m/s trim, 100 m, MANUAL input then FBWA with the 9 October transition parameter set. Angles in degrees, rates in deg/s, times in s from the first input unless stated; hover times are from release.",
+ "units": {
+  "angles": "deg",
+  "rates": "deg/s",
+  "nz": "g",
+  "altitude": "m",
+  "speed": "m/s"
+ },
+ "hover": {
+  "pitch": {
+   "run": "hover_pitch_doublet",
+   "command": "±8° attitude, 2 s each (QHOVER)",
+   "rise_90_s": 0.605,
+   "peak_pos_deg": 8.885,
+   "overshoot_pos_pct": 11.062,
+   "peak_neg_deg": -10.857,
+   "overshoot_neg_pct": 35.718,
+   "rise_90_neg_s": 0.605,
+   "overshoot_past_zero_after_neutral_deg": 0.967,
+   "settle_1deg_after_neutral_s": 0.565,
+   "max_tracking_error_deg": 3.924,
+   "peak_rate_deg_s": 44.331,
+   "cross_axis_peak_deg": 0.637,
+   "yaw_coupling_peak_deg": 1.577,
+   "lift_pwm_range_us": [
+    1612,
+    1734
+   ],
+   "altitude_dev_m": 0.378,
+   "drift_45s_m": 42.715,
+   "passed": true
+  },
+  "roll": {
+   "run": "hover_roll_doublet",
+   "command": "±8° attitude, 2 s each (QHOVER)",
+   "rise_90_s": 0.655,
+   "peak_pos_deg": 9.384,
+   "overshoot_pos_pct": 17.299,
+   "peak_neg_deg": -9.908,
+   "overshoot_neg_pct": 23.845,
+   "rise_90_neg_s": 0.775,
+   "overshoot_past_zero_after_neutral_deg": 1.101,
+   "settle_1deg_after_neutral_s": 1.095,
+   "max_tracking_error_deg": 4.43,
+   "peak_rate_deg_s": 35.191,
+   "cross_axis_peak_deg": 0.876,
+   "yaw_coupling_peak_deg": 6.421,
+   "lift_pwm_range_us": [
+    1587,
+    1732
+   ],
+   "altitude_dev_m": 0.358,
+   "drift_45s_m": 45.224,
+   "passed": true
+  },
+  "yaw": {
+   "run": "hover_yaw_doublet",
+   "command": "yaw stick ±20 %, 2 s each (QHOVER)",
+   "desired_rate_peak_pos_deg_s": 43.201,
+   "achieved_rate_peak_pos_deg_s": 14.917,
+   "desired_rate_peak_neg_deg_s": -47.149,
+   "achieved_rate_peak_neg_deg_s": -14.59,
+   "lag_s": 1.27,
+   "yaw_out_peak": 0.436,
+   "post_input_period_s": 7.98,
+   "post_input_half_cycle_peaks_deg_s": [
+    14.59,
+    9.147,
+    6.324,
+    4.412,
+    3.232
+   ],
+   "post_input_damping_ratio": 0.113,
+   "heading_settle_2deg_s": 28.209,
+   "heading_change_peak_deg": 32.844,
+   "roll_pitch_coupling_peak_deg": 0.054,
+   "lift_pwm_range_us": [
+    1525,
+    1796
+   ],
+   "passed": true,
+   "returned_near_trim": false,
+   "tail_max_rate_deg_s": 1.714
+  },
+  "throttle": {
+   "run": "hover_throttle_doublet",
+   "command": "collective ±10 points, 2 s each (QSTABILIZE), QHOVER recovery",
+   "vertical_accel_pos_pulse_m_s2": 1.145,
+   "vertical_accel_neg_pulse_m_s2": -1.625,
+   "climb_rate_peak_pos_m_s": 2.172,
+   "climb_rate_peak_neg_m_s": -1.025,
+   "altitude_peak_m": 3.659,
+   "altitude_min_m": -0.01,
+   "altitude_offset_at_20s_m": 1.627,
+   "altitude_offset_end_m": 1.569,
+   "lift_pwm_range_us": [
+    1577,
+    1727
+   ],
+   "attitude_coupling_peak_deg": 0.598,
+   "passed": true
+  }
+ },
+ "forward_22": {
+  "pitch": {
+   "run": "fw_pitch_doublet",
+   "passed": true,
+   "returned_near_trim": true,
+   "input": "elevator ±3° 0.75 s each (MANUAL), FBWA from 2.5 s after input start",
+   "trim": -18.206,
+   "pulse_s": 0.75,
+   "fbwa_after_s": 2.5,
+   "outside_control_coverage_fraction": 1.0,
+   "peak_p": 0.202,
+   "peak_q": 9.548,
+   "peak_r": 1.033,
+   "peak_dphi": 0.111,
+   "peak_dtheta": 4.738,
+   "peak_dpsi": 0.888,
+   "peak_dh": 1.205,
+   "peak_dV": 0.458,
+   "peak_dalpha": 1.508,
+   "peak_dbeta": 0.455,
+   "peak_dnz": 0.358,
+   "settle_rates_1dps_after_input_s": 1.94,
+   "settle_att_2deg_after_input_s": 1.135,
+   "altitude_offset_end_m": -0.25,
+   "speed_range": [
+    21.89,
+    22.48
+   ],
+   "q_per_deg_elev": 2.435,
+   "nz_per_deg_elev": 0.084
+  },
+  "roll": {
+   "run": "fw_roll_doublet",
+   "passed": true,
+   "returned_near_trim": true,
+   "input": "aileron ±5° 0.5 s each (MANUAL), FBWA from 2 s after input start",
+   "trim": 0.004,
+   "pulse_s": 0.5,
+   "fbwa_after_s": 2.0,
+   "outside_control_coverage_fraction": 1.0,
+   "peak_p": 20.984,
+   "peak_q": 3.091,
+   "peak_r": 21.169,
+   "peak_dphi": 9.102,
+   "peak_dtheta": 1.895,
+   "peak_dpsi": 7.592,
+   "peak_dh": 0.75,
+   "peak_dV": 0.395,
+   "peak_dalpha": 0.597,
+   "peak_dbeta": 5.463,
+   "peak_dnz": 0.109,
+   "settle_rates_1dps_after_input_s": 5.215,
+   "settle_att_2deg_after_input_s": 0.0,
+   "altitude_offset_end_m": 0.251,
+   "speed_range": [
+    21.626,
+    22.043
+   ],
+   "lateral_osc_period_s": 2.533,
+   "lateral_osc_damping_est": 0.238,
+   "lateral_half_cycle_peaks_deg_s": [
+    11.141,
+    5.154,
+    2.459,
+    1.313,
+    0.501
+   ],
+   "p_per_deg_ail": 3.974,
+   "yaw_rate_sign_vs_roll_first_pulse": "adverse"
+  },
+  "yaw": {
+   "run": "fw_yaw_doublet",
+   "passed": true,
+   "returned_near_trim": true,
+   "input": "rudder ±5° 0.75 s each (MANUAL), FBWA from 2.5 s after input start",
+   "trim": 2.097,
+   "pulse_s": 0.75,
+   "fbwa_after_s": 2.5,
+   "outside_control_coverage_fraction": 1.0,
+   "peak_p": 3.708,
+   "peak_q": 3.054,
+   "peak_r": 16.211,
+   "peak_dphi": 1.544,
+   "peak_dtheta": 1.391,
+   "peak_dpsi": 4.952,
+   "peak_dh": 0.355,
+   "peak_dV": 0.211,
+   "peak_dalpha": 0.582,
+   "peak_dbeta": 5.662,
+   "peak_dnz": 0.106,
+   "settle_rates_1dps_after_input_s": 4.865,
+   "settle_att_2deg_after_input_s": 0.0,
+   "altitude_offset_end_m": -0.076,
+   "speed_range": [
+    21.811,
+    22.1
+   ],
+   "lateral_osc_period_s": 2.495,
+   "lateral_osc_damping_est": 0.221,
+   "lateral_half_cycle_peaks_deg_s": [
+    11.63,
+    5.729,
+    2.84,
+    1.283,
+    0.669
+   ]
+  },
+  "throttle": {
+   "run": "fw_throttle_doublet",
+   "passed": true,
+   "returned_near_trim": true,
+   "input": "pusher ±0.1 2 s each (MANUAL), FBWA from 5 s after input start",
+   "trim": 0.831,
+   "pulse_s": 2.0,
+   "fbwa_after_s": 5.0,
+   "outside_control_coverage_fraction": 1.0,
+   "peak_p": 0.159,
+   "peak_q": 1.913,
+   "peak_r": 0.519,
+   "peak_dphi": 0.183,
+   "peak_dtheta": 2.2,
+   "peak_dpsi": 0.529,
+   "peak_dh": 1.916,
+   "peak_dV": 0.802,
+   "peak_dalpha": 0.201,
+   "peak_dbeta": 0.448,
+   "peak_dnz": 0.071,
+   "settle_rates_1dps_after_input_s": 1.665,
+   "settle_att_2deg_after_input_s": 0.0,
+   "altitude_offset_end_m": 0.925,
+   "speed_range": [
+    21.22,
+    22.673
+   ]
+  }
+ }
+}
