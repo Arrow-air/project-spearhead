@@ -125,3 +125,17 @@ def test_doublet_plots_show_physical_requested_input_and_yaw_response():
     assert figures["Doublet input"].data[1].y[0] == pytest.approx(3)
     assert figures["Body rates"].data[2].y[0] == pytest.approx(np.rad2deg(.04))
     assert figures["Yaw / sideslip"].data[0].y[0] == pytest.approx(np.rad2deg(.1))
+
+
+def test_flight_plots_count_time_from_release():
+    pytest.importorskip("plotly")
+    from spearhead.gui.sitl_page import flight_time_origin, sitl_figures
+    state = [0, 0, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    control = asdict(TRIM)
+    rows = [{"time_s": t, "hold": t < 47, "state": state, "control": control, "pwm": [1500]*8} for t in (10., 47., 107.)]
+    snapshot = {"history": rows, "report": {"release_at_s": 47.}}
+    assert flight_time_origin(snapshot) == 47.
+    figures = sitl_figures(snapshot)
+    assert tuple(figures["Roll"].data[0].x) == (-37., 0., 60.)
+    assert flight_time_origin({"history": rows, "time_s": 107., "free_time_s": 60.}) == 47.
+    assert flight_time_origin({"history": rows}) == 47.

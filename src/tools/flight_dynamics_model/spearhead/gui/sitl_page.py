@@ -323,24 +323,41 @@ def comparison_text(result):
     return " ".join(lines)
 
 
+def flight_time_origin(snapshot):
+    """Simulator time of release (ground starts: free physics start); None before release.
+
+    The run duration counts from this instant, so plots and messages use it as zero and the
+    firmware startup before it appears at negative times.
+    """
+    release = (snapshot.get("report") or {}).get("release_at_s")
+    if release is None and snapshot.get("free_time_s") is not None and snapshot.get("time_s") is not None:
+        release = snapshot["time_s"]-snapshot["free_time_s"]
+    if release is None:
+        release = next((r["time_s"] for r in snapshot.get("history") or [] if not r.get("hold", True)), None)
+    return release
+
+
 def sitl_figures(snapshot):
     truth = snapshot["history"]
     figures = {}
+    origin = flight_time_origin(snapshot)
+    zero = origin or 0.
+    times = [r["time_s"]-zero for r in truth]
     for axis, index in [("Roll", 6), ("Pitch", 7)]:
         go, figure = _flight_deck_base_figure(f"{axis} · FDM")
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+        figure.add_trace(go.Scatter(x=times,
                                    y=[math.degrees(r["state"][index]) for r in truth],
                                    name="FDM", line={"color": "#38bdf8"}))
         figure.update_yaxes(title_text="deg")
         figures[axis] = figure
     go, figure = _flight_deck_base_figure("Firmware outputs")
     for index, label in enumerate(["Aileron", "Elevator", "Pusher", "Rudder"]):
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+        figure.add_trace(go.Scatter(x=times,
                                    y=[r["pwm"][index] for r in truth], name=label))
     figure.update_yaxes(title_text="PWM · µs")
     figures["PWM"] = figure
     go, figure = _flight_deck_base_figure("Physical elevator")
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+    figure.add_trace(go.Scatter(x=times,
                                y=[math.degrees(r["control"]["de"]) for r in truth],
                                name="Elevator · deg", line={"color": "#fbbf24"}))
     manifest = snapshot.get("manifest")
@@ -353,28 +370,28 @@ def sitl_figures(snapshot):
     go, figure = _flight_deck_base_figure("FDM speed / altitude")
     for label, values in [("TAS · m/s", [math.sqrt(sum(v*v for v in r["state"][3:6])) for r in truth]),
                           ("Altitude · m", [-r["state"][2] for r in truth])]:
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth], y=values, name=label))
+        figure.add_trace(go.Scatter(x=times, y=values, name=label))
     figures["Energy"] = figure
     go, figure = _flight_deck_base_figure("Angle of attack · FDM")
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+    figure.add_trace(go.Scatter(x=times,
         y=[math.degrees(math.atan2(r["state"][5], r["state"][3]))
            if math.sqrt(sum(v*v for v in r["state"][3:6])) >= 1 else None for r in truth], name="Alpha"))
     figure.update_yaxes(title_text="deg · hidden below 1 m/s")
     figures["Alpha"] = figure
     go, figure = _flight_deck_base_figure("Pitch rate · FDM")
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+    figure.add_trace(go.Scatter(x=times,
         y=[math.degrees(r["state"][10]) for r in truth], name="q"))
     figure.update_yaxes(title_text="deg/s")
     figures["Pitch rate"] = figure
     go, figure = _flight_deck_base_figure("Pusher command · firmware output mapped to FDM")
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+    figure.add_trace(go.Scatter(x=times,
         y=[100*r["control"]["throttle"] if r["control"].get("throttle") is not None else None
            for r in truth], name="Pusher"))
     figure.update_yaxes(title_text="Actuator command · %", range=[0, 105])
     figures["Pusher"] = figure
     go, figure = _flight_deck_base_figure("Surface travel · physical FDM inputs")
     for name, field in [("Elevator", "de"), ("Aileron", "da"), ("Rudder", "dr")]:
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+        figure.add_trace(go.Scatter(x=times,
             y=[math.degrees(r["control"][field]) if r["control"].get(field) is not None else None
                for r in truth], name=name))
     limits = (snapshot.get("manifest") or {}).get("control_model", {}).get("assumed_travel_deg", {})
@@ -384,7 +401,7 @@ def sitl_figures(snapshot):
     figures["Surface travel"] = figure
     go, figure = _flight_deck_base_figure("Body rates · FDM")
     for index, name in [(9, "p · roll"), (10, "q · pitch"), (11, "r · yaw")]:
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth], y=[math.degrees(r["state"][index]) for r in truth], name=name))
+        figure.add_trace(go.Scatter(x=times, y=[math.degrees(r["state"][index]) for r in truth], name=name))
     figure.update_yaxes(title_text="deg/s")
     figures["Body rates"] = figure
     go, figure = _flight_deck_base_figure("Heading change / sideslip · FDM")
@@ -393,46 +410,44 @@ def sitl_figures(snapshot):
     for row in truth:
         accumulated += math.remainder(row["state"][8]-previous, 2*math.pi)
         heading.append(math.degrees(accumulated)); previous = row["state"][8]
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth], y=heading, name="Heading change"))
-    figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+    figure.add_trace(go.Scatter(x=times, y=heading, name="Heading change"))
+    figure.add_trace(go.Scatter(x=times,
         y=[math.degrees(math.asin(max(-1, min(1, r["state"][4]/math.sqrt(sum(v*v for v in r["state"][3:6]))))))
            if math.sqrt(sum(v*v for v in r["state"][3:6])) >= 1 else None for r in truth], name="Sideslip β"))
     figure.update_yaxes(title_text="deg · measured β=0 only")
     figures["Yaw / sideslip"] = figure
     go, figure = _flight_deck_base_figure("Doublet input · increment from trim")
     plan = (manifest or {}).get("doublet_plan")
-    release = (snapshot.get("report") or {}).get("release_at_s")
-    if release is None and snapshot.get("free_time_s") is not None:
-        release = snapshot["time_s"]-snapshot["free_time_s"]
+    release = origin
     if plan and release is not None:
         scale = 100 if plan["unit"] == "fraction" else 1
-        figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+        figure.add_trace(go.Scatter(x=times,
             y=[None if r["hold"] else scale*doublet_delta(plan, r["time_s"]-release) for r in truth],
             name="Requested", line={"dash": "dot", "shape": "hv"}))
         if plan.get("regime") == "hover":
             pilot = snapshot.get("pilot_inputs", [])
-            figure.add_trace(go.Scatter(x=[r["time_s"] for r in pilot],
+            figure.add_trace(go.Scatter(x=[r["time_s"]-zero for r in pilot],
                 y=[None if r["time_s"] < release or r["channels"][plan["channel"]-1] is None or
                    (plan["name"] == "throttle_doublet" and not plan["start_s"]-1 <= r["time_s"]-release < plan["recovery_at_s"]) else
                    scale*(r["channels"][plan["channel"]-1]-plan["neutral_pwm"])/plan["pwm_per_unit"] for r in pilot],
                 name="Measured pilot input · RC", line={"shape": "hv"}))
             if plan["unit"] == "deg":
-                figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+                figure.add_trace(go.Scatter(x=times,
                     y=[None if r["hold"] else math.degrees(r["state"][6+plan["axis"]]) for r in truth], name="Actual attitude"))
             figure.update_layout(title_text=plan["label"] + " · command and RC readback")
             figure.update_yaxes(title_text="Attitude · deg" if plan["unit"] == "deg" else "Pilot input percentage points")
         else:
-            figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+            figure.add_trace(go.Scatter(x=times,
                 y=[None if r["hold"] else scale*((math.degrees(r["control"][plan["surface"]]) if plan["unit"] == "deg" else r["control"][plan["surface"]])-plan["trim_value"]) for r in truth], name="Actual"))
             figure.update_yaxes(title_text="Throttle percentage points" if scale == 100 else "Surface degrees")
-        figure.update_xaxes(range=[release+plan["start_s"]-2, release+plan["recovery_at_s"]+3])
+        figure.update_xaxes(range=[plan["start_s"]-2, plan["recovery_at_s"]+3])
     figures["Doublet input"] = figure
     if (manifest or {}).get("parameter_overlay", {}).get("Q_ENABLE") or (manifest or {}).get("config", {}).get("flight_regime") == "hover":
         go, figure = _flight_deck_base_figure("Quad lift motors · firmware outputs")
         for index, label in [(4, "FR · M1"), (7, "RR · M4"), (5, "RL · M2"), (6, "FL · M3")]:
             # Zero means no PWM signal during startup; retain raw records but
             # leave a gap on the motor plot instead of stretching its scale.
-            figure.add_trace(go.Scatter(x=[r["time_s"] for r in truth],
+            figure.add_trace(go.Scatter(x=times,
                 y=[r["pwm"][index] or None for r in truth], name=label, connectgaps=False))
         figure.update_yaxes(title_text="Lift PWM · µs")
         limits = lift_pwm_limits(manifest)
@@ -453,6 +468,9 @@ def sitl_figures(snapshot):
     for figure in figures.values():
         figure.update_layout(margin={"l": 42, "r": 14, "t": 72, "b": 34},
                              title={"y": .98, "x": .03})
+        if origin is not None:
+            figure.update_xaxes(title_text="Flight time [s] · 0 = release, startup negative")
+            figure.add_vline(x=0, line_dash="dot", line_color="#475569")
     return figures
 
 
@@ -1136,7 +1154,8 @@ def register_sitl_page(ui, manager, render_shell):
             visible = [m for m in messages if message_filter.value == "All messages" or m["severity"] <= 4]
             stamp_messages = (view.get("run_id"), message_filter.value, repr(visible))
             if last_messages[0] != stamp_messages:
-                message_table.rows = [{**m, "id": i, "time": f"T+{m['time_s']:.1f} s"} for i, m in reversed(list(enumerate(visible)))]
+                zero = flight_time_origin(view) or 0.
+                message_table.rows = [{**m, "id": i, "time": f"T{m['time_s']-zero:+.1f} s"} for i, m in reversed(list(enumerate(visible)))]
                 message_table.update()
                 last_messages[0] = stamp_messages
             warning_count = sum(m['severity'] <= 4 for m in messages)
@@ -1175,7 +1194,7 @@ def register_sitl_page(ui, manager, render_shell):
                 return
             t = row["time_s"]
             free = view["free_time_s"]
-            progress.text = f"T+{t:.1f} s · " + ("calibrating / arming on ground" if free is None and manifest.get("ground_contact") else
+            progress.text = f"Simulator clock {t:.1f} s · " + ("calibrating / arming on ground" if free is None and manifest.get("ground_contact") else
                                               "calibrating / arming" if free is None else
                                               f"{free:.1f} s since takeoff command" if manifest.get("ground_contact") else f"{free:.1f} s free flight")
             x = row["state"]

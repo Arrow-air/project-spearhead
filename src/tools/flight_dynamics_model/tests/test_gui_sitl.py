@@ -365,4 +365,4 @@ def test_diagnostic_plots_use_physical_units_and_hide_low_speed_alpha():
     assert figures['Alpha'].data[0].y == pytest.approx([math.degrees(math.atan2(2,20)),None])
     assert figures['Pitch rate'].data[0].y[0] == pytest.approx(-12)
     assert figures['Pusher'].data[0].y[0] == 30
-    assert sorted(s.y0 for s in figures['Surface travel'].layout.shapes) == [-20,20]
+    assert sorted(s.y0 for s in figures['Surface travel'].layout.shapes if s.x0 != s.x1) == [-20,20]  # release marker is vertical
