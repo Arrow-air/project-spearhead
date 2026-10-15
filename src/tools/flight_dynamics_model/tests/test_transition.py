@@ -113,3 +113,9 @@ def test_forward_acceptance_uses_air_relative_speed_in_wind(tmp_path):
         'fdm_time_s': t, 'message': {'mavpackettype': 'HEARTBEAT', 'custom_mode': 5}})+'\n' for t in range(61)))
     report = analyse_transition(path, 0, 60, 80, 5)
     assert report['passed'] and report['max_true_airspeed_m_s'] == 24
+
+
+def test_default_wall_timeout_covers_startup():
+    from spearhead.sitl.backend import default_wall_timeout
+    assert default_wall_timeout(60) == 600.
+    assert default_wall_timeout(10) == 350.

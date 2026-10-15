@@ -19,6 +19,16 @@ from .protocol import ServoFrame, encode_sensor
 from ..aircraft import aircraft_summary, load_aircraft_config
 
 CONFIG_ROOT = Path(__file__).resolve().parents[2] / "sitl_configs"
+# Startup (calibration, EKF, arming, motor start) takes about 50 simulated seconds.
+BOOTSTRAP_ALLOWANCE_S = 60.
+
+
+def default_wall_timeout(duration_s):
+    """Host runtime allowance: five times the simulated time including startup.
+
+    Only the host deadline changes; physics and controller timing do not.
+    """
+    return max(150., 5*(float(duration_s) + BOOTSTRAP_ALLOWANCE_S))
 
 
 def sha256(path):

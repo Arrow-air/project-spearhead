@@ -13,7 +13,7 @@ import numpy as np
 from ..controls import Control
 from ..dynamics import dynamics
 from . import SITL_HOME, ardupilot_density_ratio, sitl_home_argument
-from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_firmware
+from .backend import CONFIG_ROOT, Session, default_wall_timeout, load_setup, serve, sha256, verify_firmware
 from .__main__ import telemetry_record
 from .metrics import analyse_truth, analyse_elevator_truth, command_at, elevator_at
 from .ground_control import ModeCommands
@@ -267,7 +267,7 @@ def run(args):
                 manifest["sitl_command"] = command
                 (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
                 process = subprocess.Popen(command, cwd=output, stdout=sitl_log, stderr=subprocess.STDOUT)
-                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or max(150, args.duration*5)):
+                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or default_wall_timeout(args.duration)):
                     if failures or not worker.is_alive():
                         raise RuntimeError("Physics backend stopped: " + str(failures))
                     if process.poll() is not None:

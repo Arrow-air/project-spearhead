@@ -128,7 +128,7 @@ More commands are in the [SITL guide](ardupilot_sitl_quickstart.md).
 | Firmware build killed or very slow | Run again with `SITL_JOBS=1` and close other programs |
 | `address already in use` | Another Flight Deck is running; stop it or set `PORT` |
 | Page does not open on Windows | Use `http://localhost:<port>/`; check that WSL2 (not WSL1) is in use with `wsl -l -v` |
-| A run fails with a wall-clock deadline or timeout | The computer is too busy for the run's time allowance; run one simulation at a time and close other programs |
+| A run fails with "wall-clock deadline exceeded" | The simulation ran below about 0.2× real time; run one simulation at a time and close other programs. Command-line runs accept `--wall-timeout <seconds>` |
 | Restricted or sandboxed terminal | Local UDP/TCP sockets must be allowed; run in a normal terminal |
 
 ## What is and is not modelled

@@ -11,7 +11,7 @@ import time
 
 import numpy as np
 
-from .backend import CONFIG_ROOT, Session, load_setup, serve, sha256, verify_firmware
+from .backend import CONFIG_ROOT, Session, default_wall_timeout, load_setup, serve, sha256, verify_firmware
 from .__main__ import telemetry_record
 from .flight import parameters_match
 from .ground_control import ModeCommands, QUADPLANE_MODES
@@ -222,7 +222,7 @@ def run(args):
                 manifest["sitl_command"] = command
                 (output / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
                 process = subprocess.Popen(command, cwd=output, stdout=slog, stderr=subprocess.STDOUT)
-                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or max(150, args.duration*5)):
+                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or default_wall_timeout(args.duration)):
                     if errors or not worker.is_alive():
                         raise RuntimeError("Physics backend stopped: "+str(errors))
                     if process.poll() is not None:
