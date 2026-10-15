@@ -302,7 +302,7 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 
 ## Quality Assurance
 
-- 560 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
+- 561 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
   wind, failures and battery telemetry.
 - Moment restoration matches Nondimit's own recentering within 6×10⁻¹⁴ N·m.
 - Control signs, sideslip symmetry and the absence of double-counted pusher thrust were checked
