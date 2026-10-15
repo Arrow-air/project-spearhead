@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 
@@ -21,7 +22,7 @@ from spearhead.gui.adapters.stability import (
 
 
 def test_scenario_adapter_loads_valid_yaml_scenario():
-    config = load_scenario_config("src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml")
+    config = load_scenario_config(Path(__file__).resolve().parents[1] / "scenarios" / "pitch_doublet.yaml")
     summary = scenario_summary(config)
 
     assert config.name == "pitch_doublet_nominal"

@@ -267,7 +267,7 @@ def run(args):
                 manifest["sitl_command"] = command
                 (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
                 process = subprocess.Popen(command, cwd=output, stdout=sitl_log, stderr=subprocess.STDOUT)
-                while time.monotonic()-started < max(150, args.duration*5):
+                while time.monotonic()-started < (getattr(args, "wall_timeout", None) or max(150, args.duration*5)):
                     if failures or not worker.is_alive():
                         raise RuntimeError("Physics backend stopped: " + str(failures))
                     if process.poll() is not None:
@@ -517,7 +517,10 @@ def main():
     parser.add_argument("--interactive", action="store_true", help="Allow Flight Deck mode commands after bootstrap")
     parser.add_argument("--perturb-roll", type=float, default=0.)
     parser.add_argument("--perturb-pitch", type=float, default=0.)
+    parser.add_argument("--wall-timeout", type=float, help="Host runtime allowance; leaves physics and controller timing unchanged")
     args = parser.parse_args()
+    if args.wall_timeout is not None and (not np.isfinite(args.wall_timeout) or args.wall_timeout <= 0):
+        parser.error("wall timeout must be finite and positive")
     if args.interactive and args.scenario != "fbwa":
         parser.error("interactive sessions bootstrap in FBWA")
     if args.duration is None:
