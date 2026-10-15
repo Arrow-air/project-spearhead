@@ -45,7 +45,7 @@ time; closing the tab does not stop it. **Stop flight** ends the firmware and FD
   land) on spring/damper landing gear. Choose takeoff height (3–30 m) and hover time (15–600 s);
   climb and landing add to it. The run ends with gear contact and firmware disarm.
 - **Interactive flight:** after startup, request any firmware mode from the selector and watch
-  what the firmware does. Pilot sticks stay neutral (hover throttle in QSTABILIZE/QACRO, centre
+  what the firmware does. Pilot sticks stay neutral (hover throttle in QSTABILIZE/QACRO, center
   throttle in altitude-holding Q modes); there is no joystick. At most 10 simulated minutes.
 
 All controller gains are frozen: the VTOL gains logged on PT1 and the 9 October fixed-wing
@@ -142,7 +142,7 @@ A `.param` file gives the parameter comparison only.
 - **CG window:** static margin, elevator trim and hover headroom over a list of CG positions,
   the same quantities as the CG summary. October-AeroDB estimates, not a measured envelope.
 - **Model Lab** (`/model-lab`): the model without firmware. Choose aircraft, aerodynamic dataset,
-  scenario and manoeuvre; play, pause, step and reset at 0.5–5× speed with attitude, telemetry,
+  scenario and maneuver; play, pause, step and reset at 0.5–5× speed with attitude, telemetry,
   control and response plots. Batch simulation and stability analysis use the same model.
 
 ## Limits
@@ -152,5 +152,5 @@ A `.param` file gives the parameter comparison only.
 - Rotor inflow, propwash, ground effect, actuator dynamics and battery sag on thrust are not
   modelled; landing gear properties are assumptions.
 - Control surfaces have no aerodynamic effect at zero airspeed (no propwash model). In QHOVER and
-  QSTABILIZE the firmware still moves aileron and elevator; the rudder is centred.
+  QSTABILIZE the firmware still moves aileron and elevator; the rudder is centered.
 - QHOVER holds attitude and height, not position: hover runs drift horizontally.

@@ -36,7 +36,7 @@ area were not supplied and are marked pending.
 ### Coefficients and moment reference
 
 The base table is a full 181 × 181 alpha/beta grid (−90° to +90°, 1° steps). The FDM reads the
-body-axis coefficients (`cfx … cmz`), dimensionalises them at the current dynamic pressure and
+body-axis coefficients (`cfx … cmz`), dimensionalizes them at the current dynamic pressure and
 transfers the moment once to the CG:
 
 ```text
@@ -65,7 +65,7 @@ The 11 October delivery has 103 cases: 97 at beta = 0 (including four elevator/r
 combinations) and six neutral sideslip cases kept for audit only. Measured ranges: elevator and
 rudder ±15°, aileron ±30° at selected alphas, 25 m/s; elevator also ±5° at 10 and 15 m/s.
 
-- Increments are the loads minus the matching zero-deflection case, normalised and added to the
+- Increments are the loads minus the matching zero-deflection case, normalized and added to the
   base before the single CG transfer, so the base is unchanged at zero deflection.
 - Sparse alpha/deflection points are triangulated per surface and speed plane; elevator is
   interpolated across 10, 15 and 25 m/s and held at the end speeds.
@@ -169,12 +169,12 @@ estimate. The installed motor (KDE or MAD) and the wooden 20×12 propeller are n
 
 - **Trim:** `spearhead/trim.py` (longitudinal) and `spearhead/sitl/physics.full_trim` (six-axis,
   used by SITL starts). The six-axis trim tries several elevator starting points and rejects a
-  result whose force/moment residuals are not balanced, even if the optimiser reports success.
+  result whose force/moment residuals are not balanced, even if the optimizer reports success.
 - **CG summary** (`spearhead/cg_card.py`): stick-fixed static margin at the 22 m/s trim from a
   ±0.001 rad alpha change at constant speed (wing, tail and fuselage loads), elevator trim at
   20/22/24 m/s, and hover headroom as the busiest rotor's thrust against its thrust at 95 % spin
   (`Q_M_SPIN_MAX`). The Flight Deck CG panel and Analyze → CG window use it.
-- **Stability** (`spearhead.stability`): trims through `run_simulation`, linearises `dynamics()`
+- **Stability** (`spearhead.stability`): trims through `run_simulation`, linearizes `dynamics()`
   by central differences, reports longitudinal and lateral modes and static derivatives, and
   sweeps CG by changing `cg_body_xyz` at runtime. Results are local to the trim point.
 
@@ -190,7 +190,7 @@ bookkeeping, not separate component physics.
   0.5. Assumed, not measured.
 - **Failures** (`spearhead/sitl/failures.py`): zero one lift rotor or the pusher between the
   firmware outputs and the physics.
-- **At rest:** dynamic pressure is zero; `Vmin` only regularises the rate normalisation.
+- **At rest:** dynamic pressure is zero; `Vmin` only regularizes the rate normalisation.
 
 ## Using the model
 
@@ -225,7 +225,7 @@ python -m spearhead.stability cg-sweep scenarios/pitch_doublet.yaml --cg-x -0.15
 | Script | Purpose |
 |---|---|
 | `recenter_october_database.py` | Restore the October base export to the CFD origin, with checks |
-| `import_control_results.py` | Normalise a control-results export without changing loads |
+| `import_control_results.py` | Normalize a control-results export without changing loads |
 | `compare_aerodb_moments.py` | Overlay ADB v1.1 and October moments at a common center |
 | `export_nondimit_moment_centers.py` | Batch Nondimit at the moment centers of the earlier study |
 | `estimate_pt1_pusher.py` | Reproduce the pusher estimate and forward-trim checks |

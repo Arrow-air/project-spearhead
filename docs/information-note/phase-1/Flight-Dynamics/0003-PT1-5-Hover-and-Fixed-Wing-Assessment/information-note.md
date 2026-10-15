@@ -298,7 +298,7 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 | Aircraft profiles | `src/tools/flight_dynamics_model/aircraft_configs/pt1_as_built.yaml`, `pt15.yaml` |
 | CG summary and window | `spearhead/cg_card.py`; Flight Deck Analyze → CG window |
 | SITL runs | ArduPlane 4.7.1 (dbe79216), `spearhead/sitl/quad.py` |
-| Input responses | `data/input_response_metrics.json`, `figures/`; runs from `spearhead.sitl.quad --doublet` and `spearhead.sitl.flight <axis>_doublet`, analysed with `src/tools/flight_dynamics_model/scripts/analyse_input_responses.py` (raw recordings are not kept in Git) |
+| Input responses | `data/input_response_metrics.json`, `figures/`; runs from `spearhead.sitl.quad --doublet` and `spearhead.sitl.flight <axis>_doublet`, analyzed with `src/tools/flight_dynamics_model/scripts/analyse_input_responses.py` (raw recordings are not kept in Git) |
 
 ## Quality Assurance
 
