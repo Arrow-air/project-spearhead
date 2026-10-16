@@ -5,6 +5,7 @@ import math
 
 import yaml
 
+from ..aircraft import pusher_options
 from ..sitl.backend import CONFIG_ROOT
 from ..sitl import failures as failure_model
 
@@ -54,6 +55,8 @@ FAILURES = {
     "pusher_out": "Pusher cut",
     "battery_low": "Low battery (awaits BATT parameter approval)",
 }
+# Pusher motor options of the PT1.5 profile (MAD V8013 150KV or KDE5215XF-220, both with the 20x12 propeller).
+PUSHERS = pusher_options("pt15")
 # A gust reaches its peak 1.5 s after it starts; same direction as the steady wind.
 GUST_START_S, GUST_DURATION_S = 20., 3.
 TRANSITION_PARAMETERS = {
@@ -89,6 +92,7 @@ class FlightSetup:
     gust_m_s: float = 0
     failure: str = "none"
     failure_time_s: float = 20
+    pusher: str = "mad"
 
     def validate(self):
         if self.aircraft not in AIRCRAFT or self.initial_point not in POINTS[self.aircraft]:
@@ -104,6 +108,8 @@ class FlightSetup:
             raise ValueError("Wind 0–15 m/s from 0–359°, gust 0–10 m/s")
         if self.failure not in FAILURES:
             raise ValueError("Choose a supported failure")
+        if self.pusher not in PUSHERS:
+            raise ValueError("Choose a supported pusher motor")
         if self.failure != "none":
             if self.aircraft != "pt15":
                 raise ValueError("Failure injection is available for PT1.5")
@@ -180,6 +186,7 @@ class FlightSetup:
         if self.failure != "none":
             data["failure"] = {"kind": self.failure, "start_s": float(self.failure_time_s)}
         if self.aircraft == "pt15":
+            data["pusher"] = self.pusher
             data["cg_body_xyz_m"] = [TRANSITION_CG_X[self.cg_case], 0., TRANSITION_CG_Z]
             if not self.is_forward:
                 data["hover_trim"] = "independent_rotors"

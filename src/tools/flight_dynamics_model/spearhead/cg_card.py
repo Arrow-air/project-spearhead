@@ -51,10 +51,11 @@ def hover_headroom(params):
 
 
 @lru_cache(maxsize=64)
-def cg_card(aircraft_id, cg_x_m, cg_z_m, travel_deg=30.):
-    """Return a JSON-friendly summary for one CG; cached because trims take seconds."""
+def cg_card(aircraft_id, cg_x_m, cg_z_m, travel_deg=30., pusher=None):
+    """Return a JSON-friendly summary for one CG and pusher option; cached because trims take seconds."""
+    from .propulsion import pusher_performance
     from .sitl.physics import full_trim
-    params = replace(load_aircraft_config(aircraft_id), cg_body_xyz=np.array([cg_x_m, 0., cg_z_m]),
+    params = replace(load_aircraft_config(aircraft_id, pusher=pusher), cg_body_xyz=np.array([cg_x_m, 0., cg_z_m]),
                      control_deflection_policy="linear", control_surface_limits_deg=(travel_deg,)*3)
     trims = {}
     margin = None
@@ -66,13 +67,21 @@ def cg_card(aircraft_id, cg_x_m, cg_z_m, travel_deg=30.):
             continue
         trims[speed] = {"elevator_deg": math.degrees(control.de), "pusher_command": control.throttle,
                         "beyond_measured": abs(math.degrees(control.de)) > MEASURED_ELEVATOR_DEG}
+        if params.pusher_system is not None:
+            performance = pusher_performance(control, params, float(state[3]))
+            trims[speed].update(pusher_current_a=performance["current_a"],
+                                above_current_limit=bool(performance.get("above_sustainable_current", False)))
         if speed == 22.:
             margin = static_margin(params, state, control)
     try:
         headroom = hover_headroom(params) if params.lift_system is not None else None
     except ValueError:
         headroom = None
+    system = params.pusher_system
     return {"cg_body_xyz_m": [cg_x_m, 0., cg_z_m], "mass_kg": params.mass, "static_margin_22": margin,
+            "pusher": None if system is None else {"option": system.option, "label": system.label,
+                                                   "current_limit_a": system.sustainable_current_a,
+                                                   "current_limit_label": system.current_limit_label},
             "trims": trims, "hover_max_rotor_fraction": headroom,
             "rotor_centroid_x_m": None if params.lift_system is None else
             float(np.mean([p[0] for p in params.lift_system.positions_body_m]))}
@@ -89,6 +98,11 @@ def cg_card_text(card):
         else:
             trims.append(f"{speed:g} m/s {trim['elevator_deg']:+.1f}°" + (" *" if trim["beyond_measured"] else ""))
     parts.append("Elevator trim: " + ", ".join(trims))
+    cruise = card["trims"].get(22.)
+    if card.get("pusher") and cruise and "pusher_current_a" in cruise:
+        parts.append(f"Pusher at 22 m/s: {100*cruise['pusher_command']:.0f} % · {cruise['pusher_current_a']:.1f} A"
+                     + (f" (above {card['pusher']['current_limit_a']:g} A {card['pusher']['current_limit_label']})"
+                        if cruise["above_current_limit"] else ""))
     if card["hover_max_rotor_fraction"] is not None:
         parts.append(f"Hover: busiest rotor at {100*card['hover_max_rotor_fraction']:.0f} % of max thrust")
     text = " · ".join(parts)

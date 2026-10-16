@@ -92,6 +92,13 @@ class PusherSystem:
     # thrust and omit reaction torque until installation data is available.
     position_body_m: tuple[float, float, float] | None = None
     reaction_torque_sign: int = 0
+    # Option id and label when a profile offers several pusher motors.
+    option: str = "default"
+    label: str = ""
+    # What the current limit means for this motor (MAD: sustainable rating; KDE: 180 s rating).
+    current_limit_label: str = "sustainable current"
+    # Optional ESC throttle-to-voltage-fraction map over battery voltage; None means duty = throttle.
+    throttle_duty_map: dict[str, Any] | None = None
 
     def __post_init__(self):
         positive = [self.equivalent_resistance_ohm, self.voltage_min_v, self.voltage_max_v,
@@ -108,6 +115,24 @@ class PusherSystem:
             raise ValueError("Pusher position must contain three finite values")
         if self.reaction_torque_sign not in (-1, 0, 1):
             raise ValueError("Pusher reaction torque sign must be -1, 0 or +1")
+        if self.throttle_duty_map is not None:
+            table = self.throttle_duty_map
+            voltages, throttles = np.asarray(table["voltages_v"], float), np.asarray(table["throttles"], float)
+            duty = np.asarray(table["duty"], float)
+            if (duty.shape != (len(voltages), len(throttles)) or np.any(np.diff(voltages) <= 0)
+                    or np.any(np.diff(throttles) <= 0) or throttles[0] <= 0 or throttles[-1] != 1
+                    or not np.all((duty > 0) & (duty <= 1)) or np.any(np.diff(duty, axis=1) <= 0)):
+                raise ValueError("Pusher throttle-duty map must be increasing, in (0, 1] and end at throttle 1")
+
+    def duty(self, throttle: float, voltage_v: float) -> float:
+        """Voltage fraction applied to the motor for a commanded throttle."""
+        throttle = float(np.clip(throttle, 0, 1))
+        if self.throttle_duty_map is None:
+            return throttle
+        table = self.throttle_duty_map
+        voltage = float(np.clip(voltage_v, table["voltages_v"][0], table["voltages_v"][-1]))
+        column = [np.interp(throttle, [0., *table["throttles"]], [0., *row]) for row in table["duty"]]
+        return float(np.interp(voltage, table["voltages_v"], column))
 
 
 def aircraft_options() -> dict[str, str]:
@@ -123,11 +148,36 @@ def aircraft_options() -> dict[str, str]:
 RATE_DERIVATIVES = frozenset({"Clp", "Clr", "Cmq", "Cnp", "Cnr"})
 
 
-def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerodynamics: str | None = None):
+def _pusher_options(pusher: dict) -> tuple[dict[str, dict], str | None]:
+    """Return {option id: estimate block} and the profile's selected option."""
+    if "options" in pusher:
+        options = {str(key): dict(value) for key, value in pusher["options"].items()}
+        selected = str(pusher.get("selected", next(iter(options))))
+        if selected not in options:
+            raise ValueError(f"Selected pusher option {selected!r} is not defined")
+        return options, selected
+    if pusher.get("estimate"):
+        return {"default": dict(pusher["estimate"])}, "default"
+    return {}, None
+
+
+def pusher_options(name_or_path: str | Path = "pt15") -> dict[str, str]:
+    """Pusher option ids and labels offered by a profile (empty when it has none)."""
+    path = Path(name_or_path)
+    if not path.is_file():
+        path = AIRCRAFT_CONFIGS / f"{name_or_path}.yaml"
+    pusher = (yaml.safe_load(path.read_text()).get("propulsion") or {}).get("pusher", {})
+    options, _ = _pusher_options(pusher)
+    return {key: str(value.get("label") or value.get("motor", {}).get("model", key)) for key, value in options.items()}
+
+
+def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerodynamics: str | None = None,
+                         pusher: str | None = None):
     """Build independent parameters from a bundled profile or a YAML file.
 
     Relative AeroDB and propulsion paths are resolved against the profile's
     directory. Geometry changes and new databases remain explicit profile inputs.
+    ``pusher`` selects one of the profile's pusher options (default: the profile's choice).
     """
     from .params import AeroDerivatives, AircraftGeometry, AircraftParams
 
@@ -166,9 +216,14 @@ def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerod
             raise ValueError("Profile rate derivatives must be finite")
         values["aero"] = replace(AeroDerivatives(), **rates)
     propulsion = data.get("propulsion", {})
-    pusher = propulsion.get("pusher", {})
-    pusher_system = dict(pusher.get("estimate", {}))
+    pusher_block = propulsion.get("pusher", {})
+    options, selected = _pusher_options(pusher_block)
+    if pusher is not None and pusher not in options:
+        raise ValueError(f"Unknown pusher option {pusher!r}; available: {sorted(options)}")
+    choice = pusher or selected
+    pusher_system = dict(options[choice]) if choice is not None else {}
     if pusher_system:
+        pusher_system.setdefault("option", choice)
         pusher_system["performance_path"] = (path.parent / pusher_system["performance_path"]).resolve()
         if pusher_system.get("position_body_m") is not None:
             pusher_system["position_body_m"] = tuple(pusher_system["position_body_m"])
@@ -187,9 +242,9 @@ def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerod
         geometry_version=str(aero.get("geometry_version", "preliminary_tail_chord_0.28m")),
         aero_database_version=str(aero.get("version", "adb_v1.1")),
         battery=BatterySpec(**data.get("battery", {})),
-        pusher_installed=bool(pusher.get("installed", True)),
+        pusher_installed=bool(pusher_block.get("installed", True)),
         pusher_system=PusherSystem(**pusher_system) if pusher_system else None,
-        Tmax=float(pusher.get("max_thrust_n", 120.0)),
+        Tmax=float(pusher_block.get("max_thrust_n", 120.0)),
         lift_system=LiftSystem(**lift) if lift else None,
     )
     if "path" in aero:
@@ -254,6 +309,10 @@ def aircraft_summary(params) -> dict[str, Any]:
             "voltage_range_v": [params.pusher_system.voltage_min_v, params.pusher_system.voltage_max_v],
             "position_body_m": params.pusher_system.position_body_m,
             "reaction_torque_sign": params.pusher_system.reaction_torque_sign,
+            "option": params.pusher_system.option,
+            "label": params.pusher_system.label,
+            "current_limit_label": params.pusher_system.current_limit_label,
+            "throttle_duty_map": params.pusher_system.throttle_duty_map,
             "model": "steady motor equilibrium + APC analytical Ct/Cp; provisional",
         },
         "lift_motor": None if lift is None else lift.motor,

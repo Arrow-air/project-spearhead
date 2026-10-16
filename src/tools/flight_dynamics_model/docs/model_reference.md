@@ -119,7 +119,7 @@ the original 25 kg ADB v1.1 parameter set.
 | CG (x, y, z) | (−0.0475, 0, +0.065) m from the logged front hover share, about ±20 mm | (−0.040, 0, +0.065) m target inside the 22 m/s window; unballasted estimate about −0.08 m | (−0.15, 0, +0.15) m; statically unstable with ADB v1.1 (static margin about −17 %) |
 | Ixx / Iyy / Izz / Ixz (kg·m²) | 4.30 / 3.73 / 7.66 / −0.29 | 4.42 / 4.07 / 8.11 / −0.31 | diag(2.5, 4.0, 5.0) placeholder |
 | Lift system | 4 × KDE5215XF-220, KDE-UAS75HVC+, KDE-CF215-DP 21.5×7.3, 12S | same | 4 × MAD V8013 PRO IPE 150KV, AMPX 80A V2, FLUXER PRO 26×7.8 (no performance data; nonzero commands are rejected) |
-| Pusher | not installed | MAD V8013 150KV / AMPX 80A / APC 20×12 Sport estimate at (−0.374, 0, +0.050) m | 120 N × throttle placeholder through the CG |
+| Pusher | not installed | At (−0.374, 0, +0.050) m, two options with the 20×12 propeller: MAD V8013 150KV / AMPX 80A (default) or KDE5215XF-220 / KDE-UAS75HVC+ | 120 N × throttle placeholder through the CG |
 
 Geometry from the 14 October drawing (body axes): lift rotors at x +0.675 / −0.750 m,
 y ±0.55 m, z −0.043 m (centroid x −0.0375 m); pusher at x −0.374 m, height open between z +0.050
@@ -151,14 +151,32 @@ Component masses in a profile are metadata; they are not added to the total.
 
 ### Pusher
 
-`Control.throttle` commands the pusher. `spearhead/pusher.py` solves quasi-steady motor RPM from a
-fit to the 15 points of the MAD V8013 150KV test sheet and APC's analytical Ct/Cp map for the
-20×12 Sport, using body axial airspeed and FDM density. At 44.4 V and 1.021 kg/m³: 62.9 N static
-and 32.8 N at 26 m/s at full command; the 24 A sustainable current is passed between 24 and
-26 m/s, which is flagged but not limited. Thrust acts at the drawing station; rotation direction
-is undecided, so reaction torque is omitted. Sources and fitted constants are in
-`data/propulsion/pt1_pusher_source.json`; `scripts/estimate_pt1_pusher.py` reproduces the
-estimate. The installed motor (KDE or MAD) and the wooden 20×12 propeller are not yet tested.
+`Control.throttle` commands the pusher. The PT1.5 profile offers two motors under
+`propulsion.pusher.options`, both with the wooden 20×12 propeller; `selected: mad` is the
+default. Choose with `load_aircraft_config("pt15", pusher="kde")`, `pusher: kde` in a SITL
+configuration or the Flight Deck pusher choice. The run manifest records the option.
+
+`spearhead/pusher.py` solves the quasi-steady motor RPM with
+`I_w = Q/Kt + I0`, `duty·V = RPM/Kv + R_eq·I_w`, `I_battery = duty·I_w/η_ESC` (η 0.97), and APC's
+analytical Ct/Cp map for the 20×12 Sport at the body axial airspeed and FDM density. No data
+exist for the wooden propeller, so both options use the APC map.
+
+| | MAD V8013 150KV / AMPX 80A | KDE5215XF-220 / KDE-UAS75HVC+ |
+|---|---|---|
+| Electrical data | 15 points of the MAD test sheet (`data/propulsion/pt1_pusher_source.json`) | 28 points of the KDE static test with the 21.5×7.3 propeller (`data/propulsion/kde5215xf_220_pusher_fit.json`, `scripts/fit_kde_pusher_motor.py`) |
+| Constants | Kv 150, I0 2.35 A, R_eq 0.106 Ω | Kv 220, I0 1.84 A, R_eq 0.136 Ω (fitted) |
+| Throttle to duty | Duty = throttle | Measured map over throttle and voltage; the KDE ESC applies about 80 % of pack voltage at full throttle at 44.4 V |
+| Fit quality | Voltage RMS 0.20 V | Static-test RPM within 0.7 %, battery current RMS 5 % (16 % at the lowest point) |
+| Full command, 44.4 V | 62.9 N static, 32.8 N and 30.0 A at 26 m/s | 69.8 N static, 38.1 N and 38.2 A at 26 m/s |
+| Current limit flagged | 24 A sustainable (MAD sheet) | 44 A, the motor's 180 s rating; KDE publishes no continuous rating |
+| Model limits | 77.8 A, 3569 W | 75 A, 3330 W (ESC 180 s ratings) |
+
+Both options use the same SITL pusher channel mapping (1050–1940 µs, normalized throttle); the
+KDE ESC's own PWM calibration on the aircraft is a hardware setting. Thrust acts at the drawing
+station; rotation direction is undecided, so reaction torque is omitted. The 21 kg build
+estimate is not adjusted for the different motor masses. The KDE test used a KDE-UAS125UVC ESC,
+not the UAS75HVC+. `scripts/estimate_pt1_pusher.py` reproduces the MAD estimate. Neither motor
+has been tested with the wooden 20×12 propeller.
 
 ### Battery
 
@@ -228,7 +246,8 @@ python -m spearhead.stability cg-sweep scenarios/pitch_doublet.yaml --cg-x -0.15
 | `import_control_results.py` | Normalize a control-results export without changing loads |
 | `compare_aerodb_moments.py` | Overlay ADB v1.1 and October moments at a common center |
 | `export_nondimit_moment_centers.py` | Batch Nondimit at the moment centers of the earlier study |
-| `estimate_pt1_pusher.py` | Reproduce the pusher estimate and forward-trim checks |
+| `estimate_pt1_pusher.py` | Reproduce the MAD pusher estimate and forward-trim checks |
+| `fit_kde_pusher_motor.py` | Fit the KDE5215XF-220 constants and throttle-duty map for the KDE pusher option |
 | `sweep_sitl_trim.py` | Six-axis trims over speed and CG with the SITL data |
 | `analyse_input_responses.py` | Metrics and figures from SITL doublet runs |
 | `report_ground_start.py` | Summary and traces of a ground-start run |
@@ -248,7 +267,7 @@ aircraft and AeroDB identity after the state columns.
   elevator/rudder pairs are assumed additive.
 - No rotor inflow, propwash, ground effect, lift-rotor drag in forward flight, actuator dynamics
   or battery sag on thrust.
-- The pusher model is MAD V8013 / APC 20×12 Sport, not the planned wooden propeller.
+- Both pusher options use the APC 20×12 Sport map, not data for the planned wooden propeller.
 - New aerodynamic deliveries should be added as new versioned datasets with their source files
   and hashes; validate coefficients, trim, derivatives, modes and control effectiveness before
   adopting them. Equality with the previous dataset at zero deflection is not the criterion,

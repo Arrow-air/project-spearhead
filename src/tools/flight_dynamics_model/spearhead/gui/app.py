@@ -1654,6 +1654,7 @@ def _register_cg_sweep_page(ui) -> None:
     def cg_sweep_page() -> None:
         """PT1.5 CG window: the Flight Deck CG summary evaluated over a range of CG x."""
         _render_page_shell(ui)
+        from ..aircraft import pusher_options
         from ..cg_card import TRIM_SPEEDS_M_S, cg_card
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
             _page_intro(ui, "CG window", "Static margin, elevator trim and hover headroom across CG positions for PT1.5.")
@@ -1666,11 +1667,13 @@ def _register_cg_sweep_page(ui) -> None:
                 with ui.row().classes("items-end gap-3"):
                     cg_x_input = ui.input("CG x values [mm, forward positive]", value="-70, -60, -50, -40, -30, -20, -10, 0").classes("min-w-96")
                     cg_z_input = ui.number("CG z [mm, down positive]", value=65, step=5).classes("w-48")
+                    pusher_input = ui.select(pusher_options("pt15"), value="mad", label="Pusher motor").classes("min-w-64")
                     run_button = ui.button("Compute", on_click=lambda: compute()).props("color=primary")
                 status = ui.label("").classes("text-slate-600")
                 columns = [{"name": "x", "label": "CG x (mm)", "field": "x"},
                            {"name": "sm", "label": "SM 22 m/s (%)", "field": "sm"},
                            *[{"name": f"de{int(s)}", "label": f"Elevator {s:g} m/s (°)", "field": f"de{int(s)}"} for s in TRIM_SPEEDS_M_S],
+                           {"name": "pusher", "label": "Pusher 22 m/s (command · current)", "field": "pusher"},
                            {"name": "hover", "label": "Hover busiest rotor (%)", "field": "hover"}]
                 table = ui.table(columns=columns, rows=[], row_key="x").classes("w-full")
 
@@ -1690,16 +1693,20 @@ def _register_cg_sweep_page(ui) -> None:
                 try:
                     for i, x in enumerate(xs, 1):
                         status.text = f"Computing {i}/{len(xs)} (trims can take several seconds)…"
-                        card = await run.cpu_bound(cg_card, "pt15", x, z)
+                        card = await run.cpu_bound(cg_card, "pt15", x, z, 30., pusher_input.value)
+                        cruise = card["trims"].get(22.)
                         row = {"x": f"{1000*x:+.1f}",
                                "sm": "no trim" if card["static_margin_22"] is None else f"{100*card['static_margin_22']:+.1f}",
-                               "hover": "—" if card["hover_max_rotor_fraction"] is None else f"{100*card['hover_max_rotor_fraction']:.0f}"}
+                               "hover": "—" if card["hover_max_rotor_fraction"] is None else f"{100*card['hover_max_rotor_fraction']:.0f}",
+                               "pusher": "no trim" if not cruise or "pusher_current_a" not in cruise else
+                               f"{100*cruise['pusher_command']:.0f} % · {cruise['pusher_current_a']:.1f} A"
+                               + (" !" if cruise["above_current_limit"] else "")}
                         for speed, trim in card["trims"].items():
                             row[f"de{int(speed)}"] = "no trim" if trim is None else f"{trim['elevator_deg']:+.1f}" + (" *" if trim["beyond_measured"] else "")
                         rows.append(row)
                         table.rows = list(rows)
                         table.update()
-                    status.text = "Done. * beyond the measured ±15° elevator data."
+                    status.text = "Done. * beyond the measured ±15° elevator data; ! pusher above its current limit."
                 finally:
                     run_button.enable()
 

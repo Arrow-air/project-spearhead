@@ -55,11 +55,16 @@ aerodynamic data stay visible in the result even when the checks pass.
 
 ## Starting conditions
 
+**Pusher motor.** MAD V8013 150KV with AMPX 80A (default) or KDE5215XF-220 with KDE-UAS75HVC+
+(the lift motor and ESC), both with the 20×12 propeller. The choice changes pusher thrust, current,
+trim command and the current limit used by the alerts; see the
+[model reference](model_reference.md#pusher).
+
 **CG.** The simulation CG (target, not measured) defaults to x −40 mm, z +65 mm from the CFD
 origin. Alternatives: PT1 logged x −47.5 mm, aft −60 mm, forward −25 mm and 0 mm. Below the
 choice the panel shows, for that CG, the static margin at 22 m/s, elevator trim at 20/22/24 m/s
-with ±30° travel (marked when beyond the measured ±15°) and the busiest lift rotor's thrust as a
-fraction of its 95 % spin thrust. Forward trim is recomputed for the chosen CG; gains do not
+with ±30° travel (marked when beyond the measured ±15°), pusher command and current at 22 m/s for
+the chosen motor, and the busiest lift rotor's thrust as a fraction of its 95 % spin thrust. Forward trim is recomputed for the chosen CG; gains do not
 change.
 
 **Wind and gusts.** Steady wind 0–15 m/s from a chosen direction (meteorological "from") and an
@@ -92,7 +97,8 @@ recorded values are labelled.
 
 **Live alerts:** elevator beyond the measured ±15° data (or any other control beyond measured
 coverage), forward flight between 3 and 20 m/s where the aerodynamic data are least reliable,
-pusher above its 24 A sustainable current, lift pack below 3.5 V per cell, and an injected
+pusher above its current limit (MAD 24 A sustainable; KDE 44 A, the 180 s motor rating), lift
+pack below 3.5 V per cell, and an injected
 failure.
 
 **Status row:** link, armed state and mode from the firmware heartbeat, GPS fix and satellites,

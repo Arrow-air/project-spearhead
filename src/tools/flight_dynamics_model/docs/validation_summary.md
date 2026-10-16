@@ -9,8 +9,9 @@ the model itself is described in the [model reference](model_reference.md).
 
 - ArduPlane 4.7.1 (`dbe79216`) in JSON SITL lockstep with the FDM; normal arming, frozen gains
   (PT1 logged VTOL gains, 9 October fixed-wing proposal), Ankara home (1125 m above sea level).
-- PT1.5 (`pt15`): 21 kg, KDE lift rotors at the 14 October drawing stations, MAD 150KV / APC
-  20×12 pusher estimate, proposed ±30° surface travel, October AeroDB at 1.021 kg/m³.
+- PT1.5 (`pt15`): 21 kg, KDE lift rotors at the 14 October drawing stations, MAD 150KV pusher
+  estimate (KDE5215XF-220 pusher as an option) with the 20×12 propeller, proposed ±30° surface
+  travel, October AeroDB at 1.021 kg/m³.
 - Simulation CG (−0.040, 0, +0.065) m: the target inside the 22 m/s window, not a measurement.
   PT1.5 without ballast is estimated at about −0.08 m.
 
@@ -25,13 +26,28 @@ the model itself is described in the [model reference](model_reference.md).
 
 All four meet the six-axis trim and level-flight residual checks. Elevator trim is beyond the
 measured ±15° at every stable CG (linear extrapolation until the AQ-12 cases arrive), and above
-about 24 m/s the pusher exceeds its 24 A sustainable current.
+about 24 m/s the MAD pusher exceeds its 24 A sustainable current.
+
+With the KDE5215XF-220 pusher the attitude and elevator are the same; the command and current
+change:
+
+| TAS | Pusher command | Pusher current |
+|---|---:|---:|
+| 20 m/s | 62 % | 15.5 A |
+| 22 m/s | 69 % | 18.7 A |
+| 24 m/s | 76 % | 22.9 A |
+| 26 m/s | 85 % | 28.0 A |
+| 28 m/s | 95 % | 33.7 A |
+
+The KDE option trims to 28 m/s, where the MAD option has no trim, and stays below the 44 A
+180 s motor rating; KDE publishes no continuous rating, and it draws slightly more current than
+the MAD motor for the same thrust.
 
 ## Checks
 
 | Check | Result |
 |---|---|
-| Model tests | 562 passed, from the repository root and from the FDM folder |
+| Model tests | 568 passed, from the repository root and from the FDM folder |
 | Fresh setup | The [setup guide](setup_guide.md) followed from a clean clone on Ubuntu 24.04 / Python 3.13: packages, firmware build, tests, a 60 s hover and the Flight Deck page |
 | Default model on `main` | The default 20 s open-loop run, `run_trim.py` and the pitch-doublet scenario give results identical to `main` |
 | Moment reference | Restored October base matches an independent wrench transfer for all 32 761 rows within 6×10⁻¹⁴ N·m |
@@ -39,13 +55,14 @@ about 24 m/s the pusher exceeds its 24 A sustainable current.
 | Hover hold, 6 m/s wind + 3 m/s gust | Passed: max tilt 0.8°, altitude error 1.0 m |
 | Hover → FBWA, calm | Passed: 30.4 s sustained FBWA without lift, 24.2 m/s, peak pitch 2.1°, altitude loss 3.0 m |
 | Hover → FBWA, 6 m/s headwind | Passed on airspeed: 32.5 s sustained FBWA, 24.2 m/s |
+| KDE pusher option | Hover → FBWA passed (33.6 s sustained FBWA, 26.4 m/s, pusher up to 35.6 A); 60 s FBWA hold at 22 m/s passed (speed within 0.04 m/s, altitude within 0.3 m, 69 % and 18.7 A) |
 | Hover doublets (pitch, roll, yaw, collective) | All passed; pitch/roll well damped, yaw sluggish and lightly damped (note 0003) |
 | 22 m/s doublets (elevator, aileron, rudder, pusher) | All passed; Dutch roll period 2.50–2.53 s and damping ratio 0.22–0.24 against the linear 0.41 Hz / 0.24 |
 | Front-right lift motor out at 20 s | Left the attitude envelope 0.4 s later, as expected for a quad-X |
 | Lift-pack telemetry | The firmware read 46.6 V and 83 A in hover with a temporary `BATT_MONITOR = 4` overlay |
 | Speed | About 0.3× real time on a two-core cloud machine running several simulations or a build at once |
 
-Recordings made before 14 October used the former rotor rectangle and CG and do not validate
+Rows without a pusher named use the MAD pusher. Recordings made before 14 October used the former rotor rectangle and CG and do not validate
 the current geometry. Forward → hover and ground-start runs were not repeated after the drawing
 update.
 

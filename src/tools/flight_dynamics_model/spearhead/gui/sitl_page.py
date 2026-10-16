@@ -10,7 +10,7 @@ from .flight_deck import attitude_html
 from .plotting import _flight_deck_base_figure
 from .flight_setup import (AIRCRAFT, POINTS, MANEUVERS, MIN_DURATION, FlightSetup,
                            TRANSITION_CGS, TRANSITION_CG_X, TRANSITION_CG_Z, TRANSITION_PARAMETERS,
-                           FAILURES, GUST_START_S,
+                           FAILURES, GUST_START_S, PUSHERS,
                            forward_start, maneuver_options)
 from ..aircraft import aircraft_summary, load_aircraft_config
 from ..sitl.ground_control import QUADPLANE_MODES, PLANE_MODES, MODE_HELP, MODE_NAMES, session_modes
@@ -559,9 +559,10 @@ def register_sitl_page(ui, manager, render_shell):
                         with ui.row().classes("w-full gap-3 mt-3") as transition_choices:
                             cg_case = ui.select(TRANSITION_CGS, value=preset.cg_case, label="Transition CG").props("dark outlined dense").classes("grow min-w-0")
                             transition_parameters = ui.select(TRANSITION_PARAMETERS, value=preset.transition_parameters, label="Transition parameters").props("dark outlined dense").classes("grow min-w-0")
+                            pusher = ui.select(PUSHERS, value=preset.pusher, label="Pusher motor (20×12 propeller)").props("dark outlined dense").classes("grow min-w-0")
                         with ui.row().classes("w-full items-center gap-1 mt-2") as cg_card_row:
                             cg_card_label = ui.label("").classes("text-xs text-sky-100")
-                            info_note(ui, "CG summary information", "For the selected CG with the October AeroDB: stick-fixed static margin at 22 m/s trim, elevator trim at 20/22/24 m/s with ±30° travel, and the busiest lift rotor's thrust as a fraction of its thrust at 95 % spin in static hover. Elevator beyond ±15° relies on extrapolated control data. These are model estimates, not a measured CG envelope.")
+                            info_note(ui, "CG summary information", "For the selected CG and pusher motor with the October AeroDB: stick-fixed static margin at 22 m/s trim, elevator trim at 20/22/24 m/s with ±30° travel, pusher command and current at 22 m/s, and the busiest lift rotor's thrust as a fraction of its thrust at 95 % spin in static hover. Elevator beyond ±15° relies on extrapolated control data. These are model estimates, not a measured CG envelope.")
                         ui.label("Wind and failures · times count from release (ground starts: from motor spin-up)").classes("fd-muted text-xs mt-3")
                         with ui.element("div").classes("fd-condition-grid w-full") as condition_choices:
                             wind_speed = ui.number("Wind (m/s)", value=preset.wind_speed_m_s, min=0, max=15, step=1).props("dark outlined dense").classes("w-full")
@@ -744,7 +745,7 @@ def register_sitl_page(ui, manager, render_shell):
                                duration.value, altitude.value, speed.value,
                                cg_case.value, transition_parameters.value,
                                wind_speed.value or 0, wind_from.value or 0, gust.value or 0,
-                               failure.value, failure_time.value or 0).validate()
+                               failure.value, failure_time.value or 0, pusher.value).validate()
 
         syncing_setup = [False]
         setup_run = [None]
@@ -797,7 +798,7 @@ def register_sitl_page(ui, manager, render_shell):
             from ..cg_card import cg_card, cg_card_text
             if aircraft.value != "pt15":
                 return
-            key = (aircraft.value, TRANSITION_CG_X[cg_case.value], TRANSITION_CG_Z)
+            key = (aircraft.value, TRANSITION_CG_X[cg_case.value], TRANSITION_CG_Z, 30., pusher.value)
             if key == cg_card_key[0]:
                 return
             cg_card_key[0] = key
@@ -942,6 +943,7 @@ def register_sitl_page(ui, manager, render_shell):
                     transition_parameters.value = recipe.transition_parameters
                     wind_speed.value, wind_from.value, gust.value = recipe.wind_speed_m_s, recipe.wind_from_deg, recipe.gust_m_s
                     failure.value, failure_time.value = recipe.failure, recipe.failure_time_s
+                    pusher.value = recipe.pusher
                     setup_run[0] = view.get("run_id")
                     plan_panel.value = False
                 finally:
@@ -961,7 +963,7 @@ def register_sitl_page(ui, manager, render_shell):
             stop.set_enabled(active)
             stop.set_visibility(active)
             for field in (aircraft, initial_point, maneuver, duration, altitude, cg_case, transition_parameters,
-                          wind_speed, wind_from, gust, failure, failure_time):
+                          wind_speed, wind_from, gust, failure, failure_time, pusher):
                 field.set_enabled(not locked)
             forward_choices = aircraft.value == "pt15"
             transition_choices.set_visibility(forward_choices)
@@ -969,6 +971,7 @@ def register_sitl_page(ui, manager, render_shell):
             cg_case.label = "Simulation CG (target, not measured)"
             transition_parameters.label = "Forward parameters"
             caption = (TRANSITION_CGS[cg_case.value] + " · " + TRANSITION_PARAMETERS[transition_parameters.value]
+                       + " · pusher " + PUSHERS[pusher.value].split(" · ")[0]
                        if forward_choices else "Altitude and airspeed")
             if wind_speed.value or gust.value:
                 caption += f" · wind {wind_speed.value or 0:g} m/s" + (f" + {gust.value:g} m/s gust" if gust.value else "")
@@ -984,7 +987,7 @@ def register_sitl_page(ui, manager, render_shell):
             speed.min = 0 if hover_setup else 22
             speed.max = 26 if prototype_forward else 30
             duration.min = MIN_DURATION.get(maneuver.value, 15)
-            setup_hint.text = ("Air-start hover · KDE lift · MAD 150KV / APC 20×12 pusher estimate." if hover_setup else
+            setup_hint.text = ("Air-start hover · KDE lift · selected pusher motor with the 20×12 propeller estimate." if hover_setup else
                                "Air-start at six-axis trim · provisional pusher · Spearhead hover awaits MAD performance data.")
             if prototype_forward:
                 setup_hint.text = "PT1.5 forward air start at computed six-axis trim for the selected speed and simulation CG. ±30° proposed travel; frozen forward parameters. Lift motors remain off; fixed-wing modes are available. Physical CG is unconfirmed."
@@ -1264,6 +1267,7 @@ def register_sitl_page(ui, manager, render_shell):
         speed.on_value_change(lambda: conditions_changed())
         duration.on_value_change(lambda: refresh())
         cg_case.on_value_change(lambda: (refresh(), schedule_cg_card()))
+        pusher.on_value_change(lambda: (refresh(), schedule_cg_card()))
         compare_button.on_click(lambda: compare_file(compare_path.value or ""))
         compare_upload.on_upload(compare_uploaded)
         ui.timer(.5, schedule_cg_card, once=True)

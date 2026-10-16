@@ -93,7 +93,8 @@ def live_alerts(row, cells=12):
         alerts.append("Outside measured aerodynamic data")
     pusher = row.get("pusher") or {}
     if pusher.get("above_sustainable_current"):
-        alerts.append(f"Pusher above {pusher.get('sustainable_current_a', 24):g} A sustainable current")
+        alerts.append(f"Pusher above {pusher.get('sustainable_current_a', 24):g} A "
+                      f"{pusher.get('current_limit_label', 'sustainable current')}")
     airspeed = row.get("true_airspeed_m_s")
     if isinstance(airspeed, (int, float)) and LOW_SPEED_DATA_M_S[0] <= airspeed < LOW_SPEED_DATA_M_S[1]:
         alerts.append("Below 20 m/s: wing-body aero from 25 m/s data; 10–15 m/s CFD shows less lift")

@@ -82,7 +82,8 @@ def estimate_pusher(system, voltage_v: float, throttle: float, axial_speed_m_s: 
         raise ValueError("Pusher inputs must be finite and density positive")
     if not system.voltage_min_v <= voltage_v <= system.voltage_max_v:
         raise ValueError("Pusher voltage is outside the configured 12S envelope")
-    requested = float(np.clip(throttle, 0, 1))
+    # Duty is the voltage fraction applied to the motor; some ESCs (KDE) map throttle to duty nonlinearly.
+    requested = system.duty(throttle, voltage_v)
     empty = dict(thrust_n=0., current_a=0., power_w=0., shaft_power_w=0., rpm=0.,
                  torque_nm=0., effective_duty=0., limited=False,
                  above_sustainable_current=False, outside_propeller_data=False)

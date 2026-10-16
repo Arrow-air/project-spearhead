@@ -212,7 +212,8 @@ def test_new_geometry_and_aerodb_can_be_selected_without_overwriting_old_profile
     data["geometry"]["tail_chord"] = 0.30
     data["aerodynamics"] = {"version": "future-test-db", "geometry_version": "test_tail_0.30m", "path": "new.csv"}
     data["propulsion"]["lift"]["performance_path"] = str(load_aircraft_config("pt15").lift_system.performance_path)
-    data["propulsion"]["pusher"]["estimate"]["performance_path"] = str(load_aircraft_config("pt15").pusher_system.performance_path)
+    for option in data["propulsion"]["pusher"]["options"].values():
+        option["performance_path"] = str(load_aircraft_config("pt15").pusher_system.performance_path)
     (tmp_path / "new.csv").write_text("source supplied later\n")
     profile = tmp_path / "new.yaml"
     profile.write_text(yaml.safe_dump(data))

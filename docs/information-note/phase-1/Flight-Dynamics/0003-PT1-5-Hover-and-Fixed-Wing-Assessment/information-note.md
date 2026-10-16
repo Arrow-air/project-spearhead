@@ -10,7 +10,7 @@ sidebar_position: 1
 
 "Preliminary"
 
-"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 15 October 2026, hover and fixed-wing input responses added"
+"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 15 October 2026, hover and fixed-wing input responses added; Rev C, 16 October 2026, KDE5215XF-220 pusher option added"
 
 "Replacement Log: Supersedes the CG conclusions of [note 0001](../0001-Preliminary-Fixed-Wing-Stability-Analysis/information-note.md) for the October aerodynamic database; note 0001 remains the record of the ADB v1.1 study."
 
@@ -42,7 +42,7 @@ it is not a flight clearance.
 | Aero reference | S 1.805 m², b 3.95 m, c 0.457 m, rho 1.021 kg/m³ (Ankara test field, hot day) |
 | Lift rotors | KDE5215XF-220, KDE-CF215-DP 21.5×7.3, 12S; stations x +0.675 / −0.750 m, y ±0.55 m, z −0.043 m |
 | Rotor centroid | x −0.0375 m |
-| Pusher | Station (−0.374, 0, z); z open between +0.040 and −0.050 m body; motor (KDE or MAD) and wooden 20×12 propeller undecided |
+| Pusher | Station (−0.374, 0, z); z open between +0.040 and −0.050 m body; wooden 20×12 propeller; motor undecided between MAD V8013 150KV with AMPX 80A and KDE5215XF-220 with KDE-UAS75HVC+ (the lift motor and ESC) |
 | PT1 as flown (log17) | 17.9 kg, wings on, no pusher |
 | PT1.5 | 21 kg build estimate (adds pusher, 12S pusher pack, ESC, servos, tail electronics, skin) |
 
@@ -59,7 +59,7 @@ through the moment balance about the rotor stations; total thrust checks the mas
 
 The FDM uses the October base table (restored from its export center (−0.1, 0, +0.15) m to the
 origin), the 11 October control increments (±15° measured, linear continuation to ±30°), a
-static KDE lift model, an analytical MAD V8013 150KV / APC 20×12 pusher model, build-up inertia
+static KDE lift model, an analytical pusher model for both candidate motors with APC's 20×12 Sport map, build-up inertia
 and vortex-lattice rate damping. Static margin is stick-fixed at trim, from a small alpha change at
 constant speed (wing, tail and fuselage loads). Hover headroom is the busiest rotor's thrust
 against its thrust at 95 % spin.
@@ -211,16 +211,26 @@ target. The built aircraft must be weighed.
 
 #### Trim and pusher performance at the target CG
 
-| TAS | Alpha | Elevator | Pusher command | Pusher current |
-|---:|---:|---:|---:|---:|
-| 20 m/s | 2.54° | −21.1° | 77 % | 15.0 A |
-| 22 m/s | 1.49° | −18.2° | 83 % | 18.0 A |
-| 24 m/s | 0.70° | −15.8° | 90 % | 21.8 A |
-| 26 m/s | 0.08° | −14.6° | 96 % | 26.3 A |
+| TAS | Alpha | Elevator | MAD command | MAD current | KDE command | KDE current |
+|---:|---:|---:|---:|---:|---:|---:|
+| 20 m/s | 2.54° | −21.1° | 77 % | 15.0 A | 62 % | 15.5 A |
+| 22 m/s | 1.49° | −18.2° | 83 % | 18.0 A | 69 % | 18.7 A |
+| 24 m/s | 0.70° | −15.8° | 90 % | 21.8 A | 76 % | 22.9 A |
+| 26 m/s | 0.08° | −14.6° | 96 % | 26.3 A | 85 % | 28.0 A |
+| 28 m/s | −0.41° | −14.0° | no trim | — | 95 % | 33.7 A |
 
-Estimated pusher thrust at full command is 62.9 N static, 36.2 N at 24 m/s and 32.8 N at 26 m/s.
-The 24 A sustainable current is passed between 24 and 26 m/s. Stall speed at 21 kg is about
-12.6 m/s (CLmax ≈ 1.40). Suggested PT1.5 speeds: minimum 17, cruise 21, maximum 26 m/s.
+Estimated thrust at full command and 44.4 V:
+
+| Motor | Static | 24 m/s | 26 m/s | Current at 26 m/s | Current limit |
+|---|---:|---:|---:|---:|---|
+| MAD V8013 150KV / AMPX 80A | 62.9 N | 36.2 N | 32.8 N | 30.0 A | 24 A sustainable (passed between 24 and 26 m/s) |
+| KDE5215XF-220 / KDE-UAS75HVC+ | 69.8 N | 41.2 N | 38.1 N | 38.2 A | 44 A, 180 s rating only |
+
+The KDE model uses the motor's own static test (28 points) for its electrical constants and a
+measured throttle-to-voltage map: the KDE ESC applies about 80 % of pack voltage at full
+throttle, so throttle is not duty. Both models use APC's 20×12 Sport map for the wooden
+propeller. Stall speed at 21 kg is about 12.6 m/s (CLmax ≈ 1.40). Suggested PT1.5 speeds: minimum
+17, cruise 21, maximum 26 m/s.
 
 A pusher thrust line above the CG adds nose-down moment and more elevator demand: at +40 mm
 (the highest option) about 3 N·m at cruise thrust, roughly 2° of elevator. The lowest option
@@ -244,15 +254,23 @@ about 9 s), which the autopilot handles. Roll subsidence is fast (−20.6 1/s).
 | Hover → FBWA, 9 October parameters | Passed: 30.4 s sustained FBWA without lift, 24.2 m/s, peak pitch 2.1°, altitude loss 3.0 m |
 | Hover → FBWA, later PT1.5 parameters (set since removed) | Passed: 26.1 s, 24.2 m/s, peak pitch 0.8°, altitude loss 0.9 m |
 | Hover → FBWA, 6 m/s headwind | Passed on airspeed: 32.5 s, 24.2 m/s |
+| Hover → FBWA, KDE pusher, 9 October parameters | Passed: 33.6 s sustained FBWA without lift, 26.4 m/s, peak pitch 1.0°, altitude loss 0.2 m; pusher current up to 35.6 A |
+| 22 m/s FBWA hold, KDE pusher, 60 s | Passed: speed 21.98–22.04 m/s, altitude within 0.3 m, pusher 69 % and 18.7 A as trimmed |
 
-These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations.
+Runs without a motor named use the MAD pusher. These runs use 25 m/s aerodynamic coefficients
+below 20 m/s; see the limitations.
 
 ### CG and pusher recommendations
 
 1. Target CG x −0.040 m (window −0.046 to −0.027 m); weigh PT1.5 and place the pusher pack forward
    before adding ballast.
 2. Mount the pusher at the lowest option (z −50 mm, drawing frame).
-3. Hover-only flight until the CG is set, AQ-12 and AQ-18 are answered and the elevator mixing gain
+3. Pusher motor: in the model the KDE5215XF-220 gives about 11 % more static thrust and 16 % more
+   at 26 m/s, trims up to 28 m/s and shares the lift motor and ESC (spares). It draws about 4 % more
+   current at cruise, and KDE publishes only 180 s ratings, so continuous cruise current must be
+   checked thermally. The MAD motor has a published 24 A sustainable rating, which it passes above
+   about 25 m/s. Both need a static test with the wooden 20×12 propeller before the choice.
+4. Hover-only flight until the CG is set, AQ-12 and AQ-18 are answered and the elevator mixing gain
    gives the full surface travel.
 
 ## Limitations
@@ -266,7 +284,9 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
   effect does not follow pusher thrust (AQ-18).
 - CG z, inertia and rate damping are estimates; Cnr (−0.04) covers lifting surfaces only.
 - No rotor inflow, ground effect, propwash or lift-rotor drag in forward flight.
-- Pusher model is MAD V8013 / APC 20×12 Sport, not the planned wooden propeller.
+- Both pusher models use APC's 20×12 Sport map, not data for the planned wooden propeller; the KDE
+  electrical fit comes from a test with a different ESC (UAS125UVC) and propeller (21.5×7.3).
+  The 21 kg estimate is not adjusted for the different motor masses.
 - Wind is uniform steady wind with 1-cosine gusts.
 - The elevator increments carry lateral loads (yaw and roll) from the 15 m/s cases, extrapolated
   beyond ±5°. At 22 m/s trim they require 2.1° of rudder. Removing lateral loads from symmetric
@@ -296,13 +316,14 @@ These runs use 25 m/s aerodynamic coefficients below 20 m/s; see the limitations
 | PT1 logs | DataFlash 00000014–00000017 (19 September 2026) |
 | Aerodynamic data | `src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/` |
 | Aircraft profiles | `src/tools/flight_dynamics_model/aircraft_configs/pt1_as_built.yaml`, `pt15.yaml` |
+| Pusher options | `pt15.yaml` `propulsion.pusher.options`; KDE fit `scripts/fit_kde_pusher_motor.py`, `data/propulsion/kde5215xf_220_pusher_fit.json` |
 | CG summary and window | `spearhead/cg_card.py`; Flight Deck Analyze → CG window |
 | SITL runs | ArduPlane 4.7.1 (dbe79216), `spearhead/sitl/quad.py` |
 | Input responses | `data/input_response_metrics.json`, `figures/`; runs from `spearhead.sitl.quad --doublet` and `spearhead.sitl.flight <axis>_doublet`, analyzed with `src/tools/flight_dynamics_model/scripts/analyse_input_responses.py` (raw recordings are not kept in Git) |
 
 ## Quality Assurance
 
-- 562 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
+- 568 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
   wind, failures and battery telemetry.
 - Moment restoration matches Nondimit's own recentering within 6×10⁻¹⁴ N·m.
 - Control signs, sideslip symmetry and the absence of double-counted pusher thrust were checked

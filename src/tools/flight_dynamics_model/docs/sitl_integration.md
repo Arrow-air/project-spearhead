@@ -40,7 +40,7 @@ browser does not create a second physics model. Nothing is flashed to hardware.
 
 | Output | Mapping |
 |---|---|
-| SERVO1–4 | Virtual aileron, elevator (reversed), pusher, rudder |
+| SERVO1–4 | Virtual aileron, elevator (reversed), pusher (1050–1940 µs for either pusher motor), rudder |
 | SERVO5–8 | Lift motors 1–4 (Quad-X); FDM rotor order front-right, rear-right, rear-left, front-left = channels 5, 8, 6, 7 |
 | Lift PWM | 1100–1940 µs (`Q_M_PWM_MIN/MAX` from the PT1 log) |
 | Surface travel | PT1.5: ±30° over 1000–2000 µs (Aero team proposal, uncalibrated); reference fixed-wing configurations: ±20° |

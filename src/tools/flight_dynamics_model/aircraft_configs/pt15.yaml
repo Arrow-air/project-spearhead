@@ -25,46 +25,99 @@ battery:
   mass_kg: 3.709
 propulsion:
   pusher:
-    # PT1.5 adds the pusher; motor (KDE or MAD) and wooden 20x12 propeller are undecided.
+    # PT1.5 adds the pusher. Motor not yet chosen: MAD V8013 150KV or a KDE5215XF-220 (same
+    # motor and ESC as the lift units), both with the wooden 20x12 propeller, modelled with
+    # APC's 20x12 Sport map. Select with load_aircraft_config(..., pusher="kde") or the
+    # Flight Deck pusher choice. Analytical estimates, not bench validation.
     installed: true
-    # User-confirmed 150 KV on 2026-10-11. Analytical estimate, not bench validation.
-    # Loader derives Tmax at nominal battery voltage and the selected FDM density.
-    estimate:
-      motor:
-        model: MAD V8013 PRO IPE 150KV
-        kv_rpm_per_v: 150
-        no_load_current_a: 2.35
-        no_load_test_voltage_v: 30
-        phase_resistance_ohm: 0.037
-        source: https://www.mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor
-        electrical_data: ../data/propulsion/mad_v8013_150_bench.json
-        data_edition: MAD V8013 IPE 150KV manufacturer test sheet; confirm installed PRO edition
-      esc:
-        model: MAD AMPX 80A (5-14S)
-        continuous_current_a: 80
-        voltage_cells_min: 5
-        voltage_cells_max: 14
-        source: https://www.mad-motor.com/products/mad-ampx-80a-5-14s-esc
-      propeller:
-        model: APC 20x12 Sport LP20012
-        diameter_in: 20.0
-        pitch_in: 12.0
-        blades: 2
-        # Conservative Sport limit 190000 / diameter; actual 12S motor RPM is lower.
-        max_rpm: 9500
-        source: https://www.apcprop.com/product/20x12/
-      performance_path: ../data/propulsion/sources/PER3_20x12.dat
-      equivalent_resistance_ohm: 0.1056886284068577
-      esc_efficiency: 0.97
-      voltage_min_v: 36.0
-      voltage_max_v: 50.4
-      max_current_a: 77.8
-      max_input_power_w: 3569.0
-      sustainable_current_a: 24.0
-      # Drawing x = 374 mm aft of the origin. Mount height is open (+40 to -50 mm, z up);
-      # the candidate is the lowest option, closest to the estimated CG height.
-      position_body_m: [-0.374, 0.0, 0.050]
-      reaction_torque_sign: 0
+    selected: mad
+    options:
+      mad:
+        label: MAD V8013 150KV · AMPX 80A
+        current_limit_label: sustainable current
+        # User-confirmed 150 KV on 2026-10-11.
+        motor:
+          model: MAD V8013 PRO IPE 150KV
+          kv_rpm_per_v: 150
+          no_load_current_a: 2.35
+          no_load_test_voltage_v: 30
+          phase_resistance_ohm: 0.037
+          source: https://www.mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor
+          electrical_data: ../data/propulsion/mad_v8013_150_bench.json
+          data_edition: MAD V8013 IPE 150KV manufacturer test sheet; confirm installed PRO edition
+        esc:
+          model: MAD AMPX 80A (5-14S)
+          continuous_current_a: 80
+          voltage_cells_min: 5
+          voltage_cells_max: 14
+          source: https://www.mad-motor.com/products/mad-ampx-80a-5-14s-esc
+        propeller:
+          model: APC 20x12 Sport LP20012
+          diameter_in: 20.0
+          pitch_in: 12.0
+          blades: 2
+          # Conservative Sport limit 190000 / diameter; actual 12S motor RPM is lower.
+          max_rpm: 9500
+          source: https://www.apcprop.com/product/20x12/
+        performance_path: ../data/propulsion/sources/PER3_20x12.dat
+        equivalent_resistance_ohm: 0.1056886284068577
+        esc_efficiency: 0.97
+        voltage_min_v: 36.0
+        voltage_max_v: 50.4
+        max_current_a: 77.8
+        max_input_power_w: 3569.0
+        sustainable_current_a: 24.0
+        # Drawing x = 374 mm aft of the origin. Mount height is open (+40 to -50 mm, z up);
+        # the candidate is the lowest option, closest to the estimated CG height.
+        position_body_m: [-0.374, 0.0, 0.050]
+        reaction_torque_sign: 0
+      kde:
+        label: KDE5215XF-220 · KDE-UAS75HVC+
+        # 180 s ratings only (motor 44 A / 1955 W); KDE publishes no continuous rating.
+        current_limit_label: 180 s motor rating
+        motor:
+          model: KDE5215XF-220
+          kv_rpm_per_v: 220
+          # Fitted to the KDE static test with the 21.5x7.3 propeller (scripts/fit_kde_pusher_motor.py).
+          no_load_current_a: 1.8397
+          phase_resistance_ohm: 0.078
+          continuous_current_a_180s: 44
+          continuous_power_w_180s: 1955
+          source: https://www.kdedirect.com/products/kde5215xf-220
+          electrical_data: ../data/propulsion/kde5215xf_220_pusher_fit.json
+          data_edition: KDE5215XF-220 test with KDE-UAS125UVC ESC and KDE-CF215-DP propeller
+        esc:
+          model: KDE-UAS75HVC+
+          continuous_current_a: 75
+          peak_current_a_5s: 130
+          continuous_power_w_180s: 3330
+          source: https://www.kdedirect.com/products/kde-uas75hvc
+        propeller:
+          model: wooden 20x12, modelled with APC 20x12 Sport LP20012
+          diameter_in: 20.0
+          pitch_in: 12.0
+          blades: 2
+          max_rpm: 9500
+          source: https://www.apcprop.com/product/20x12/
+        performance_path: ../data/propulsion/sources/PER3_20x12.dat
+        equivalent_resistance_ohm: 0.136201
+        esc_efficiency: 0.97
+        voltage_min_v: 36.0
+        voltage_max_v: 50.4
+        # Model limits: ESC 180 s current and power ratings.
+        max_current_a: 75.0
+        max_input_power_w: 3330.0
+        sustainable_current_a: 44.0
+        throttle_duty_map:
+          voltages_v: [25.2000, 33.6000, 42.0000, 50.4000]
+          throttles: [0.2500, 0.3750, 0.5000, 0.6250, 0.7500, 0.8750, 1.0000]
+          duty:
+            - [0.3027, 0.4186, 0.5232, 0.6309, 0.7374, 0.8338, 0.9138]
+            - [0.2904, 0.4014, 0.5031, 0.6057, 0.7021, 0.7923, 0.8656]
+            - [0.2860, 0.3890, 0.4911, 0.5842, 0.6717, 0.7562, 0.8182]
+            - [0.2789, 0.3745, 0.4763, 0.5640, 0.6429, 0.7232, 0.7670]
+        position_body_m: [-0.374, 0.0, 0.050]
+        reaction_torque_sign: 0
   lift:
     motor:
       model: KDE5215XF-220

@@ -53,14 +53,16 @@ def load_setup(path=None):
     config = yaml.safe_load(path.read_text())
     required = {"firmware", "aircraft", "aerodynamics", "cg_body_xyz_m", "speed_m_s",
                 "altitude_m", "max_step_s", "physics_rate_hz", "channels"}
-    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact", "hover_trim", "wind", "failure"}:
+    if not isinstance(config, dict) or not required <= set(config) or set(config)-required-{"control_deflection_policy", "flight_regime", "ground_contact", "hover_trim", "wind", "failure", "pusher"}:
         raise ValueError("Invalid SITL configuration fields")
     if config["firmware"] != FIRMWARE_TAG or config["aerodynamics"] != DATASET:
         raise ValueError("This integration requires Plane-4.7.1 and the new AeroDB")
     cg = np.asarray(config["cg_body_xyz_m"], dtype=float)
     if cg.shape != (3,) or not np.isfinite(cg).all():
         raise ValueError("CG must contain three finite values")
-    params = replace(load_aircraft_config(config["aircraft"], aerodynamics=DATASET), cg_body_xyz=cg)
+    # Optional pusher option of the profile (PT1.5: "mad" or "kde"); default is the profile's choice.
+    params = replace(load_aircraft_config(config["aircraft"], aerodynamics=DATASET, pusher=config.get("pusher")),
+                     cg_body_xyz=cg)
     if (not params.use_aero_database or params.deflection_database_path is None
             or params.rho != 1.021 or not np.array_equal(params.aerodb_reference.moment_center_body_xyz, [0, 0, 0])):
         raise ValueError("Unexpected AeroDB, deflections, density, or source moment center")
@@ -236,6 +238,7 @@ class Session:
             self.last_record["pusher"] = {
                 "thrust_n": pusher["thrust_n"], "current_a": pusher["current_a"],
                 "sustainable_current_a": params.pusher_system.sustainable_current_a,
+                "current_limit_label": params.pusher_system.current_limit_label,
                 "above_sustainable_current": bool(pusher.get("above_sustainable_current", False))}
         if self.physics.ground is not None:
             self.last_record["ground"] = self.physics.ground.loads(self.physics.state)[2]
