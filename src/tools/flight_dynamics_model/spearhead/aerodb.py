@@ -320,7 +320,9 @@ def load_aerodynamic_database_cached(
     reference: AeroDBReference | None = None,
 ) -> AeroDatabase:
     db_path = Path(path).resolve()
-    key = (str(db_path), _reference_cache_key(reference) if reference is not None else None)
+    stat = db_path.stat()
+    key = (str(db_path), stat.st_mtime_ns, stat.st_size,
+           _reference_cache_key(reference) if reference is not None else None)
     if key not in _CACHE:
         _CACHE[key] = load_aerodynamic_database(db_path, reference)
     return _CACHE[key]

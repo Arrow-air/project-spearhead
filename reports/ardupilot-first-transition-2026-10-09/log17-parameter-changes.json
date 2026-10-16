@@ -1,0 +1,1136 @@
+[
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23714.0,
+    "after": 23744.0,
+    "time_s": 215.734595
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 772.0,
+    "after": 800.0,
+    "time_s": 246.731959
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23744.0,
+    "after": 23775.0,
+    "time_s": 246.732613
+  },
+  {
+    "name": "STAT_FLTCNT",
+    "before": 78.0,
+    "after": 79.0,
+    "time_s": 246.734309
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 159.44308471679688,
+    "after": 172.03196716308594,
+    "time_s": 246.734876
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 800.0,
+    "after": 831.0,
+    "time_s": 277.728648
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23775.0,
+    "after": 23806.0,
+    "time_s": 277.729265
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 172.03196716308594,
+    "after": 180.06822204589844,
+    "time_s": 277.731076
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 831.0,
+    "after": 862.0,
+    "time_s": 308.725399
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23806.0,
+    "after": 23837.0,
+    "time_s": 308.726251
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 862.0,
+    "after": 893.0,
+    "time_s": 339.722731
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23837.0,
+    "after": 23868.0,
+    "time_s": 339.72342
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 180.06822204589844,
+    "after": 188.58831787109375,
+    "time_s": 339.72518
+  },
+  {
+    "name": "Q_M_THST_HOVER",
+    "before": 0.22768813371658325,
+    "after": 0.22743670642375946,
+    "time_s": 346.421342
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 893.0,
+    "after": 900.0,
+    "time_s": 346.521696
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23868.0,
+    "after": 23875.0,
+    "time_s": 346.522379
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 188.58831787109375,
+    "after": 190.72850036621094,
+    "time_s": 346.522918
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102412.5625,
+    "after": 102412.421875,
+    "time_s": 346.720909
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102412.421875,
+    "after": 102410.1171875,
+    "time_s": 358.719991
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102410.1171875,
+    "after": 102412.2578125,
+    "time_s": 370.718664
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23875.0,
+    "after": 23905.0,
+    "time_s": 376.719626
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102412.2578125,
+    "after": 102410.75,
+    "time_s": 382.717272
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102410.75,
+    "after": 102412.3359375,
+    "time_s": 394.716534
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102412.3359375,
+    "after": 102413.125,
+    "time_s": 406.714872
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23905.0,
+    "after": 23936.0,
+    "time_s": 407.71616
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102413.125,
+    "after": 102411.5703125,
+    "time_s": 417.713987
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102411.5703125,
+    "after": 102411.234375,
+    "time_s": 429.712555
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23936.0,
+    "after": 23967.0,
+    "time_s": 438.712945
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102411.234375,
+    "after": 102409.84375,
+    "time_s": 441.711337
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.84375,
+    "after": 102409.609375,
+    "time_s": 453.710221
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.609375,
+    "after": 102410.375,
+    "time_s": 465.709441
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23967.0,
+    "after": 23998.0,
+    "time_s": 469.709872
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102410.375,
+    "after": 102408.1640625,
+    "time_s": 477.708315
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.1640625,
+    "after": 102408.546875,
+    "time_s": 489.70653
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 23998.0,
+    "after": 24029.0,
+    "time_s": 500.706791
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.546875,
+    "after": 102407.53125,
+    "time_s": 501.705844
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.53125,
+    "after": 102408.984375,
+    "time_s": 513.704391
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.984375,
+    "after": 102408.234375,
+    "time_s": 524.70301
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24029.0,
+    "after": 24060.0,
+    "time_s": 531.703699
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.234375,
+    "after": 102407.4296875,
+    "time_s": 535.701978
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.4296875,
+    "after": 102407.2109375,
+    "time_s": 547.700801
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.2109375,
+    "after": 102407.1171875,
+    "time_s": 559.69982
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24060.0,
+    "after": 24091.0,
+    "time_s": 562.700383
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.1171875,
+    "after": 102407.2265625,
+    "time_s": 571.698419
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.2265625,
+    "after": 102406.2265625,
+    "time_s": 583.697434
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24091.0,
+    "after": 24122.0,
+    "time_s": 593.697449
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.2265625,
+    "after": 102405.3203125,
+    "time_s": 595.695955
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.3203125,
+    "after": 102404.984375,
+    "time_s": 607.694752
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.984375,
+    "after": 102407.125,
+    "time_s": 618.693691
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24122.0,
+    "after": 24153.0,
+    "time_s": 624.694521
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.125,
+    "after": 102406.2890625,
+    "time_s": 630.692504
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.2890625,
+    "after": 102405.8203125,
+    "time_s": 642.691257
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.8203125,
+    "after": 102405.765625,
+    "time_s": 654.690043
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24153.0,
+    "after": 24184.0,
+    "time_s": 655.691033
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.765625,
+    "after": 102407.5625,
+    "time_s": 666.689107
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.5625,
+    "after": 102406.7890625,
+    "time_s": 678.688009
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24184.0,
+    "after": 24215.0,
+    "time_s": 686.688406
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.7890625,
+    "after": 102408.2265625,
+    "time_s": 690.686442
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.2265625,
+    "after": 102405.046875,
+    "time_s": 702.685268
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.046875,
+    "after": 102408.046875,
+    "time_s": 714.68425
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24215.0,
+    "after": 24246.0,
+    "time_s": 717.685023
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.046875,
+    "after": 102405.4140625,
+    "time_s": 726.6831
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.4140625,
+    "after": 102407.9375,
+    "time_s": 738.681927
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24246.0,
+    "after": 24277.0,
+    "time_s": 748.682241
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.9375,
+    "after": 102408.2109375,
+    "time_s": 750.68069
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.2109375,
+    "after": 102406.53125,
+    "time_s": 762.67951
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.53125,
+    "after": 102408.5,
+    "time_s": 774.67831
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24277.0,
+    "after": 24308.0,
+    "time_s": 779.678863
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.5,
+    "after": 102408.5703125,
+    "time_s": 786.677358
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.5703125,
+    "after": 102405.046875,
+    "time_s": 798.675685
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.046875,
+    "after": 102406.484375,
+    "time_s": 810.674417
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24308.0,
+    "after": 24339.0,
+    "time_s": 810.675843
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.484375,
+    "after": 102409.046875,
+    "time_s": 821.673574
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.046875,
+    "after": 102409.1953125,
+    "time_s": 833.672352
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24339.0,
+    "after": 24370.0,
+    "time_s": 841.672734
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.1953125,
+    "after": 102406.65625,
+    "time_s": 845.671237
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.65625,
+    "after": 102406.171875,
+    "time_s": 857.6698
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.171875,
+    "after": 102406.546875,
+    "time_s": 869.668721
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24370.0,
+    "after": 24401.0,
+    "time_s": 872.669575
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.546875,
+    "after": 102404.0,
+    "time_s": 881.667644
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.0,
+    "after": 102406.6484375,
+    "time_s": 893.666259
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24401.0,
+    "after": 24432.0,
+    "time_s": 903.666367
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.6484375,
+    "after": 102407.3828125,
+    "time_s": 905.665253
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.3828125,
+    "after": 102404.515625,
+    "time_s": 917.663741
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.515625,
+    "after": 102406.0390625,
+    "time_s": 929.662625
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24432.0,
+    "after": 24463.0,
+    "time_s": 934.663342
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.0390625,
+    "after": 102408.0546875,
+    "time_s": 941.661662
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.0546875,
+    "after": 102406.7109375,
+    "time_s": 953.66049
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.7109375,
+    "after": 102405.5,
+    "time_s": 965.658997
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24463.0,
+    "after": 24494.0,
+    "time_s": 965.6605
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.5,
+    "after": 102404.9140625,
+    "time_s": 976.658115
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.9140625,
+    "after": 102403.5703125,
+    "time_s": 988.656946
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24494.0,
+    "after": 24525.0,
+    "time_s": 996.65718
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.5703125,
+    "after": 102405.25,
+    "time_s": 1000.655483
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.25,
+    "after": 102403.6953125,
+    "time_s": 1012.654283
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.6953125,
+    "after": 102402.4296875,
+    "time_s": 1024.6533
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24525.0,
+    "after": 24556.0,
+    "time_s": 1027.654165
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.4296875,
+    "after": 102402.6640625,
+    "time_s": 1036.651843
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.6640625,
+    "after": 102403.5078125,
+    "time_s": 1048.650682
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24556.0,
+    "after": 24587.0,
+    "time_s": 1058.650949
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.5078125,
+    "after": 102405.5546875,
+    "time_s": 1059.649811
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.5546875,
+    "after": 102402.265625,
+    "time_s": 1071.648702
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.265625,
+    "after": 102401.84375,
+    "time_s": 1083.647203
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24587.0,
+    "after": 24618.0,
+    "time_s": 1089.648239
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102401.84375,
+    "after": 102402.46875,
+    "time_s": 1095.646229
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.46875,
+    "after": 102403.59375,
+    "time_s": 1107.644703
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.59375,
+    "after": 102407.4609375,
+    "time_s": 1119.643606
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24618.0,
+    "after": 24649.0,
+    "time_s": 1120.645025
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.4609375,
+    "after": 102404.953125,
+    "time_s": 1131.642382
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.953125,
+    "after": 102403.1328125,
+    "time_s": 1143.641173
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24649.0,
+    "after": 24680.0,
+    "time_s": 1151.641564
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.1328125,
+    "after": 102405.5859375,
+    "time_s": 1155.640452
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.5859375,
+    "after": 102403.7265625,
+    "time_s": 1167.638787
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.7265625,
+    "after": 102403.5,
+    "time_s": 1179.637521
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24680.0,
+    "after": 24711.0,
+    "time_s": 1182.63905
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.5,
+    "after": 102405.5390625,
+    "time_s": 1191.636716
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.5390625,
+    "after": 102404.5,
+    "time_s": 1203.635276
+  },
+  {
+    "name": "BATT_FS_CRT_ACT",
+    "before": 4.0,
+    "after": 0.0,
+    "time_s": 1207.137869
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24711.0,
+    "after": 24742.0,
+    "time_s": 1213.635925
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.5,
+    "after": 102402.765625,
+    "time_s": 1215.634083
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.765625,
+    "after": 102403.65625,
+    "time_s": 1227.632995
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.65625,
+    "after": 102401.953125,
+    "time_s": 1238.631658
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24742.0,
+    "after": 24773.0,
+    "time_s": 1244.632713
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102401.953125,
+    "after": 102403.3828125,
+    "time_s": 1250.630751
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.3828125,
+    "after": 102405.59375,
+    "time_s": 1262.629224
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.59375,
+    "after": 102401.1875,
+    "time_s": 1274.628107
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24773.0,
+    "after": 24804.0,
+    "time_s": 1275.629219
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102401.1875,
+    "after": 102402.390625,
+    "time_s": 1286.627395
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.390625,
+    "after": 102401.015625,
+    "time_s": 1298.625892
+  },
+  {
+    "name": "BATT_ARM_VOLT",
+    "before": 46.79999923706055,
+    "after": 44.0,
+    "time_s": 1303.241486
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24804.0,
+    "after": 24835.0,
+    "time_s": 1306.626458
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102401.015625,
+    "after": 102404.2265625,
+    "time_s": 1310.624781
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 900.0,
+    "after": 912.0,
+    "time_s": 1337.622845
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24835.0,
+    "after": 24866.0,
+    "time_s": 1337.623749
+  },
+  {
+    "name": "STAT_FLTCNT",
+    "before": 79.0,
+    "after": 80.0,
+    "time_s": 1337.625267
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 190.72850036621094,
+    "after": 196.64430236816406,
+    "time_s": 1337.625982
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 912.0,
+    "after": 943.0,
+    "time_s": 1368.61993
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24866.0,
+    "after": 24897.0,
+    "time_s": 1368.620518
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 196.64430236816406,
+    "after": 201.4270477294922,
+    "time_s": 1368.621959
+  },
+  {
+    "name": "STAT_FLTTIME",
+    "before": 943.0,
+    "after": 962.0,
+    "time_s": 1387.4176
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24897.0,
+    "after": 24916.0,
+    "time_s": 1387.418208
+  },
+  {
+    "name": "STAT_DISTFLWN",
+    "before": 201.4270477294922,
+    "after": 207.8089599609375,
+    "time_s": 1387.419948
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.2265625,
+    "after": 102410.765625,
+    "time_s": 1387.617358
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102410.765625,
+    "after": 102406.8828125,
+    "time_s": 1399.615718
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.8828125,
+    "after": 102407.4296875,
+    "time_s": 1411.6143
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24916.0,
+    "after": 24946.0,
+    "time_s": 1417.615526
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.4296875,
+    "after": 102407.1171875,
+    "time_s": 1423.613394
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.1171875,
+    "after": 102405.3046875,
+    "time_s": 1435.612209
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.3046875,
+    "after": 102407.5234375,
+    "time_s": 1447.610815
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24946.0,
+    "after": 24977.0,
+    "time_s": 1448.612276
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102407.5234375,
+    "after": 102406.75,
+    "time_s": 1458.610177
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.75,
+    "after": 102406.765625,
+    "time_s": 1470.60874
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 24977.0,
+    "after": 25008.0,
+    "time_s": 1479.608887
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.765625,
+    "after": 102408.6171875,
+    "time_s": 1482.607512
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.6171875,
+    "after": 102409.3515625,
+    "time_s": 1494.606349
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.3515625,
+    "after": 102408.25,
+    "time_s": 1506.605114
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25008.0,
+    "after": 25039.0,
+    "time_s": 1510.605703
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.25,
+    "after": 102408.984375,
+    "time_s": 1517.603783
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.984375,
+    "after": 102409.859375,
+    "time_s": 1529.602585
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.859375,
+    "after": 102406.96875,
+    "time_s": 1541.601381
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25039.0,
+    "after": 25070.0,
+    "time_s": 1541.602915
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.96875,
+    "after": 102411.0703125,
+    "time_s": 1553.600144
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102411.0703125,
+    "after": 102410.0078125,
+    "time_s": 1565.59921
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25070.0,
+    "after": 25101.0,
+    "time_s": 1572.599775
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102410.0078125,
+    "after": 102409.4609375,
+    "time_s": 1577.598047
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.4609375,
+    "after": 102409.4296875,
+    "time_s": 1589.59704
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.4296875,
+    "after": 102409.5859375,
+    "time_s": 1601.59537
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25101.0,
+    "after": 25132.0,
+    "time_s": 1603.596544
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102409.5859375,
+    "after": 102408.8203125,
+    "time_s": 1613.594192
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.8203125,
+    "after": 102408.546875,
+    "time_s": 1624.593032
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25132.0,
+    "after": 25163.0,
+    "time_s": 1634.593478
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102408.546875,
+    "after": 102406.171875,
+    "time_s": 1636.591857
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.171875,
+    "after": 102405.265625,
+    "time_s": 1648.590955
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.265625,
+    "after": 102404.390625,
+    "time_s": 1660.589721
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25163.0,
+    "after": 25194.0,
+    "time_s": 1665.590244
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.390625,
+    "after": 102404.96875,
+    "time_s": 1672.588544
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.96875,
+    "after": 102406.1015625,
+    "time_s": 1683.58742
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.1015625,
+    "after": 102403.5,
+    "time_s": 1695.586204
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25194.0,
+    "after": 25225.0,
+    "time_s": 1696.587121
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102403.5,
+    "after": 102405.5390625,
+    "time_s": 1707.584768
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102405.5390625,
+    "after": 102406.3359375,
+    "time_s": 1719.583645
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25225.0,
+    "after": 25256.0,
+    "time_s": 1727.583946
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102406.3359375,
+    "after": 102404.8203125,
+    "time_s": 1731.582387
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.8203125,
+    "after": 102404.1796875,
+    "time_s": 1742.581322
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102404.1796875,
+    "after": 102402.875,
+    "time_s": 1754.580085
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25256.0,
+    "after": 25287.0,
+    "time_s": 1758.580924
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.875,
+    "after": 102402.6640625,
+    "time_s": 1766.578821
+  },
+  {
+    "name": "BARO1_GND_PRESS",
+    "before": 102402.6640625,
+    "after": 102401.234375,
+    "time_s": 1778.577685
+  },
+  {
+    "name": "STAT_RUNTIME",
+    "before": 25287.0,
+    "after": 25318.0,
+    "time_s": 1789.577825
+  }
+]

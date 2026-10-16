@@ -1,6 +1,8 @@
 name: pitch_doublet_nominal
 
 aircraft_case: nominal
+# Preserve the original regression scenario; override explicitly for the new DB.
+aerodynamics: adb_v1_1
 
 trim:
   airspeed: 25

@@ -1,8 +1,8 @@
 """Aerodynamic models.
 
-ADB v1.1 is preferred when the drag-corrected CSV is available. The original
-derivative model remains available as a fallback and as provisional control/rate
-increments because ADB v1.1 has no control-surface dimensions yet.
+The selected alpha/beta database supplies base loads. Partial measured control
+increments replace provisional controls when supplied. Rate derivatives remain
+provisional, and the original derivative model is available as a fallback.
 """
 
 from pathlib import Path
@@ -11,6 +11,7 @@ import numpy as np
 
 from .aerodb import dimensional_body_force_moment, load_aerodynamic_database_cached
 from .controls import Control
+from .deflections import load_deflection_database_cached
 from .params import AircraftParams
 
 
@@ -30,7 +31,8 @@ def aero_model_placeholder(
     beta = np.arcsin(np.clip(v / V, -1.0, 1.0))
     alpha_eff = np.clip(alpha, -params.alpha_limit, params.alpha_limit)
     beta_eff = np.clip(beta, -params.beta_limit, params.beta_limit)
-    qbar = 0.5 * params.rho * V**2
+    # Vmin regularizes rate normalization, not dynamic pressure at rest.
+    qbar = 0.5 * params.rho * V_raw**2
 
     p_hat = p * params.bref / (2.0 * V)
     q_hat = q * params.cref / (2.0 * V)
@@ -114,13 +116,13 @@ def aero_model_adb(
     control: Control,
     params: AircraftParams,
 ) -> tuple[np.ndarray, np.ndarray, dict[str, float | str | dict[str, float]]]:
-    """Compute aerodynamic loads from ADB v1.1 plus provisional increments."""
+    """Compute selected base loads, measured/provisional controls and rate terms."""
     u, v, w = v_b
     V_raw = np.linalg.norm(v_b)
     V = max(V_raw, params.Vmin)
     alpha = np.arctan2(w, u)
     beta = np.arcsin(np.clip(v / V, -1.0, 1.0))
-    qbar = 0.5 * params.rho * V**2
+    qbar = 0.5 * params.rho * V_raw**2
 
     adb_path = Path(params.aero_database_path)
     database = load_aerodynamic_database_cached(adb_path, params.aerodb_reference)
@@ -129,8 +131,24 @@ def aero_model_adb(
         np.rad2deg(beta),
         clamp=params.aero_database_clamp,
     )
+    total_coefficients = dict(coefficients)
+    control_coefficients = {}
+    coverage = None
+    provisional_control = control
+    if params.deflection_database_path is not None:
+        deflections = load_deflection_database_cached(params.deflection_database_path, database.reference)
+        control_coefficients, coverage = deflections.increments_at(
+            float(np.rad2deg(alpha)), float(np.rad2deg(beta)), control,
+            deflection_policy=params.control_deflection_policy,
+            limits_deg=params.control_surface_limits_deg,
+            velocity_m_s=V_raw,
+        )
+        for key, value in control_coefficients.items():
+            total_coefficients[key] += value
+        # Measured controls replace all provisional control terms. Rate terms remain.
+        provisional_control = Control(de=0.0, da=0.0, dr=0.0, throttle=control.throttle)
     F_adb_b, M_adb_b = dimensional_body_force_moment(
-        coefficients,
+        total_coefficients,
         qbar,
         database.reference,
         shift_to_cg=params.shift_adb_moments_to_cg,
@@ -141,18 +159,23 @@ def aero_model_adb(
         V,
         qbar,
         omega_b,
-        control,
+        provisional_control,
         params,
     )
 
     info = {
-        "source": "adb_v1_1_drag_correction",
+        "source": params.aero_database_version,
         "alpha": alpha,
         "beta": beta,
         "V": V_raw,
         "qbar": qbar,
         "database_path": str(adb_path),
         "coefficients": coefficients,
+        "body_coefficients_with_controls": total_coefficients,
+        "measured_control_increment_coefficients": control_coefficients,
+        "control_data_coverage": coverage,
+        "control_source": "measured_increment_csv" if coverage is not None else "provisional_derivatives",
+        "rate_source": "provisional_derivatives",
         "provisional_increment_coefficients": increment_coefficients,
     }
     return F_adb_b + F_increment_b, M_adb_b + M_increment_b, info
@@ -164,7 +187,7 @@ def aero_model(
     control: Control,
     params: AircraftParams,
 ) -> tuple[np.ndarray, np.ndarray, dict[str, float | str | dict[str, float]]]:
-    """Compute aerodynamic loads, preferring ADB v1.1 when available."""
+    """Compute aerodynamic loads from the selected database when available."""
     adb_path = Path(params.aero_database_path)
     if params.use_aero_database and adb_path.exists():
         return aero_model_adb(v_b, omega_b, control, params)

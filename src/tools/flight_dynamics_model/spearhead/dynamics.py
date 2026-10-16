@@ -13,6 +13,7 @@ def dynamics(
     x: np.ndarray,
     params: AircraftParams,
     control_override: ControlInput | None = None,
+    wind_ned: np.ndarray | None = None,
 ) -> np.ndarray:
     """Return the state derivative for the 12-state nonlinear aircraft model."""
     v_b = x[3:6]
@@ -20,7 +21,7 @@ def dynamics(
     omega_b = x[9:12]
 
     R_body_to_ned = euler_body_to_ned(phi, theta, psi)
-    breakdown = compute_force_moment_breakdown(t, x, params, control_override=control_override)
+    breakdown = compute_force_moment_breakdown(t, x, params, control_override=control_override, wind_ned=wind_ned)
     F_total_b = breakdown["total"]["force_b"]
     M_total_b = breakdown["total"]["moment_b"]
 

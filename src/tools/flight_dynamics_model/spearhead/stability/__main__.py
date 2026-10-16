@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from ..scenarios import load_scenario
+from ..aircraft import aircraft_options, aerodynamic_options, load_aircraft_config
 from .analysis import analyze_stability
 from .export import export_json, export_modes_csv
 from .report import export_markdown
@@ -29,7 +30,7 @@ def _write_outputs(result, args: argparse.Namespace) -> None:
 
 
 def _analyze(args: argparse.Namespace) -> int:
-    config = load_scenario(args.scenario)
+    config = load_scenario(args.scenario, params=None if args.aircraft is None else load_aircraft_config(args.aircraft), aerodynamics=args.aerodynamics)
     result = analyze_stability(config)
     _write_outputs(result, args)
     print(
@@ -41,7 +42,7 @@ def _analyze(args: argparse.Namespace) -> int:
 
 
 def _cg_sweep(args: argparse.Namespace) -> int:
-    config = load_scenario(args.scenario)
+    config = load_scenario(args.scenario, params=None if args.aircraft is None else load_aircraft_config(args.aircraft), aerodynamics=args.aerodynamics)
     y_ref = float(config.params.cg_body_xyz[1])
     z_ref = float(config.params.cg_body_xyz[2])
     cg_positions = [np.array([x_ref, y_ref, z_ref], dtype=float) for x_ref in args.cg_x]
@@ -55,6 +56,8 @@ def _cg_sweep(args: argparse.Namespace) -> int:
 
 
 def _add_output_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--aircraft", choices=list(aircraft_options()), help="override the scenario aircraft profile")
+    parser.add_argument("--aerodynamics", choices=list(aerodynamic_options()), help="override the aerodynamic dataset")
     parser.add_argument("--json", type=Path, help="write JSON summary")
     parser.add_argument("--csv", type=Path, help="write CSV eigenvalue table")
     parser.add_argument("--markdown", type=Path, help="write Markdown summary")

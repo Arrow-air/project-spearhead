@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="400" viewBox="0 0 1080 400" role="img" aria-labelledby="title desc">
+<title id="title">ArduPilot and FDM</title><desc id="desc">ArduPilot sends motor and servo commands to the FDM. The FDM simulates aircraft motion and returns simulated sensor feedback.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 L6 4 L1 7" fill="none" stroke="#5b8dee" stroke-width="1.4" stroke-linejoin="round"/></marker></defs>
+<style>text {font-family: 'Neue Haas Grotesk', Arial, Helvetica, sans-serif;} .eyebrow {font-size:11px;font-weight:700;letter-spacing:1.6px;fill:#5b8dee;} .title {font-size:30px;font-weight:700;fill:#f3f4f6;} .heading {font-size:23px;font-weight:700;fill:#f3f4f6;} .body {font-size:15px;fill:#b2b3b5;} .caption {font-size:13px;fill:#b2b3b5;} .number {font-size:12px;font-weight:700;fill:#5b8dee;}</style>
+<rect width="1080" height="400" rx="16" fill="#1b1b1d"/>
+<text x="48" y="36" class="eyebrow">SPEARHEAD / 01 · SIMULATION LOOP</text>
+<text x="48" y="82" class="title">ArduPilot + FDM</text>
+<text x="48" y="111" class="body">Flight control and aircraft physics in one shared simulation loop.</text>
+<rect x="48" y="151" width="362" height="184" rx="10" fill="#242526" stroke="#5b8dee" stroke-width="1.2"/>
+<text x="72" y="182" class="eyebrow">FLIGHT CONTROL</text>
+<text x="72" y="222" class="title">ArduPilot 4.7.1</text>
+<text x="72" y="263" class="body">Estimates state and controls flight.</text>
+<text x="72" y="288" class="body">Produces motor and servo outputs.</text>
+<rect x="670" y="151" width="362" height="184" rx="10" fill="#242526" stroke="#5b8dee" stroke-width="1.2"/>
+<text x="694" y="182" class="eyebrow">AIRCRAFT PHYSICS</text>
+<text x="694" y="222" class="title">Spearhead FDM</text>
+<text x="694" y="263" class="body">Calculates forces and aircraft motion.</text>
+<text x="694" y="288" class="body">Produces simulated sensor data.</text>
+<path d="M411 219 L669 219" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<text x="540" y="206" class="caption" text-anchor="middle">Motor + servo commands</text>
+<path d="M669 285 L411 285" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<text x="540" y="308" class="caption" text-anchor="middle">Simulated sensor feedback</text>
+<text x="48" y="373" class="caption">Flight Deck selects experiments, shows instruments and preserves recordings.</text>
+</svg>

@@ -59,6 +59,7 @@ def _surface_to_channel(surface: str) -> str:
         "ruddervator": "dr",
         "dr": "dr",
         "throttle": "throttle",
+        "lift_throttle": "lift_throttle",
     }
     if normalized not in mapping:
         raise ValueError(f"Unsupported control surface: {surface}")
@@ -82,9 +83,17 @@ def _control_with_commands(
             "da": base.da,
             "dr": base.dr,
             "throttle": base.throttle,
+            "lift_throttle": base.lift_throttle,
+            "lift_motor_throttles": base.lift_motor_throttles,
         }
         for channel, command in channels:
-            values[channel] += command.value_at(t)
+            increment = command.value_at(t)
+            values[channel] += increment
+            if channel == "lift_throttle" and values["lift_motor_throttles"] is not None:
+                # Open-loop collective perturbation preserves the initial rotor bias.
+                values["lift_motor_throttles"] = tuple(
+                    value + increment for value in values["lift_motor_throttles"]
+                )
         return Control(**values)
 
     return scheduled_control
@@ -103,6 +112,8 @@ def _prepare_initial_state_and_control(
             target_speed=config.trim_target_speed,
             altitude=config.trim_altitude,
         )
+        if not trim_result["success"]:
+            raise ValueError(f"Trim failed: {trim_result['message']}")
         initial_state = trim_result["x_trim"]
         if control_override is None:
             control_override = trim_result["control_trim"]
