@@ -34,6 +34,10 @@ living engineering record and is published to the Arrow docs site.
 |----------|-------------|
 | [Electrical Master Document](docs/electrical-master.md) | Full electrical architecture (SPH-E-001) |
 | [PT1 Parts List](docs/pt1-parts-list.md) | Electrical procurement for the PT1 build |
+| [PT1 As-Built Note](docs/pt1-as-built-note.md) | PT1 and PT1.5 electrical state as flown, validation log and open checks (SPH-E-006) |
+| [PT1 Wiring Diagram](docs/pt1-wiring-diagram.md) | Harness connection diagram, Mermaid source plus PNG and SVG (SPH-E-005) |
+| [PT2 PCB Scope and Reuse Map](docs/pt2-pcb-scope-and-reuse-map.md) | PT2 board set and what is reused from Quiver and Caribou (SPH-E-008) |
+| [Flight Log Review 2026-10-18](docs/pt1-flight-log-review-2026-10-18.md) | PT1 and PT1.5 hover log review with ranked findings and actions |
 | [Information Notes](docs/information-note/) | Aerodynamics and flight-dynamics design notes |
 | [Reference Guides](docs/reference-guide/) | Stable technical references (e.g. ArduPilot QuadPlane) |
 
