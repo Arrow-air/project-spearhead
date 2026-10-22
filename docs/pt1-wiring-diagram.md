@@ -15,11 +15,7 @@ sidebar_position: 6
 
 **Propulsion is stale (Oct 16, 2026):** PT1 flies KDE ESCs on physical PWM from the 6C I/O PWM OUT port, not the DroneCAN ESC nodes and H11 CAN runs drawn below, and the wing servos sit on a breakout at the FMU PWM OUT port at 8.0 V. PT1.5 adds a pusher on a separate 12S 15 Ah pack. See SPH-E-006 (`pt1-as-built-note.md`). Redraw after the channel map is read back (SPH-E-006 AB-03).
 
-Auto-generated from the harness table. Each arrow is one harness; the label is the harness ID plus wire gauge and connector. Regenerate with `docs/pt1-wiring-diagram.mmd` after any §4.6 change.
-
-Rendered image (static): `pt1-wiring-diagram.svg` (vector) and `pt1-wiring-diagram.png`.
-
-![PT1 wiring diagram](pt1-wiring-diagram.png)
+Auto-generated from the harness table. Each arrow is one harness and the label is the harness ID plus wire gauge and connector. The Mermaid source below is the diagram. Regenerate it after any §4.6 change.
 
 ## Connection diagram (Mermaid source, renders on GitHub)
 
