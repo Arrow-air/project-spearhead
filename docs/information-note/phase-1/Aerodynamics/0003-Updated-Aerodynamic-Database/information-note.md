@@ -20,7 +20,7 @@ sidebar_position: 1
 
 This information note documents the updated aerodynamic database generation work for Project Spearhead. The database replaces the preliminary design aerodynamic database. The purpose of the database is to provide force, moment, and coefficient data over the aircraft angle-of-attack and sideslip envelope, together with the aileron, elevator and rudder effects, so that the results can be used for flight dynamics modelling, control simulation, and later flight-control table generation.
 
-A new CFD simulation file with deflectable control surfaces and the pusher actuator disk was used for all analyses, so the propeller effect is included directly and no separate actuator disk correction is needed. [SakeDB](https://github.com/Arrow-air/project-spearhead/blob/main/src/tools/SakeDB/README.md) was used to define and manage a 400-case CFD campaign with neutral control surfaces, and a surrogate surface was generated from it. With the same simulation file, 113 control surface deflection cases were solved with a script. Finally, the dense surrogate output was processed with [Nondimit](https://github.com/Arrow-air/project-spearhead/blob/main/src/tools/Nondimit/README.md) for coefficient-table preparation, drag correction for omitted components, and sign-convention checks.
+A new CFD simulation file with deflectable control surfaces and the pusher actuator disk was used for all analyses, so the propeller slipstream is included in every analysis. [SakeDB](https://github.com/Arrow-air/project-spearhead/blob/main/src/tools/SakeDB/README.md) was used to define and manage a 400-case CFD campaign with neutral control surfaces, and a surrogate surface was generated from it. With the same simulation file, 121 control surface deflection cases were solved with a script. Finally, the dense surrogate output was processed with [Nondimit](https://github.com/Arrow-air/project-spearhead/blob/main/src/tools/Nondimit/README.md) for coefficient-table preparation, drag correction for omitted components, and sign-convention checks.
 
 This note does not describe the internal operation of SakeDB or Nondimit. It records how the tools were used in the aerodynamic database workflow and what was delivered.
 
@@ -32,7 +32,7 @@ Each database point was solved as a steady CFD case, with the same simulation se
 
 Each analysis was run for 400 iterations, except the first five database cases at alpha -90 deg, which were run for 500 iterations.
 
-The simulation file has one deflection parameter for each control: aileron, elevator and rudder. The left and right ruddervators are driven by the mixed elevator and rudder commands. The pusher propeller is modelled with a blade element virtual disk trimmed to a target thrust of 30 N at 4300 rpm in every analysis, so the slipstream effect is included in the airframe loads. The force of the disk itself is not part of the delivered loads.
+The simulation file has one deflection parameter for each control: aileron, elevator and rudder. The left and right ruddervators are driven by the mixed elevator and rudder commands. The pusher propeller is modelled with a blade element virtual disk trimmed to a target thrust of 30 N at 4300 rpm, so the slipstream effect is included in the airframe loads. The disk thrust is fixed at 30 N at every speed and angle, which is above the cruise thrust and well above the thrust at low speed. The force of the disk itself is not part of the delivered loads.
 
 Every analysis reports the body-axis forces and moments "Fx", "Fy", "Fz", "Mx", "My", and "Mz" about the CFD origin (0 m, 0 m, 0 m).
 
@@ -62,13 +62,13 @@ The delivered dense grid covers alpha from -90 deg to +90 deg and beta from -90 
 
 The control surface effects were solved as separate cases with a script. For each case, the script set the alpha, beta, velocity and control deflections, remeshed the deflected geometry and solved the case with the same solver setup. Each case was averaged over the last 50 iterations, and every control case has a neutral reference case at the same alpha, beta and velocity.
 
-The 113 cases were run in three batches. The first batch covers +/-5 deg single-surface deflections at 25 m/s from alpha -5 deg to 30 deg, with elevator cases at 10 m/s and 15 m/s. The second batch covers the full command travel of elevator and rudder +/-15 deg and aileron +/-30 deg, and combined elevator and rudder commands. The third batch extends the elevator to -20 deg and -30 deg at 22 m/s, beyond the +/-15 deg command limit, at the request of the flight dynamics team to show whether the elevator saturates. The full case matrix is given in the [case matrix](assets/case_matrix.csv), with all cases at beta = 0 deg unless stated.
+The 121 cases were run in four batches. The first batch covers +/-5 deg single-surface deflections at 25 m/s from alpha -5 deg to 30 deg, with elevator cases at 10 m/s and 15 m/s. The second batch covers elevator and rudder +/-15 deg, aileron +/-15 deg and +/-30 deg, and combined elevator and rudder commands. The third batch extends the elevator to -20 deg and -30 deg at 22 m/s, beyond the +/-15 deg range of the second batch, at the request of the flight dynamics team to show whether the elevator saturates. The fourth batch covers the elevator command range of +/-30 deg used with the current ruddervator mixing, with elevator -30 deg and +30 deg at 25 m/s and alpha 0, 2 and 4 deg, and neutral references at alpha 2 and 4 deg. The full case matrix is given in the [case matrix](assets/case_matrix.csv), with all cases at beta = 0 deg unless stated.
 
 The deflection cases are delivered as direct CFD results, with the same mesh settings as the aerodynamic database, as dimensional loads about the CFD origin, without a surrogate, drag multiplier or other correction.
 
 ### 5. Coefficient Output Preparation
 
-The dense surrogate output was then processed with Nondimit in the same way as the preliminary design aerodynamic database, with three differences. The moment reference center is the CG used for this campaign, (-0.10 m, 0 m, 0.15 m), instead of (-0.15 m, 0 m, 0.15 m). The reference density is the run condition of the new simulation file, 1.021 kg/m^3, instead of 1.09 kg/m^3. "Fy", "Mx", and "Mz" are set to zero at beta = 0 deg to remove the small asymmetry left by the surrogate.
+The dense surrogate output was then processed with Nondimit in the same way as the preliminary design aerodynamic database, with three differences. The moment reference center is (-0.10 m, 0 m, 0.15 m), instead of (-0.15 m, 0 m, 0.15 m). The reference density is the run condition of the new simulation file, 1.021 kg/m^3, instead of 1.09 kg/m^3. "Fy", "Mx", and "Mz" are set to zero at beta = 0 deg to remove the small asymmetry left by the surrogate.
 
 The wind-frame drag multiplier of 1.3 for omitted drag-producing components was applied as in the preliminary design aerodynamic database, to the wind-frame drag component "D" only, and the corrected drag vector was projected back into body axes.
 
@@ -76,15 +76,16 @@ The wind-frame drag multiplier of 1.3 for omitted drag-producing components was 
 
 ### Database Package
 
-The database package provides the aerodynamic database as the main deliverable, and the control table with the deflection cases as a supporting deliverable. The control table is split in two files because the third batch was run later.
+The database package provides the aerodynamic database as the main deliverable, and the control table with the deflection cases as a supporting deliverable. The control table is split in three files because the third and fourth batches were run later.
 
 | Deliverable | Description |
 |-------------|-------------|
 | [Aerodynamic database](assets/database.csv) | Dense surrogate table converted into body and wind-frame aerodynamic coefficients with Nondimit, after the 1.3x drag multiplier |
 | [Control table](assets/deflection.csv) | Case001 to Case103: case inputs (alpha, beta, velocity, aileron, elevator, rudder) and the six dimensional loads about the CFD origin |
 | [Control table, 22 m/s elevator extension](assets/deflection_cases_104_113.csv) | Case104 to Case113, same format |
+| [Control table, 25 m/s elevator extension](assets/deflection_cases_114_121.csv) | Case114 to Case121, same format |
 
-The aerodynamic database file starts with a three-line Nondimit header that lists the reference values, the moment reference center and the export options. If another reference value set, moment reference center or correction setup is required, users can regenerate the database export with Nondimit. Note that the delivered coefficient table is referenced to the aircraft CG at (-0.10 m, 0 m, 0.15 m), while the control table is referenced to the CFD origin (0 m, 0 m, 0 m).
+The aerodynamic database file starts with a three-line Nondimit header that lists the reference values, the moment reference center and the export options. If another reference value set, moment reference center or correction setup is required, users can regenerate the database export with Nondimit. Note that the delivered coefficient table is referenced to the moment reference center at (-0.10 m, 0 m, 0.15 m), while the control table is referenced to the CFD origin (0 m, 0 m, 0 m).
 
 | Drag | Lift |
 |-------|------|
@@ -99,6 +100,8 @@ The control increments at full command, taken from the neutral case Case008 at 2
 |------|---------|-------:|-------:|-------:|---------:|---------:|---------:|
 | Case074 | Elevator -15 deg | -2.14 | 0.05 | 21.25 | 0.00 | 29.93 | 0.14 |
 | Case075 | Elevator +15 deg | -3.98 | -0.01 | -24.39 | 0.02 | -27.96 | 0.19 |
+| Case116 | Elevator -30 deg | -7.36 | 0.06 | 43.80 | 0.01 | 55.99 | 0.08 |
+| Case117 | Elevator +30 deg | -9.85 | -0.15 | -40.43 | 0.06 | -47.61 | 0.28 |
 | Case086 | Rudder -15 deg | -3.47 | 11.76 | -1.50 | -4.74 | 0.38 | -15.75 |
 | Case087 | Rudder +15 deg | -7.92 | -12.45 | -2.15 | 4.88 | 2.96 | 17.29 |
 | Case092 | Aileron -15 deg | -8.60 | 1.27 | 15.03 | -124.35 | 2.14 | 8.03 |
@@ -108,11 +111,11 @@ The control increments at full command, taken from the neutral case Case008 at 2
 
 A negative elevator (trailing edge up) gives a nose-up pitching moment. A positive rudder gives a nose-right yawing moment with a negative side force. A positive aileron gives a positive rolling moment with adverse yaw. The responses to opposite commands are close to antisymmetric.
 
-At 22 m/s, the elevator pitching moment stays linear down to -20 deg, at about 1.5 N m/deg, and does not saturate down to -30 deg. At -30 deg no rudder authority is left on the ruddervators, so the elevator command limit stays at +/-15 deg.
+At 25 m/s and alpha 0 deg, the elevator pitching moment slope drops from 2.00 N m/deg between 0 deg and -15 deg to 1.74 N m/deg between -15 deg and -30 deg, and from 1.86 N m/deg to 1.31 N m/deg on the positive side. At 22 m/s, the pitching moment stays linear down to -20 deg, at about 1.5 N m/deg. The elevator does not saturate within +/-30 deg at either speed, and it gives almost no rolling or yawing moment. Because the ruddervators carry both the elevator and the rudder commands, a large elevator deflection leaves less ruddervator travel for the rudder, so the rudder authority is reduced at large elevator deflections.
 
-| Elevator | Elevator at 22 m/s |
-|----------|--------------------|
-| ![Elevator pitching moment increments](assets/images/control_elevator_my_vs_alpha.png) | ![Elevator pitching moment increment at 22 m/s](assets/images/control_elevator_22ms.png) |
+| Elevator | Elevator sweep at 22 m/s and 25 m/s |
+|----------|-------------------------------------|
+| ![Elevator pitching moment increments](assets/images/control_elevator_my_vs_alpha.png) | ![Elevator pitching moment increment at 22 m/s and 25 m/s](assets/images/control_elevator_sweep.png) |
 | **Aileron** | **Rudder** |
 | ![Aileron rolling moment increments](assets/images/control_aileron_mx_vs_alpha.png) | ![Rudder yawing moment increments](assets/images/control_rudder_mz_vs_alpha.png) |
 
@@ -133,7 +136,7 @@ The coefficient table is organized by alpha and beta in degrees. The delivered c
 | Force denominator | $$qS$$ | 575.9078 N |
 | Roll and yaw moment denominator | $$qSb$$ | 2274.8358 N m |
 | Pitch moment denominator | $$qSc$$ | 263.1899 N m |
-| Moment reference center / CG, body x y z | $$(x_m, y_m, z_m)$$ | -0.10 m, 0 m, 0.15 m |
+| Moment reference center, body x y z | $$(x_m, y_m, z_m)$$ | -0.10 m, 0 m, 0.15 m |
 
 The density value corresponds to the run condition of the simulation file.
 
@@ -238,5 +241,5 @@ If a different moment reference center, reference area, span, chord, density, or
 ## Remarks
 
 - The 400-iteration runs with last-50 averaging are accepted for the current aerodynamic database stage. The achieved disk thrust is 27 N to 30 N against the 30 N target.
-- With the CG at x = -0.10 m, the aircraft is not statically stable in pitch by itself. The estimated neutral point is x = -0.051 m to -0.072 m, and the longitudinal stability analysis will define the allowable CG range.
+- About the moment reference center at x = -0.10 m, the aircraft is not statically stable in pitch. The estimated neutral point is x = -0.051 m to -0.072 m, and the longitudinal stability analysis will define the allowable CG range.
 - The control surface effects are delivered as separate CFD cases and are not merged into the coefficient table. They are added to the coefficient table as described in How to Use the Database.
