@@ -6,6 +6,8 @@ arm64
 arrowair
 BVLOS
 connectorized
+dimensionalized
+mathbf
 quadplane
 Pixhawk
 SITL
@@ -36,6 +38,10 @@ PyInstaller
 pyinstaller
 Raymer
 RANS
+recentered
+remeshed
+ruddervator
+ruddervators
 Schlichting
 scipy
 streamlit

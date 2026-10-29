@@ -12,9 +12,9 @@ sidebar_position: 1
 
 "Revision History: None"
 
-"Replacement Log: Replaces [0002-Preliminary-Design-Aerodynamic-Database](../0002-Preliminary-Design-Aerodynamic-Database/information-note.md)"
+"Replacement Log: Overwrites [0002-Preliminary-Design-Aerodynamic-Database](../0002-Preliminary-Design-Aerodynamic-Database/information-note.md)"
 
-"Reference: [0002-Preliminary-Design-Aerodynamic-Database](../0002-Preliminary-Design-Aerodynamic-Database/information-note.md)"
+"Reference: [0001-Preliminary-Design](../0001-Preliminary-Design/information-note.md)"
 
 ## Project Description
 
@@ -62,7 +62,7 @@ The delivered dense grid covers alpha from -90 deg to +90 deg and beta from -90 
 
 The control surface effects were solved as separate cases with a script. For each case, the script set the alpha, beta, velocity and control deflections, remeshed the deflected geometry and solved the case with the same solver setup. Each case was averaged over the last 50 iterations, and every control case has a neutral reference case at the same alpha, beta and velocity.
 
-The 113 cases were run in three batches. The first batch covers +/-5 deg single-surface deflections at 25 m/s from alpha -5 deg to 30 deg, with elevator cases at 10 m/s and 15 m/s. The second batch covers the full command travel of elevator and rudder +/-15 deg and aileron +/-30 deg, and combined elevator and rudder commands. The third batch extends the elevator to -20 deg and -30 deg at 22 m/s, beyond the +/-15 deg command limit, at the request of the flight dynamics team to show whether the elevator saturates. The full case matrix is given in [Case Matrix](assets/case_matrix.md).
+The 113 cases were run in three batches. The first batch covers +/-5 deg single-surface deflections at 25 m/s from alpha -5 deg to 30 deg, with elevator cases at 10 m/s and 15 m/s. The second batch covers the full command travel of elevator and rudder +/-15 deg and aileron +/-30 deg, and combined elevator and rudder commands. The third batch extends the elevator to -20 deg and -30 deg at 22 m/s, beyond the +/-15 deg command limit, at the request of the flight dynamics team to show whether the elevator saturates. The full case matrix is given in the [case matrix](assets/case_matrix.csv), with all cases at beta = 0 deg unless stated.
 
 The deflection cases are delivered as direct CFD results, with the same mesh settings as the aerodynamic database, as dimensional loads about the CFD origin, without a surrogate, drag multiplier or other correction.
 
