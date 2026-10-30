@@ -1,44 +1,1105 @@
 {
-  "solids": 318,
-  "revision": "center-ribs-rear-gear-v2",
+  "solids": 490,
+  "revision": "pt1-v35",
   "span_m": 3.95,
-  "snapshot": "2026-09-26",
+  "source": "AR-SH-PT1-0000 PT1 v35",
   "groups": [
     {
-      "id": "fuselage",
-      "solids": 113
+      "id": "10000-FuselageStructure",
+      "solids": 225
     },
     {
-      "id": "main_wing",
-      "solids": 61
+      "id": "20000-WingStructure",
+      "solids": 100
     },
     {
-      "id": "tail",
-      "solids": 55
+      "id": "30000-TailStructure",
+      "solids": 63
     },
     {
-      "id": "motor_mounts_and_booms",
-      "solids": 11
+      "id": "40000-Propulsion",
+      "solids": 64
     },
     {
-      "id": "landing_gear",
-      "solids": 11
-    },
-    {
-      "id": "inferred_starboard_outer_wing",
-      "solids": 47
-    },
-    {
-      "id": "restored_hidden_port_aft_motor_mount",
-      "solids": 3
-    },
-    {
-      "id": "restored_center_wing_ribs",
-      "solids": 6
-    },
-    {
-      "id": "restored_rear_landing_gear",
-      "solids": 11
+      "id": "80000-BoomStructure",
+      "solids": 38
     }
-  ]
+  ],
+  "parts": {
+    "11101": {
+      "description": "BULKHEAD STA1",
+      "material": "W",
+      "qty": 1
+    },
+    "11102": {
+      "description": "BULKHEAD STA2",
+      "material": "W",
+      "qty": 1
+    },
+    "11103": {
+      "description": "BULKHEAD STA3",
+      "material": "W",
+      "qty": 1
+    },
+    "11104": {
+      "description": "BULKHEAD STA4",
+      "material": "W",
+      "qty": 1
+    },
+    "11201": {
+      "description": "TOP LONGERON",
+      "material": "W",
+      "qty": 1
+    },
+    "11202": {
+      "description": "REAR UPPER LONGERON",
+      "material": "W",
+      "qty": 2
+    },
+    "11203": {
+      "description": "REAR LOWER LONGERON",
+      "material": "W",
+      "qty": 2
+    },
+    "11301": {
+      "description": "FLOOR",
+      "material": "W",
+      "qty": 1
+    },
+    "11302": {
+      "description": "KEEL STRIP",
+      "material": "W",
+      "qty": 1
+    },
+    "11303": {
+      "description": "FLOOR SUPPORT",
+      "material": "W",
+      "qty": 2
+    },
+    "11304": {
+      "description": "REAR INCLINED FLOOR PLATE",
+      "material": "?",
+      "qty": 1
+    },
+    "11305": {
+      "description": "NOSE KEEL PLATE 2 MM",
+      "material": "?",
+      "qty": 1
+    },
+    "11306": {
+      "description": "NOSE DECK PLATE 2 MM",
+      "material": "?",
+      "qty": 1
+    },
+    "11307": {
+      "description": "FRONT DECK PLATE 2 MM",
+      "material": "?",
+      "qty": 1
+    },
+    "11401": {
+      "description": "MID BOX BEAM",
+      "material": "W",
+      "qty": 2
+    },
+    "11402": {
+      "description": "MID BOX BEAM SUPPORT",
+      "material": "W",
+      "qty": 1
+    },
+    "11403": {
+      "description": "MID SPAR",
+      "material": "W",
+      "qty": 1
+    },
+    "12101": {
+      "description": "CENTRE CONNECTOR",
+      "material": "P",
+      "qty": 1
+    },
+    "12102": {
+      "description": "NOSE BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "12105L": {
+      "description": "MID BOX BEAM CONNECTOR",
+      "material": "P",
+      "qty": 2
+    },
+    "12105R": {
+      "description": "MID BOX BEAM CONNECTOR",
+      "material": "P",
+      "qty": 2
+    },
+    "12201": {
+      "description": "FLOOR PIN BOSS 10X11X6.1",
+      "material": "P",
+      "qty": 9
+    },
+    "12202": {
+      "description": "INSERT BOSS",
+      "material": "P",
+      "qty": 74
+    },
+    "12203": {
+      "description": "INSERT BOSS 11X11X14.5",
+      "material": "P",
+      "qty": 4
+    },
+    "12204": {
+      "description": "INSERT BOSS 8.7X8.7X14.5",
+      "material": "P",
+      "qty": 12
+    },
+    "13101": {
+      "description": "FORWARD FUSELAGE SKIN",
+      "material": "A",
+      "qty": 1
+    },
+    "13103L": {
+      "description": "MID SKIN UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13103R": {
+      "description": "MID SKIN UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13104L": {
+      "description": "MID SKIN LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13104R": {
+      "description": "MID SKIN LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13105L": {
+      "description": "TAIL-END SKIN",
+      "material": "A",
+      "qty": 1
+    },
+    "13105R": {
+      "description": "TAIL-END SKIN",
+      "material": "A",
+      "qty": 1
+    },
+    "13106L": {
+      "description": "SIDE SKIN SECTION 2",
+      "material": "A",
+      "qty": 1
+    },
+    "13106R": {
+      "description": "SIDE SKIN SECTION 2",
+      "material": "A",
+      "qty": 1
+    },
+    "13201": {
+      "description": "NOSE CONE",
+      "material": "A",
+      "qty": 1
+    },
+    "13202": {
+      "description": "NOSE TIP",
+      "material": "A",
+      "qty": 1
+    },
+    "13203": {
+      "description": "TOP PANEL FORWARD",
+      "material": "A",
+      "qty": 1
+    },
+    "13301L": {
+      "description": "WING-ROOT SKIN 1 UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13301R": {
+      "description": "WING-ROOT SKIN 1 UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13302L": {
+      "description": "WING-ROOT SKIN 2 UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13302R": {
+      "description": "WING-ROOT SKIN 2 UPPER",
+      "material": "A",
+      "qty": 1
+    },
+    "13303L": {
+      "description": "WING-ROOT SKIN 2 LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13303R": {
+      "description": "WING-ROOT SKIN 2 LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13304L": {
+      "description": "WING-ROOT SKIN 1 LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13304R": {
+      "description": "WING-ROOT SKIN 1 LOWER",
+      "material": "A",
+      "qty": 1
+    },
+    "13305L": {
+      "description": "WING-ROOT SKIN 1 FRONT",
+      "material": "A",
+      "qty": 1
+    },
+    "13305R": {
+      "description": "WING-ROOT SKIN 1 FRONT",
+      "material": "A",
+      "qty": 1
+    },
+    "13306L": {
+      "description": "WING-ROOT SKIN 2 FRONT",
+      "material": "A",
+      "qty": 1
+    },
+    "13306R": {
+      "description": "WING-ROOT SKIN 2 FRONT",
+      "material": "A",
+      "qty": 1
+    },
+    "13307L": {
+      "description": "WING-ROOT SKIN 1 REAR",
+      "material": "A",
+      "qty": 1
+    },
+    "13307R": {
+      "description": "WING-ROOT SKIN 1 REAR",
+      "material": "A",
+      "qty": 1
+    },
+    "13308L": {
+      "description": "WING-ROOT SKIN 2 REAR",
+      "material": "A",
+      "qty": 1
+    },
+    "13308R": {
+      "description": "WING-ROOT SKIN 2 REAR",
+      "material": "A",
+      "qty": 1
+    },
+    "13401L": {
+      "description": "FAIRING PANEL A",
+      "material": "A",
+      "qty": 1
+    },
+    "13401R": {
+      "description": "FAIRING PANEL A",
+      "material": "A",
+      "qty": 1
+    },
+    "13402L": {
+      "description": "FAIRING PANEL B",
+      "material": "A",
+      "qty": 1
+    },
+    "13402R": {
+      "description": "FAIRING PANEL B",
+      "material": "A",
+      "qty": 1
+    },
+    "13403L": {
+      "description": "FAIRING PANEL C",
+      "material": "A",
+      "qty": 1
+    },
+    "13403R": {
+      "description": "FAIRING PANEL C",
+      "material": "A",
+      "qty": 1
+    },
+    "13405L": {
+      "description": "FAIRING PANEL E",
+      "material": "A",
+      "qty": 1
+    },
+    "13405R": {
+      "description": "FAIRING PANEL E",
+      "material": "A",
+      "qty": 1
+    },
+    "13406L": {
+      "description": "FAIRING PANEL F",
+      "material": "A",
+      "qty": 1
+    },
+    "13406R": {
+      "description": "FAIRING PANEL F",
+      "material": "A",
+      "qty": 1
+    },
+    "13407L": {
+      "description": "FAIRING LOWER PANEL REAR 246X250",
+      "material": "A",
+      "qty": 1
+    },
+    "13407R": {
+      "description": "FAIRING LOWER PANEL REAR 246X250",
+      "material": "A",
+      "qty": 1
+    },
+    "13408L": {
+      "description": "FAIRING LOWER PANEL FRONT 246X130",
+      "material": "A",
+      "qty": 1
+    },
+    "13408R": {
+      "description": "FAIRING LOWER PANEL FRONT 246X130",
+      "material": "A",
+      "qty": 1
+    },
+    "14101": {
+      "description": "SIDE HATCH",
+      "material": "A",
+      "qty": 1
+    },
+    "14102": {
+      "description": "TOP PANEL AFT",
+      "material": "A",
+      "qty": 1
+    },
+    "14103": {
+      "description": "TOP PANEL MID",
+      "material": "A",
+      "qty": 1
+    },
+    "14104": {
+      "description": "FAIRING PANEL D",
+      "material": "A",
+      "qty": 2
+    },
+    "14105": {
+      "description": "FAIRING PANEL D MIRRORED",
+      "material": "A",
+      "qty": 2
+    },
+    "14106": {
+      "description": "FAIRING STRAP",
+      "material": "A",
+      "qty": 2
+    },
+    "14201L": {
+      "description": "HATCH LATCH HOUSING",
+      "material": "P",
+      "qty": 2
+    },
+    "14201R": {
+      "description": "HATCH LATCH HOUSING",
+      "material": "P",
+      "qty": 1
+    },
+    "14202": {
+      "description": "LATCH HOUSING B",
+      "material": "P",
+      "qty": 3
+    },
+    "14203": {
+      "description": "LATCH BOLT",
+      "material": "P",
+      "qty": 7
+    },
+    "14204": {
+      "description": "SIDE LATCH GUIDE PLATE",
+      "material": "P",
+      "qty": 1
+    },
+    "14205": {
+      "description": "SIDE LATCH STOP BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "14206": {
+      "description": "SIDE LATCH PIN BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "14207": {
+      "description": "LATCH HOUSING B MIRRORED",
+      "material": "P",
+      "qty": 1
+    },
+    "14208": {
+      "description": "HATCH LATCH HOUSING WITH TAB",
+      "material": "P",
+      "qty": 1
+    },
+    "14301": {
+      "description": "NOSE LATCH BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "14302": {
+      "description": "NOSE LATCH STRIP",
+      "material": "P",
+      "qty": 1
+    },
+    "15101": {
+      "description": "FRONT GEAR LEG PLATE",
+      "material": "W",
+      "qty": 2
+    },
+    "15102": {
+      "description": "FRONT GEAR CENTRE PLATE",
+      "material": "W",
+      "qty": 1
+    },
+    "15103": {
+      "description": "FRONT GEAR MOUNTING PLATE +Y",
+      "material": "W",
+      "qty": 1
+    },
+    "15104": {
+      "description": "FRONT GEAR MOUNTING PLATE -Y",
+      "material": "W",
+      "qty": 1
+    },
+    "15105": {
+      "description": "FRONT GEAR DIAGONAL BRACE",
+      "material": "?",
+      "qty": 2
+    },
+    "15201": {
+      "description": "REAR GEAR LEG PLATE",
+      "material": "W",
+      "qty": 2
+    },
+    "15202": {
+      "description": "REAR GEAR CENTRE PLATE",
+      "material": "W",
+      "qty": 1
+    },
+    "15203": {
+      "description": "REAR GEAR MOUNTING PLATE +Y",
+      "material": "W",
+      "qty": 1
+    },
+    "15204": {
+      "description": "REAR GEAR MOUNTING PLATE -Y",
+      "material": "W",
+      "qty": 1
+    },
+    "15205": {
+      "description": "REAR GEAR DIAGONAL BRACE",
+      "material": "?",
+      "qty": 2
+    },
+    "16101": {
+      "description": "CENTRE SPAR TUBE 30X30X1069",
+      "material": "C",
+      "qty": 1
+    },
+    "16201": {
+      "description": "CENTRE RIB Y248",
+      "material": "W",
+      "qty": 2
+    },
+    "16202": {
+      "description": "CENTRE RIB Y428",
+      "material": "W",
+      "qty": 2
+    },
+    "16203": {
+      "description": "CENTRE ROOT RIB Y668",
+      "material": "B",
+      "qty": 2
+    },
+    "22101": {
+      "description": "OUTER SPAR TUBE 30X30X1410",
+      "material": "C",
+      "qty": 1
+    },
+    "22102": {
+      "description": "REAR SPAR WEB",
+      "material": "W",
+      "qty": 1
+    },
+    "22201": {
+      "description": "WING ROOT RIB Y672",
+      "material": "W",
+      "qty": 1
+    },
+    "22202": {
+      "description": "WING RIB Y819/Y966",
+      "material": "B",
+      "qty": 2
+    },
+    "22203": {
+      "description": "WING RIB Y1113",
+      "material": "W",
+      "qty": 1
+    },
+    "22204": {
+      "description": "WING FRONT RIB Y1248/Y1656/Y1792",
+      "material": "B",
+      "qty": 3
+    },
+    "22205": {
+      "description": "WING FRONT RIB Y1385",
+      "material": "W",
+      "qty": 1
+    },
+    "22206": {
+      "description": "WING FRONT RIB Y1520",
+      "material": "W",
+      "qty": 1
+    },
+    "22207": {
+      "description": "WING RIB Y1928",
+      "material": "B",
+      "qty": 1
+    },
+    "22208": {
+      "description": "WING TIP RIB Y1973",
+      "material": "W",
+      "qty": 1
+    },
+    "22301": {
+      "description": "LEADING-EDGE SHEET",
+      "material": "B",
+      "qty": 1
+    },
+    "22302": {
+      "description": "LEADING-EDGE STICK 10X5",
+      "material": "B",
+      "qty": 1
+    },
+    "22401": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L445",
+      "material": "C",
+      "qty": 1
+    },
+    "22402": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L800",
+      "material": "C",
+      "qty": 1
+    },
+    "22403": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L50",
+      "material": "C",
+      "qty": 1
+    },
+    "22501": {
+      "description": "AILERON RIB",
+      "material": "?",
+      "qty": 5
+    },
+    "22502": {
+      "description": "AILERON END RIB",
+      "material": "W",
+      "qty": 2
+    },
+    "22503": {
+      "description": "AILERON NOSE SHEET LOWER 1.5 MM",
+      "material": "B",
+      "qty": 1
+    },
+    "22504": {
+      "description": "AILERON NOSE SHEET UPPER 1.5 MM",
+      "material": "B",
+      "qty": 1
+    },
+    "22601": {
+      "description": "AILERON HINGE ROD 10X10X800",
+      "material": "C",
+      "qty": 1
+    },
+    "22602": {
+      "description": "AILERON HINGE BLOCK",
+      "material": "P",
+      "qty": 5
+    },
+    "22603": {
+      "description": "AILERON HINGE HOLDER",
+      "material": "P",
+      "qty": 5
+    },
+    "22604": {
+      "description": "AILERON HINGE (BOUGHT)",
+      "material": "X",
+      "qty": 5
+    },
+    "22701": {
+      "description": "AILERON SERVO MOUNT",
+      "material": "P",
+      "qty": 1
+    },
+    "22702": {
+      "description": "AILERON SERVO MOUNT CAP",
+      "material": "P",
+      "qty": 1
+    },
+    "22703": {
+      "description": "SERVO BAY RIB SHORT",
+      "material": "W",
+      "qty": 1
+    },
+    "22704": {
+      "description": "SERVO BAY SPANWISE WEB",
+      "material": "W",
+      "qty": 1
+    },
+    "22705": {
+      "description": "AILERON HORN BASE",
+      "material": "P",
+      "qty": 1
+    },
+    "22706": {
+      "description": "AILERON HORN ROD CLAMP",
+      "material": "P",
+      "qty": 1
+    },
+    "22707": {
+      "description": "AILERON HORN PLATE",
+      "material": "?",
+      "qty": 1
+    },
+    "23101": {
+      "description": "OUTER SPAR TUBE 30X30X1410",
+      "material": "C",
+      "qty": 1
+    },
+    "23102": {
+      "description": "REAR SPAR WEB",
+      "material": "W",
+      "qty": 1
+    },
+    "23201": {
+      "description": "WING ROOT RIB Y672",
+      "material": "W",
+      "qty": 1
+    },
+    "23202": {
+      "description": "WING RIB Y819/Y966",
+      "material": "B",
+      "qty": 2
+    },
+    "23203": {
+      "description": "WING RIB Y1113",
+      "material": "W",
+      "qty": 1
+    },
+    "23204": {
+      "description": "WING FRONT RIB Y1248/Y1656/Y1792",
+      "material": "B",
+      "qty": 3
+    },
+    "23205": {
+      "description": "WING FRONT RIB Y1385",
+      "material": "W",
+      "qty": 1
+    },
+    "23206": {
+      "description": "WING FRONT RIB Y1520",
+      "material": "W",
+      "qty": 1
+    },
+    "23207": {
+      "description": "WING RIB Y1928",
+      "material": "B",
+      "qty": 1
+    },
+    "23208": {
+      "description": "WING TIP RIB Y1973",
+      "material": "W",
+      "qty": 1
+    },
+    "23301": {
+      "description": "LEADING-EDGE SHEET",
+      "material": "B",
+      "qty": 1
+    },
+    "23302": {
+      "description": "LEADING-EDGE STICK 10X5",
+      "material": "B",
+      "qty": 1
+    },
+    "23401": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L445",
+      "material": "C",
+      "qty": 1
+    },
+    "23402": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L800",
+      "material": "C",
+      "qty": 1
+    },
+    "23403": {
+      "description": "TRAILING-EDGE TUBE \u00d84X2.5 L50",
+      "material": "C",
+      "qty": 1
+    },
+    "23501": {
+      "description": "AILERON RIB",
+      "material": "?",
+      "qty": 5
+    },
+    "23502": {
+      "description": "AILERON END RIB",
+      "material": "W",
+      "qty": 2
+    },
+    "23503": {
+      "description": "AILERON NOSE SHEET LOWER 1.5 MM",
+      "material": "B",
+      "qty": 1
+    },
+    "23504": {
+      "description": "AILERON NOSE SHEET UPPER 1.5 MM",
+      "material": "B",
+      "qty": 1
+    },
+    "23601": {
+      "description": "AILERON HINGE ROD 10X10X800",
+      "material": "C",
+      "qty": 1
+    },
+    "23602": {
+      "description": "AILERON HINGE BLOCK",
+      "material": "P",
+      "qty": 5
+    },
+    "23603": {
+      "description": "AILERON HINGE HOLDER",
+      "material": "P",
+      "qty": 5
+    },
+    "23604": {
+      "description": "AILERON HINGE (BOUGHT)",
+      "material": "X",
+      "qty": 5
+    },
+    "23701": {
+      "description": "AILERON SERVO MOUNT",
+      "material": "P",
+      "qty": 1
+    },
+    "23702": {
+      "description": "AILERON SERVO MOUNT CAP",
+      "material": "P",
+      "qty": 1
+    },
+    "23703": {
+      "description": "SERVO BAY RIB SHORT",
+      "material": "W",
+      "qty": 1
+    },
+    "23704": {
+      "description": "SERVO BAY SPANWISE WEB",
+      "material": "W",
+      "qty": 1
+    },
+    "23705": {
+      "description": "AILERON HORN BASE",
+      "material": "P",
+      "qty": 1
+    },
+    "23706": {
+      "description": "AILERON HORN ROD CLAMP",
+      "material": "P",
+      "qty": 1
+    },
+    "23707": {
+      "description": "AILERON HORN PLATE",
+      "material": "?",
+      "qty": 1
+    },
+    "31101": {
+      "description": "TAIL MAIN SPAR",
+      "material": "?",
+      "qty": 1
+    },
+    "31102": {
+      "description": "TAIL CROSS TUBE \u00d816X14",
+      "material": "C",
+      "qty": 1
+    },
+    "31103": {
+      "description": "TAIL PANEL SPAR TUBE \u00d816X14",
+      "material": "C",
+      "qty": 2
+    },
+    "31201": {
+      "description": "TAIL CENTRE RIB",
+      "material": "W",
+      "qty": 2
+    },
+    "31202": {
+      "description": "TAIL ROOT RIB",
+      "material": "W",
+      "qty": 2
+    },
+    "31203": {
+      "description": "TAIL MID RIB",
+      "material": "W",
+      "qty": 4
+    },
+    "31204": {
+      "description": "TAIL TIP RIB",
+      "material": "W",
+      "qty": 2
+    },
+    "31205": {
+      "description": "TAIL PANEL CROSS PLATE",
+      "material": "W",
+      "qty": 2
+    },
+    "31206": {
+      "description": "TAIL RIB PIECE Y312",
+      "material": "W",
+      "qty": 2
+    },
+    "31303L": {
+      "description": "TAIL SPAR CONNECTOR",
+      "material": "P",
+      "qty": 1
+    },
+    "31303R": {
+      "description": "TAIL SPAR CONNECTOR",
+      "material": "P",
+      "qty": 1
+    },
+    "31304L": {
+      "description": "TAIL CENTRE CONNECTOR",
+      "material": "P",
+      "qty": 1
+    },
+    "31304R": {
+      "description": "TAIL CENTRE CONNECTOR",
+      "material": "P",
+      "qty": 1
+    },
+    "32101L": {
+      "description": "TAIL REAR SKIN COVER",
+      "material": "A",
+      "qty": 1
+    },
+    "32101R": {
+      "description": "TAIL REAR SKIN COVER",
+      "material": "A",
+      "qty": 1
+    },
+    "32102L": {
+      "description": "TAIL FRONT SKIN COVER",
+      "material": "A",
+      "qty": 1
+    },
+    "32102R": {
+      "description": "TAIL FRONT SKIN COVER",
+      "material": "A",
+      "qty": 1
+    },
+    "32103": {
+      "description": "COVER MOUNT TAB",
+      "material": "A",
+      "qty": 2
+    },
+    "32104": {
+      "description": "M3 SHIM 8X8X0.5",
+      "material": "?",
+      "qty": 1
+    },
+    "32105": {
+      "description": "M3 D-SHIM OD8 ID3.5 T0.5",
+      "material": "?",
+      "qty": 1
+    },
+    "32106": {
+      "description": "COVER MOUNT TAB MIRRORED",
+      "material": "A",
+      "qty": 2
+    },
+    "32201": {
+      "description": "TAIL CENTRE HATCH",
+      "material": "A",
+      "qty": 1
+    },
+    "32202": {
+      "description": "TAIL HATCH LATCH RECEIVER",
+      "material": "P",
+      "qty": 1
+    },
+    "33101": {
+      "description": "RUDDERVATOR LE SHEET",
+      "material": "B",
+      "qty": 4
+    },
+    "33102": {
+      "description": "RUDDERVATOR RIB",
+      "material": "B",
+      "qty": 8
+    },
+    "33201": {
+      "description": "RUDDERVATOR HINGE ROD 10X10 BORE 8.5",
+      "material": "C",
+      "qty": 2
+    },
+    "33202": {
+      "description": "TAIL HINGE BLOCK",
+      "material": "P",
+      "qty": 4
+    },
+    "33203": {
+      "description": "TAIL HINGE HOLDER",
+      "material": "P",
+      "qty": 4
+    },
+    "33301": {
+      "description": "RUDDERVATOR HORN BASE",
+      "material": "P",
+      "qty": 2
+    },
+    "33302": {
+      "description": "RUDDERVATOR HORN ROD CLAMP",
+      "material": "P",
+      "qty": 2
+    },
+    "33303": {
+      "description": "RUDDERVATOR HORN PLATE",
+      "material": "?",
+      "qty": 2
+    },
+    "41101": {
+      "description": "LIFT MOTOR KDE5215XF (BOUGHT, CAD model DT5215)",
+      "material": "X",
+      "qty": 4
+    },
+    "41301": {
+      "description": "ESC KDE XF UAS 55A HVC (BOUGHT, CAD model KDE-UAS55HVC)",
+      "material": "X",
+      "qty": 4
+    },
+    "81101": {
+      "description": "LONGITUDINAL BOOM 30X30X2000",
+      "material": "C",
+      "qty": 2
+    },
+    "82101L": {
+      "description": "LATERAL JOINT BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "82101R": {
+      "description": "LATERAL JOINT BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "82102": {
+      "description": "LATERAL JOINT PLATE",
+      "material": "M",
+      "qty": 4
+    },
+    "82103": {
+      "description": "LATERAL JOINT SPACER",
+      "material": "P",
+      "qty": 2
+    },
+    "82201": {
+      "description": "ROOT CLAMP TOP PLATE",
+      "material": "M",
+      "qty": 2
+    },
+    "82202": {
+      "description": "ROOT CLAMP BOTTOM PLATE",
+      "material": "M",
+      "qty": 2
+    },
+    "82203": {
+      "description": "ROOT CLAMP SPACER INNER FRONT",
+      "material": "P",
+      "qty": 2
+    },
+    "82204": {
+      "description": "ROOT CLAMP SPACER INNER REAR",
+      "material": "P",
+      "qty": 2
+    },
+    "82205": {
+      "description": "ROOT CLAMP SPACER OUTER",
+      "material": "P",
+      "qty": 4
+    },
+    "82301L": {
+      "description": "BOOM SOCKET OUTER",
+      "material": "?",
+      "qty": 1
+    },
+    "82301R": {
+      "description": "BOOM SOCKET OUTER",
+      "material": "?",
+      "qty": 1
+    },
+    "82302L": {
+      "description": "BOOM SOCKET INNER",
+      "material": "?",
+      "qty": 1
+    },
+    "82302R": {
+      "description": "BOOM SOCKET INNER",
+      "material": "?",
+      "qty": 1
+    },
+    "83101": {
+      "description": "FRONT MOTOR MOUNT TOP PLATE",
+      "material": "M",
+      "qty": 2
+    },
+    "83102": {
+      "description": "FRONT MOTOR MOUNT BOTTOM PLATE",
+      "material": "M",
+      "qty": 2
+    },
+    "83103L": {
+      "description": "FRONT MOTOR MOUNT U-BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "83103R": {
+      "description": "FRONT MOTOR MOUNT U-BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "83201L": {
+      "description": "REAR MOTOR MOUNT U-BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "83201R": {
+      "description": "REAR MOTOR MOUNT U-BLOCK",
+      "material": "P",
+      "qty": 1
+    },
+    "83202L": {
+      "description": "REAR MOTOR MOUNT TOP PLATE",
+      "material": "M",
+      "qty": 1
+    },
+    "83202R": {
+      "description": "REAR MOTOR MOUNT TOP PLATE",
+      "material": "M",
+      "qty": 1
+    },
+    "83203L": {
+      "description": "REAR MOTOR MOUNT BOTTOM PLATE",
+      "material": "M",
+      "qty": 1
+    },
+    "83203R": {
+      "description": "REAR MOTOR MOUNT BOTTOM PLATE",
+      "material": "M",
+      "qty": 1
+    }
+  }
 }

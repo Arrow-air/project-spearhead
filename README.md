@@ -53,9 +53,9 @@ project-spearhead/
 
 ## CAD reconstruction
 
-A [STEP-backed Build123D structural assembly](src/design/README.md) and dated
-Fusion snapshot are available under `src/design/`. The reconstruction labels
-inferred geometry and is not an as-built aircraft definition.
+The [PT1 main assembly](src/design/README.md) is under `src/design/`: the Fusion
+STEP export, the part list and a Build123D loader, checks and web viewer. It is
+a review model, not a manufacturing release.
 
 ## Project phases
 

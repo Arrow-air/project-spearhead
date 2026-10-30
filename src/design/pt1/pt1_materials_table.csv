@@ -1,0 +1,216 @@
+part number,name,description,material,density g/cm3,qty,unit mass g,total mass g,material letter,flag
+AR-SH-PT1-11101,11101-BulkheadSta1,BULKHEAD STA1,PT1 Beech Plywood,0.73,1,70.33,70.33,W,
+AR-SH-PT1-11102,11102-BulkheadSta2,BULKHEAD STA2,PT1 Beech Plywood,0.73,1,65.02,65.02,W,
+AR-SH-PT1-11103,11103-BulkheadSta3,BULKHEAD STA3,PT1 Beech Plywood,0.73,1,92.44,92.44,W,
+AR-SH-PT1-11104,11104-BulkheadSta4,BULKHEAD STA4,PT1 Beech Plywood,0.73,1,48.02,48.02,W,
+AR-SH-PT1-11201,11201-TopLongeron,TOP LONGERON,PT1 Beech Plywood,0.73,1,26.02,26.02,W,
+AR-SH-PT1-11202,11202-RearUpperLongeron,REAR UPPER LONGERON,PT1 Beech Plywood,0.73,2,15.96,31.92,W,
+AR-SH-PT1-11203,11203-RearLowerLongeron,REAR LOWER LONGERON,PT1 Beech Plywood,0.73,2,15.29,30.58,W,
+AR-SH-PT1-11301,11301-Floor,FLOOR,PT1 Beech Plywood,0.73,1,230.05,230.05,W,
+AR-SH-PT1-11302,11302-KeelStrip,KEEL STRIP,PT1 Beech Plywood,0.73,1,19.05,19.05,W,
+AR-SH-PT1-11303,11303-FloorSupport,FLOOR SUPPORT,PT1 Beech Plywood,0.73,2,11.26,22.52,W,
+AR-SH-PT1-11304,11304-RearInclinedFloorPlate,REAR INCLINED FLOOR PLATE,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-11305,11305-NoseKeelPlate2mm,NOSE KEEL PLATE 2 MM,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-11306,11306-NoseDeckPlate2mm,NOSE DECK PLATE 2 MM,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-11307,11307-FrontDeckPlate2mm,FRONT DECK PLATE 2 MM,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-11401,11401-MidBoxBeam,MID BOX BEAM,PT1 Beech Plywood,0.73,2,112.53,225.06,W,
+AR-SH-PT1-11402,11402-MidBoxBeamSupport,MID BOX BEAM SUPPORT,PT1 Beech Plywood,0.73,1,31.56,31.56,W,
+AR-SH-PT1-11403,11403-MidSpar,MID SPAR,PT1 Beech Plywood,0.73,1,107.98,107.98,W,
+AR-SH-PT1-12101,12101-CentreConnector,CENTRE CONNECTOR,PT1 PA6-CF,1.2,1,124.04,124.04,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12102,12102-NoseBlock,NOSE BLOCK,PT1 PA6-CF,1.2,1,119.86,119.86,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12105L,12105L-MidBoxBeamConnector,MID BOX BEAM CONNECTOR,PT1 PA6-CF,1.2,2,11.53,23.06,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12105R,12105R-MidBoxBeamConnector,MID BOX BEAM CONNECTOR,PT1 PA6-CF,1.2,2,11.53,23.06,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12201,12201-FloorPinBoss10x11x6p1,FLOOR PIN BOSS 10X11X6.1,PT1 PA6-CF,1.2,9,0.40,3.60,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12202,12202-InsertBoss,INSERT BOSS,PT1 PA6-CF,1.2,74,0.63,46.62,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12203,12203-InsertBoss11x11x14p5,INSERT BOSS 11X11X14.5,PT1 PA6-CF,1.2,4,1.84,7.36,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-12204,12204-InsertBoss8p7x8p7x14p5,INSERT BOSS 8.7X8.7X14.5,PT1 PA6-CF,1.2,12,0.78,9.36,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-13101,13101-ForwardFuselageSkin,FORWARD FUSELAGE SKIN,PT1 ASA-Aero 0.30 eff,0.3,1,143.17,143.17,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13103L,13103L-MidSkinUpper,MID SKIN UPPER,PT1 ASA-Aero 0.30 eff,0.3,1,24.15,24.15,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13103R,13103R-MidSkinUpper,MID SKIN UPPER,PT1 ASA-Aero 0.30 eff,0.3,1,23.90,23.90,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13104L,13104L-MidSkinLower,MID SKIN LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,58.37,58.37,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13104R,13104R-MidSkinLower,MID SKIN LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,58.25,58.25,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13105L,13105L-TailEndSkin,TAIL-END SKIN,PT1 ASA-Aero 0.30 eff,0.3,1,42.58,42.58,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13105R,13105R-TailEndSkin,TAIL-END SKIN,PT1 ASA-Aero 0.30 eff,0.3,1,42.68,42.68,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13106L,13106L-SideSkinSection2,SIDE SKIN SECTION 2,PT1 ASA-Aero 0.30 eff,0.3,1,87.52,87.52,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13106R,13106R-SideSkinSection2,SIDE SKIN SECTION 2,PT1 ASA-Aero 0.30 eff,0.3,1,87.41,87.41,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13201,13201-NoseCone,NOSE CONE,PT1 ASA-Aero 0.20 eff,0.2,1,95.04,95.04,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13202,13202-NoseTip,NOSE TIP,PT1 ASA-Aero 0.25 eff,0.25,1,77.80,77.80,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05; nose tip block (14 mm), not a panel: 0.25 assumed"
+AR-SH-PT1-13203,13203-TopPanelForward,TOP PANEL FORWARD,PT1 ASA-Aero 0.30 eff,0.3,1,41.65,41.65,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13301L,13301L-WingRootSkin1Upper,WING-ROOT SKIN 1 UPPER,PT1 ASA-Aero 0.25 eff,0.25,1,32.06,32.06,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13301R,13301R-WingRootSkin1Upper,WING-ROOT SKIN 1 UPPER,PT1 ASA-Aero 0.25 eff,0.25,1,32.06,32.06,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13302L,13302L-WingRootSkin2Upper,WING-ROOT SKIN 2 UPPER,PT1 ASA-Aero 0.30 eff,0.3,1,44.71,44.71,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13302R,13302R-WingRootSkin2Upper,WING-ROOT SKIN 2 UPPER,PT1 ASA-Aero 0.30 eff,0.3,1,44.71,44.71,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13303L,13303L-WingRootSkin2Lower,WING-ROOT SKIN 2 LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,44.17,44.17,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13303R,13303R-WingRootSkin2Lower,WING-ROOT SKIN 2 LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,44.17,44.17,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13304L,13304L-WingRootSkin1Lower,WING-ROOT SKIN 1 LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,32.41,32.41,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13304R,13304R-WingRootSkin1Lower,WING-ROOT SKIN 1 LOWER,PT1 ASA-Aero 0.30 eff,0.3,1,32.41,32.41,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13305L,13305L-WingRootSkin1Front,WING-ROOT SKIN 1 FRONT,PT1 ASA-Aero 0.30 eff,0.3,1,50.30,50.30,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13305R,13305R-WingRootSkin1Front,WING-ROOT SKIN 1 FRONT,PT1 ASA-Aero 0.30 eff,0.3,1,50.30,50.30,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13306L,13306L-WingRootSkin2Front,WING-ROOT SKIN 2 FRONT,PT1 ASA-Aero 0.30 eff,0.3,1,57.89,57.89,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13306R,13306R-WingRootSkin2Front,WING-ROOT SKIN 2 FRONT,PT1 ASA-Aero 0.30 eff,0.3,1,57.89,57.89,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13307L,13307L-WingRootSkin1Rear,WING-ROOT SKIN 1 REAR,PT1 ASA-Aero 0.25 eff,0.25,1,18.99,18.99,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13307R,13307R-WingRootSkin1Rear,WING-ROOT SKIN 1 REAR,PT1 ASA-Aero 0.25 eff,0.25,1,18.99,18.99,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13308L,13308L-WingRootSkin2Rear,WING-ROOT SKIN 2 REAR,PT1 ASA-Aero 0.30 eff,0.3,1,26.51,26.51,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13308R,13308R-WingRootSkin2Rear,WING-ROOT SKIN 2 REAR,PT1 ASA-Aero 0.30 eff,0.3,1,26.51,26.51,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13401L,13401L-FairingPanelA,FAIRING PANEL A,PT1 ASA-Aero 0.40 eff,0.4,1,12.18,12.18,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13401R,13401R-FairingPanelA,FAIRING PANEL A,PT1 ASA-Aero 0.40 eff,0.4,1,12.18,12.18,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13402L,13402L-FairingPanelB,FAIRING PANEL B,PT1 ASA-Aero 0.35 eff,0.35,1,20.36,20.36,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13402R,13402R-FairingPanelB,FAIRING PANEL B,PT1 ASA-Aero 0.35 eff,0.35,1,20.36,20.36,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13403L,13403L-FairingPanelC,FAIRING PANEL C,PT1 ASA-Aero 0.30 eff,0.3,1,27.03,27.03,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13403R,13403R-FairingPanelC,FAIRING PANEL C,PT1 ASA-Aero 0.30 eff,0.3,1,27.03,27.03,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13405L,13405L-FairingPanelE,FAIRING PANEL E,PT1 ASA-Aero 0.30 eff,0.3,1,16.41,16.41,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13405R,13405R-FairingPanelE,FAIRING PANEL E,PT1 ASA-Aero 0.30 eff,0.3,1,16.41,16.41,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13406L,13406L-FairingPanelF,FAIRING PANEL F,PT1 ASA-Aero 0.40 eff,0.4,1,10.67,10.67,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13406R,13406R-FairingPanelF,FAIRING PANEL F,PT1 ASA-Aero 0.40 eff,0.4,1,10.67,10.67,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13407L,13407L-FairingLowerPanelRear246x250,FAIRING LOWER PANEL REAR 246X250,PT1 ASA-Aero 0.25 eff,0.25,1,67.48,67.48,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13407R,13407R-FairingLowerPanelRear246x250,FAIRING LOWER PANEL REAR 246X250,PT1 ASA-Aero 0.25 eff,0.25,1,67.48,67.48,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13408L,13408L-FairingLowerPanelFront246x130,FAIRING LOWER PANEL FRONT 246X130,PT1 ASA-Aero 0.35 eff,0.35,1,33.25,33.25,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-13408R,13408R-FairingLowerPanelFront246x130,FAIRING LOWER PANEL FRONT 246X130,PT1 ASA-Aero 0.35 eff,0.35,1,33.25,33.25,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14101,14101-SideHatch,SIDE HATCH,PT1 ASA-Aero 0.30 eff,0.3,1,22.55,22.55,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14102,14102-TopPanelAft,TOP PANEL AFT,PT1 ASA-Aero 0.30 eff,0.3,1,29.98,29.98,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14103,14103-TopPanelMid,TOP PANEL MID,PT1 ASA-Aero 0.30 eff,0.3,1,42.18,42.18,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14104,14104-FairingPanelD,FAIRING PANEL D,PT1 ASA-Aero 0.30 eff,0.3,2,39.16,78.32,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14105,14105-FairingPanelDMirrored,FAIRING PANEL D MIRRORED,PT1 ASA-Aero 0.30 eff,0.3,2,39.16,78.32,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14106,14106-FairingStrap,FAIRING STRAP,PT1 ASA-Aero 0.30 eff,0.3,2,24.02,48.04,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-14201L,14201L-HatchLatchHousing,HATCH LATCH HOUSING,PT1 PA6-CF,1.2,2,2.81,5.62,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14201R,14201R-HatchLatchHousing,HATCH LATCH HOUSING,PT1 PA6-CF,1.2,1,2.81,2.81,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14202,14202-LatchHousingBLeft; 14202-LatchHousingBLeft2,LATCH HOUSING B,PT1 PA6-CF,1.2,3,2.82,8.46,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14203,14203-LatchBolt,LATCH BOLT,PT1 PA6-CF,1.2,7,2.13,14.91,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14204,14204-SideLatchGuidePlate,SIDE LATCH GUIDE PLATE,PT1 PA6-CF,1.2,1,0.62,0.62,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14205,14205-SideLatchStopBlock,SIDE LATCH STOP BLOCK,PT1 PA6-CF,1.2,1,2.71,2.71,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14206,14206-SideLatchPinBlock,SIDE LATCH PIN BLOCK,PT1 PA6-CF,1.2,1,0.62,0.62,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14207,14207-LatchHousingBMirrored,LATCH HOUSING B MIRRORED,PT1 PA6-CF,1.2,1,2.82,2.82,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14208,14208-HatchLatchHousingWithTab,HATCH LATCH HOUSING WITH TAB,PT1 PA6-CF,1.2,1,2.82,2.82,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14301,14301-NoseLatchBlock,NOSE LATCH BLOCK,PT1 PA6-CF,1.2,1,3.93,3.93,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-14302,14302-NoseLatchStrip,NOSE LATCH STRIP,PT1 PA6-CF,1.2,1,2.57,2.57,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-15101,15101-FrontGearLegPlate,FRONT GEAR LEG PLATE,PT1 Beech Plywood,0.73,2,52.93,105.86,W,
+AR-SH-PT1-15102,15102-FrontGearCentrePlate,FRONT GEAR CENTRE PLATE,PT1 Beech Plywood,0.73,1,10.57,10.57,W,
+AR-SH-PT1-15103,15103-FrontGearMountingPlateRight,FRONT GEAR MOUNTING PLATE +Y,PT1 Beech Plywood,0.73,1,5.84,5.84,W,
+AR-SH-PT1-15104,15104-FrontGearMountingPlateLeft,FRONT GEAR MOUNTING PLATE -Y,PT1 Beech Plywood,0.73,1,5.11,5.11,W,
+AR-SH-PT1-15105,15105-FrontGearDiagonalBrace,FRONT GEAR DIAGONAL BRACE,PT1 TBD no mass,0.001,2,,,?,? material open: needs Alperen
+AR-SH-PT1-15201,15201-RearGearLegPlate,REAR GEAR LEG PLATE,PT1 Beech Plywood,0.73,2,52.93,105.86,W,
+AR-SH-PT1-15202,15202-RearGearCentrePlate,REAR GEAR CENTRE PLATE,PT1 Beech Plywood,0.73,1,10.57,10.57,W,
+AR-SH-PT1-15203,15203-RearGearMountingPlateRight,REAR GEAR MOUNTING PLATE +Y,PT1 Beech Plywood,0.73,1,5.84,5.84,W,
+AR-SH-PT1-15204,15204-RearGearMountingPlateLeft,REAR GEAR MOUNTING PLATE -Y,PT1 Beech Plywood,0.73,1,5.11,5.11,W,
+AR-SH-PT1-15205,15205-RearGearDiagonalBrace,REAR GEAR DIAGONAL BRACE,PT1 TBD no mass,0.001,2,,,?,? material open: needs Alperen
+AR-SH-PT1-16101,16101-CentreSparTube30x30x1069,CENTRE SPAR TUBE 30X30X1069,PT1 Carbon Fibre,1.55,1,281.92,281.92,C,
+AR-SH-PT1-16201,16201-CentreRibY248,CENTRE RIB Y248,PT1 Beech Plywood,0.73,2,23.40,46.80,W,
+AR-SH-PT1-16202,16202-CentreRibY428,CENTRE RIB Y428,PT1 Beech Plywood,0.73,2,34.87,69.74,W,
+AR-SH-PT1-16203,16203-CentreRootRibY668,CENTRE ROOT RIB Y668,PT1 Balsa,0.16,2,9.74,19.48,B,
+AR-SH-PT1-22101,22101-OuterSparTube30x30x1410,OUTER SPAR TUBE 30X30X1410,PT1 Carbon Fibre,1.55,1,371.71,371.71,C,
+AR-SH-PT1-22102,22102-RearSparWeb,REAR SPAR WEB,PT1 Beech Plywood,0.73,1,134.05,134.05,W,
+AR-SH-PT1-22201,22201-WingRootRibY672,WING ROOT RIB Y672,PT1 Beech Plywood,0.73,1,44.65,44.65,W,
+AR-SH-PT1-22202,22202-WingRibY819Y966,WING RIB Y819/Y966,PT1 Balsa,0.16,2,7.02,14.04,B,
+AR-SH-PT1-22203,22203-WingRibY1113,WING RIB Y1113,PT1 Beech Plywood,0.73,1,27.42,27.42,W,
+AR-SH-PT1-22204,22204-WingFrontRibY1248Y1656Y1792,WING FRONT RIB Y1248/Y1656/Y1792,PT1 Balsa,0.16,3,5.33,15.99,B,
+AR-SH-PT1-22205,22205-WingFrontRibY1385,WING FRONT RIB Y1385,PT1 Beech Plywood,0.73,1,23.02,23.02,W,
+AR-SH-PT1-22206,22206-WingFrontRibY1520,WING FRONT RIB Y1520,PT1 Beech Plywood,0.73,1,23.02,23.02,W,
+AR-SH-PT1-22207,22207-WingRibY1928,WING RIB Y1928,PT1 Balsa,0.16,1,7.52,7.52,B,
+AR-SH-PT1-22208,22208-WingTipRibY1973,WING TIP RIB Y1973,PT1 Beech Plywood,0.73,1,45.45,45.45,W,
+AR-SH-PT1-22301,22301-LeadingEdgeSheet,LEADING-EDGE SHEET,PT1 Balsa,0.16,1,40.67,40.67,B,
+AR-SH-PT1-22302,22302-LeadingEdgeStick10x5,LEADING-EDGE STICK 10X5,PT1 Balsa,0.16,1,8.20,8.20,B,
+AR-SH-PT1-22401,22401-TrailingEdgeTubeD4x2p5L445,TRAILING-EDGE TUBE Ø4X2.5 L445,PT1 Carbon Fibre,1.55,1,5.28,5.28,C,
+AR-SH-PT1-22402,22402-TrailingEdgeTubeD4x2p5L800,TRAILING-EDGE TUBE Ø4X2.5 L800,PT1 Carbon Fibre,1.55,1,9.50,9.50,C,
+AR-SH-PT1-22403,22403-TrailingEdgeTubeD4x2p5L50,TRAILING-EDGE TUBE Ø4X2.5 L50,PT1 Carbon Fibre,1.55,1,0.59,0.59,C,
+AR-SH-PT1-22501,22501-AileronRib,AILERON RIB,PT1 TBD no mass,0.001,5,,,?,? material open: needs Alperen
+AR-SH-PT1-22502,22502-AileronEndRib,AILERON END RIB,PT1 Beech Plywood,0.73,2,6.63,13.26,W,
+AR-SH-PT1-22503,22503-AileronNoseSheetLower1p5mm,AILERON NOSE SHEET LOWER 1.5 MM,PT1 Balsa,0.16,1,3.45,3.45,B,
+AR-SH-PT1-22504,22504-AileronNoseSheetUpper1p5mm,AILERON NOSE SHEET UPPER 1.5 MM,PT1 Balsa,0.16,1,2.94,2.94,B,
+AR-SH-PT1-22601,22601-AileronHingeRod10x10x800,AILERON HINGE ROD 10X10X800,PT1 Carbon Fibre,1.55,1,53.64,53.64,C,
+AR-SH-PT1-22602,22602-AileronHingeBlock,AILERON HINGE BLOCK,PT1 PA6-CF,1.2,5,12.01,60.05,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22603,22603-AileronHingeHolder,AILERON HINGE HOLDER,PT1 PA6-CF,1.2,5,1.84,9.20,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22604,22604-AileronHinge,AILERON HINGE (BOUGHT),PT1 TBD no mass,0.001,5,,,X,X bought part: datasheet mass needed
+AR-SH-PT1-22701,22701-AileronServoMount,AILERON SERVO MOUNT,PT1 PA6-CF,1.2,1,36.92,36.92,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22702,22702-AileronServoMountCap,AILERON SERVO MOUNT CAP,PT1 PA6-CF,1.2,1,11.65,11.65,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22703,22703-ServoBayRibShort,SERVO BAY RIB SHORT,PT1 Beech Plywood,0.73,1,4.51,4.51,W,
+AR-SH-PT1-22704,22704-ServoBaySpanwiseWeb,SERVO BAY SPANWISE WEB,PT1 Beech Plywood,0.73,1,14.77,14.77,W,
+AR-SH-PT1-22705,22705-AileronHornBase,AILERON HORN BASE,PT1 PA6-CF,1.2,1,5.88,5.88,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22706,22706-AileronHornRodClamp,AILERON HORN ROD CLAMP,PT1 PA6-CF,1.2,1,10.72,10.72,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-22707,22707-AileronHornPlate,AILERON HORN PLATE,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-23101,23101-OuterSparTube30x30x1410,OUTER SPAR TUBE 30X30X1410,PT1 Carbon Fibre,1.55,1,371.71,371.71,C,
+AR-SH-PT1-23102,23102-RearSparWeb,REAR SPAR WEB,PT1 Beech Plywood,0.73,1,134.05,134.05,W,
+AR-SH-PT1-23201,23201-WingRootRibY672,WING ROOT RIB Y672,PT1 Beech Plywood,0.73,1,44.66,44.66,W,
+AR-SH-PT1-23202,23202-WingRibY819Y966,WING RIB Y819/Y966,PT1 Balsa,0.16,2,7.02,14.04,B,
+AR-SH-PT1-23203,23203-WingRibY1113,WING RIB Y1113,PT1 Beech Plywood,0.73,1,27.43,27.43,W,
+AR-SH-PT1-23204,23204-WingFrontRibY1248Y1656Y1792,WING FRONT RIB Y1248/Y1656/Y1792,PT1 Balsa,0.16,3,5.33,15.99,B,
+AR-SH-PT1-23205,23205-WingFrontRibY1385,WING FRONT RIB Y1385,PT1 Beech Plywood,0.73,1,23.02,23.02,W,
+AR-SH-PT1-23206,23206-WingFrontRibY1520,WING FRONT RIB Y1520,PT1 Beech Plywood,0.73,1,23.02,23.02,W,
+AR-SH-PT1-23207,23207-WingRibY1928,WING RIB Y1928,PT1 Balsa,0.16,1,7.52,7.52,B,
+AR-SH-PT1-23208,23208-WingTipRibY1973,WING TIP RIB Y1973,PT1 Beech Plywood,0.73,1,45.45,45.45,W,
+AR-SH-PT1-23301,23301-LeadingEdgeSheet,LEADING-EDGE SHEET,PT1 Balsa,0.16,1,40.67,40.67,B,
+AR-SH-PT1-23302,23302-LeadingEdgeStick10x5,LEADING-EDGE STICK 10X5,PT1 Balsa,0.16,1,8.20,8.20,B,
+AR-SH-PT1-23401,23401-TrailingEdgeTubeD4x2p5L445,TRAILING-EDGE TUBE Ø4X2.5 L445,PT1 Carbon Fibre,1.55,1,5.28,5.28,C,
+AR-SH-PT1-23402,23402-TrailingEdgeTubeD4x2p5L800,TRAILING-EDGE TUBE Ø4X2.5 L800,PT1 Carbon Fibre,1.55,1,9.50,9.50,C,
+AR-SH-PT1-23403,23403-TrailingEdgeTubeD4x2p5L50,TRAILING-EDGE TUBE Ø4X2.5 L50,PT1 Carbon Fibre,1.55,1,0.59,0.59,C,
+AR-SH-PT1-23501,23501-AileronRib,AILERON RIB,PT1 TBD no mass,0.001,5,,,?,? material open: needs Alperen
+AR-SH-PT1-23502,23502-AileronEndRib,AILERON END RIB,PT1 Beech Plywood,0.73,2,6.63,13.26,W,
+AR-SH-PT1-23503,23503-AileronNoseSheetLower1p5mm,AILERON NOSE SHEET LOWER 1.5 MM,PT1 Balsa,0.16,1,3.45,3.45,B,
+AR-SH-PT1-23504,23504-AileronNoseSheetUpper1p5mm,AILERON NOSE SHEET UPPER 1.5 MM,PT1 Balsa,0.16,1,2.94,2.94,B,
+AR-SH-PT1-23601,23601-AileronHingeRod10x10x800,AILERON HINGE ROD 10X10X800,PT1 Carbon Fibre,1.55,1,53.64,53.64,C,
+AR-SH-PT1-23602,23602-AileronHingeBlock,AILERON HINGE BLOCK,PT1 PA6-CF,1.2,5,12.01,60.05,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23603,23603-AileronHingeHolder,AILERON HINGE HOLDER,PT1 PA6-CF,1.2,5,1.84,9.20,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23604,23604-AileronHinge,AILERON HINGE (BOUGHT),PT1 TBD no mass,0.001,5,,,X,X bought part: datasheet mass needed
+AR-SH-PT1-23701,23701-AileronServoMount,AILERON SERVO MOUNT,PT1 PA6-CF,1.2,1,36.92,36.92,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23702,23702-AileronServoMountCap,AILERON SERVO MOUNT CAP,PT1 PA6-CF,1.2,1,11.65,11.65,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23703,23703-ServoBayRibShort,SERVO BAY RIB SHORT,PT1 Beech Plywood,0.73,1,4.51,4.51,W,
+AR-SH-PT1-23704,23704-ServoBaySpanwiseWeb,SERVO BAY SPANWISE WEB,PT1 Beech Plywood,0.73,1,14.77,14.77,W,
+AR-SH-PT1-23705,23705-AileronHornBase,AILERON HORN BASE,PT1 PA6-CF,1.2,1,5.88,5.88,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23706,23706-AileronHornRodClamp,AILERON HORN ROD CLAMP,PT1 PA6-CF,1.2,1,10.72,10.72,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-23707,23707-AileronHornPlate,AILERON HORN PLATE,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-31101,31101-TailMainSpar,TAIL MAIN SPAR,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-31102,31102-TailCrossTubeD16x14,TAIL CROSS TUBE Ø16X14,PT1 Carbon Fibre,1.55,1,17.80,17.80,C,
+AR-SH-PT1-31103,31103-TailPanelSparTubeD16x14,TAIL PANEL SPAR TUBE Ø16X14,PT1 Carbon Fibre,1.55,2,35.58,71.16,C,
+AR-SH-PT1-31201,31201-TailCentreRibLeft; 31201-TailCentreRibRight,TAIL CENTRE RIB,PT1 Beech Plywood,0.73,2,10.79,21.58,W,
+AR-SH-PT1-31202,31202-TailRootRibLeft; 31202-TailRootRibRight,TAIL ROOT RIB,PT1 Beech Plywood,0.73,2,14.91,29.82,W,
+AR-SH-PT1-31203,31203-TailMidRibLeft; 31203-TailMidRibLeft2; 31203-TailMidRibRight; 31203-TailMidRibRight2,TAIL MID RIB,PT1 Beech Plywood,0.73,4,10.22,40.88,W,
+AR-SH-PT1-31204,31204-TailTipRibLeft; 31204-TailTipRibRight,TAIL TIP RIB,PT1 Beech Plywood,0.73,2,14.29,28.58,W,
+AR-SH-PT1-31205,31205-TailPanelCrossPlate,TAIL PANEL CROSS PLATE,PT1 Beech Plywood,0.73,2,14.36,28.72,W,
+AR-SH-PT1-31206,31206-TailRibPieceY312,TAIL RIB PIECE Y312,PT1 Beech Plywood,0.73,2,3.73,7.46,W,
+AR-SH-PT1-31303L,31303L-TailSparConnector,TAIL SPAR CONNECTOR,PT1 PA6-CF,1.2,1,10.99,10.99,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-31303R,31303R-TailSparConnector,TAIL SPAR CONNECTOR,PT1 PA6-CF,1.2,1,10.91,10.91,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-31304L,31304L-TailCentreConnector,TAIL CENTRE CONNECTOR,PT1 PA6-CF,1.2,1,22.36,22.36,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-31304R,31304R-TailCentreConnector,TAIL CENTRE CONNECTOR,PT1 PA6-CF,1.2,1,22.36,22.36,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-32101L,32101L-TailRearSkinCover,TAIL REAR SKIN COVER,PT1 ASA-Aero 0.30 eff,0.3,1,48.68,48.68,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-32101R,32101R-TailRearSkinCover,TAIL REAR SKIN COVER,PT1 ASA-Aero 0.30 eff,0.3,1,46.31,46.31,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-32102L,32102L-TailFrontSkinCover,TAIL FRONT SKIN COVER,PT1 ASA-Aero 0.30 eff,0.3,1,53.77,53.77,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-32102R,32102R-TailFrontSkinCover,TAIL FRONT SKIN COVER,PT1 ASA-Aero 0.30 eff,0.3,1,51.03,51.03,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-32103,32103-CoverMountTab,COVER MOUNT TAB,PT1 ASA-Aero 0.25 eff,0.25,2,0.24,0.48,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05; cover mount tab, not a panel: 0.25 assumed"
+AR-SH-PT1-32104,32104-M3Shim8x8x0p5,M3 SHIM 8X8X0.5,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-32105,32105-M3DShimOD8ID3p5T0p5,M3 D-SHIM OD8 ID3.5 T0.5,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-32106,32106-CoverMountTabMirrored,COVER MOUNT TAB MIRRORED,PT1 ASA-Aero 0.25 eff,0.25,2,0.24,0.48,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05; cover mount tab, not a panel: 0.25 assumed"
+AR-SH-PT1-32201,32201-TailCentreHatch,TAIL CENTRE HATCH,PT1 ASA-Aero 0.25 eff,0.25,1,10.67,10.67,A,"ASA-Aero effective density from 0.10 g/cm2 skin, rounded to 0.05"
+AR-SH-PT1-32202,32202-TailHatchLatchReceiver,TAIL HATCH LATCH RECEIVER,PT1 PA6-CF,1.2,1,5.29,5.29,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-33101,33101-RuddervatorLESheetLeft; 33101-RuddervatorLESheetRight,RUDDERVATOR LE SHEET,PT1 Balsa,0.16,4,1.39,5.56,B,
+AR-SH-PT1-33102,33102-RuddervatorRibLeft; 33102-RuddervatorRibLeft2; 33102-RuddervatorRibLeft3; 33102-RuddervatorRibRight; 33102-RuddervatorRibRight2; 33102-RuddervatorRibRight3,RUDDERVATOR RIB,PT1 Balsa,0.16,8,0.98,7.84,B,
+AR-SH-PT1-33201,33201-RuddervatorHingeRod10x10Bore8p5Left; 33201-RuddervatorHingeRod10x10Bore8p5Right,RUDDERVATOR HINGE ROD 10X10 BORE 8.5,PT1 Carbon Fibre,1.55,2,26.25,52.50,C,
+AR-SH-PT1-33202,33202-TailHingeBlock,TAIL HINGE BLOCK,PT1 PA6-CF,1.2,4,9.88,39.52,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-33203,33203-TailHingeHolder,TAIL HINGE HOLDER,PT1 PA6-CF,1.2,4,1.84,7.36,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-33301,33301-RuddervatorHornBase,RUDDERVATOR HORN BASE,PT1 PA6-CF,1.2,2,6.79,13.58,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-33302,33302-RuddervatorHornRodClamp,RUDDERVATOR HORN ROD CLAMP,PT1 PA6-CF,1.2,2,9.99,19.98,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-33303,33303-RuddervatorHornPlate,RUDDERVATOR HORN PLATE,PT1 TBD no mass,0.001,2,,,?,? material open: needs Alperen
+AR-SH-PT1-41101,41101-LiftMotor,"LIFT MOTOR KDE5215XF (BOUGHT, CAD model DT5215)",PT1 TBD no mass,0.001,4,,,X,X bought part: datasheet mass needed
+AR-SH-PT1-41301,41301-ESC,"ESC KDE XF UAS 55A HVC (BOUGHT, CAD model KDE-UAS55HVC)",PT1 TBD no mass,0.001,4,,,X,X bought part: datasheet mass needed
+AR-SH-PT1-81101,81101-LongitudinalBoom30x30x2000,LONGITUDINAL BOOM 30X30X2000,PT1 Carbon Fibre,1.55,2,525.51,1051.02,C,
+AR-SH-PT1-82101L,82101L-LateralJointBlock,LATERAL JOINT BLOCK,PT1 PA6-CF,1.2,1,60.80,60.80,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82101R,82101R-LateralJointBlock,LATERAL JOINT BLOCK,PT1 PA6-CF,1.2,1,60.80,60.80,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82102,82102-LateralJointPlate,LATERAL JOINT PLATE,PT1 Aluminium 6061,2.7,4,23.37,93.48,M,
+AR-SH-PT1-82103,82103-LateralJointSpacer,LATERAL JOINT SPACER,PT1 PA6-CF,1.2,2,18.16,36.32,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82201,82201-RootClampTopPlate,ROOT CLAMP TOP PLATE,PT1 Aluminium 6061,2.7,2,135.34,270.68,M,
+AR-SH-PT1-82202,82202-RootClampBottomPlate,ROOT CLAMP BOTTOM PLATE,PT1 Aluminium 6061,2.7,2,130.86,261.72,M,
+AR-SH-PT1-82203,82203-RootClampSpacerInnerFront,ROOT CLAMP SPACER INNER FRONT,PT1 PA6-CF,1.2,2,62.75,125.50,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82204,82204-RootClampSpacerInnerRear,ROOT CLAMP SPACER INNER REAR,PT1 PA6-CF,1.2,2,62.75,125.50,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82205,82205-RootClampSpacerOuter,ROOT CLAMP SPACER OUTER,PT1 PA6-CF,1.2,4,64.42,257.68,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-82301L,82301L-BoomSocketOuter,BOOM SOCKET OUTER,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-82301R,82301R-BoomSocketOuter,BOOM SOCKET OUTER,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-82302L,82302L-BoomSocketInner,BOOM SOCKET INNER,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-82302R,82302R-BoomSocketInner,BOOM SOCKET INNER,PT1 TBD no mass,0.001,1,,,?,? material open: needs Alperen
+AR-SH-PT1-83101,83101-FrontMotorMountTopPlate,FRONT MOTOR MOUNT TOP PLATE,PT1 Aluminium 6061,2.7,2,51.67,103.34,M,
+AR-SH-PT1-83102,83102-FrontMotorMountBottomPlate,FRONT MOTOR MOUNT BOTTOM PLATE,PT1 Aluminium 6061,2.7,2,55.69,111.38,M,
+AR-SH-PT1-83103L,83103L-FrontMotorMountUBlock,FRONT MOTOR MOUNT U-BLOCK,PT1 PA6-CF,1.2,1,154.82,154.82,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-83103R,83103R-FrontMotorMountUBlock,FRONT MOTOR MOUNT U-BLOCK,PT1 PA6-CF,1.2,1,154.82,154.82,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-83201L,83201L-RearMotorMountUBlock,REAR MOTOR MOUNT U-BLOCK,PT1 PA6-CF,1.2,1,180.98,180.98,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-83201R,83201R-RearMotorMountUBlock,REAR MOTOR MOUNT U-BLOCK,PT1 PA6-CF,1.2,1,180.98,180.98,P,density assumed (PA6-CF solid 1.20 until infill given)
+AR-SH-PT1-83202L,83202L-RearMotorMountTopPlate,REAR MOTOR MOUNT TOP PLATE,PT1 Aluminium 6061,2.7,1,65.16,65.16,M,
+AR-SH-PT1-83202R,83202R-RearMotorMountTopPlate,REAR MOTOR MOUNT TOP PLATE,PT1 Aluminium 6061,2.7,1,65.34,65.34,M,
+AR-SH-PT1-83203L,83203L-RearMotorMountBottomPlate,REAR MOTOR MOUNT BOTTOM PLATE,PT1 Aluminium 6061,2.7,1,69.18,69.18,M,
+AR-SH-PT1-83203R,83203R-RearMotorMountBottomPlate,REAR MOTOR MOUNT BOTTOM PLATE,PT1 Aluminium 6061,2.7,1,69.36,69.36,M,

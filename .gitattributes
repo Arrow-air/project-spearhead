@@ -1,4 +1,5 @@
 *.sh text eol=lf
 *.command text eol=lf
-src/design/fusion_snapshot/**/*.f3d filter=lfs diff=lfs merge=lfs -text
-src/design/fusion_snapshot/**/*.step filter=lfs diff=lfs merge=lfs -text
+src/design/pt1/*.step filter=lfs diff=lfs merge=lfs -text
+src/design/pt1/*.csv text eol=lf
+src/design/pt1/*.json text eol=lf

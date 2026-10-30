@@ -1,0 +1,10131 @@
+{
+"source": "AR-SH-PT1-0000 PT1",
+"version": 35,
+"modified": false,
+"accuracy": "very high",
+"bodies": [
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13101-ForwardFuselageSkin:1",
+"comp": "13101-ForwardFuselageSkin",
+"body": "5351",
+"pn": "AR-SH-PT1-13101",
+"vol": 477220.396,
+"c": [
+-326.25746,
+-0.14522,
+-48.015
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-453.5,
+-115.236,
+-153.2828,
+-203.7,
+115.2121,
+57.5128
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13103L-MidSkinUpper:1",
+"comp": "13103L-MidSkinUpper",
+"body": "5353-L",
+"pn": "AR-SH-PT1-13103L",
+"vol": 80493.5718,
+"c": [
+153.32169,
+-80.90394,
+50.44526
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-115.1996,
+9.855,
+266.3,
+5.0,
+57.5119
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13103R-MidSkinUpper:1",
+"comp": "13103R-MidSkinUpper",
+"body": "5353-R",
+"pn": "AR-SH-PT1-13103R",
+"vol": 79666.7596,
+"c": [
+153.99837,
+81.72768,
+50.44524
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-5.0,
+9.855,
+266.3,
+115.1996,
+57.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13104L-MidSkinLower:1",
+"comp": "13104L-MidSkinLower",
+"body": "5354-L",
+"pn": "AR-SH-PT1-13104L",
+"vol": 194564.9245,
+"c": [
+144.72686,
+-84.04047,
+-97.62804
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-110.5034,
+-153.2828,
+266.3,
+5.0,
+-1.9928
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13104R-MidSkinLower:1",
+"comp": "13104R-MidSkinLower",
+"body": "5354-R",
+"pn": "AR-SH-PT1-13104R",
+"vol": 194181.3407,
+"c": [
+144.71561,
+84.1926,
+-97.60256
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-5.0,
+-153.2828,
+266.3,
+110.5034,
+-1.9928
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13105L-TailEndSkin:1",
+"comp": "13105L-TailEndSkin",
+"body": "5355-L",
+"pn": "AR-SH-PT1-13105L",
+"vol": 141945.6478,
+"c": [
+315.35365,
+-60.80223,
+-18.76751
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+256.7,
+-103.6642,
+-125.4595,
+374.0,
+5.0,
+57.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13105R-TailEndSkin:1",
+"comp": "13105R-TailEndSkin",
+"body": "5355-R",
+"pn": "AR-SH-PT1-13105R",
+"vol": 142269.5308,
+"c": [
+315.23027,
+60.6467,
+-18.81327
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+256.7,
+-5.0,
+-125.4595,
+374.0,
+103.6642,
+57.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13106L-SideSkinSection2:1",
+"comp": "13106L-SideSkinSection2",
+"body": "5356-L",
+"pn": "AR-SH-PT1-13106L",
+"vol": 291829.8444,
+"c": [
+-92.32698,
+-81.62809,
+-72.12483
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-213.7,
+-115.1996,
+-153.2828,
+36.3,
+5.0,
+57.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13100-FuselageSkinPanels:1+13106R-SideSkinSection2:1",
+"comp": "13106R-SideSkinSection2",
+"body": "5356-R",
+"pn": "AR-SH-PT1-13106R",
+"vol": 291411.6721,
+"c": [
+-91.83197,
+81.73467,
+-72.33154
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-213.7,
+-5.0,
+-153.2828,
+36.3,
+115.1996,
+57.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13200-NoseTopPanels:1+13201-NoseCone:1",
+"comp": "13201-NoseCone",
+"body": "5381",
+"pn": "AR-SH-PT1-13201",
+"vol": 475129.339,
+"c": [
+-499.52829,
+0.00506,
+-45.33817
+],
+"mat": "PT1 ASA-Aero 0.20 eff",
+"bbox": [
+-567.2372,
+-115.2121,
+-153.0105,
+-443.5,
+115.2121,
+57.2409
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13200-NoseTopPanels:1+13202-NoseTip:1",
+"comp": "13202-NoseTip",
+"body": "5382",
+"pn": "AR-SH-PT1-13202",
+"vol": 311191.8675,
+"c": [
+-575.15012,
+3e-05,
+-46.1131
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+-595.3024,
+-90.0311,
+-106.0286,
+-564.4633,
+90.0311,
+10.2999
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13200-NoseTopPanels:1+13203-TopPanelForward:1",
+"comp": "13203-TopPanelForward",
+"body": "5383",
+"pn": "AR-SH-PT1-13203",
+"vol": 138834.1586,
+"c": [
+-326.81584,
+-0.23941,
+55.42294
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-433.0,
+-91.75,
+49.5116,
+-226.0,
+91.75,
+57.5119
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13301R-WingRootSkin1Upper:1",
+"comp": "13301R-WingRootSkin1Upper",
+"body": "5361-R",
+"pn": "AR-SH-PT1-13301R",
+"vol": 128257.11,
+"c": [
+150.02876,
+172.98861,
+31.3759
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+26.3,
+98.3929,
+11.6561,
+266.3,
+246.0,
+44.3892
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13302R-WingRootSkin2Upper:1",
+"comp": "13302R-WingRootSkin2Upper",
+"body": "5362-R",
+"pn": "AR-SH-PT1-13302R",
+"vol": 149042.8978,
+"c": [
+146.96634,
+332.98254,
+31.85543
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+236.0,
+11.6561,
+266.3,
+430.0,
+44.3906
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13303L-WingRootSkin2Lower:1",
+"comp": "13303L-WingRootSkin2Lower",
+"body": "5363-L",
+"pn": "AR-SH-PT1-13303L",
+"vol": 147233.1869,
+"c": [
+146.4137,
+-333.0097,
+-6.02146
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-430.0,
+-8.8843,
+266.3,
+-236.0,
+-3.1552
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13303R-WingRootSkin2Lower:1",
+"comp": "13303R-WingRootSkin2Lower",
+"body": "5363-R",
+"pn": "AR-SH-PT1-13303R",
+"vol": 147233.1869,
+"c": [
+146.4137,
+333.0097,
+-6.02146
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+236.0,
+-8.8843,
+266.3,
+430.0,
+-3.1552
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13301L-WingRootSkin1Upper:1",
+"comp": "13301L-WingRootSkin1Upper",
+"body": "5361-L",
+"pn": "AR-SH-PT1-13301L",
+"vol": 128257.1101,
+"c": [
+150.02876,
+-172.98861,
+31.3759
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+26.3,
+-246.0,
+11.6561,
+266.3,
+-98.3929,
+44.3892
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13302L-WingRootSkin2Upper:1",
+"comp": "13302L-WingRootSkin2Upper",
+"body": "5362-L",
+"pn": "AR-SH-PT1-13302L",
+"vol": 149042.8978,
+"c": [
+146.96634,
+-332.98254,
+31.85543
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-430.0,
+11.6561,
+266.3,
+-236.0,
+44.3906
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13304L-WingRootSkin1Lower:1",
+"comp": "13304L-WingRootSkin1Lower",
+"body": "5365-L",
+"pn": "AR-SH-PT1-13304L",
+"vol": 108045.941,
+"c": [
+146.94204,
+-174.35207,
+-5.96345
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+-246.0,
+-8.8825,
+266.3,
+-96.6754,
+-1.9928
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13304R-WingRootSkin1Lower:1",
+"comp": "13304R-WingRootSkin1Lower",
+"body": "5365-R",
+"pn": "AR-SH-PT1-13304R",
+"vol": 108045.9447,
+"c": [
+146.94205,
+174.35207,
+-5.96345
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+26.3,
+96.6754,
+-8.8825,
+266.3,
+246.0,
+-1.9928
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13305L-WingRootSkin1Front:1",
+"comp": "13305L-WingRootSkin1Front",
+"body": "5366-L",
+"pn": "AR-SH-PT1-13305L",
+"vol": 167666.8108,
+"c": [
+-61.41569,
+-170.96863,
+13.14795
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-196.4084,
+-246.0,
+-9.8397,
+36.3,
+-109.8342,
+44.5201
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13305R-WingRootSkin1Front:1",
+"comp": "13305R-WingRootSkin1Front",
+"body": "5366-R",
+"pn": "AR-SH-PT1-13305R",
+"vol": 167666.8108,
+"c": [
+-61.41569,
+170.96863,
+13.14795
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-196.4084,
+109.8342,
+-9.8397,
+36.3,
+246.0,
+44.5201
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13306L-WingRootSkin2Front:1",
+"comp": "13306L-WingRootSkin2Front",
+"body": "5367-L",
+"pn": "AR-SH-PT1-13306L",
+"vol": 192967.2031,
+"c": [
+-43.67897,
+-332.39977,
+12.93452
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-114.2731,
+-430.0,
+-9.8422,
+36.3,
+-236.0,
+44.3927
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13306R-WingRootSkin2Front:1",
+"comp": "13306R-WingRootSkin2Front",
+"body": "5367-R",
+"pn": "AR-SH-PT1-13306R",
+"vol": 192967.2031,
+"c": [
+-43.67897,
+332.39977,
+12.93452
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-114.2731,
+236.0,
+-9.8422,
+36.3,
+430.0,
+44.3927
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13307L-WingRootSkin1Rear:1",
+"comp": "13307L-WingRootSkin1Rear",
+"body": "5368-L",
+"pn": "AR-SH-PT1-13307L",
+"vol": 75942.7665,
+"c": [
+295.29092,
+-165.20975,
+0.46759
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+256.7,
+-246.0,
+-6.5948,
+331.3094,
+-84.0691,
+14.5442
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13307R-WingRootSkin1Rear:1",
+"comp": "13307R-WingRootSkin1Rear",
+"body": "5368-R",
+"pn": "AR-SH-PT1-13307R",
+"vol": 75942.7675,
+"c": [
+295.29092,
+165.20975,
+0.46759
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+256.7,
+84.0691,
+-6.5948,
+331.3094,
+246.0,
+14.5442
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13308L-WingRootSkin2Rear:1",
+"comp": "13308L-WingRootSkin2Rear",
+"body": "5369-L",
+"pn": "AR-SH-PT1-13308L",
+"vol": 88364.1638,
+"c": [
+295.02106,
+-332.35398,
+0.16727
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+256.7,
+-430.0,
+-6.5555,
+330.5096,
+-236.0,
+13.6304
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13300-WingRootSkins:1+13308R-WingRootSkin2Rear:1",
+"comp": "13308R-WingRootSkin2Rear",
+"body": "5369-R",
+"pn": "AR-SH-PT1-13308R",
+"vol": 88364.1638,
+"c": [
+295.02106,
+332.35398,
+0.16727
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+256.7,
+236.0,
+-6.5555,
+330.5096,
+430.0,
+13.6304
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13401L-FairingPanelA:1",
+"comp": "13401L-FairingPanelA",
+"body": "5371-L",
+"pn": "AR-SH-PT1-13401L",
+"vol": 30439.0327,
+"c": [
+-41.70752,
+-471.54523,
+37.0968
+],
+"mat": "PT1 ASA-Aero 0.40 eff",
+"bbox": [
+-111.8986,
+-550.0,
+21.7888,
+114.5969,
+-420.0,
+49.0598
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13401R-FairingPanelA:1",
+"comp": "13401R-FairingPanelA",
+"body": "5371-R",
+"pn": "AR-SH-PT1-13401R",
+"vol": 30439.0327,
+"c": [
+-41.70752,
+471.54523,
+37.0968
+],
+"mat": "PT1 ASA-Aero 0.40 eff",
+"bbox": [
+-111.8986,
+420.0,
+21.7888,
+114.5969,
+550.0,
+49.0598
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13402L-FairingPanelB:1",
+"comp": "13402L-FairingPanelB",
+"body": "5372-L",
+"pn": "AR-SH-PT1-13402L",
+"vol": 58141.803,
+"c": [
+269.26805,
+-482.60636,
+18.61287
+],
+"mat": "PT1 ASA-Aero 0.35 eff",
+"bbox": [
+114.5886,
+-550.0,
+-3.1124,
+358.6923,
+-420.0,
+40.0985
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13402R-FairingPanelB:1",
+"comp": "13402R-FairingPanelB",
+"body": "5372-R",
+"pn": "AR-SH-PT1-13402R",
+"vol": 58141.8032,
+"c": [
+269.26805,
+482.60636,
+18.61287
+],
+"mat": "PT1 ASA-Aero 0.35 eff",
+"bbox": [
+114.5886,
+420.0,
+-3.1124,
+358.6923,
+550.0,
+40.0985
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13403L-FairingPanelC:1",
+"comp": "13403L-FairingPanelC",
+"body": "5373-L",
+"pn": "AR-SH-PT1-13403L",
+"vol": 90055.3451,
+"c": [
+-28.36679,
+-615.37959,
+-9.10086
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-131.5388,
+-670.0,
+-27.2204,
+114.5864,
+-550.0,
+32.3706
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13403R-FairingPanelC:1",
+"comp": "13403R-FairingPanelC",
+"body": "5373-R",
+"pn": "AR-SH-PT1-13403R",
+"vol": 90055.3452,
+"c": [
+-28.36679,
+615.37959,
+-9.10086
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-131.5388,
+550.0,
+-27.2204,
+114.5864,
+670.0,
+32.3706
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13405L-FairingPanelE:1",
+"comp": "13405L-FairingPanelE",
+"body": "5375-L",
+"pn": "AR-SH-PT1-13405L",
+"vol": 54680.4846,
+"c": [
+272.75172,
+-613.7544,
+18.37174
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+114.5886,
+-670.0,
+-3.1124,
+358.6923,
+-550.0,
+40.0985
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13405R-FairingPanelE:1",
+"comp": "13405R-FairingPanelE",
+"body": "5375-R",
+"pn": "AR-SH-PT1-13405R",
+"vol": 54680.4846,
+"c": [
+272.75172,
+613.7544,
+18.37174
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+114.5886,
+550.0,
+-3.1124,
+358.6923,
+670.0,
+40.0985
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13406L-FairingPanelF:1",
+"comp": "13406L-FairingPanelF",
+"body": "5376-L",
+"pn": "AR-SH-PT1-13406L",
+"vol": 26667.5028,
+"c": [
+-48.06442,
+-621.88083,
+36.82064
+],
+"mat": "PT1 ASA-Aero 0.40 eff",
+"bbox": [
+-111.8986,
+-670.0,
+21.7888,
+114.5969,
+-550.0,
+49.0598
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13406R-FairingPanelF:1",
+"comp": "13406R-FairingPanelF",
+"body": "5376-R",
+"pn": "AR-SH-PT1-13406R",
+"vol": 26667.5028,
+"c": [
+-48.06442,
+621.88083,
+36.82064
+],
+"mat": "PT1 ASA-Aero 0.40 eff",
+"bbox": [
+-111.8986,
+550.0,
+21.7888,
+114.5969,
+670.0,
+49.0598
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13407L-FairingLowerPanelRear246x250:1",
+"comp": "13407L-FairingLowerPanelRear246x250",
+"body": "5378-L",
+"pn": "AR-SH-PT1-13407L",
+"vol": 269932.7564,
+"c": [
+253.55146,
+-547.72377,
+-13.82174
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+114.5864,
+-670.0,
+-25.5967,
+360.7058,
+-420.0,
+2.17
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13407R-FairingLowerPanelRear246x250:1",
+"comp": "13407R-FairingLowerPanelRear246x250",
+"body": "5378-R",
+"pn": "AR-SH-PT1-13407R",
+"vol": 269932.7564,
+"c": [
+253.55146,
+547.72377,
+-13.82174
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+114.5864,
+420.0,
+-25.5967,
+360.7058,
+670.0,
+2.17
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13408L-FairingLowerPanelFront246x130:1",
+"comp": "13408L-FairingLowerPanelFront246x130",
+"body": "5379-L",
+"pn": "AR-SH-PT1-13408L",
+"vol": 94938.9635,
+"c": [
+-28.10174,
+-481.55706,
+-8.83261
+],
+"mat": "PT1 ASA-Aero 0.35 eff",
+"bbox": [
+-131.5388,
+-550.0,
+-27.2204,
+114.5864,
+-420.0,
+32.3706
+]
+},
+{
+"path": "10000-FuselageStructure:1+13000-Skin:1+13400-WingRootFairingPanels:1+13408R-FairingLowerPanelFront246x130:1",
+"comp": "13408R-FairingLowerPanelFront246x130",
+"body": "5379-R",
+"pn": "AR-SH-PT1-13408R",
+"vol": 94938.9634,
+"c": [
+-28.10174,
+481.55706,
+-8.83261
+],
+"mat": "PT1 ASA-Aero 0.35 eff",
+"bbox": [
+-131.5388,
+420.0,
+-27.2204,
+114.5864,
+550.0,
+32.3706
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11100-Bulkheads:1+11101-BulkheadSta1:1",
+"comp": "11101-BulkheadSta1",
+"body": "5311",
+"pn": "AR-SH-PT1-11101",
+"vol": 96348.4386,
+"c": [
+-441.5,
+0.03572,
+-38.99268
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-111.1996,
+-149.2828,
+-439.5,
+111.1996,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11100-Bulkheads:1+11102-BulkheadSta2:1",
+"comp": "11102-BulkheadSta2",
+"body": "5312",
+"pn": "AR-SH-PT1-11102",
+"vol": 89063.938,
+"c": [
+-201.5,
+0.03864,
+-36.1964
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-203.5,
+-111.1996,
+-149.2828,
+-199.5,
+111.1996,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11100-Bulkheads:1+11103-BulkheadSta3:1",
+"comp": "11103-BulkheadSta3",
+"body": "5313",
+"pn": "AR-SH-PT1-11103",
+"vol": 126631.9548,
+"c": [
+197.4136,
+0.01102,
+-36.7739
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+195.4136,
+-111.1996,
+-149.2828,
+199.4136,
+111.1996,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11100-Bulkheads:1+11104-BulkheadSta4:1",
+"comp": "11104-BulkheadSta4",
+"body": "5314",
+"pn": "AR-SH-PT1-11104",
+"vol": 65779.5622,
+"c": [
+372.0,
+-0.0,
+-3.96744
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+370.0,
+-76.0442,
+-64.488,
+374.0,
+76.0442,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11200-Longerons:1+11201-TopLongeron:1",
+"comp": "11201-TopLongeron",
+"body": "5324-R",
+"pn": "AR-SH-PT1-11201",
+"vol": 35639.2685,
+"c": [
+-72.33314,
+2.62022,
+51.512
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-14.0,
+49.512,
+374.0,
+40.0,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11200-Longerons:1+11202-RearUpperLongeron:1",
+"comp": "11202-RearUpperLongeron",
+"body": "5325-L",
+"pn": "AR-SH-PT1-11202",
+"vol": 21859.2071,
+"c": [
+280.82796,
+-68.0442,
+38.54521
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+187.414,
+-70.0442,
+23.512,
+374.0,
+-66.0442,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11200-Longerons:1+11203-RearLowerLongeron:1",
+"comp": "11203-RearLowerLongeron",
+"body": "5326-L",
+"pn": "AR-SH-PT1-11203",
+"vol": 20950.3677,
+"c": [
+284.7068,
+-58.0442,
+-49.488
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+195.4136,
+-60.0442,
+-64.488,
+374.0,
+-56.0442,
+-34.488
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11200-Longerons:1+11202-RearUpperLongeron:2",
+"comp": "11202-RearUpperLongeron",
+"body": "5325-L",
+"pn": "AR-SH-PT1-11202",
+"vol": 21859.2071,
+"c": [
+280.82796,
+68.0442,
+38.54521
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+187.414,
+66.0442,
+23.512,
+374.0,
+70.0442,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11200-Longerons:1+11203-RearLowerLongeron:2",
+"comp": "11203-RearLowerLongeron",
+"body": "5326-L",
+"pn": "AR-SH-PT1-11203",
+"vol": 20950.3677,
+"c": [
+284.7068,
+58.0442,
+-49.488
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+195.4136,
+56.0442,
+-64.488,
+374.0,
+60.0442,
+-34.488
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11301-Floor:1",
+"comp": "11301-Floor",
+"body": "5321",
+"pn": "AR-SH-PT1-11301",
+"vol": 315134.8071,
+"c": [
+-122.04253,
+-0.0,
+-135.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-84.0,
+-137.2828,
+199.4136,
+84.0,
+-133.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11302-KeelStrip:1",
+"comp": "11302-KeelStrip",
+"body": "5322",
+"pn": "AR-SH-PT1-11302",
+"vol": 26091.772,
+"c": [
+-123.70211,
+0.0,
+-142.62281
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-2.0,
+-149.2828,
+199.4136,
+2.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11303-FloorSupport:1",
+"comp": "11303-FloorSupport",
+"body": "5323-L",
+"pn": "AR-SH-PT1-11303",
+"vol": 15429.9265,
+"c": [
+-122.0432,
+-82.0,
+-140.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-84.0,
+-143.2828,
+199.4136,
+-80.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11304-RearInclinedFloorPlate:1",
+"comp": "11304-RearInclinedFloorPlate",
+"body": "5327",
+"pn": "AR-SH-PT1-11304",
+"vol": 7405.6082,
+"c": [
+285.82015,
+0.0,
+-104.64588
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.7629,
+-5.0,
+-149.2748,
+374.006,
+5.0,
+-60.4402
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11303-FloorSupport:2",
+"comp": "11303-FloorSupport",
+"body": "5323-L",
+"pn": "AR-SH-PT1-11303",
+"vol": 15429.9265,
+"c": [
+-122.0432,
+82.0,
+-140.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+80.0,
+-143.2828,
+199.4136,
+84.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11305-NoseKeelPlate2mm:1",
+"comp": "11305-NoseKeelPlate2mm",
+"body": "5315",
+"pn": "AR-SH-PT1-11305",
+"vol": 8994.8274,
+"c": [
+-486.43359,
+0.0,
+-47.94924
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-564.4633,
+-1.0,
+-149.2828,
+-443.5,
+1.0,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11306-NoseDeckPlate2mm:1",
+"comp": "11306-NoseDeckPlate2mm",
+"body": "5316",
+"pn": "AR-SH-PT1-11306",
+"vol": 31570.4157,
+"c": [
+-497.96575,
+0.0482,
+-12.88166
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-564.475,
+-105.4344,
+-13.8817,
+-423.5,
+105.4344,
+-11.8817
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11300-KeelFloorDeckPlates:1+11307-FrontDeckPlate2mm:1",
+"comp": "11307-FrontDeckPlate2mm",
+"body": "5317",
+"pn": "AR-SH-PT1-11307",
+"vol": 80595.2783,
+"c": [
+-324.69402,
+0.0,
+-14.88166
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-439.5,
+-90.453,
+-15.8817,
+-203.5,
+90.453,
+-13.8817
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11400-MidBox:1+11401-MidBoxBeam:1",
+"comp": "11401-MidBoxBeam",
+"body": "5331-L",
+"pn": "AR-SH-PT1-11401",
+"vol": 154153.7161,
+"c": [
+-120.26343,
+-92.453,
+9.89173
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+-94.453,
+-32.8317,
+199.4136,
+-90.453,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11400-MidBox:1+11402-MidBoxBeamSupport:1",
+"comp": "11402-MidBoxBeamSupport",
+"body": "5332",
+"pn": "AR-SH-PT1-11402",
+"vol": 43232.8911,
+"c": [
+-16.71159,
+0.0,
+17.06666
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-18.7116,
+-94.453,
+-19.1753,
+-14.7116,
+94.453,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11400-MidBox:1+11403-MidSpar:1",
+"comp": "11403-MidSpar",
+"body": "5333",
+"pn": "AR-SH-PT1-11403",
+"vol": 147916.7769,
+"c": [
+193.4136,
+-0.00387,
+11.03922
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+191.4136,
+-670.0,
+-19.8379,
+195.4136,
+670.0,
+41.4453
+]
+},
+{
+"path": "10000-FuselageStructure:1+11000-PrimaryStructure:1+11400-MidBox:1+11401-MidBoxBeam:2",
+"comp": "11401-MidBoxBeam",
+"body": "5331-L",
+"pn": "AR-SH-PT1-11401",
+"vol": 154153.7161,
+"c": [
+-120.26343,
+92.453,
+9.89173
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-443.5,
+90.453,
+-32.8317,
+199.4136,
+94.453,
+53.512
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:1",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+-344.5,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-349.4972,
+-5.5011,
+-149.2828,
+-339.5028,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:2",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+-218.9,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-223.8972,
+-5.5011,
+-149.2828,
+-213.9028,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:3",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+-208.5,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-213.4972,
+-5.5011,
+-149.2828,
+-203.5028,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:4",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+-192.206,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-197.2032,
+-5.5011,
+-149.2828,
+-187.2088,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:5",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+-88.4,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-93.3972,
+-5.5011,
+-149.2828,
+-83.4028,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:6",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+21.3,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+16.3028,
+-5.5011,
+-149.2828,
+26.2972,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:7",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+31.7,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+26.7028,
+-5.5011,
+-149.2828,
+36.6972,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:8",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+42.1,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+37.1028,
+-5.5011,
+-149.2828,
+47.0972,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12201-FloorPinBoss10x11x6p1:9",
+"comp": "12201-FloorPinBoss10x11x6p1",
+"body": "5345",
+"pn": "AR-SH-PT1-12201",
+"vol": 333.8158,
+"c": [
+101.414,
+0.0,
+-146.59398
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+96.4168,
+-5.5011,
+-149.2828,
+106.4112,
+5.5011,
+-143.1828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:1",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-90.99833,
+-663.53469,
+16.59603
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-96.1888,
+-670.0,
+10.8461,
+-85.4305,
+-657.4989,
+21.6044
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:2",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-90.99833,
+-423.53469,
+16.59603
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-96.1888,
+-430.0,
+10.8461,
+-85.4305,
+-417.4989,
+21.6044
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:3",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-76.2853,
+-663.53469,
+22.40286
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-81.1776,
+-670.0,
+16.9887,
+-71.1429,
+-657.4989,
+27.0235
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:4",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-76.2853,
+-423.53469,
+22.40286
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-81.1776,
+-430.0,
+16.9887,
+-71.1429,
+-417.4989,
+27.0235
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:5",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-67.67872,
+-423.53469,
+-2.74143
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-71.7623,
+-430.0,
+-6.419,
+-63.5755,
+-417.4989,
+1.7679
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:6",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.27725,
+-423.53469,
+37.11871
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.1822,
+-430.0,
+32.5966,
+25.3948,
+-417.4989,
+40.8092
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:7",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.27725,
+-243.53469,
+37.11871
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.1822,
+-250.0,
+32.5966,
+25.3948,
+-237.4989,
+40.8092
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:8",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.31194,
+-423.53469,
+-1.95566
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.2912,
+-430.0,
+-5.5628,
+25.3374,
+-417.4989,
+2.4834
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:9",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.31194,
+-243.53469,
+-1.95566
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.2912,
+-250.0,
+-5.5628,
+25.3374,
+-237.4989,
+2.4834
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:10",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.20004,
+-423.53469,
+37.29231
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.1712,
+-430.0,
+32.8441,
+35.2356,
+-417.4989,
+40.9086
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:11",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.20004,
+-243.53469,
+37.29231
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.1712,
+-250.0,
+32.8441,
+35.2356,
+-237.4989,
+40.9086
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:12",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.24851,
+-423.53469,
+-1.85491
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.2278,
+-430.0,
+-5.462,
+35.274,
+-417.4989,
+2.5842
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:13",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.24851,
+-243.53469,
+-1.85491
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.2278,
+-250.0,
+-5.462,
+35.274,
+-237.4989,
+2.5842
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:14",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+41.2536,
+-243.53469,
+-1.75358
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+37.2329,
+-250.0,
+-5.3608,
+45.2792,
+-237.4989,
+2.6856
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:15",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+41.69338,
+-243.53469,
+37.26257
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+37.6327,
+-250.0,
+32.7917,
+45.7425,
+-237.4989,
+40.9015
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:16",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+82.96741,
+-663.53469,
+35.03778
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+78.582,
+-670.0,
+30.276,
+87.2771,
+-657.4989,
+38.971
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:17",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+-660.74842,
+-0.6087
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+-664.9783,
+-4.4512,
+203.9147,
+-656.4631,
+4.064
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:18",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+-607.26732,
+-10.39547
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+-611.9536,
+-14.7666,
+203.9147,
+-602.3994,
+-5.2124
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:19",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+-492.73268,
+-10.39547
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+-497.6006,
+-14.7666,
+203.9147,
+-488.0464,
+-5.2124
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:20",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+240.14566,
+-423.53469,
+0.26244
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+236.0998,
+-430.0,
+-3.3631,
+244.1828,
+-417.4989,
+4.7199
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:21",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+240.14566,
+-243.53469,
+0.26244
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+236.0998,
+-250.0,
+-3.3631,
+244.1828,
+-237.4989,
+4.7199
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:22",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+249.40503,
+-423.53469,
+9.94951
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+244.554,
+-430.0,
+4.7809,
+254.0783,
+-417.4989,
+14.3053
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:23",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+249.40503,
+-243.53469,
+9.94951
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+244.554,
+-250.0,
+4.7809,
+254.0783,
+-237.4989,
+14.3053
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:24",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+261.80455,
+-423.53469,
+0.48227
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+257.7587,
+-430.0,
+-3.1432,
+265.8417,
+-417.4989,
+4.9397
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:25",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+261.80455,
+-243.53469,
+0.48227
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+257.7587,
+-250.0,
+-3.1432,
+265.8417,
+-237.4989,
+4.9397
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:26",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+266.9285,
+-663.53469,
+0.76396
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+262.8939,
+-670.0,
+-2.8587,
+270.9712,
+-657.4989,
+5.2186
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:27",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+271.98991,
+-423.53469,
+4.86384
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+267.0975,
+-430.0,
+-0.3401,
+276.6948,
+-417.4989,
+9.2572
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:28",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+271.98991,
+-243.53469,
+4.86384
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+267.0975,
+-250.0,
+-0.3401,
+276.6948,
+-237.4989,
+9.2572
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:29",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+280.53154,
+-663.53469,
+2.62601
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+275.5566,
+-670.0,
+-2.648,
+285.2989,
+-657.4989,
+7.0943
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:38",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-90.99833,
+423.53469,
+16.59603
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-96.1888,
+417.4989,
+10.8461,
+-85.4305,
+430.0,
+21.6044
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:39",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-90.99833,
+663.53469,
+16.59603
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-96.1888,
+657.4989,
+10.8461,
+-85.4305,
+670.0,
+21.6044
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:40",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-76.2853,
+423.53469,
+22.40286
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-81.1776,
+417.4989,
+16.9887,
+-71.1429,
+430.0,
+27.0235
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:41",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-76.2853,
+663.53469,
+22.40286
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-81.1776,
+657.4989,
+16.9887,
+-71.1429,
+670.0,
+27.0235
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:42",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+-67.67872,
+423.53469,
+-2.74143
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-71.7623,
+417.4989,
+-6.419,
+-63.5755,
+430.0,
+1.7679
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:43",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.27725,
+243.53469,
+37.11871
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.1822,
+237.4989,
+32.5966,
+25.3948,
+250.0,
+40.8092
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:44",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.27725,
+423.53469,
+37.11871
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.1822,
+417.4989,
+32.5966,
+25.3948,
+430.0,
+40.8092
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:45",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.31194,
+243.53469,
+-1.95566
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.2912,
+237.4989,
+-5.5628,
+25.3374,
+250.0,
+2.4834
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:46",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+21.31194,
+423.53469,
+-1.95566
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+17.2912,
+417.4989,
+-5.5628,
+25.3374,
+430.0,
+2.4834
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:47",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.20004,
+243.53469,
+37.29231
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.1712,
+237.4989,
+32.8441,
+35.2356,
+250.0,
+40.9086
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:48",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.20004,
+423.53469,
+37.29231
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.1712,
+417.4989,
+32.8441,
+35.2356,
+430.0,
+40.9086
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:49",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.24851,
+243.53469,
+-1.85491
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.2278,
+237.4989,
+-5.462,
+35.274,
+250.0,
+2.5842
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:50",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+31.24851,
+423.53469,
+-1.85491
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+27.2278,
+417.4989,
+-5.462,
+35.274,
+430.0,
+2.5842
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:51",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+41.2536,
+243.53469,
+-1.75358
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+37.2329,
+237.4989,
+-5.3608,
+45.2792,
+250.0,
+2.6856
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:52",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+41.69338,
+243.53469,
+37.26257
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+37.6327,
+237.4989,
+32.7917,
+45.7425,
+250.0,
+40.9015
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:53",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+82.96741,
+663.53469,
+35.03778
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+78.582,
+657.4989,
+30.276,
+87.2771,
+670.0,
+38.971
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:54",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+492.73268,
+-10.39547
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+488.0464,
+-14.7666,
+203.9147,
+497.6006,
+-5.2124
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:55",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+607.26732,
+-10.39547
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+602.3994,
+-14.7666,
+203.9147,
+611.9536,
+-5.2124
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:56",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+197.87891,
+660.74842,
+-0.6087
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+191.4136,
+656.4631,
+-4.4512,
+203.9147,
+664.9783,
+4.064
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:57",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+240.14566,
+243.53469,
+0.26244
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+236.0998,
+237.4989,
+-3.3631,
+244.1828,
+250.0,
+4.7199
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:58",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+240.14566,
+423.53469,
+0.26244
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+236.0998,
+417.4989,
+-3.3631,
+244.1828,
+430.0,
+4.7199
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:59",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+249.40503,
+243.53469,
+9.94951
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+244.554,
+237.4989,
+4.7809,
+254.0783,
+250.0,
+14.3053
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:60",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+249.40503,
+423.53469,
+9.94951
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+244.554,
+417.4989,
+4.7809,
+254.0783,
+430.0,
+14.3053
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:61",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+261.80455,
+243.53469,
+0.48227
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+257.7587,
+237.4989,
+-3.1432,
+265.8417,
+250.0,
+4.9397
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:62",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+261.80455,
+423.53469,
+0.48227
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+257.7587,
+417.4989,
+-3.1432,
+265.8417,
+430.0,
+4.9397
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:63",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+266.9285,
+663.53469,
+0.76396
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+262.8939,
+657.4989,
+-2.8587,
+270.9712,
+670.0,
+5.2186
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:64",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+271.98991,
+243.53469,
+4.86384
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+267.0975,
+237.4989,
+-0.3401,
+276.6948,
+250.0,
+9.2572
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:65",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+271.98991,
+423.53469,
+4.86384
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+267.0975,
+417.4989,
+-0.3401,
+276.6948,
+430.0,
+9.2572
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:66",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+280.53154,
+663.53469,
+2.62601
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+275.5566,
+657.4989,
+-2.648,
+285.2989,
+670.0,
+7.0943
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:30",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.1866,
+-150.8303,
+278.69463
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1251.8072,
+-157.5692,
+271.778,
+1260.5836,
+-143.8302,
+285.7835
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:31",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.72361,
+-69.73023,
+299.37166
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1252.4577,
+-76.1973,
+295.4864,
+1261.0539,
+-63.6924,
+304.0856
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:32",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.93399,
+-165.82572,
+300.09726
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1252.7491,
+-173.2774,
+294.4081,
+1261.0889,
+-158.3489,
+306.4939
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:33",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1257.6376,
+-69.73023,
+325.54482
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1253.6097,
+-76.1973,
+321.0967,
+1261.6719,
+-63.6924,
+329.1619
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:34",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1400.5973,
+-69.72256,
+304.07979
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1396.1852,
+-76.1891,
+300.1193,
+1404.9282,
+-63.6851,
+308.8673
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:35",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1402.98772,
+-156.63114,
+281.85772
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1398.4854,
+-163.4796,
+274.9194,
+1407.4371,
+-149.6299,
+288.9484
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:36",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1413.4492,
+-69.7249,
+308.66103
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1408.7557,
+-76.1921,
+303.6273,
+1418.0011,
+-63.6871,
+312.8758
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:37",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1415.20237,
+-159.07504,
+284.92355
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1410.4881,
+-166.7169,
+278.9368,
+1419.8181,
+-151.601,
+291.373
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:67",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.1866,
+150.8303,
+278.69463
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1251.8072,
+143.8302,
+271.778,
+1260.5836,
+157.5692,
+285.7835
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:68",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.72361,
+69.73023,
+299.37166
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1252.4577,
+63.6924,
+295.4864,
+1261.0539,
+76.1973,
+304.0856
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:69",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1256.93399,
+165.82572,
+300.09726
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1252.7491,
+158.3489,
+294.4081,
+1261.0889,
+173.2774,
+306.4939
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:70",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1257.6376,
+69.73023,
+325.54482
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1253.6097,
+63.6924,
+321.0967,
+1261.6719,
+76.1973,
+329.1619
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:71",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1400.5973,
+69.72256,
+304.07979
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1396.1852,
+63.6851,
+300.1193,
+1404.9282,
+76.1891,
+308.8673
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:72",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1402.98772,
+156.63114,
+281.85772
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1398.4854,
+149.6299,
+274.9194,
+1407.4371,
+163.4796,
+288.9484
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:73",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1413.4492,
+69.7249,
+308.66103
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1408.7557,
+63.6871,
+303.6273,
+1418.0011,
+76.1921,
+312.8758
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12202-InsertBoss:74",
+"comp": "12202-InsertBoss",
+"body": "5347-L",
+"pn": "AR-SH-PT1-12202",
+"vol": 523.0584,
+"c": [
+1415.20237,
+159.07504,
+284.92355
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1410.4881,
+151.601,
+278.9368,
+1419.8181,
+166.7169,
+291.373
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12203-InsertBoss11x11x14p5:1",
+"comp": "12203-InsertBoss11x11x14p5",
+"body": "5343-L",
+"pn": "AR-SH-PT1-12203",
+"vol": 1531.9422,
+"c": [
+-451.05712,
+-95.17171,
+44.512
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-458.0,
+-100.6717,
+39.012,
+-443.5,
+-89.6717,
+50.012
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12203-InsertBoss11x11x14p5:2",
+"comp": "12203-InsertBoss11x11x14p5",
+"body": "5343-L",
+"pn": "AR-SH-PT1-12203",
+"vol": 1531.9422,
+"c": [
+-451.05712,
+-87.1736,
+-139.28279
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-458.0,
+-92.6736,
+-144.7828,
+-443.5,
+-81.6736,
+-133.7828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:1",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-436.17668,
+-106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-443.5,
+-111.0021,
+37.1709,
+-428.9989,
+-102.286,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:2",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-436.17668,
+-91.02923,
+-127.75281
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-443.5,
+-95.0352,
+-132.0776,
+-428.9989,
+-86.3192,
+-123.3616
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:3",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-206.82332,
+-106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-214.0011,
+-111.0021,
+37.1709,
+-199.5,
+-102.286,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:4",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-206.82332,
+-90.09,
+-137.70861
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-214.0011,
+-94.096,
+-142.0334,
+-199.5,
+-85.38,
+-133.3174
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:5",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+192.09028,
+-106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+184.9125,
+-111.0021,
+37.1709,
+199.4136,
+-102.286,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:6",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+192.09028,
+-90.09,
+-137.70861
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+184.9125,
+-94.096,
+-142.0334,
+199.4136,
+-85.38,
+-133.3174
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12203-InsertBoss11x11x14p5:3",
+"comp": "12203-InsertBoss11x11x14p5",
+"body": "5343-L",
+"pn": "AR-SH-PT1-12203",
+"vol": 1531.9422,
+"c": [
+-451.05712,
+87.1736,
+-139.28279
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-458.0,
+81.6736,
+-144.7828,
+-443.5,
+92.6736,
+-133.7828
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12203-InsertBoss11x11x14p5:4",
+"comp": "12203-InsertBoss11x11x14p5",
+"body": "5343-L",
+"pn": "AR-SH-PT1-12203",
+"vol": 1531.9422,
+"c": [
+-451.05712,
+95.17171,
+44.512
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-458.0,
+89.6717,
+39.012,
+-443.5,
+100.6717,
+50.012
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:7",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-436.17668,
+91.02923,
+-127.75281
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-443.5,
+86.3192,
+-132.0776,
+-428.9989,
+95.0352,
+-123.3616
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:8",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-436.17668,
+106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-443.5,
+102.286,
+37.1709,
+-428.9989,
+111.0021,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:9",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-206.82332,
+90.09,
+-137.70861
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-214.0011,
+85.38,
+-142.0334,
+-199.5,
+94.096,
+-133.3174
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:10",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+-206.82332,
+106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-214.0011,
+102.286,
+37.1709,
+-199.5,
+111.0021,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:11",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+192.09028,
+90.09,
+-137.70861
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+184.9125,
+85.38,
+-142.0334,
+199.4136,
+94.096,
+-133.3174
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12200-Bosses:1+12204-InsertBoss8p7x8p7x14p5:12",
+"comp": "12204-InsertBoss8p7x8p7x14p5",
+"body": "5344-L",
+"pn": "AR-SH-PT1-12204",
+"vol": 646.1523,
+"c": [
+192.09028,
+106.99607,
+41.4957
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+184.9125,
+102.286,
+37.1709,
+199.4136,
+111.0021,
+45.8869
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12101-CentreConnector:1",
+"comp": "12101-CentreConnector",
+"body": "5341",
+"pn": "AR-SH-PT1-12101",
+"vol": 103363.0429,
+"c": [
+9.62114,
+-0.0,
+17.17022
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-14.7116,
+-50.0,
+-7.8317,
+25.2884,
+50.0,
+42.1683
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12102-NoseBlock:1",
+"comp": "12102-NoseBlock",
+"body": "5342",
+"pn": "AR-SH-PT1-12102",
+"vol": 99884.8546,
+"c": [
+-452.93297,
+0.0,
+13.28989
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-463.5,
+-76.0469,
+-7.83,
+-439.5,
+76.0469,
+32.17
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12105L-MidBoxBeamConnector:1",
+"comp": "12105L-MidBoxBeamConnector",
+"body": "5346-L",
+"pn": "AR-SH-PT1-12105L",
+"vol": 9611.3859,
+"c": [
+-396.32817,
+-85.48804,
+-15.74579
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-416.7721,
+-94.453,
+-22.8317,
+-375.8843,
+-71.453,
+0.6122
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12105L-MidBoxBeamConnector:2",
+"comp": "12105L-MidBoxBeamConnector",
+"body": "5346-L",
+"pn": "AR-SH-PT1-12105L",
+"vol": 9611.3859,
+"c": [
+-236.67183,
+-85.48804,
+-15.74579
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-257.1157,
+-94.453,
+-22.8317,
+-216.2279,
+-71.453,
+0.6122
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12105R-MidBoxBeamConnector:1",
+"comp": "12105R-MidBoxBeamConnector",
+"body": "5346-R",
+"pn": "AR-SH-PT1-12105R",
+"vol": 9611.3859,
+"c": [
+-236.67183,
+85.48804,
+-15.74579
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-257.1157,
+71.453,
+-22.8317,
+-216.2279,
+94.453,
+0.6122
+]
+},
+{
+"path": "10000-FuselageStructure:1+12000-SecondaryStructure:1+12100-Connectors:1+12105R-MidBoxBeamConnector:2",
+"comp": "12105R-MidBoxBeamConnector",
+"body": "5346-R",
+"pn": "AR-SH-PT1-12105R",
+"vol": 9611.3859,
+"c": [
+-396.32823,
+85.48804,
+-15.74579
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-416.7721,
+71.453,
+-22.8317,
+-375.8843,
+94.453,
+0.6122
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14201L-HatchLatchHousing:1",
+"comp": "14201L-HatchLatchHousing",
+"body": "5211-L",
+"pn": "AR-SH-PT1-14201L",
+"vol": 2343.8836,
+"c": [
+2.00937,
+-66.76252,
+52.51078
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-38.9,
+-74.2519,
+49.6084,
+25.3,
+-59.2519,
+64.1084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14201L-HatchLatchHousing:2",
+"comp": "14201L-HatchLatchHousing",
+"body": "5211-L",
+"pn": "AR-SH-PT1-14201L",
+"vol": 2343.8836,
+"c": [
+212.00937,
+-51.76252,
+52.51078
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+171.1,
+-59.2519,
+49.6084,
+235.3,
+-44.2519,
+64.1084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14208-HatchLatchHousingWithTab:1",
+"comp": "14208-HatchLatchHousingWithTab",
+"body": "5211-R",
+"pn": "AR-SH-PT1-14208",
+"vol": 2349.3464,
+"c": [
+2.02288,
+66.7625,
+52.5158
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-38.9,
+59.2519,
+49.6084,
+25.3,
+74.2519,
+64.1084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14201R-HatchLatchHousing:1",
+"comp": "14201R-HatchLatchHousing",
+"body": "5211-R-V2",
+"pn": "AR-SH-PT1-14201R",
+"vol": 2343.8838,
+"c": [
+212.00937,
+51.76252,
+52.51078
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+171.1,
+44.2519,
+49.6084,
+235.3,
+59.2519,
+64.1084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14202-LatchHousingBLeft:1",
+"comp": "14202-LatchHousingBLeft",
+"body": "5212-L",
+"pn": "AR-SH-PT1-14202",
+"vol": 2349.346,
+"c": [
+53.0107,
+-549.9848,
+-21.29236
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+12.0625,
+-557.4976,
+-32.8768,
+76.2931,
+-542.4881,
+-18.1989
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14207-LatchHousingBMirrored:1",
+"comp": "14207-LatchHousingBMirrored",
+"body": "5212-L-V2",
+"pn": "AR-SH-PT1-14207",
+"vol": 2349.3459,
+"c": [
+213.03183,
+-485.96732,
+28.8215
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+172.2258,
+-494.3535,
+21.2983,
+236.0582,
+-477.11,
+39.9992
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14202-LatchHousingBLeft2:1",
+"comp": "14202-LatchHousingBLeft2",
+"body": "5212-L-V3",
+"pn": "AR-SH-PT1-14202",
+"vol": 2349.3459,
+"c": [
+246.42623,
+-487.05454,
+22.09768
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+223.4254,
+-496.6802,
+9.8346,
+286.578,
+-479.1057,
+34.3553
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:1",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+-15.66691,
+-66.75187,
+49.11371
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-40.2,
+-75.7519,
+47.2084,
+14.0,
+-57.7519,
+53.2084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:2",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+35.29183,
+-549.99192,
+-18.04516
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+10.7591,
+-558.9978,
+-22.3544,
+64.9952,
+-540.9875,
+-15.8804
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:3",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+194.33309,
+-51.75187,
+49.11371
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+169.8,
+-60.7519,
+47.2084,
+224.0,
+-42.7519,
+53.2084
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:4",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+195.02001,
+-486.03883,
+28.55203
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+170.8457,
+-495.9775,
+20.1085,
+224.9472,
+-475.5119,
+38.3957
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:5",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+263.0221,
+-488.60374,
+15.26545
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+233.6073,
+-498.4415,
+7.2478,
+287.8704,
+-477.5889,
+27.1672
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14204-SideLatchGuidePlate:1",
+"comp": "14204-SideLatchGuidePlate",
+"body": "5214-L",
+"pn": "AR-SH-PT1-14204",
+"vol": 517.5822,
+"c": [
+193.59313,
+-485.22563,
+32.16359
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+168.814,
+-497.8708,
+23.304,
+224.9999,
+-473.0054,
+39.3806
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14205-SideLatchStopBlock:1",
+"comp": "14205-SideLatchStopBlock",
+"body": "5215-L",
+"pn": "AR-SH-PT1-14205",
+"vol": 2261.6808,
+"c": [
+230.02828,
+-487.4195,
+22.4241
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+224.0163,
+-502.7428,
+15.1433,
+236.165,
+-471.0753,
+31.2634
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14206-SideLatchPinBlock:1",
+"comp": "14206-SideLatchPinBlock",
+"body": "5216-L",
+"pn": "AR-SH-PT1-14206",
+"vol": 513.1749,
+"c": [
+212.05244,
+-485.15997,
+32.45541
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+202.7551,
+-488.8773,
+28.149,
+221.3498,
+-481.4426,
+36.7618
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:6",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+-15.66691,
+66.75187,
+49.11371
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-40.2,
+57.7519,
+47.2084,
+14.0,
+75.7519,
+53.2085
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14200-HatchLatch:1+14203-LatchBolt:7",
+"comp": "14203-LatchBolt",
+"body": "5213-L",
+"pn": "AR-SH-PT1-14203",
+"vol": 1774.6422,
+"c": [
+194.33309,
+51.75187,
+49.11371
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+169.8,
+42.7519,
+47.2084,
+224.0,
+60.7519,
+53.2085
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14101-SideHatch:1",
+"comp": "14101-SideHatch",
+"body": "5357-L",
+"pn": "AR-SH-PT1-14101",
+"vol": 75161.9692,
+"c": [
+-329.87345,
+-100.63589,
+-84.28391
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-433.0,
+-107.4404,
+-133.7684,
+-226.0,
+-91.7675,
+-35.0276
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14102-TopPanelAft:1",
+"comp": "14102-TopPanelAft",
+"body": "5352",
+"pn": "AR-SH-PT1-14102",
+"vol": 99940.6637,
+"c": [
+137.00823,
+-0.0,
+55.37071
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+47.0,
+-76.75,
+49.5116,
+224.0,
+76.75,
+57.5119
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14103-TopPanelMid:1",
+"comp": "14103-TopPanelMid",
+"body": "5384",
+"pn": "AR-SH-PT1-14103",
+"vol": 140602.6611,
+"c": [
+-87.59744,
+-0.0,
+55.42258
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-193.0,
+-91.75,
+49.5116,
+14.0,
+91.75,
+57.5119
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14104-FairingPanelD:1",
+"comp": "14104-FairingPanelD",
+"body": "5374-L",
+"pn": "AR-SH-PT1-14104",
+"vol": 130518.5046,
+"c": [
+84.04546,
+-601.38202,
+45.99024
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-78.5811,
+-659.6,
+14.9823,
+234.6,
+-550.0,
+61.8094
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14104-FairingPanelD:2",
+"comp": "14104-FairingPanelD",
+"body": "5374-L",
+"pn": "AR-SH-PT1-14104",
+"vol": 130518.5046,
+"c": [
+84.04546,
+498.61798,
+45.99024
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-78.5811,
+440.4,
+14.9823,
+234.6,
+550.0,
+61.8094
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14105-FairingPanelDMirrored:1",
+"comp": "14105-FairingPanelDMirrored",
+"body": "5374-L-V2",
+"pn": "AR-SH-PT1-14105",
+"vol": 130518.5047,
+"c": [
+84.04546,
+-498.61798,
+45.99024
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-78.5811,
+-550.0,
+14.9823,
+234.6,
+-440.4,
+61.8094
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14105-FairingPanelDMirrored:2",
+"comp": "14105-FairingPanelDMirrored",
+"body": "5374-L-V2",
+"pn": "AR-SH-PT1-14105",
+"vol": 130518.5047,
+"c": [
+84.04546,
+601.38202,
+45.99024
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-78.5811,
+550.0,
+14.9823,
+234.6,
+659.6,
+61.8094
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14106-FairingStrap:1",
+"comp": "14106-FairingStrap",
+"body": "5377-L",
+"pn": "AR-SH-PT1-14106",
+"vol": 80076.9886,
+"c": [
+-3.7218,
+-550.00005,
+-21.39974
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-79.2,
+-624.6,
+-27.3418,
+74.6,
+-475.4,
+-13.1826
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14100-Hatches:1+14106-FairingStrap:2",
+"comp": "14106-FairingStrap",
+"body": "5377-L",
+"pn": "AR-SH-PT1-14106",
+"vol": 80076.9886,
+"c": [
+-3.7218,
+550.0,
+-21.39974
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+-79.2,
+475.4,
+-27.3418,
+74.6,
+624.6,
+-13.1826
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14300-NoseLatch:1+14301-NoseLatchBlock:1",
+"comp": "14301-NoseLatchBlock",
+"body": "5217-R",
+"pn": "AR-SH-PT1-14301",
+"vol": 3277.412,
+"c": [
+-429.61475,
+91.70436,
+-109.55676
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-438.5,
+87.0393,
+-123.4557,
+-419.0,
+97.834,
+-96.1607
+]
+},
+{
+"path": "10000-FuselageStructure:1+14000-HatchesLatches:1+14300-NoseLatch:1+14302-NoseLatchStrip:1",
+"comp": "14302-NoseLatchStrip",
+"body": "5218-R",
+"pn": "AR-SH-PT1-14302",
+"vol": 2143.1659,
+"c": [
+-416.0,
+94.40118,
+-109.81118
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-433.0,
+91.7675,
+-117.9613,
+-399.0,
+97.1183,
+-101.7906
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15101-FrontGearLegPlate:1",
+"comp": "15101-FrontGearLegPlate",
+"body": "3211",
+"pn": "AR-SH-PT1-15101",
+"vol": 72508.5188,
+"c": [
+-437.5,
+5.33712,
+-220.48669
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-439.5,
+-209.5048,
+-403.5905,
+-435.5,
+209.5048,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15101-FrontGearLegPlate:2",
+"comp": "15101-FrontGearLegPlate",
+"body": "3211",
+"pn": "AR-SH-PT1-15101",
+"vol": 72508.5188,
+"c": [
+-415.5,
+5.33712,
+-220.48669
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-417.5,
+-209.5048,
+-403.5905,
+-413.5,
+209.5048,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15102-FrontGearCentrePlate:1",
+"comp": "15102-FrontGearCentrePlate",
+"body": "3212",
+"pn": "AR-SH-PT1-15102",
+"vol": 14482.9542,
+"c": [
+-426.5,
+-0.0,
+-180.07083
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-439.5,
+-84.5761,
+-182.0708,
+-413.5,
+84.5761,
+-178.0708
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15103-FrontGearMountingPlateRight:1",
+"comp": "15103-FrontGearMountingPlateRight",
+"body": "3213-R",
+"pn": "AR-SH-PT1-15103",
+"vol": 7995.8239,
+"c": [
+-426.52383,
+41.0,
+-139.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-439.5,
+2.0,
+-141.2828,
+-413.5,
+80.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15104-FrontGearMountingPlateLeft:1",
+"comp": "15104-FrontGearMountingPlateLeft",
+"body": "3214-L",
+"pn": "AR-SH-PT1-15104",
+"vol": 6997.4239,
+"c": [
+-426.52723,
+-41.0,
+-139.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-439.5,
+-80.0,
+-141.2828,
+-413.5,
+-2.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15105-FrontGearDiagonalBrace:1",
+"comp": "15105-FrontGearDiagonalBrace",
+"body": "3215-L",
+"pn": "AR-SH-PT1-15105",
+"vol": 23526.9943,
+"c": [
+-426.5,
+-169.72789,
+-278.54014
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-439.5,
+-203.6265,
+-401.7827,
+-413.5,
+-107.9148,
+-165.7952
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15100-FrontLandingGear:1+15105-FrontGearDiagonalBrace:2",
+"comp": "15105-FrontGearDiagonalBrace",
+"body": "3215-L",
+"pn": "AR-SH-PT1-15105",
+"vol": 23526.9943,
+"c": [
+-426.5,
+169.72789,
+-278.54014
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-439.5,
+107.9148,
+-401.7827,
+-413.5,
+203.6265,
+-165.7952
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15201-RearGearLegPlate:1",
+"comp": "15201-RearGearLegPlate",
+"body": "3231",
+"pn": "AR-SH-PT1-15201",
+"vol": 72508.5188,
+"c": [
+171.414,
+5.33712,
+-220.48669
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+169.414,
+-209.5048,
+-403.5905,
+173.414,
+209.5048,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15201-RearGearLegPlate:2",
+"comp": "15201-RearGearLegPlate",
+"body": "3231",
+"pn": "AR-SH-PT1-15201",
+"vol": 72508.5188,
+"c": [
+193.414,
+5.33712,
+-220.48669
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+191.414,
+-209.5048,
+-403.5905,
+195.414,
+209.5048,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15202-RearGearCentrePlate:1",
+"comp": "15202-RearGearCentrePlate",
+"body": "3232",
+"pn": "AR-SH-PT1-15202",
+"vol": 14482.9542,
+"c": [
+182.414,
+-0.0,
+-180.07083
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+169.414,
+-84.5761,
+-182.0708,
+195.414,
+84.5761,
+-178.0708
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15203-RearGearMountingPlateRight:1",
+"comp": "15203-RearGearMountingPlateRight",
+"body": "3233-R",
+"pn": "AR-SH-PT1-15203",
+"vol": 7995.8239,
+"c": [
+182.43789,
+41.0,
+-139.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+169.414,
+2.0,
+-141.2828,
+195.414,
+80.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15204-RearGearMountingPlateLeft:1",
+"comp": "15204-RearGearMountingPlateLeft",
+"body": "3234-L",
+"pn": "AR-SH-PT1-15204",
+"vol": 6997.4239,
+"c": [
+182.44129,
+-41.0,
+-139.28279
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+169.414,
+-80.0,
+-141.2828,
+195.414,
+-2.0,
+-137.2828
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15205-RearGearDiagonalBrace:1",
+"comp": "15205-RearGearDiagonalBrace",
+"body": "3235-L",
+"pn": "AR-SH-PT1-15205",
+"vol": 23526.9943,
+"c": [
+182.414,
+-169.72789,
+-278.54014
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+169.414,
+-203.6265,
+-401.7827,
+195.414,
+-107.9148,
+-165.7952
+]
+},
+{
+"path": "10000-FuselageStructure:1+15000-LandingGear:1+15200-RearLandingGear:1+15205-RearGearDiagonalBrace:2",
+"comp": "15205-RearGearDiagonalBrace",
+"body": "3235-L",
+"pn": "AR-SH-PT1-15205",
+"vol": 23526.9943,
+"c": [
+182.414,
+169.72789,
+-278.54014
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+169.414,
+107.9148,
+-401.7827,
+195.414,
+203.6265,
+-165.7952
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16100-Spar:1+16101-CentreSparTube30x30x1069:1",
+"comp": "16101-CentreSparTube30x30x1069",
+"body": "5712",
+"pn": "AR-SH-PT1-16101",
+"vol": 181881.3625,
+"c": [
+0.28841,
+-0.0,
+17.16834
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+-14.7116,
+-534.5,
+2.1683,
+15.2884,
+534.5,
+32.1683
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16201-CentreRibY248:1",
+"comp": "16201-CentreRibY248",
+"body": "5761-L",
+"pn": "AR-SH-PT1-16201",
+"vol": 32050.0698,
+"c": [
+79.8726,
+-248.0,
+14.01582
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-110.5392,
+-250.0,
+-6.3422,
+303.9633,
+-246.0,
+40.8927
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16202-CentreRibY428:1",
+"comp": "16202-CentreRibY428",
+"body": "5762-L",
+"pn": "AR-SH-PT1-16202",
+"vol": 47757.2725,
+"c": [
+71.85769,
+-428.0,
+14.03512
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-110.5392,
+-430.0,
+-6.3422,
+303.9633,
+-426.0,
+40.8927
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16203-CentreRootRibY668:1",
+"comp": "16203-CentreRootRibY668",
+"body": "5763-L",
+"pn": "AR-SH-PT1-16203",
+"vol": 60854.2755,
+"c": [
+71.79628,
+-667.5,
+13.90163
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-110.5392,
+-670.0,
+-6.3422,
+303.9633,
+-665.0,
+40.8927
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16201-CentreRibY248:2",
+"comp": "16201-CentreRibY248",
+"body": "5761-L",
+"pn": "AR-SH-PT1-16201",
+"vol": 32050.0698,
+"c": [
+79.8726,
+248.0,
+14.01582
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-110.5392,
+246.0,
+-6.3422,
+303.9633,
+250.0,
+40.8927
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16202-CentreRibY428:2",
+"comp": "16202-CentreRibY428",
+"body": "5762-L",
+"pn": "AR-SH-PT1-16202",
+"vol": 47757.2725,
+"c": [
+71.85769,
+428.0,
+14.03512
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-110.5392,
+426.0,
+-6.3422,
+303.9633,
+430.0,
+40.8927
+]
+},
+{
+"path": "10000-FuselageStructure:1+16000-WingCentreSection:1+16200-Ribs:1+16203-CentreRootRibY668:2",
+"comp": "16203-CentreRootRibY668",
+"body": "5763-L",
+"pn": "AR-SH-PT1-16203",
+"vol": 60854.2755,
+"c": [
+71.79628,
+667.5,
+13.90163
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-110.5392,
+665.0,
+-6.3422,
+303.9633,
+670.0,
+40.8927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22100-Spars:1+22101-OuterSparTube30x30x1410:1",
+"comp": "22101-OuterSparTube30x30x1410",
+"body": "5711-L",
+"pn": "AR-SH-PT1-22101",
+"vol": 239814.5748,
+"c": [
+0.28841,
+-1270.25,
+17.16834
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+-14.7116,
+-1975.0,
+2.1683,
+15.2884,
+-565.5,
+32.1683
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22100-Spars:1+22102-RearSparWeb:1",
+"comp": "22102-RearSparWeb",
+"body": "5713-L",
+"pn": "AR-SH-PT1-22102",
+"vol": 183635.7702,
+"c": [
+193.4136,
+-1319.49479,
+10.76739
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+191.4136,
+-1975.0,
+-7.316,
+195.4136,
+-670.0,
+28.6629
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22201-WingRootRibY672:1",
+"comp": "22201-WingRootRibY672",
+"body": "5721-L",
+"pn": "AR-SH-PT1-22201",
+"vol": 61170.66,
+"c": [
+81.45671,
+-672.0,
+13.35831
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+-674.0,
+-9.8422,
+328.7624,
+-670.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22202-WingRibY819Y966:1",
+"comp": "22202-WingRibY819Y966",
+"body": "5722-L",
+"pn": "AR-SH-PT1-22202",
+"vol": 43858.3894,
+"c": [
+94.99093,
+-965.83333,
+12.15155
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-968.3333,
+-9.8422,
+328.7624,
+-963.333,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22202-WingRibY819Y966:2",
+"comp": "22202-WingRibY819Y966",
+"body": "5722-L",
+"pn": "AR-SH-PT1-22202",
+"vol": 43858.3894,
+"c": [
+94.99093,
+-819.16667,
+12.15155
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-821.6667,
+-9.8422,
+328.7624,
+-816.6663,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22203-WingRibY1113:1",
+"comp": "22203-WingRibY1113",
+"body": "5723-L",
+"pn": "AR-SH-PT1-22203",
+"vol": 37569.2786,
+"c": [
+104.47492,
+-1113.0,
+11.76053
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+-1115.0,
+-9.8422,
+328.7624,
+-1111.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22204-WingFrontRibY1248Y1656Y1792:1",
+"comp": "22204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-L",
+"pn": "AR-SH-PT1-22204",
+"vol": 33291.7901,
+"c": [
+46.62565,
+-1791.66667,
+14.40179
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-1794.167,
+-9.8422,
+195.4136,
+-1789.1667,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22204-WingFrontRibY1248Y1656Y1792:2",
+"comp": "22204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-L",
+"pn": "AR-SH-PT1-22204",
+"vol": 33291.7901,
+"c": [
+46.62565,
+-1655.83333,
+14.4018
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-1658.3337,
+-9.8422,
+195.4136,
+-1653.3333,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22204-WingFrontRibY1248Y1656Y1792:3",
+"comp": "22204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-L",
+"pn": "AR-SH-PT1-22204",
+"vol": 33291.7901,
+"c": [
+46.62565,
+-1248.33333,
+14.4018
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-1250.8337,
+-9.8422,
+195.4136,
+-1245.8333,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22205-WingFrontRibY1385:1",
+"comp": "22205-WingFrontRibY1385",
+"body": "5725-L",
+"pn": "AR-SH-PT1-22205",
+"vol": 31534.4959,
+"c": [
+62.19583,
+-1384.66667,
+14.95057
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+-1386.667,
+-9.8422,
+195.4136,
+-1382.6667,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22206-WingFrontRibY1520:1",
+"comp": "22206-WingFrontRibY1520",
+"body": "5726-L",
+"pn": "AR-SH-PT1-22206",
+"vol": 31534.1635,
+"c": [
+62.19645,
+-1519.5,
+14.95065
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+-1521.5,
+-9.8422,
+195.4136,
+-1517.5,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22207-WingRibY1928:1",
+"comp": "22207-WingRibY1928",
+"body": "5727-L",
+"pn": "AR-SH-PT1-22207",
+"vol": 46990.9197,
+"c": [
+104.40982,
+-1927.5,
+11.76395
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+-1930.0,
+-9.8422,
+328.7624,
+-1925.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22200-Ribs:1+22208-WingTipRibY1973:1",
+"comp": "22208-WingTipRibY1973",
+"body": "5728-L",
+"pn": "AR-SH-PT1-22208",
+"vol": 62257.9708,
+"c": [
+82.88167,
+-1973.0,
+13.13855
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5319,
+-1975.0,
+-9.8422,
+328.7624,
+-1971.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22300-LeadingEdge:1+22301-LeadingEdgeSheet:1",
+"comp": "22301-LeadingEdgeSheet",
+"body": "5731-L",
+"pn": "AR-SH-PT1-22301",
+"vol": 254162.8519,
+"c": [
+-86.07999,
+-1322.5,
+13.12362
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-114.0392,
+-1975.0,
+-9.8053,
+-43.4021,
+-670.0,
+38.4043
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22300-LeadingEdge:1+22302-LeadingEdgeStick10x5:1",
+"comp": "22302-LeadingEdgeStick10x5",
+"body": "5732-L",
+"pn": "AR-SH-PT1-22302",
+"vol": 51247.2302,
+"c": [
+-109.66107,
+-1322.5,
+2.326
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.539,
+-1975.0,
+-2.674,
+-107.539,
+-670.0,
+7.326
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22400-TrailingEdge:1+22401-TrailingEdgeTubeD4x2p5L445:1",
+"comp": "22401-TrailingEdgeTubeD4x2p5L445",
+"body": "5741-L",
+"pn": "AR-SH-PT1-22401",
+"vol": 3407.6463,
+"c": [
+328.48587,
+-892.5,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+-1115.0,
+-5.9258,
+330.4859,
+-670.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22400-TrailingEdge:1+22402-TrailingEdgeTubeD4x2p5L800:1",
+"comp": "22402-TrailingEdgeTubeD4x2p5L800",
+"body": "5742-L",
+"pn": "AR-SH-PT1-22402",
+"vol": 6126.1057,
+"c": [
+328.48587,
+-1520.0,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+-1920.0,
+-5.9258,
+330.4859,
+-1120.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22400-TrailingEdge:1+22403-TrailingEdgeTubeD4x2p5L50:1",
+"comp": "22403-TrailingEdgeTubeD4x2p5L50",
+"body": "5743-L",
+"pn": "AR-SH-PT1-22403",
+"vol": 382.8816,
+"c": [
+328.48587,
+-1950.0,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+-1975.0,
+-5.9258,
+330.4859,
+-1925.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22501-AileronRib:1",
+"comp": "22501-AileronRib",
+"body": "5751-L",
+"pn": "AR-SH-PT1-22501",
+"vol": 9248.2595,
+"c": [
+254.84808,
+-1791.5,
+4.57361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+-1794.0,
+-7.1263,
+328.7624,
+-1789.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22501-AileronRib:2",
+"comp": "22501-AileronRib",
+"body": "5751-L",
+"pn": "AR-SH-PT1-22501",
+"vol": 9248.2595,
+"c": [
+254.84808,
+-1655.75,
+4.57361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+-1658.25,
+-7.1263,
+328.7624,
+-1653.25,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22501-AileronRib:3",
+"comp": "22501-AileronRib",
+"body": "5751-L",
+"pn": "AR-SH-PT1-22501",
+"vol": 9248.2595,
+"c": [
+254.84808,
+-1520.0,
+4.57361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+-1522.5,
+-7.1263,
+328.7624,
+-1517.5,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22501-AileronRib:4",
+"comp": "22501-AileronRib",
+"body": "5751-L",
+"pn": "AR-SH-PT1-22501",
+"vol": 9248.2595,
+"c": [
+254.84808,
+-1384.25,
+4.57361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+-1386.75,
+-7.1263,
+328.7624,
+-1381.75,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22501-AileronRib:5",
+"comp": "22501-AileronRib",
+"body": "5751-L",
+"pn": "AR-SH-PT1-22501",
+"vol": 9248.2595,
+"c": [
+254.84808,
+-1248.5,
+4.57361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+-1251.0,
+-7.1263,
+328.7624,
+-1246.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22502-AileronEndRib:1",
+"comp": "22502-AileronEndRib",
+"body": "5752-L",
+"pn": "AR-SH-PT1-22502",
+"vol": 9079.3817,
+"c": [
+252.41207,
+-1918.0,
+4.85764
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+200.562,
+-1920.0,
+-7.1263,
+328.7624,
+-1916.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22502-AileronEndRib:2",
+"comp": "22502-AileronEndRib",
+"body": "5752-L",
+"pn": "AR-SH-PT1-22502",
+"vol": 9079.3817,
+"c": [
+252.41207,
+-1122.0,
+4.85764
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+200.562,
+-1124.0,
+-7.1263,
+328.7624,
+-1120.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22503-AileronNoseSheetLower1p5mm:1",
+"comp": "22503-AileronNoseSheetLower1p5mm",
+"body": "5753-L",
+"pn": "AR-SH-PT1-22503",
+"vol": 21547.0949,
+"c": [
+206.22179,
+-1519.49488,
+1.19569
+],
+"mat": "PT1 Balsa",
+"bbox": [
+200.6053,
+-1920.0,
+-7.0788,
+211.4321,
+-1120.0,
+10.1737
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22500-AileronStructure:1+22504-AileronNoseSheetUpper1p5mm:1",
+"comp": "22504-AileronNoseSheetUpper1p5mm",
+"body": "5754-L",
+"pn": "AR-SH-PT1-22504",
+"vol": 18359.0578,
+"c": [
+205.68485,
+-1519.19557,
+18.22178
+],
+"mat": "PT1 Balsa",
+"bbox": [
+200.6053,
+-1920.0,
+10.1737,
+210.2686,
+-1120.0,
+25.4111
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22601-AileronHingeRod10x10x800:1",
+"comp": "22601-AileronHingeRod10x10x800",
+"body": "2721-L",
+"pn": "AR-SH-PT1-22601",
+"vol": 34603.9862,
+"c": [
+235.197,
+-1520.0,
+6.456
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+230.197,
+-1920.0,
+1.456,
+240.197,
+-1120.0,
+11.456
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22602-AileronHingeBlock:1",
+"comp": "22602-AileronHingeBlock",
+"body": "2722-L",
+"pn": "AR-SH-PT1-22602",
+"vol": 10008.866,
+"c": [
+223.65516,
+-1856.0,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+-1878.0,
+-0.5443,
+242.1974,
+-1834.0,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22602-AileronHingeBlock:2",
+"comp": "22602-AileronHingeBlock",
+"body": "2722-L",
+"pn": "AR-SH-PT1-22602",
+"vol": 10008.866,
+"c": [
+223.65516,
+-1720.25,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+-1742.25,
+-0.5443,
+242.1974,
+-1698.25,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22602-AileronHingeBlock:3",
+"comp": "22602-AileronHingeBlock",
+"body": "2722-L",
+"pn": "AR-SH-PT1-22602",
+"vol": 10008.866,
+"c": [
+223.65516,
+-1584.5,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+-1606.5,
+-0.5443,
+242.1974,
+-1562.5,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22602-AileronHingeBlock:4",
+"comp": "22602-AileronHingeBlock",
+"body": "2722-L",
+"pn": "AR-SH-PT1-22602",
+"vol": 10008.866,
+"c": [
+223.65516,
+-1313.0,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+-1335.0,
+-0.5443,
+242.1974,
+-1291.0,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22602-AileronHingeBlock:5",
+"comp": "22602-AileronHingeBlock",
+"body": "2722-L",
+"pn": "AR-SH-PT1-22602",
+"vol": 10008.866,
+"c": [
+223.65516,
+-1177.25,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+-1199.25,
+-0.5443,
+242.1974,
+-1155.25,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22603-AileronHingeHolder:1",
+"comp": "22603-AileronHingeHolder",
+"body": "2723-L",
+"pn": "AR-SH-PT1-22603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+-1859.75,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+-1874.9,
+2.9235,
+200.8636,
+-1844.6,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22603-AileronHingeHolder:2",
+"comp": "22603-AileronHingeHolder",
+"body": "2723-L",
+"pn": "AR-SH-PT1-22603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+-1724.0,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+-1739.15,
+2.9235,
+200.8636,
+-1708.85,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22603-AileronHingeHolder:3",
+"comp": "22603-AileronHingeHolder",
+"body": "2723-L",
+"pn": "AR-SH-PT1-22603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+-1588.25,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+-1603.4,
+2.9235,
+200.8636,
+-1573.1,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22603-AileronHingeHolder:4",
+"comp": "22603-AileronHingeHolder",
+"body": "2723-L",
+"pn": "AR-SH-PT1-22603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+-1316.75,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+-1331.9,
+2.9235,
+200.8636,
+-1301.6,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22603-AileronHingeHolder:5",
+"comp": "22603-AileronHingeHolder",
+"body": "2723-L",
+"pn": "AR-SH-PT1-22603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+-1181.0,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+-1196.15,
+2.9235,
+200.8636,
+-1165.85,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22604-AileronHinge:1",
+"comp": "22604-AileronHinge",
+"body": "2724-L",
+"pn": "AR-SH-PT1-22604",
+"vol": 1026.88,
+"c": [
+207.87525,
+-1855.14706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+-1871.0,
+7.9235,
+219.6636,
+-1841.0,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22604-AileronHinge:2",
+"comp": "22604-AileronHinge",
+"body": "2724-L",
+"pn": "AR-SH-PT1-22604",
+"vol": 1026.88,
+"c": [
+207.87525,
+-1719.39706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+-1735.25,
+7.9235,
+219.6636,
+-1705.25,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22604-AileronHinge:3",
+"comp": "22604-AileronHinge",
+"body": "2724-L",
+"pn": "AR-SH-PT1-22604",
+"vol": 1026.88,
+"c": [
+207.87525,
+-1583.64706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+-1599.5,
+7.9235,
+219.6636,
+-1569.5,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22604-AileronHinge:4",
+"comp": "22604-AileronHinge",
+"body": "2724-L",
+"pn": "AR-SH-PT1-22604",
+"vol": 1026.88,
+"c": [
+207.87525,
+-1312.14706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+-1328.0,
+7.9235,
+219.6636,
+-1298.0,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22600-AileronHinges:1+22604-AileronHinge:5",
+"comp": "22604-AileronHinge",
+"body": "2724-L",
+"pn": "AR-SH-PT1-22604",
+"vol": 1026.88,
+"c": [
+207.87525,
+-1176.39706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+-1192.25,
+7.9235,
+219.6636,
+-1162.25,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22701-AileronServoMount:1",
+"comp": "22701-AileronServoMount",
+"body": "2711-L",
+"pn": "AR-SH-PT1-22701",
+"vol": 30766.2649,
+"c": [
+157.41914,
+-1410.35198,
+19.02245
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+125.7136,
+-1433.0833,
+-5.9815,
+191.1136,
+-1386.9667,
+29.6968
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22702-AileronServoMountCap:1",
+"comp": "22702-AileronServoMountCap",
+"body": "2712-L",
+"pn": "AR-SH-PT1-22702",
+"vol": 9712.1807,
+"c": [
+157.97704,
+-1513.2,
+17.86413
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+125.7136,
+-1517.2,
+-5.9815,
+191.1136,
+-1509.2,
+29.6968
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22703-ServoBayRibShort:1",
+"comp": "22703-ServoBayRibShort",
+"body": "2713-L",
+"pn": "AR-SH-PT1-22703",
+"vol": 6176.9711,
+"c": [
+156.71859,
+-1435.08333,
+14.94717
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+121.4136,
+-1437.0833,
+-7.9486,
+195.4136,
+-1433.0833,
+30.0029
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22704-ServoBaySpanwiseWeb:1",
+"comp": "22704-ServoBaySpanwiseWeb",
+"body": "2714-L",
+"pn": "AR-SH-PT1-22704",
+"vol": 20238.0782,
+"c": [
+123.4136,
+-1452.40061,
+10.87072
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+121.4136,
+-1521.5,
+-7.9847,
+125.4136,
+-1382.6667,
+30.0029
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22705-AileronHornBase:1",
+"comp": "22705-AileronHornBase",
+"body": "2715-L",
+"pn": "AR-SH-PT1-22705",
+"vol": 4902.4842,
+"c": [
+236.98079,
+-1452.12512,
+-12.94068
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+227.0194,
+-1470.369,
+-28.5443,
+255.595,
+-1433.881,
+-6.6654
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22706-AileronHornRodClamp:1",
+"comp": "22706-AileronHornRodClamp",
+"body": "2716-L",
+"pn": "AR-SH-PT1-22706",
+"vol": 8933.3422,
+"c": [
+238.88472,
+-1452.12512,
+1.28582
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+226.7963,
+-1470.369,
+-6.9547,
+255.5545,
+-1433.881,
+15.0746
+]
+},
+{
+"path": "20000-WingStructure:1+22000-LeftWing:1+22700-AileronActuation:1+22707-AileronHornPlate:1",
+"comp": "22707-AileronHornPlate",
+"body": "2717-L",
+"pn": "AR-SH-PT1-22707",
+"vol": 1983.4715,
+"c": [
+239.5523,
+-1452.12522,
+13.51399
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+229.8974,
+-1470.369,
+11.8557,
+255.3667,
+-1433.881,
+15.3335
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23100-Spars:1+23101-OuterSparTube30x30x1410:1",
+"comp": "23101-OuterSparTube30x30x1410",
+"body": "5711-R",
+"pn": "AR-SH-PT1-23101",
+"vol": 239814.5748,
+"c": [
+0.28841,
+1270.25,
+17.16834
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+-14.7116,
+565.5,
+2.1683,
+15.2884,
+1975.0,
+32.1683
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23100-Spars:1+23102-RearSparWeb:1",
+"comp": "23102-RearSparWeb",
+"body": "5713-R",
+"pn": "AR-SH-PT1-23102",
+"vol": 183635.7702,
+"c": [
+193.4136,
+1319.49479,
+10.76739
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+191.4136,
+670.0,
+-7.316,
+195.4136,
+1975.0,
+28.6629
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23201-WingRootRibY672:1",
+"comp": "23201-WingRootRibY672",
+"body": "5721-R",
+"pn": "AR-SH-PT1-23201",
+"vol": 61173.3613,
+"c": [
+81.45379,
+672.0,
+13.35895
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+670.0,
+-9.8422,
+328.7624,
+674.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23202-WingRibY819Y966:1",
+"comp": "23202-WingRibY819Y966",
+"body": "5722-R",
+"pn": "AR-SH-PT1-23202",
+"vol": 43859.0667,
+"c": [
+94.98943,
+819.16667,
+12.15151
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+816.6667,
+-9.8422,
+328.7624,
+821.667,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23203-WingRibY1113:1",
+"comp": "23203-WingRibY1113",
+"body": "5723-R",
+"pn": "AR-SH-PT1-23203",
+"vol": 37569.524,
+"c": [
+104.47531,
+1113.0,
+11.76059
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+1111.0,
+-9.8422,
+328.7624,
+1115.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23204-WingFrontRibY1248Y1656Y1792:1",
+"comp": "23204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-R",
+"pn": "AR-SH-PT1-23204",
+"vol": 33292.4955,
+"c": [
+46.62469,
+1248.33333,
+14.40168
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+1245.833,
+-9.8422,
+195.4136,
+1250.8333,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23204-WingFrontRibY1248Y1656Y1792:2",
+"comp": "23204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-R",
+"pn": "AR-SH-PT1-23204",
+"vol": 33292.4955,
+"c": [
+46.62469,
+1655.83333,
+14.40168
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+1653.333,
+-9.8422,
+195.4136,
+1658.3333,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23205-WingFrontRibY1385:1",
+"comp": "23205-WingFrontRibY1385",
+"body": "5725-R",
+"pn": "AR-SH-PT1-23205",
+"vol": 31534.9181,
+"c": [
+62.195,
+1384.66667,
+14.95054
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+1382.6667,
+-9.8422,
+195.4136,
+1386.667,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23206-WingFrontRibY1520:1",
+"comp": "23206-WingFrontRibY1520",
+"body": "5726-R",
+"pn": "AR-SH-PT1-23206",
+"vol": 31534.2709,
+"c": [
+62.19628,
+1519.5,
+14.95064
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5392,
+1517.5,
+-9.8422,
+195.4136,
+1521.5,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23207-WingRibY1928:1",
+"comp": "23207-WingRibY1928",
+"body": "5727-R",
+"pn": "AR-SH-PT1-23207",
+"vol": 46991.1344,
+"c": [
+104.40946,
+1927.5,
+11.76396
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+1925.0,
+-9.8422,
+328.7624,
+1930.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23208-WingTipRibY1973:1",
+"comp": "23208-WingTipRibY1973",
+"body": "5728-R",
+"pn": "AR-SH-PT1-23208",
+"vol": 62257.7309,
+"c": [
+82.88193,
+1973.0,
+13.1385
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+-112.5319,
+1971.0,
+-9.8422,
+328.7624,
+1975.0,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23202-WingRibY819Y966:2",
+"comp": "23202-WingRibY819Y966",
+"body": "5722-R",
+"pn": "AR-SH-PT1-23202",
+"vol": 43859.0667,
+"c": [
+94.98943,
+965.83333,
+12.15151
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+963.3333,
+-9.8422,
+328.7624,
+968.3337,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23200-Ribs:1+23204-WingFrontRibY1248Y1656Y1792:3",
+"comp": "23204-WingFrontRibY1248Y1656Y1792",
+"body": "5724-R",
+"pn": "AR-SH-PT1-23204",
+"vol": 33292.4955,
+"c": [
+46.62469,
+1791.66667,
+14.40168
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.5392,
+1789.1663,
+-9.8422,
+195.4136,
+1794.1667,
+44.3927
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23300-LeadingEdge:1+23301-LeadingEdgeSheet:1",
+"comp": "23301-LeadingEdgeSheet",
+"body": "5731-R",
+"pn": "AR-SH-PT1-23301",
+"vol": 254162.8519,
+"c": [
+-86.07999,
+1322.5,
+13.12362
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-114.0392,
+670.0,
+-9.8053,
+-43.4021,
+1975.0,
+38.4043
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23300-LeadingEdge:1+23302-LeadingEdgeStick10x5:1",
+"comp": "23302-LeadingEdgeStick10x5",
+"body": "5732-R",
+"pn": "AR-SH-PT1-23302",
+"vol": 51247.2302,
+"c": [
+-109.66107,
+1322.5,
+2.326
+],
+"mat": "PT1 Balsa",
+"bbox": [
+-112.539,
+670.0,
+-2.674,
+-107.539,
+1975.0,
+7.326
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23400-TrailingEdge:1+23401-TrailingEdgeTubeD4x2p5L445:1",
+"comp": "23401-TrailingEdgeTubeD4x2p5L445",
+"body": "5741-R",
+"pn": "AR-SH-PT1-23401",
+"vol": 3407.6463,
+"c": [
+328.48587,
+892.5,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+670.0,
+-5.9258,
+330.4859,
+1115.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23400-TrailingEdge:1+23402-TrailingEdgeTubeD4x2p5L800:1",
+"comp": "23402-TrailingEdgeTubeD4x2p5L800",
+"body": "5742-R",
+"pn": "AR-SH-PT1-23402",
+"vol": 6126.1057,
+"c": [
+328.48587,
+1520.0,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+1120.0,
+-5.9258,
+330.4859,
+1920.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23400-TrailingEdge:1+23403-TrailingEdgeTubeD4x2p5L50:1",
+"comp": "23403-TrailingEdgeTubeD4x2p5L50",
+"body": "5743-R",
+"pn": "AR-SH-PT1-23403",
+"vol": 382.8816,
+"c": [
+328.48587,
+1950.0,
+-3.92582
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+326.4859,
+1925.0,
+-5.9258,
+330.4859,
+1975.0,
+-1.9258
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23501-AileronRib:1",
+"comp": "23501-AileronRib",
+"body": "5751-R",
+"pn": "AR-SH-PT1-23501",
+"vol": 9248.2203,
+"c": [
+254.84848,
+1248.5,
+4.57357
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+1246.0,
+-7.1263,
+328.7624,
+1251.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23501-AileronRib:2",
+"comp": "23501-AileronRib",
+"body": "5751-R",
+"pn": "AR-SH-PT1-23501",
+"vol": 9248.2203,
+"c": [
+254.84848,
+1384.25,
+4.57357
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+1381.75,
+-7.1263,
+328.7624,
+1386.75,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23501-AileronRib:3",
+"comp": "23501-AileronRib",
+"body": "5751-R",
+"pn": "AR-SH-PT1-23501",
+"vol": 9248.2203,
+"c": [
+254.84848,
+1520.0,
+4.57357
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+1517.5,
+-7.1263,
+328.7624,
+1522.5,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23501-AileronRib:4",
+"comp": "23501-AileronRib",
+"body": "5751-R",
+"pn": "AR-SH-PT1-23501",
+"vol": 9248.2203,
+"c": [
+254.84848,
+1655.75,
+4.57357
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+1653.25,
+-7.1263,
+328.7624,
+1658.25,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23501-AileronRib:5",
+"comp": "23501-AileronRib",
+"body": "5751-R",
+"pn": "AR-SH-PT1-23501",
+"vol": 9248.2203,
+"c": [
+254.84848,
+1791.5,
+4.57357
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+200.562,
+1789.0,
+-7.1263,
+328.7624,
+1794.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23502-AileronEndRib:1",
+"comp": "23502-AileronEndRib",
+"body": "5752-R",
+"pn": "AR-SH-PT1-23502",
+"vol": 9079.3817,
+"c": [
+252.41207,
+1122.0,
+4.85764
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+200.562,
+1120.0,
+-7.1263,
+328.7624,
+1124.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23502-AileronEndRib:2",
+"comp": "23502-AileronEndRib",
+"body": "5752-R",
+"pn": "AR-SH-PT1-23502",
+"vol": 9079.3817,
+"c": [
+252.41207,
+1918.0,
+4.85764
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+200.562,
+1916.0,
+-7.1263,
+328.7624,
+1920.0,
+25.485
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23503-AileronNoseSheetLower1p5mm:1",
+"comp": "23503-AileronNoseSheetLower1p5mm",
+"body": "5753-R",
+"pn": "AR-SH-PT1-23503",
+"vol": 21547.0949,
+"c": [
+206.22179,
+1519.49488,
+1.19569
+],
+"mat": "PT1 Balsa",
+"bbox": [
+200.6053,
+1120.0,
+-7.0788,
+211.4321,
+1920.0,
+10.1737
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23500-AileronStructure:1+23504-AileronNoseSheetUpper1p5mm:1",
+"comp": "23504-AileronNoseSheetUpper1p5mm",
+"body": "5754-R",
+"pn": "AR-SH-PT1-23504",
+"vol": 18359.0578,
+"c": [
+205.68485,
+1519.19557,
+18.22178
+],
+"mat": "PT1 Balsa",
+"bbox": [
+200.6053,
+1120.0,
+10.1737,
+210.2686,
+1920.0,
+25.4111
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23601-AileronHingeRod10x10x800:1",
+"comp": "23601-AileronHingeRod10x10x800",
+"body": "2721-R",
+"pn": "AR-SH-PT1-23601",
+"vol": 34603.9862,
+"c": [
+235.197,
+1520.0,
+6.456
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+230.197,
+1120.0,
+1.456,
+240.197,
+1920.0,
+11.456
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23602-AileronHingeBlock:1",
+"comp": "23602-AileronHingeBlock",
+"body": "2722-R",
+"pn": "AR-SH-PT1-23602",
+"vol": 10008.866,
+"c": [
+223.65516,
+1177.25,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+1155.25,
+-0.5443,
+242.1974,
+1199.25,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23602-AileronHingeBlock:2",
+"comp": "23602-AileronHingeBlock",
+"body": "2722-R",
+"pn": "AR-SH-PT1-23602",
+"vol": 10008.866,
+"c": [
+223.65516,
+1313.0,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+1291.0,
+-0.5443,
+242.1974,
+1335.0,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23602-AileronHingeBlock:3",
+"comp": "23602-AileronHingeBlock",
+"body": "2722-R",
+"pn": "AR-SH-PT1-23602",
+"vol": 10008.866,
+"c": [
+223.65516,
+1584.5,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+1562.5,
+-0.5443,
+242.1974,
+1606.5,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23602-AileronHingeBlock:4",
+"comp": "23602-AileronHingeBlock",
+"body": "2722-R",
+"pn": "AR-SH-PT1-23602",
+"vol": 10008.866,
+"c": [
+223.65516,
+1720.25,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+1698.25,
+-0.5443,
+242.1974,
+1742.25,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23602-AileronHingeBlock:5",
+"comp": "23602-AileronHingeBlock",
+"body": "2722-R",
+"pn": "AR-SH-PT1-23602",
+"vol": 10008.866,
+"c": [
+223.65516,
+1856.0,
+9.27561
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+201.4636,
+1834.0,
+-0.5443,
+242.1974,
+1878.0,
+13.9735
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23603-AileronHingeHolder:1",
+"comp": "23603-AileronHingeHolder",
+"body": "2723-R",
+"pn": "AR-SH-PT1-23603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+1181.0,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+1165.85,
+2.9235,
+200.8636,
+1196.15,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23603-AileronHingeHolder:2",
+"comp": "23603-AileronHingeHolder",
+"body": "2723-R",
+"pn": "AR-SH-PT1-23603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+1316.75,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+1301.6,
+2.9235,
+200.8636,
+1331.9,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23603-AileronHingeHolder:3",
+"comp": "23603-AileronHingeHolder",
+"body": "2723-R",
+"pn": "AR-SH-PT1-23603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+1588.25,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+1573.1,
+2.9235,
+200.8636,
+1603.4,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23603-AileronHingeHolder:4",
+"comp": "23603-AileronHingeHolder",
+"body": "2723-R",
+"pn": "AR-SH-PT1-23603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+1724.0,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+1708.85,
+2.9235,
+200.8636,
+1739.15,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23603-AileronHingeHolder:5",
+"comp": "23603-AileronHingeHolder",
+"body": "2723-R",
+"pn": "AR-SH-PT1-23603",
+"vol": 1532.1414,
+"c": [
+192.6154,
+1859.75,
+10.17346
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+189.4136,
+1844.6,
+2.9235,
+200.8636,
+1874.9,
+17.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23604-AileronHinge:1",
+"comp": "23604-AileronHinge",
+"body": "2724-R",
+"pn": "AR-SH-PT1-23604",
+"vol": 1026.88,
+"c": [
+207.87525,
+1176.39706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+1162.25,
+7.9235,
+219.6636,
+1192.25,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23604-AileronHinge:2",
+"comp": "23604-AileronHinge",
+"body": "2724-R",
+"pn": "AR-SH-PT1-23604",
+"vol": 1026.88,
+"c": [
+207.87525,
+1312.14706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+1298.0,
+7.9235,
+219.6636,
+1328.0,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23604-AileronHinge:3",
+"comp": "23604-AileronHinge",
+"body": "2724-R",
+"pn": "AR-SH-PT1-23604",
+"vol": 1026.88,
+"c": [
+207.87525,
+1583.64706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+1569.5,
+7.9235,
+219.6636,
+1599.5,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23604-AileronHinge:4",
+"comp": "23604-AileronHinge",
+"body": "2724-R",
+"pn": "AR-SH-PT1-23604",
+"vol": 1026.88,
+"c": [
+207.87525,
+1719.39706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+1705.25,
+7.9235,
+219.6636,
+1735.25,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23600-AileronHinges:1+23604-AileronHinge:5",
+"comp": "23604-AileronHinge",
+"body": "2724-R",
+"pn": "AR-SH-PT1-23604",
+"vol": 1026.88,
+"c": [
+207.87525,
+1855.14706,
+10.17346
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+196.1636,
+1841.0,
+7.9235,
+219.6636,
+1871.0,
+12.4235
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23701-AileronServoMount:1",
+"comp": "23701-AileronServoMount",
+"body": "2711-R",
+"pn": "AR-SH-PT1-23701",
+"vol": 30766.2649,
+"c": [
+157.41914,
+1410.35198,
+19.02245
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+125.7136,
+1386.9667,
+-5.9815,
+191.1136,
+1433.0833,
+29.6968
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23702-AileronServoMountCap:1",
+"comp": "23702-AileronServoMountCap",
+"body": "2712-R",
+"pn": "AR-SH-PT1-23702",
+"vol": 9712.1807,
+"c": [
+157.97704,
+1513.2,
+17.86413
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+125.7136,
+1509.2,
+-5.9815,
+191.1136,
+1517.2,
+29.6968
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23703-ServoBayRibShort:1",
+"comp": "23703-ServoBayRibShort",
+"body": "2713-R",
+"pn": "AR-SH-PT1-23703",
+"vol": 6176.9711,
+"c": [
+156.71859,
+1435.08333,
+14.94717
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+121.4136,
+1433.0833,
+-7.9486,
+195.4136,
+1437.0833,
+30.0029
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23704-ServoBaySpanwiseWeb:1",
+"comp": "23704-ServoBaySpanwiseWeb",
+"body": "2714-R",
+"pn": "AR-SH-PT1-23704",
+"vol": 20238.0782,
+"c": [
+123.4136,
+1452.40061,
+10.87072
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+121.4136,
+1382.6667,
+-7.9847,
+125.4136,
+1521.5,
+30.0029
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23705-AileronHornBase:1",
+"comp": "23705-AileronHornBase",
+"body": "2715-R",
+"pn": "AR-SH-PT1-23705",
+"vol": 4902.4842,
+"c": [
+236.98079,
+1452.12512,
+-12.94068
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+227.0194,
+1433.881,
+-28.5443,
+255.595,
+1470.369,
+-6.6654
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23706-AileronHornRodClamp:1",
+"comp": "23706-AileronHornRodClamp",
+"body": "2716-R",
+"pn": "AR-SH-PT1-23706",
+"vol": 8933.3422,
+"c": [
+238.88472,
+1452.12512,
+1.28582
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+226.7963,
+1433.881,
+-6.9547,
+255.5545,
+1470.369,
+15.0746
+]
+},
+{
+"path": "20000-WingStructure:1+23000-RightWing:1+23700-AileronActuation:1+23707-AileronHornPlate:1",
+"comp": "23707-AileronHornPlate",
+"body": "2717-R",
+"pn": "AR-SH-PT1-23707",
+"vol": 1983.4715,
+"c": [
+239.5523,
+1452.12522,
+13.51399
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+229.8974,
+1433.881,
+11.8557,
+255.3667,
+1470.369,
+15.3335
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32101L-TailRearSkinCover:1",
+"comp": "32101L-TailRearSkinCover",
+"body": "5541-L",
+"pn": "AR-SH-PT1-32101L",
+"vol": 162259.2381,
+"c": [
+1397.68739,
+-81.99798,
+303.82549
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+1325.0756,
+-170.7395,
+270.448,
+1463.2537,
+9.75,
+328.8603
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32101R-TailRearSkinCover:1",
+"comp": "32101R-TailRearSkinCover",
+"body": "5541-R",
+"pn": "AR-SH-PT1-32101R",
+"vol": 154382.7426,
+"c": [
+1397.37476,
+86.04854,
+303.7935
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+1325.0756,
+0.25,
+270.448,
+1463.2537,
+170.7395,
+328.8603
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32102L-TailFrontSkinCover:1",
+"comp": "32102L-TailFrontSkinCover",
+"body": "5542-L",
+"pn": "AR-SH-PT1-32102L",
+"vol": 179231.3561,
+"c": [
+1255.99815,
+-83.11251,
+308.8407
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+1189.4677,
+-171.9916,
+270.0777,
+1336.5009,
+9.75,
+333.1385
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32102R-TailFrontSkinCover:1",
+"comp": "32102R-TailFrontSkinCover",
+"body": "5542-R",
+"pn": "AR-SH-PT1-32102R",
+"vol": 170094.3292,
+"c": [
+1256.32858,
+87.5249,
+308.88593
+],
+"mat": "PT1 ASA-Aero 0.30 eff",
+"bbox": [
+1189.4677,
+0.25,
+270.0777,
+1336.5009,
+171.9916,
+333.1385
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32103-CoverMountTab:1",
+"comp": "32103-CoverMountTab",
+"body": "5543-L",
+"pn": "AR-SH-PT1-32103",
+"vol": 973.4781,
+"c": [
+1256.99653,
+-163.28106,
+301.64307
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+1252.7491,
+-173.2774,
+294.4081,
+1261.2535,
+-152.9256,
+310.2252
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32106-CoverMountTabMirrored:1",
+"comp": "32106-CoverMountTabMirrored",
+"body": "5543-R",
+"pn": "AR-SH-PT1-32106",
+"vol": 973.4781,
+"c": [
+1256.99653,
+163.28106,
+301.64307
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+1252.7491,
+152.9256,
+294.4081,
+1261.2535,
+173.2774,
+310.2252
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32104-M3Shim8x8x0p5:1",
+"comp": "32104-M3Shim8x8x0p5",
+"body": "5544",
+"pn": "AR-SH-PT1-32104",
+"vol": 20.3222,
+"c": [
+-50.29161,
+0.0,
+47.38377
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-54.2979,
+-4.0,
+46.9943,
+-46.2853,
+4.0,
+47.7732
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32105-M3DShimOD8ID3p5T0p5:1",
+"comp": "32105-M3DShimOD8ID3p5T0p5",
+"body": "5545",
+"pn": "AR-SH-PT1-32105",
+"vol": 17.06,
+"c": [
+-50.8861,
+0.0,
+47.40453
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-54.2979,
+-4.0,
+47.0467,
+-47.7844,
+4.0,
+47.7732
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32103-CoverMountTab:2",
+"comp": "32103-CoverMountTab",
+"body": "5543-L",
+"pn": "AR-SH-PT1-32103",
+"vol": 973.4781,
+"c": [
+1256.26013,
+148.50617,
+280.55534
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+1251.8072,
+138.4069,
+271.7781,
+1260.7482,
+157.5692,
+289.7696
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32100-TailSkin:1+32106-CoverMountTabMirrored:2",
+"comp": "32106-CoverMountTabMirrored",
+"body": "5543-R",
+"pn": "AR-SH-PT1-32106",
+"vol": 973.4781,
+"c": [
+1256.26013,
+-148.50617,
+280.55534
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+1251.8072,
+-157.5692,
+271.7781,
+1260.7482,
+-138.4069,
+289.7696
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32200-TailCentreHatch:1+32201-TailCentreHatch:1",
+"comp": "32201-TailCentreHatch",
+"body": "5221",
+"pn": "AR-SH-PT1-32201",
+"vol": 42673.0282,
+"c": [
+1321.89901,
+0.00012,
+326.62088
+],
+"mat": "PT1 ASA-Aero 0.25 eff",
+"bbox": [
+1274.8997,
+-55.6,
+313.5459,
+1378.4107,
+55.6,
+332.874
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32200-TailCentreHatch:1+32202-TailHatchLatchReceiver:1",
+"comp": "32202-TailHatchLatchReceiver",
+"body": "5222",
+"pn": "AR-SH-PT1-32202",
+"vol": 4406.9954,
+"c": [
+1310.65707,
+-0.00435,
+320.35125
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1274.8721,
+-26.5014,
+315.7131,
+1329.3734,
+26.5016,
+328.4348
+]
+},
+{
+"path": "30000-TailStructure:1+32000-SkinHatch:1+32200-TailCentreHatch:1+14202-LatchHousingBLeft:2",
+"comp": "14202-LatchHousingBLeft",
+"body": "5212-L",
+"pn": "AR-SH-PT1-14202",
+"vol": 2349.346,
+"c": [
+1287.2154,
+0.0038,
+326.84616
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1263.9286,
+-7.5109,
+320.8794,
+1328.0687,
+7.4965,
+338.7783
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33101-RuddervatorLESheetLeft:1",
+"comp": "33101-RuddervatorLESheetLeft",
+"body": "5551-L",
+"pn": "AR-SH-PT1-33101",
+"vol": 8690.4736,
+"c": [
+1362.85776,
+-322.91426,
+161.08686
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.431,
+-486.1405,
+45.3332,
+1370.9604,
+-160.1088,
+277.4558
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33101-RuddervatorLESheetLeft:2",
+"comp": "33101-RuddervatorLESheetLeft",
+"body": "5551-L",
+"pn": "AR-SH-PT1-33101",
+"vol": 8690.4736,
+"c": [
+1363.29224,
+-331.63147,
+173.52875
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.4753,
+-494.437,
+57.2998,
+1371.7512,
+-168.4052,
+289.1719
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibLeft:1",
+"comp": "33102-RuddervatorRibLeft",
+"body": "5552-L",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8234,
+"c": [
+1393.45563,
+-485.60792,
+55.33482
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.3309,
+-496.0089,
+43.0344,
+1452.0876,
+-475.1854,
+69.7756
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibLeft2:1",
+"comp": "33102-RuddervatorRibLeft2",
+"body": "5552-L-V2",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8201,
+"c": [
+1395.96822,
+-382.78914,
+127.28545
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1356.8435,
+-393.1901,
+114.985,
+1454.6002,
+-372.3666,
+141.7262
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibLeft3:1",
+"comp": "33102-RuddervatorRibLeft3",
+"body": "5552-L-V3",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8164,
+"c": [
+1398.68099,
+-271.77847,
+204.9686
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1359.5562,
+-282.1795,
+192.6682,
+1457.313,
+-261.356,
+219.4094
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibLeft3:2",
+"comp": "33102-RuddervatorRibLeft3",
+"body": "5552-L-V3",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8164,
+"c": [
+1401.19357,
+-168.95933,
+276.91948
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1362.0688,
+-179.3603,
+264.619,
+1459.8255,
+-158.5368,
+291.3603
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibRight:1",
+"comp": "33102-RuddervatorRibRight",
+"body": "5552-R",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8164,
+"c": [
+1393.45567,
+485.60792,
+55.33481
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.3309,
+475.1854,
+43.0344,
+1452.0876,
+496.0089,
+69.7756
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibRight2:1",
+"comp": "33102-RuddervatorRibRight2",
+"body": "5552-R-V2",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8201,
+"c": [
+1395.96822,
+382.78914,
+127.28544
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1356.8435,
+372.3666,
+114.985,
+1454.6002,
+393.1901,
+141.7262
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibRight3:1",
+"comp": "33102-RuddervatorRibRight3",
+"body": "5552-R-V3",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8226,
+"c": [
+1398.68096,
+271.77847,
+204.9686
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1359.5562,
+261.356,
+192.6682,
+1457.313,
+282.1795,
+219.4094
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33102-RuddervatorRibRight3:2",
+"comp": "33102-RuddervatorRibRight3",
+"body": "5552-R-V3",
+"pn": "AR-SH-PT1-33102",
+"vol": 6120.8226,
+"c": [
+1401.19354,
+168.95933,
+276.91948
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1362.0688,
+158.5368,
+264.619,
+1459.8255,
+179.3603,
+291.3603
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33101-RuddervatorLESheetRight:1",
+"comp": "33101-RuddervatorLESheetRight",
+"body": "5551-R",
+"pn": "AR-SH-PT1-33101",
+"vol": 8690.4736,
+"c": [
+1362.85776,
+322.91426,
+161.08686
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.431,
+160.1088,
+45.3332,
+1370.9604,
+486.1405,
+277.4558
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33100-RuddervatorStructure:1+33101-RuddervatorLESheetRight:2",
+"comp": "33101-RuddervatorLESheetRight",
+"body": "5551-R",
+"pn": "AR-SH-PT1-33101",
+"vol": 8690.4736,
+"c": [
+1363.29224,
+331.63147,
+173.52875
+],
+"mat": "PT1 Balsa",
+"bbox": [
+1354.4753,
+168.4052,
+57.2998,
+1371.7512,
+494.437,
+289.1719
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33202-TailHingeBlock:1",
+"comp": "33202-TailHingeBlock",
+"body": "2741-L",
+"pn": "AR-SH-PT1-33202",
+"vol": 8236.4711,
+"c": [
+1374.76885,
+-434.48546,
+92.41697
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1356.1978,
+-456.8651,
+72.7565,
+1388.8556,
+-411.8071,
+111.2397
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33202-TailHingeBlock:2",
+"comp": "33202-TailHingeBlock",
+"body": "2741-L",
+"pn": "AR-SH-PT1-33202",
+"vol": 8236.4711,
+"c": [
+1379.99418,
+-220.65601,
+242.05075
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1361.4231,
+-243.0357,
+222.3902,
+1394.081,
+-197.9776,
+260.8735
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33203-TailHingeHolder:1",
+"comp": "33203-TailHingeHolder",
+"body": "2742-L",
+"pn": "AR-SH-PT1-33203",
+"vol": 1532.1414,
+"c": [
+1347.68428,
+-437.12105,
+90.58718
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1344.0013,
+-452.9042,
+76.7945,
+1356.1517,
+-421.3379,
+104.5336
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33203-TailHingeHolder:2",
+"comp": "33203-TailHingeHolder",
+"body": "2742-L",
+"pn": "AR-SH-PT1-33203",
+"vol": 1532.1414,
+"c": [
+1352.9096,
+-223.2916,
+240.22097
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1349.2266,
+-239.0747,
+226.4283,
+1361.377,
+-207.5085,
+254.1674
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33201-RuddervatorHingeRod10x10Bore8p5Left:1",
+"comp": "33201-RuddervatorHingeRod10x10Bore8p5Left",
+"body": "2743-L",
+"pn": "AR-SH-PT1-33201",
+"vol": 16936.7719,
+"c": [
+1383.25683,
+-327.27287,
+166.60304
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+1374.1979,
+-490.5129,
+50.1099,
+1392.3157,
+-164.0328,
+283.0962
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33201-RuddervatorHingeRod10x10Bore8p5Right:1",
+"comp": "33201-RuddervatorHingeRod10x10Bore8p5Right",
+"body": "2743-R",
+"pn": "AR-SH-PT1-33201",
+"vol": 16936.7719,
+"c": [
+1383.25683,
+327.27287,
+166.60304
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+1374.1979,
+164.0328,
+50.1099,
+1392.3157,
+490.5129,
+283.0962
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33202-TailHingeBlock:3",
+"comp": "33202-TailHingeBlock",
+"body": "2741-L",
+"pn": "AR-SH-PT1-33202",
+"vol": 8236.4711,
+"c": [
+1374.76885,
+434.48546,
+92.41697
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1356.1978,
+411.8071,
+72.7565,
+1388.8556,
+456.8651,
+111.2397
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33202-TailHingeBlock:4",
+"comp": "33202-TailHingeBlock",
+"body": "2741-L",
+"pn": "AR-SH-PT1-33202",
+"vol": 8236.4711,
+"c": [
+1379.99418,
+220.65601,
+242.05075
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1361.4231,
+197.9776,
+222.3902,
+1394.081,
+243.0357,
+260.8735
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33203-TailHingeHolder:3",
+"comp": "33203-TailHingeHolder",
+"body": "2742-L",
+"pn": "AR-SH-PT1-33203",
+"vol": 1532.1414,
+"c": [
+1347.68428,
+437.12105,
+90.58718
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1344.0013,
+421.3379,
+76.7945,
+1356.1517,
+452.9042,
+104.5336
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33200-RuddervatorHinges:1+33203-TailHingeHolder:4",
+"comp": "33203-TailHingeHolder",
+"body": "2742-L",
+"pn": "AR-SH-PT1-33203",
+"vol": 1532.1414,
+"c": [
+1352.9096,
+223.2916,
+240.22097
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1349.2266,
+207.5085,
+226.4283,
+1361.377,
+239.0747,
+254.1674
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33301-RuddervatorHornBase:1",
+"comp": "33301-RuddervatorHornBase",
+"body": "2731-L",
+"pn": "AR-SH-PT1-33301",
+"vol": 5661.5967,
+"c": [
+1385.37695,
+-316.66679,
+151.41013
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1374.4547,
+-334.8389,
+134.5194,
+1403.2894,
+-302.2651,
+166.6449
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33302-RuddervatorHornRodClamp:1",
+"comp": "33302-RuddervatorHornRodClamp",
+"body": "2732-L",
+"pn": "AR-SH-PT1-33302",
+"vol": 8320.8605,
+"c": [
+1386.36338,
+-324.68343,
+162.83154
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1374.4547,
+-346.5803,
+145.687,
+1403.5711,
+-304.9153,
+183.9204
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33303-RuddervatorHornPlate:1",
+"comp": "33303-RuddervatorHornPlate",
+"body": "2733-L",
+"pn": "AR-SH-PT1-33303",
+"vol": 2045.3012,
+"c": [
+1387.79966,
+-331.23207,
+172.13936
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1377.7598,
+-347.0772,
+160.4617,
+1403.6027,
+-315.2674,
+184.1256
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33301-RuddervatorHornBase:2",
+"comp": "33301-RuddervatorHornBase",
+"body": "2731-L",
+"pn": "AR-SH-PT1-33301",
+"vol": 5661.5967,
+"c": [
+1385.37694,
+316.667,
+151.40999
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1374.4547,
+302.2655,
+134.5191,
+1403.2894,
+334.8393,
+166.6447
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33302-RuddervatorHornRodClamp:2",
+"comp": "33302-RuddervatorHornRodClamp",
+"body": "2732-L",
+"pn": "AR-SH-PT1-33302",
+"vol": 8320.8605,
+"c": [
+1386.36337,
+324.68358,
+162.83144
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1374.4547,
+304.9157,
+145.6867,
+1403.5711,
+346.5807,
+183.9202
+]
+},
+{
+"path": "30000-TailStructure:1+33000-Ruddervators:1+33300-RuddervatorActuation:1+33303-RuddervatorHornPlate:2",
+"comp": "33303-RuddervatorHornPlate",
+"body": "2733-L",
+"pn": "AR-SH-PT1-33303",
+"vol": 2045.3012,
+"c": [
+1387.79966,
+331.23207,
+172.13936
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1377.7598,
+315.2678,
+160.4614,
+1403.6027,
+347.0775,
+184.1253
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31100-Spars:1+31101-TailMainSpar:1",
+"comp": "31101-TailMainSpar",
+"body": "5511",
+"pn": "AR-SH-PT1-31101",
+"vol": 154495.1803,
+"c": [
+1351.62483,
+0.3471,
+177.69961
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1343.4984,
+-564.8338,
+2.1566,
+1358.6185,
+564.8338,
+320.8031
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31100-Spars:1+31102-TailCrossTubeD16x14:1",
+"comp": "31102-TailCrossTubeD16x14",
+"body": "5512",
+"pn": "AR-SH-PT1-31102",
+"vol": 11481.4437,
+"c": [
+1274.26497,
+0.0,
+312.00703
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+1266.2575,
+-121.8254,
+303.7932,
+1282.2595,
+121.8254,
+319.8499
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31100-Spars:1+31103-TailPanelSparTubeD16x14:1",
+"comp": "31103-TailPanelSparTubeD16x14",
+"body": "5513-L",
+"pn": "AR-SH-PT1-31103",
+"vol": 22953.387,
+"c": [
+1269.30155,
+-328.28475,
+169.87349
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+1256.428,
+-532.3721,
+23.7129,
+1282.1751,
+-124.1974,
+316.0341
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31100-Spars:1+31103-TailPanelSparTubeD16x14:2",
+"comp": "31103-TailPanelSparTubeD16x14",
+"body": "5513-L",
+"pn": "AR-SH-PT1-31103",
+"vol": 22953.387,
+"c": [
+1269.30155,
+328.28475,
+169.87349
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+1256.428,
+124.1974,
+23.7129,
+1282.1751,
+532.3721,
+316.0341
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31201-TailCentreRibLeft:1",
+"comp": "31201-TailCentreRibLeft",
+"body": "5521-L",
+"pn": "AR-SH-PT1-31201",
+"vol": 14774.3613,
+"c": [
+1307.76403,
+-74.18943,
+310.61721
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1194.3108,
+-76.1974,
+294.5632,
+1443.2123,
+-72.1815,
+329.1356
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31201-TailCentreRibRight:1",
+"comp": "31201-TailCentreRibRight",
+"body": "5521-R",
+"pn": "AR-SH-PT1-31201",
+"vol": 14774.2072,
+"c": [
+1307.76554,
+74.18944,
+310.61714
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1194.3108,
+72.1815,
+294.5632,
+1443.2123,
+76.1974,
+329.1356
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31202-TailRootRibLeft:1",
+"comp": "31202-TailRootRibLeft",
+"body": "5522-L",
+"pn": "AR-SH-PT1-31202",
+"vol": 20437.9108,
+"c": [
+1322.30687,
+-161.93565,
+284.46555
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1190.8772,
+-175.6755,
+267.4949,
+1462.0146,
+-148.296,
+304.9126
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31202-TailRootRibRight:1",
+"comp": "31202-TailRootRibRight",
+"body": "5522-R",
+"pn": "AR-SH-PT1-31202",
+"vol": 20437.9193,
+"c": [
+1322.30654,
+161.93559,
+284.46557
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1190.8772,
+148.296,
+267.4949,
+1462.0146,
+175.6755,
+304.9126
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31203-TailMidRibLeft:1",
+"comp": "31203-TailMidRibLeft",
+"body": "5523-L",
+"pn": "AR-SH-PT1-31203",
+"vol": 14001.3875,
+"c": [
+1277.01306,
+-382.46397,
+131.84698
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1185.4917,
+-396.0586,
+113.275,
+1352.0831,
+-368.679,
+150.6927
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31203-TailMidRibLeft2:1",
+"comp": "31203-TailMidRibLeft2",
+"body": "5523-L-V2",
+"pn": "AR-SH-PT1-31203",
+"vol": 14001.335,
+"c": [
+1279.70584,
+-272.27244,
+208.9569
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1188.1844,
+-285.8671,
+190.3849,
+1354.7759,
+-258.4875,
+227.8026
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31203-TailMidRibRight:1",
+"comp": "31203-TailMidRibRight",
+"body": "5523-R",
+"pn": "AR-SH-PT1-31203",
+"vol": 14001.5043,
+"c": [
+1277.01282,
+382.46385,
+131.84705
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1185.4917,
+368.679,
+113.275,
+1352.0831,
+396.0586,
+150.6927
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31203-TailMidRibRight2:1",
+"comp": "31203-TailMidRibRight2",
+"body": "5523-R-V2",
+"pn": "AR-SH-PT1-31203",
+"vol": 14001.3871,
+"c": [
+1279.70568,
+272.27241,
+208.95698
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1188.1844,
+258.4875,
+190.3849,
+1354.7759,
+285.8671,
+227.8026
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31204-TailTipRibLeft:1",
+"comp": "31204-TailTipRibLeft",
+"body": "5524-L",
+"pn": "AR-SH-PT1-31204",
+"vol": 19580.9944,
+"c": [
+1318.61375,
+-492.50233,
+52.97218
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1182.799,
+-506.2497,
+36.1653,
+1451.9075,
+-478.8702,
+73.583
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31204-TailTipRibRight:1",
+"comp": "31204-TailTipRibRight",
+"body": "5524-R",
+"pn": "AR-SH-PT1-31204",
+"vol": 19580.9408,
+"c": [
+1318.61405,
+492.50226,
+52.9722
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1182.799,
+478.8702,
+36.1653,
+1451.9075,
+506.2497,
+73.583
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31205-TailPanelCrossPlate:1",
+"comp": "31205-TailPanelCrossPlate",
+"body": "5526-L",
+"pn": "AR-SH-PT1-31205",
+"vol": 19677.2436,
+"c": [
+1281.25014,
+-326.1896,
+168.19178
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1277.4197,
+-390.121,
+115.6713,
+1285.0921,
+-260.7856,
+221.0438
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31206-TailRibPieceY312:1",
+"comp": "31206-TailRibPieceY312",
+"body": "5527-L",
+"pn": "AR-SH-PT1-31206",
+"vol": 5108.3842,
+"c": [
+1316.409,
+-314.15602,
+179.85212
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1279.0264,
+-324.2805,
+161.6791,
+1353.6276,
+-299.788,
+191.9497
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31205-TailPanelCrossPlate:2",
+"comp": "31205-TailPanelCrossPlate",
+"body": "5526-L",
+"pn": "AR-SH-PT1-31205",
+"vol": 19677.2436,
+"c": [
+1281.25014,
+326.1896,
+168.19178
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1277.4197,
+260.7856,
+115.6713,
+1285.0921,
+390.121,
+221.0438
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31200-Ribs:1+31206-TailRibPieceY312:2",
+"comp": "31206-TailRibPieceY312",
+"body": "5527-L",
+"pn": "AR-SH-PT1-31206",
+"vol": 5108.3842,
+"c": [
+1316.409,
+314.15602,
+179.85212
+],
+"mat": "PT1 Beech Plywood",
+"bbox": [
+1279.0264,
+299.788,
+161.6791,
+1353.6276,
+324.2805,
+191.9497
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31300-Connectors:1+31303L-TailSparConnector:1",
+"comp": "31303L-TailSparConnector",
+"body": "5533-L",
+"pn": "AR-SH-PT1-31303L",
+"vol": 9160.9205,
+"c": [
+1316.80576,
+-310.02449,
+184.40129
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1283.1633,
+-321.0039,
+165.6702,
+1350.2814,
+-294.4246,
+196.5355
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31300-Connectors:1+31303R-TailSparConnector:1",
+"comp": "31303R-TailSparConnector",
+"body": "5533-R",
+"pn": "AR-SH-PT1-31303R",
+"vol": 9093.816,
+"c": [
+1316.80871,
+310.05896,
+184.45044
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1283.1633,
+294.4246,
+165.6702,
+1350.2814,
+321.0039,
+196.5355
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31300-Connectors:1+31304L-TailCentreConnector:1",
+"comp": "31304L-TailCentreConnector",
+"body": "5534-L",
+"pn": "AR-SH-PT1-31304L",
+"vol": 18630.573,
+"c": [
+1275.14653,
+-124.20072,
+307.07369
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1261.1786,
+-160.4729,
+282.1216,
+1295.7821,
+-91.8217,
+324.1364
+]
+},
+{
+"path": "30000-TailStructure:1+31000-PrimaryStructure:1+31300-Connectors:1+31304R-TailCentreConnector:1",
+"comp": "31304R-TailCentreConnector",
+"body": "5534-R",
+"pn": "AR-SH-PT1-31304R",
+"vol": 18630.573,
+"c": [
+1275.14653,
+124.20072,
+307.07369
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+1261.1786,
+91.8217,
+282.1216,
+1295.7821,
+160.4729,
+324.1364
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 01",
+"pn": "AR-SH-PT1-41101",
+"vol": 311.3763,
+"c": [
+-675.0002,
+-549.99905,
+41.04037
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-680.8,
+-555.8,
+36.2,
+-669.2,
+-544.2,
+49.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 02",
+"pn": "AR-SH-PT1-41101",
+"vol": 20032.0643,
+"c": [
+-675.0,
+-550.0,
+78.0821
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-705.0,
+-580.0,
+69.5,
+-645.0,
+-520.0,
+84.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 03",
+"pn": "AR-SH-PT1-41101",
+"vol": 4425.4411,
+"c": [
+-674.99874,
+-549.99548,
+64.64365
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-705.0,
+-580.0,
+55.8,
+-645.0,
+-520.0,
+74.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 04",
+"pn": "AR-SH-PT1-41101",
+"vol": 27440.5951,
+"c": [
+-675.91338,
+-550.4457,
+52.4999
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-704.75,
+-579.75,
+43.0,
+-645.25,
+-520.25,
+74.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 05",
+"pn": "AR-SH-PT1-41101",
+"vol": 2090.4775,
+"c": [
+-675.0148,
+-549.98296,
+63.51224
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-679.0,
+-554.0,
+39.0,
+-671.0,
+-546.0,
+89.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 06",
+"pn": "AR-SH-PT1-41101",
+"vol": 2118.0468,
+"c": [
+-675.0,
+-550.0,
+48.5
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-686.0,
+-561.0,
+45.0,
+-664.0,
+-539.0,
+52.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 07",
+"pn": "AR-SH-PT1-41101",
+"vol": 465.3823,
+"c": [
+-650.65441,
+-538.38774,
+50.24994
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-659.8359,
+-549.7395,
+46.0,
+-644.3311,
+-529.1401,
+54.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 08",
+"pn": "AR-SH-PT1-41101",
+"vol": 645.2283,
+"c": [
+-674.9695,
+-549.8365,
+41.88972
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-682.5,
+-557.5,
+39.0,
+-667.5,
+-542.5,
+45.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 09",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+-680.52337,
+-550.72025,
+41.74473
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-682.6375,
+-552.8795,
+39.75,
+-678.3415,
+-548.6738,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:1",
+"comp": "41101-LiftMotor",
+"body": "7121-L 10",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+-670.10735,
+-552.66244,
+41.75684
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-672.3941,
+-555.1664,
+39.75,
+-667.6454,
+-550.4953,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 01",
+"pn": "AR-SH-PT1-41101",
+"vol": 311.3763,
+"c": [
+749.9998,
+-549.99905,
+41.04037
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+744.2,
+-555.8,
+36.2,
+755.8,
+-544.2,
+49.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 02",
+"pn": "AR-SH-PT1-41101",
+"vol": 20032.0643,
+"c": [
+750.0,
+-550.0,
+78.0821
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+720.0,
+-580.0,
+69.5,
+780.0,
+-520.0,
+84.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 03",
+"pn": "AR-SH-PT1-41101",
+"vol": 4425.4411,
+"c": [
+750.00126,
+-549.99548,
+64.64365
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+720.0,
+-580.0,
+55.8,
+780.0,
+-520.0,
+74.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 04",
+"pn": "AR-SH-PT1-41101",
+"vol": 27440.5951,
+"c": [
+749.08662,
+-550.4457,
+52.4999
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+720.25,
+-579.75,
+43.0,
+779.75,
+-520.25,
+74.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 05",
+"pn": "AR-SH-PT1-41101",
+"vol": 2090.4775,
+"c": [
+749.9852,
+-549.98296,
+63.51224
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+746.0,
+-554.0,
+39.0,
+754.0,
+-546.0,
+89.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 06",
+"pn": "AR-SH-PT1-41101",
+"vol": 2118.0468,
+"c": [
+750.0,
+-550.0,
+48.5
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+739.0,
+-561.0,
+45.0,
+761.0,
+-539.0,
+52.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 07",
+"pn": "AR-SH-PT1-41101",
+"vol": 465.3823,
+"c": [
+774.34559,
+-538.38774,
+50.24994
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+765.1641,
+-549.7395,
+46.0,
+780.6689,
+-529.1401,
+54.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 08",
+"pn": "AR-SH-PT1-41101",
+"vol": 645.2283,
+"c": [
+750.0305,
+-549.8365,
+41.88972
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+742.5,
+-557.5,
+39.0,
+757.5,
+-542.5,
+45.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 09",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+744.47663,
+-550.72025,
+41.74473
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+742.3625,
+-552.8795,
+39.75,
+746.6585,
+-548.6738,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:2",
+"comp": "41101-LiftMotor",
+"body": "7121-L 10",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+754.89265,
+-552.66244,
+41.75684
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+752.6059,
+-555.1664,
+39.75,
+757.3546,
+-550.4953,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 01",
+"pn": "AR-SH-PT1-41101",
+"vol": 311.3763,
+"c": [
+-675.46671,
+549.53254,
+41.04037
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-681.2677,
+543.7323,
+36.2,
+-669.6677,
+555.3323,
+49.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 02",
+"pn": "AR-SH-PT1-41101",
+"vol": 20032.0643,
+"c": [
+-675.46766,
+549.53234,
+78.0821
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-705.4677,
+519.5323,
+69.5,
+-645.4677,
+579.5323,
+84.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 03",
+"pn": "AR-SH-PT1-41101",
+"vol": 4425.4411,
+"c": [
+-675.46314,
+549.53107,
+64.64365
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-705.4677,
+519.5323,
+55.8,
+-645.4677,
+579.5323,
+74.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 04",
+"pn": "AR-SH-PT1-41101",
+"vol": 27440.5951,
+"c": [
+-675.91336,
+550.44572,
+52.4999
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-705.2177,
+519.7823,
+43.0,
+-645.7177,
+579.2823,
+74.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 05",
+"pn": "AR-SH-PT1-41101",
+"vol": 2090.4775,
+"c": [
+-675.45062,
+549.54713,
+63.51224
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-679.4677,
+545.5323,
+39.0,
+-671.4677,
+553.5323,
+89.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 06",
+"pn": "AR-SH-PT1-41101",
+"vol": 2118.0468,
+"c": [
+-675.46766,
+549.53234,
+48.5
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-686.4677,
+538.5323,
+45.0,
+-664.4677,
+560.5323,
+52.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 07",
+"pn": "AR-SH-PT1-41101",
+"vol": 465.3823,
+"c": [
+-663.85541,
+525.18675,
+50.24994
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-675.2072,
+518.8634,
+46.0,
+-654.6077,
+534.3682,
+54.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 08",
+"pn": "AR-SH-PT1-41101",
+"vol": 645.2283,
+"c": [
+-675.30417,
+549.50184,
+41.88972
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-682.9677,
+542.0323,
+39.0,
+-667.9677,
+557.0323,
+45.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 09",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+-676.18792,
+555.05571,
+41.74473
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-678.3472,
+552.8738,
+39.75,
+-674.1414,
+557.1699,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:3",
+"comp": "41101-LiftMotor",
+"body": "7121-L 10",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+-678.1301,
+544.63969,
+41.75684
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-680.6341,
+542.1778,
+39.75,
+-675.9629,
+546.9264,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 01",
+"pn": "AR-SH-PT1-41101",
+"vol": 311.3763,
+"c": [
+749.53329,
+549.53254,
+41.04037
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+743.7323,
+543.7323,
+36.2,
+755.3323,
+555.3323,
+49.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 02",
+"pn": "AR-SH-PT1-41101",
+"vol": 20032.0643,
+"c": [
+749.53234,
+549.53234,
+78.0821
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+719.5323,
+519.5323,
+69.5,
+779.5323,
+579.5323,
+84.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 03",
+"pn": "AR-SH-PT1-41101",
+"vol": 4425.4411,
+"c": [
+749.53686,
+549.53107,
+64.64365
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+719.5323,
+519.5323,
+55.8,
+779.5323,
+579.5323,
+74.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 04",
+"pn": "AR-SH-PT1-41101",
+"vol": 27440.5951,
+"c": [
+749.08664,
+550.44572,
+52.4999
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+719.7823,
+519.7823,
+43.0,
+779.2823,
+579.2823,
+74.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 05",
+"pn": "AR-SH-PT1-41101",
+"vol": 2090.4775,
+"c": [
+749.54938,
+549.54713,
+63.51224
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+745.5323,
+545.5323,
+39.0,
+753.5323,
+553.5323,
+89.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 06",
+"pn": "AR-SH-PT1-41101",
+"vol": 2118.0468,
+"c": [
+749.53234,
+549.53234,
+48.5
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+738.5323,
+538.5323,
+45.0,
+760.5323,
+560.5323,
+52.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 07",
+"pn": "AR-SH-PT1-41101",
+"vol": 465.3823,
+"c": [
+761.14459,
+525.18675,
+50.24994
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+749.7928,
+518.8634,
+46.0,
+770.3923,
+534.3682,
+54.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 08",
+"pn": "AR-SH-PT1-41101",
+"vol": 645.2283,
+"c": [
+749.69583,
+549.50184,
+41.88972
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+742.0323,
+542.0323,
+39.0,
+757.0323,
+557.0323,
+45.0
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 09",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+748.81208,
+555.05571,
+41.74473
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+746.6528,
+552.8738,
+39.75,
+750.8586,
+557.1699,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41100-LiftMotors:1+41101-LiftMotor:4",
+"comp": "41101-LiftMotor",
+"body": "7121-L 10",
+"pn": "AR-SH-PT1-41101",
+"vol": 32.2981,
+"c": [
+746.8699,
+544.63969,
+41.75684
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+744.3659,
+542.1778,
+39.75,
+749.0371,
+546.9264,
+43.75
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 01",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-628.99966,
+-509.90275,
+35.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-630.9,
+-512.45,
+33.6,
+-627.1,
+-506.45,
+37.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 02",
+"pn": "AR-SH-PT1-41301",
+"vol": 27191.1525,
+"c": [
+-648.37673,
+-503.22084,
+20.99996
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-693.95,
+-509.75,
+3.5,
+-599.0,
+-497.2,
+38.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 03",
+"pn": "AR-SH-PT1-41301",
+"vol": 10936.6749,
+"c": [
+-644.98172,
+-510.224,
+21.0
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-681.0,
+-512.45,
+3.5,
+-609.0,
+-507.05,
+38.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 04",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-660.99966,
+-509.90275,
+35.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-662.9,
+-512.45,
+33.6,
+-659.1,
+-506.45,
+37.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 05",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-628.99966,
+-509.90275,
+6.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-630.9,
+-512.45,
+4.6,
+-627.1,
+-506.45,
+8.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:1",
+"comp": "41301-ESC",
+"body": "2421-L 06",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-660.99966,
+-509.90275,
+6.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-662.9,
+-512.45,
+4.6,
+-659.1,
+-506.45,
+8.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 01",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+727.49966,
+-509.90275,
+2.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+725.6,
+-512.45,
+0.8,
+729.4,
+-506.45,
+4.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 02",
+"pn": "AR-SH-PT1-41301",
+"vol": 27191.1525,
+"c": [
+746.87673,
+-503.22084,
+17.20004
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+697.5,
+-509.75,
+-0.3,
+792.45,
+-497.2,
+34.7
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 03",
+"pn": "AR-SH-PT1-41301",
+"vol": 10936.6749,
+"c": [
+743.48172,
+-510.224,
+17.2
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+707.5,
+-512.45,
+-0.3,
+779.5,
+-507.05,
+34.7
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 04",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+759.49966,
+-509.90275,
+2.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+757.6,
+-512.45,
+0.8,
+761.4,
+-506.45,
+4.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 05",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+727.49966,
+-509.90275,
+31.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+725.6,
+-512.45,
+29.8,
+729.4,
+-506.45,
+33.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:2",
+"comp": "41301-ESC",
+"body": "2421-L 06",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+759.49966,
+-509.90275,
+31.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+757.6,
+-512.45,
+29.8,
+761.4,
+-506.45,
+33.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 01",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-665.79733,
+509.90275,
+35.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-667.697,
+506.45,
+33.6,
+-663.897,
+512.45,
+37.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 02",
+"pn": "AR-SH-PT1-41301",
+"vol": 27191.1525,
+"c": [
+-646.42025,
+503.22084,
+20.99996
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-695.797,
+497.2,
+3.5,
+-600.847,
+509.75,
+38.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 03",
+"pn": "AR-SH-PT1-41301",
+"vol": 10936.6749,
+"c": [
+-649.81526,
+510.224,
+21.0
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-685.797,
+507.05,
+3.5,
+-613.797,
+512.45,
+38.5
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 04",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-633.79733,
+509.90275,
+35.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-635.697,
+506.45,
+33.6,
+-631.897,
+512.45,
+37.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 05",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-665.79733,
+509.90275,
+6.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-667.697,
+506.45,
+4.6,
+-663.897,
+512.45,
+8.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:3",
+"comp": "41301-ESC",
+"body": "2421-L 06",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+-633.79733,
+509.90275,
+6.49916
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+-635.697,
+506.45,
+4.6,
+-631.897,
+512.45,
+8.4
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 01",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+764.29733,
+509.90275,
+2.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+762.397,
+506.45,
+0.8,
+766.197,
+512.45,
+4.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 02",
+"pn": "AR-SH-PT1-41301",
+"vol": 27191.1525,
+"c": [
+744.92025,
+503.22084,
+17.20004
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+699.347,
+497.2,
+-0.3,
+794.297,
+509.75,
+34.7
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 03",
+"pn": "AR-SH-PT1-41301",
+"vol": 10936.6749,
+"c": [
+748.31526,
+510.224,
+17.2
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+712.297,
+507.05,
+-0.3,
+784.297,
+512.45,
+34.7
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 04",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+732.29733,
+509.90275,
+2.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+730.397,
+506.45,
+0.8,
+734.197,
+512.45,
+4.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 05",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+764.29733,
+509.90275,
+31.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+762.397,
+506.45,
+29.8,
+766.197,
+512.45,
+33.6
+]
+},
+{
+"path": "40000-Propulsion:1+41000-LiftPropulsion:1+41300-ESC:1+41301-ESC:4",
+"comp": "41301-ESC",
+"body": "2421-L 06",
+"pn": "AR-SH-PT1-41301",
+"vol": 16.9713,
+"c": [
+732.29733,
+509.90275,
+31.70084
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+730.397,
+506.45,
+29.8,
+734.197,
+512.45,
+33.6
+]
+},
+{
+"path": "80000-BoomStructure:1+81000-LongitudinalBooms:1+81100-Booms:1+81101-LongitudinalBoom30x30x2000:1",
+"comp": "81101-LongitudinalBoom30x30x2000",
+"body": "5411-L",
+"pn": "AR-SH-PT1-81101",
+"vol": 339037.204,
+"c": [
+298.65263,
+-550.11606,
+17.17
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+-700.0,
+-565.0,
+2.17,
+1300.0,
+-535.0,
+32.17
+]
+},
+{
+"path": "80000-BoomStructure:1+81000-LongitudinalBooms:1+81100-Booms:1+81101-LongitudinalBoom30x30x2000:2",
+"comp": "81101-LongitudinalBoom30x30x2000",
+"body": "5411-L",
+"pn": "AR-SH-PT1-81101",
+"vol": 339037.204,
+"c": [
+298.65263,
+550.11606,
+17.17
+],
+"mat": "PT1 Carbon Fibre",
+"bbox": [
+-700.0,
+535.0,
+2.17,
+1300.0,
+565.0,
+32.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82101L-LateralJointBlock:1",
+"comp": "82101L-LateralJointBlock",
+"body": "5421-L",
+"pn": "AR-SH-PT1-82101L",
+"vol": 50664.2847,
+"c": [
+-448.65154,
+-513.41593,
+17.25171
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-478.655,
+-534.6,
+2.17,
+-418.645,
+-485.0,
+31.67
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82101R-LateralJointBlock:1",
+"comp": "82101R-LateralJointBlock",
+"body": "5421-R",
+"pn": "AR-SH-PT1-82101R",
+"vol": 50664.2847,
+"c": [
+-448.65154,
+513.41593,
+17.25171
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-478.655,
+485.0,
+2.17,
+-418.645,
+534.6,
+31.67
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82102-LateralJointPlate:1",
+"comp": "82102-LateralJointPlate",
+"body": "5422-L",
+"pn": "AR-SH-PT1-82102",
+"vol": 8654.3509,
+"c": [
+-448.38115,
+-550.0,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-478.655,
+-575.0,
+-0.83,
+-418.645,
+-525.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82102-LateralJointPlate:2",
+"comp": "82102-LateralJointPlate",
+"body": "5422-L",
+"pn": "AR-SH-PT1-82102",
+"vol": 8654.3509,
+"c": [
+-448.38115,
+-550.0,
+33.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-478.655,
+-575.0,
+32.17,
+-418.645,
+-525.0,
+35.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82103-LateralJointSpacer:1",
+"comp": "82103-LateralJointSpacer",
+"body": "5423-L",
+"pn": "AR-SH-PT1-82103",
+"vol": 15136.4886,
+"c": [
+-447.89371,
+-570.12895,
+16.92
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-478.655,
+-575.0,
+2.17,
+-418.645,
+-565.4,
+31.67
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82102-LateralJointPlate:3",
+"comp": "82102-LateralJointPlate",
+"body": "5422-L",
+"pn": "AR-SH-PT1-82102",
+"vol": 8654.3509,
+"c": [
+-448.38115,
+550.0,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-478.655,
+525.0,
+-0.83,
+-418.645,
+575.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82102-LateralJointPlate:4",
+"comp": "82102-LateralJointPlate",
+"body": "5422-L",
+"pn": "AR-SH-PT1-82102",
+"vol": 8654.3509,
+"c": [
+-448.38115,
+550.0,
+33.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-478.655,
+525.0,
+32.17,
+-418.645,
+575.0,
+35.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82100-LateralJoint:1+82103-LateralJointSpacer:2",
+"comp": "82103-LateralJointSpacer",
+"body": "5423-L",
+"pn": "AR-SH-PT1-82103",
+"vol": 15136.4886,
+"c": [
+-447.89371,
+570.12895,
+16.92
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-478.655,
+565.4,
+2.17,
+-418.645,
+575.0,
+31.67
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82201-RootClampTopPlate:1",
+"comp": "82201-RootClampTopPlate",
+"body": "5714-L",
+"pn": "AR-SH-PT1-82201",
+"vol": 50126.9268,
+"c": [
+0.28841,
+-550.22334,
+33.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-62.7116,
+-650.0,
+32.17,
+63.2884,
+-450.0,
+35.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82202-RootClampBottomPlate:1",
+"comp": "82202-RootClampBottomPlate",
+"body": "5715-L",
+"pn": "AR-SH-PT1-82202",
+"vol": 48466.0093,
+"c": [
+0.28841,
+-550.51494,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-62.7116,
+-650.0,
+-0.83,
+63.2884,
+-450.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82203-RootClampSpacerInnerFront:1",
+"comp": "82203-RootClampSpacerInnerFront",
+"body": "5716-L",
+"pn": "AR-SH-PT1-82203",
+"vol": 52294.7405,
+"c": [
+-30.15475,
+-501.59026,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-62.7116,
+-534.6,
+2.17,
+-15.1115,
+-450.0,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82204-RootClampSpacerInnerRear:1",
+"comp": "82204-RootClampSpacerInnerRear",
+"body": "5717-L",
+"pn": "AR-SH-PT1-82204",
+"vol": 52294.4363,
+"c": [
+30.73167,
+-501.59032,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+15.6885,
+-534.6,
+2.17,
+63.2884,
+-450.0,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82205-RootClampSpacerOuter:1",
+"comp": "82205-RootClampSpacerOuter",
+"body": "5718-L",
+"pn": "AR-SH-PT1-82205",
+"vol": 53685.3527,
+"c": [
+-29.91867,
+-598.97158,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-62.7116,
+-650.0,
+2.17,
+-15.1115,
+-565.4,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82201-RootClampTopPlate:2",
+"comp": "82201-RootClampTopPlate",
+"body": "5714-L",
+"pn": "AR-SH-PT1-82201",
+"vol": 50126.9268,
+"c": [
+0.28841,
+550.22334,
+33.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-62.7116,
+450.0,
+32.17,
+63.2884,
+650.0,
+35.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82202-RootClampBottomPlate:2",
+"comp": "82202-RootClampBottomPlate",
+"body": "5715-L",
+"pn": "AR-SH-PT1-82202",
+"vol": 48466.0093,
+"c": [
+0.28841,
+550.51494,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-62.7116,
+450.0,
+-0.83,
+63.2884,
+650.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82203-RootClampSpacerInnerFront:2",
+"comp": "82203-RootClampSpacerInnerFront",
+"body": "5716-L",
+"pn": "AR-SH-PT1-82203",
+"vol": 52294.7405,
+"c": [
+-30.15475,
+501.59026,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-62.7116,
+450.0,
+2.17,
+-15.1115,
+534.6,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82204-RootClampSpacerInnerRear:2",
+"comp": "82204-RootClampSpacerInnerRear",
+"body": "5717-L",
+"pn": "AR-SH-PT1-82204",
+"vol": 52294.4363,
+"c": [
+30.73167,
+501.59032,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+15.6885,
+450.0,
+2.17,
+63.2884,
+534.6,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82205-RootClampSpacerOuter:2",
+"comp": "82205-RootClampSpacerOuter",
+"body": "5718-L",
+"pn": "AR-SH-PT1-82205",
+"vol": 53685.3527,
+"c": [
+30.49559,
+-598.97153,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+15.6884,
+-650.0,
+2.17,
+63.2885,
+-565.4,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82205-RootClampSpacerOuter:3",
+"comp": "82205-RootClampSpacerOuter",
+"body": "5718-L",
+"pn": "AR-SH-PT1-82205",
+"vol": 53685.3527,
+"c": [
+-29.91867,
+598.97158,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-62.7116,
+565.4,
+2.17,
+-15.1115,
+650.0,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82200-RootClamp:1+82205-RootClampSpacerOuter:4",
+"comp": "82205-RootClampSpacerOuter",
+"body": "5718-L",
+"pn": "AR-SH-PT1-82205",
+"vol": 53685.3527,
+"c": [
+30.49559,
+598.97153,
+16.17
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+15.6884,
+565.4,
+2.17,
+63.2885,
+650.0,
+30.17
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82300-TailSockets:1+82301L-BoomSocketOuter:1",
+"comp": "82301L-BoomSocketOuter",
+"body": "5531-L",
+"pn": "AR-SH-PT1-82301L",
+"vol": 167650.6105,
+"c": [
+1263.26848,
+-525.69738,
+45.6178
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1180.43,
+-580.4,
+21.1272,
+1348.5905,
+-492.8095,
+71.2901
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82300-TailSockets:1+82301R-BoomSocketOuter:1",
+"comp": "82301R-BoomSocketOuter",
+"body": "5531-R",
+"pn": "AR-SH-PT1-82301R",
+"vol": 167650.6079,
+"c": [
+1263.26848,
+525.69738,
+45.6178
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1180.43,
+492.8095,
+21.1272,
+1348.5905,
+580.4,
+71.2901
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82300-TailSockets:1+82302L-BoomSocketInner:1",
+"comp": "82302L-BoomSocketInner",
+"body": "5532-L",
+"pn": "AR-SH-PT1-82302L",
+"vol": 255760.1083,
+"c": [
+1274.90049,
+-531.07412,
+21.53361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1180.43,
+-580.4,
+-3.23,
+1348.558,
+-482.1468,
+54.7031
+]
+},
+{
+"path": "80000-BoomStructure:1+82000-Joints:1+82300-TailSockets:1+82302R-BoomSocketInner:1",
+"comp": "82302R-BoomSocketInner",
+"body": "5532-R",
+"pn": "AR-SH-PT1-82302R",
+"vol": 255760.1127,
+"c": [
+1274.90049,
+531.07412,
+21.53361
+],
+"mat": "PT1 TBD no mass",
+"bbox": [
+1180.43,
+482.1468,
+-3.23,
+1348.558,
+580.4,
+54.7031
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83101-FrontMotorMountTopPlate:1",
+"comp": "83101-FrontMotorMountTopPlate",
+"body": "7141-L",
+"pn": "AR-SH-PT1-83101",
+"vol": 19136.2052,
+"c": [
+-669.57763,
+-548.90263,
+41.5
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-750.0,
+-575.0,
+40.0,
+-600.0,
+-525.0,
+43.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83102-FrontMotorMountBottomPlate:1",
+"comp": "83102-FrontMotorMountBottomPlate",
+"body": "7142-L",
+"pn": "AR-SH-PT1-83102",
+"vol": 20625.7442,
+"c": [
+-669.96922,
+-548.98188,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-750.0,
+-575.0,
+-0.83,
+-600.0,
+-525.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83103L-FrontMotorMountUBlock:1",
+"comp": "83103L-FrontMotorMountUBlock",
+"body": "7143-L",
+"pn": "AR-SH-PT1-83103L",
+"vol": 129019.6743,
+"c": [
+-668.95864,
+-548.82654,
+24.58169
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-750.0,
+-575.0,
+2.67,
+-600.0,
+-513.0,
+40.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83103R-FrontMotorMountUBlock:1",
+"comp": "83103R-FrontMotorMountUBlock",
+"body": "7143-R",
+"pn": "AR-SH-PT1-83103R",
+"vol": 129019.6743,
+"c": [
+-668.95864,
+548.82654,
+24.58169
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+-750.0,
+513.0,
+2.67,
+-600.0,
+575.0,
+40.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83101-FrontMotorMountTopPlate:2",
+"comp": "83101-FrontMotorMountTopPlate",
+"body": "7141-L",
+"pn": "AR-SH-PT1-83101",
+"vol": 19136.2052,
+"c": [
+-669.57763,
+548.90263,
+41.5
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-750.0,
+525.0,
+40.0,
+-600.0,
+575.0,
+43.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83100-Front:1+83102-FrontMotorMountBottomPlate:2",
+"comp": "83102-FrontMotorMountBottomPlate",
+"body": "7142-L",
+"pn": "AR-SH-PT1-83102",
+"vol": 20625.7442,
+"c": [
+-669.96922,
+548.98188,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+-750.0,
+525.0,
+-0.83,
+-600.0,
+575.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83201L-RearMotorMountUBlock:1",
+"comp": "83201L-RearMotorMountUBlock",
+"body": "7144-L",
+"pn": "AR-SH-PT1-83201L",
+"vol": 150814.7318,
+"c": [
+785.41957,
+-550.05345,
+25.16809
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+700.0,
+-575.0,
+2.67,
+875.0,
+-513.0,
+40.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83201R-RearMotorMountUBlock:1",
+"comp": "83201R-RearMotorMountUBlock",
+"body": "7144-R",
+"pn": "AR-SH-PT1-83201R",
+"vol": 150814.7318,
+"c": [
+785.41957,
+550.05345,
+25.16809
+],
+"mat": "PT1 PA6-CF",
+"bbox": [
+700.0,
+513.0,
+2.67,
+875.0,
+575.0,
+40.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83202L-RearMotorMountTopPlate:1",
+"comp": "83202L-RearMotorMountTopPlate",
+"body": "7145-L",
+"pn": "AR-SH-PT1-83202L",
+"vol": 24132.3482,
+"c": [
+789.97422,
+-550.0,
+41.5
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+700.0,
+-575.0,
+40.0,
+875.0,
+-525.0,
+43.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83202R-RearMotorMountTopPlate:1",
+"comp": "83202R-RearMotorMountTopPlate",
+"body": "7145-R",
+"pn": "AR-SH-PT1-83202R",
+"vol": 24198.5337,
+"c": [
+790.01344,
+550.0,
+41.5
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+700.0,
+525.0,
+40.0,
+875.0,
+575.0,
+43.0
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83203L-RearMotorMountBottomPlate:1",
+"comp": "83203L-RearMotorMountBottomPlate",
+"body": "7146-L",
+"pn": "AR-SH-PT1-83203L",
+"vol": 25621.8873,
+"c": [
+787.65031,
+-550.0,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+700.0,
+-575.0,
+-0.83,
+875.0,
+-525.0,
+2.17
+]
+},
+{
+"path": "80000-BoomStructure:1+83000-MotorMounts:1+83200-Rear:1+83203R-RearMotorMountBottomPlate:1",
+"comp": "83203R-RearMotorMountBottomPlate",
+"body": "7146-R",
+"pn": "AR-SH-PT1-83203R",
+"vol": 25688.0728,
+"c": [
+787.69324,
+550.0,
+0.67
+],
+"mat": "PT1 Aluminium 6061",
+"bbox": [
+700.0,
+525.0,
+-0.83,
+875.0,
+575.0,
+2.17
+]
+}
+],
+"bounds": "tight world-axis box from measureManager.getOrientedBoundingBox"
+}

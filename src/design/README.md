@@ -1,17 +1,29 @@
-# Spearhead Build123D assembly
+# Spearhead PT1 assembly
 
-A **STEP-backed structural reconstruction**, not a parametric redesign or an
-as-built aircraft definition. Captured from the current **Project Spearhead**
-Fusion cloud project on **2026-09-26**. The original Fusion documents were not
-saved, updated, or edited.
+The PT1 main assembly as a STEP file, its part list, and a Build123D loader,
+checks and web viewer. It is a **review model**, not a manufacturing release.
 
-![Generated assembly re-imported into Fusion](../../reviews/fusion-reconstruction/fusion-roundtrip.png)
+The source is Fusion design `AR-SH-PT1-0000 PT1` version 35 (Project Spearhead /
+PT1), exported without the hidden `REF - NOT PT1 BUILD` group.
 
-## Web review
+![PT1 assembly](../../reviews/pt1-assembly/spearhead.png)
 
-[Open the interactive viewer](http://10.3.10.123:4195/) on the ranch network or
-ranch VPN. Orbit, isolate subsystems, inspect parts and download the STEP.
-[Viewer source and hosting instructions](viewer/README.md).
+## Contents
+
+| File | Content |
+| --- | --- |
+| `pt1/AR-SH-PT1-0000_PT1_v35_noREF.step` | Assembly, AP214, tracked with Git LFS |
+| `pt1/pt1_part_numbers.csv` | 215 part numbers: name, description, material code, quantity per side, family |
+| `pt1/pt1_assembly_manifest.csv` | Every solid with its occurrence path, volume and centroid |
+| `pt1/pt1_materials_table.csv` | Material, density, quantity and mass per part number |
+| `pt1/pt1_side_review.csv` | Left and right comparison of every part |
+| `pt1/pt1_renumber_map_v30_v32.csv` | Part number and path changes from Fusion v30 to v32 |
+| `pt1/native-bodies.json` | Volume, centroid and material of every numbered body, read from Fusion v35 |
+
+Fusion v33 and v34 changed only group names and two descriptions. Fusion v35 removed a
+thin wall from the tip ribs 22208 and 23208. The side review was computed on v32, and
+the tip-rib pair was re-checked on v35. See the
+[review notes](../../reviews/pt1-assembly/README.md).
 
 ## Run
 
@@ -24,115 +36,55 @@ src/design/.venv/bin/pip install -r src/design/requirements.lock.txt
 src/design/.venv/bin/python src/design/spearhead.py
 ```
 
-The generated aircraft is `src/design/output/spearhead.step`. Import it into
-Fusion, FreeCAD or another STEP viewer. Re-running the command rebuilds it from
-the immutable source exports; nothing depends on Fusion being installed.
+This loads the STEP and writes `src/design/output/spearhead.step`.
 
 ```sh
-# Saved-visible source geometry only, without reconstruction additions:
-src/design/.venv/bin/python src/design/spearhead.py --as-exported --output src/design/output/saved-visible.step
 # Offline preview:
 src/design/.venv/bin/python src/design/render.py
-# Geometry checks and STEP export/import roundtrip:
+# Checks against the Fusion body dump and part list, plus STEP export/import roundtrip:
 src/design/.venv/bin/python src/design/validate.py
 ```
 
-`build_aircraft()` returns a labeled Build123D `Compound` with named subsystem
-and body children. `--show` optionally uses an already-installed `ocp_vscode`
-viewer. STEP geometry is imported, not fused, so parts remain separately
-selectable. Coordinates are **millimetres, X aft, Y span, Z up**.
+`build_aircraft()` returns a labeled Build123D `Compound`: five systems, then
+subsystems and families, then parts named `NNNNN-Name`. Parts stay separately
+selectable. `part_occurrences()` walks the numbered parts and `part_numbers()`
+reads the part list. `--show` optionally uses an already-installed `ocp_vscode`
+viewer. Coordinates are **millimetres, X aft, Y span, Z up**.
 
-## Chosen baseline
+[Viewer source and hosting instructions](viewer/README.md).
 
-There is no current complete-aircraft master in the inspected cloud project.
-The freshest plausible structural configuration combines these separate designs
-in their existing common coordinates:
+## Counts
 
-| Subsystem | Fusion design | Version | Last saved (UTC) |
-| --- | --- | --- | --- |
-| Fuselage | `fuselage_v2` | 41 | 2026-09-22 |
-| Main wing | `main_wing_structure` | 42 | 2026-08-07 |
-| V-tail | `tail_wing_structure_v2_USER_EDITS_NOW` | 15 | 2026-08-05 |
-| Booms and motor mounts | `motor_mount` | 7 | 2026-08-06 |
-| Front landing gear | `lg` | 3 | 2026-06-24 |
-| Center-wing ribs and rear landing gear | hidden in `fuselage_v2` | 41 | 2026-09-22 |
+| Item | Count |
+| --- | --- |
+| Part numbers | 215 |
+| Part occurrences | 426 |
+| Solids in the STEP | 490 |
+| Numbered bodies in Fusion | 482 |
 
-The baseline is the latest **CAD available in those designs**, not a claim that
-it matches the aircraft currently flying. Exact cloud lineage IDs, timestamps,
-body visibility and linked revisions are in `fusion_snapshot/*/manifest.json`.
-`motor_mount` still links to tail v14, while standalone tail v15 is newer; this
-assembly deliberately uses v15. No cloud reference was updated in place.
+Solids exceed bodies by 8 because each of the 4 diagonal gear braces (15105 and
+15205, 2 of each) is one Fusion body made of 3 disjoint lumps, which STEP writes
+as 3 solids.
 
-### Explicit reconstruction decisions
+## Known limits
 
-- Main-wing v42 has a full-width spar and only one detailed outer panel.
-  **47 solids** wholly outboard of Y=-670 mm are mirrored across XZ. The blue
-  panel is inferred, including handed details; it is not a verified right-wing
-  manufacturing design. Existing central structure and boom fittings are not
-  duplicated.
-- Three bodies of the fourth motor mount are hidden in v7. They were copied
-  into a disposable unsaved Fusion document and exported without changing the
-  original. The **actual hidden geometry** is restored in teal, not mirrored.
-- Six fixed center-wing ribs and eleven rear landing-gear bodies were recovered
-  from hidden occurrences in `fuselage_v2` v41, retaining exact native placement.
-  Hidden duplicate spars and alternate front-gear bodies are excluded.
-- Booms, mounts, landing gear and all original structural placements are STEP
-  geometry. No arbitrary placement offsets or guessed tube dimensions are used.
-- One tail spar object is a zero-volume point placeholder. STEP drops it;
-  the manifest records it. No nonzero-volume selected native solid is missing.
-
-The resulting model has **318 valid solids** and a **3,950 mm span**. The
-saved-visible-only configuration contains 251 solids.
-
-## What is included in the snapshot
-
-All **26 f3d designs** in the current project were exported as both visible
-**STEP** geometry and native **F3D archives**, including old/conceptual designs,
-fixtures, molds and supplied equipment. They are preserved separately, not all
-piled into the aircraft. F3D archives retain hidden geometry and native design
-content; STEP exports follow the document's saved visibility. Large CAD files
-are tracked with Git LFS. The dated cloud catalog also lists the drawing and
-CSV, which are not 3D design exports.
-
-The separate `Project Spearhead - Old`, Spearhead Wiring and Longshot projects
-were not imported into this snapshot. `temp` initially failed because it was
-saved in the Simulation workspace; switching its UI to Design allowed both
-exports. This was resolved, not an outstanding missing file.
-
-## Known gaps
-
-- This is the **structural aircraft**, not a complete populated flight model.
-  Current motors/propellers, electric pusher, battery, avionics, harness and
-  covering skins have not been reconciled or fitted. Available equipment CAD is
-  exported separately; old gas-engine references are not silently substituted
-  for the current electric configuration.
-- Loose connectors and incomplete/hidden structure in the source are retained
-  as source evidence. Assembly validity does not establish mating fit, joint
-  constraints, interference clearance, manufacturing readiness or flight safety.
-- The front landing-gear source is older than the fuselage source. No physical-build
-  reconciliation was attempted.
-- Historical exports can contain defective solids. See the per-file import
-  inventory in the validation report; only selected assembly geometry is
-  required to pass all solid-validity checks.
+- Battery, avionics and harness are not modelled.
+- Bought parts (motors, ESCs, aileron hinges) have no datasheet mass yet.
+- The motor and ESC CAD models are not mirror-symmetric, so the right side uses
+  rotated copies of the left parts, seated on the mounts the same way as the left.
+- Real left and right differences are listed in the side review, including the
+  mid, side and tail-end skins, gear mounting plates, tail spar connectors, tail skin covers
+  and rear motor mount plates.
+- Validity, volume and centroid checks do not establish fit, mass or flight
+  readiness.
 
 ## Verification and the volume trap
 
-See [review notes](../../reviews/fusion-reconstruction/README.md) and
-[validation.json](../../reviews/fusion-reconstruction/validation.json).
-All selected source solids are matched to native bodies using bounding boxes,
-not fragile body names alone. Maximum measured bounds difference is under
-0.01 mm. Adaptive volume integration agrees with Fusion's high-accuracy
-properties within 0.018% for fuselage, main wing and tail.
+See [review notes](../../reviews/pt1-assembly/README.md) and
+[validation.json](../../reviews/pt1-assembly/validation.json).
 
 **Do not use the default `solid.volume` for mass estimates on this dataset.**
-OCP's non-adaptive integration reports an approximately 18.8% volume error on a
-spline leading-edge part despite correct bounds. `spearhead.volume_mm3()` uses
-adaptive Gauss integration (`Eps=1e-9`) and resolves the discrepancy. Native
-and imported tessellation checks are retained as supporting evidence, not as
-proof of exact surface equivalence. Summed volumes are not fused-union volume
-or aircraft mass.
-
-`fusion_snapshot/scripts/` contains the capture and measurement scripts.
-Fusion capture scripts record this machine's original absolute export paths;
-edit those paths before recapturing elsewhere. Normal assembly builds use
-repository-relative paths and need no API access.
+OCP's non-adaptive integration is inaccurate on spline faces: it differed by up
+to 0.43 % between two exports of the same PT1 skin panel, and by about 18.8 % on
+a leading-edge part of the earlier reconstruction. `spearhead.volume_mm3()` uses
+adaptive Gauss integration (`Eps=1e-9`) and resolves the discrepancy.

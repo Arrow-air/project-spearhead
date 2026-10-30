@@ -1,10 +1,13 @@
-"""Validate snapshot imports and reconstruction; record exchange discrepancies."""
-from pathlib import Path
-import json, hashlib
+"""Validate the PT1 export against the Fusion body dump and the part list; record the result."""
+from collections import Counter
+import csv, json, hashlib
 from build123d import import_step, export_step
-from spearhead import HERE, SNAPSHOT, STRUCTURES, build_aircraft, summary, volume_mm3
+from spearhead import HERE, PT1, SOURCE, SYSTEMS, build_aircraft, part_numbers, part_occurrences, summary
 
-REVIEW=HERE.parents[1]/'reviews'/'fusion-reconstruction'
+REVIEW=HERE.parents[1]/'reviews'/'pt1-assembly'
+NATIVE=PT1/'native-bodies.json'
+PARTS,OCCURRENCES,SOLIDS,NUMBERED_BODIES=215,426,490,482
+SPLIT_BODIES={'15105','15205'} # one Fusion body of 3 disjoint lumps; STEP writes 3 solids
 
 def digest(path):
     h=hashlib.sha256()
@@ -12,94 +15,114 @@ def digest(path):
         for block in iter(lambda:f.read(1024*1024),b''):h.update(block)
     return h.hexdigest()
 
-def run(reuse_imports=False):
+def measure(solids):
+    """Adaptive volume and centroid of a set of solids (see spearhead.volume_mm3)."""
+    from OCP.BRepGProp import BRepGProp
+    from OCP.GProp import GProp_GProps
+    total=0;moment=[0,0,0]
+    for s in solids:
+        props=GProp_GProps();BRepGProp.VolumeProperties_s(s.wrapped,props,1e-9,True,False)
+        c=props.CentreOfMass();total+=props.Mass();moment=[m+props.Mass()*v for m,v in zip(moment,(c.X(),c.Y(),c.Z()))]
+    return total,[m/total for m in moment]
+
+def mesh_bounds(solids):
+    """Bounds from a 0.02 mm mesh; OCP's analytic box is up to 59 mm loose on trimmed spline faces."""
+    from OCP.BRep import BRep_Tool
+    from OCP.BRepMesh import BRepMesh_IncrementalMesh
+    from OCP.TopLoc import TopLoc_Location
+    low=[float('inf')]*3;high=[-float('inf')]*3
+    for s in solids:
+        BRepMesh_IncrementalMesh(s.wrapped,.02,False,.1,True)
+        for f in s.faces():
+            location=TopLoc_Location();poly=BRep_Tool.Triangulation_s(f.wrapped,location)
+            if poly is None:continue
+            trsf=location.Transformation()
+            for i in range(1,poly.NbNodes()+1):
+                p=poly.Node(i).Transformed(trsf);xyz=(p.X(),p.Y(),p.Z())
+                low=[min(a,b) for a,b in zip(low,xyz)];high=[max(a,b) for a,b in zip(high,xyz)]
+    return low+high
+
+def side(y):return 'qty L' if y<-20 else 'qty R' if y>20 else 'qty centre'
+
+def native_occurrences(native):
+    """Group the Fusion bodies per occurrence: component name to volume and centroid."""
+    grouped={}
+    for b in native['bodies']:grouped.setdefault(b['path'],[]).append(b)
+    result={}
+    for path,bodies in grouped.items():
+        total=sum(b['vol'] for b in bodies)
+        bounds=[min(b['bbox'][k] for b in bodies) for k in range(3)]+[max(b['bbox'][k] for b in bodies) for k in range(3,6)]
+        result.setdefault(bodies[0]['comp'],[]).append((total,[sum(b['c'][k]*b['vol'] for b in bodies)/total for k in range(3)],bounds))
+    return result
+
+def run():
     REVIEW.mkdir(parents=True,exist_ok=True)
-    previous=json.loads((REVIEW/'validation.json').read_text()) if reuse_imports and (REVIEW/'validation.json').exists() else {}
-    verified={r['name']:r for r in previous.get('source_files',[])} if previous.get('passed') else {}
     report={'source_files':[],'native_comparison':{},'checks':[],'warnings':[]}
     def check(name,condition):
         report['checks'].append({'name':name,'passed':bool(condition)})
-    index=json.loads((SNAPSHOT/'index.json').read_text())
-    archives=json.loads((SNAPSHOT/'archives.json').read_text())
-    check('26 native archives succeeded',sum(r.get('archive_ok') is True for r in archives['files'])==26)
-    check('native source documents were not modified',all(not r.get('modified_before',False) and not r.get('modified_after',False) for r in archives['files']))
-    for rec in index['files']:
-        folder=SNAPSHOT/rec['slug']
-        item={'name':rec['name'],'version':rec['version'],'status':rec['status'],'files':{}}
-        for suffix in ['step','f3d']:
-            path=folder/f'source.{suffix}'
-            if path.exists():item['files'][suffix]={'sha256':digest(path),'bytes':path.stat().st_size}
-        cached=verified.get(rec['name'],{})
-        if rec.get('step_ok') and cached.get('files')==item['files'] and 'solids' in cached:
-            item.update({k:cached[k] for k in ['solids','shells','faces','valid_solids']})
-        elif rec.get('step_ok'):
-            shape=import_step(folder/'source.step')
-            item.update(solids=len(shape.solids()),shells=len(shape.shells()),faces=len(shape.faces()),valid_solids=sum(s.is_valid for s in shape.solids()))
-        report['source_files'].append(item)
-        (REVIEW/'validation.json').write_text(json.dumps(report,indent=2))
-    for key,(slug,_) in STRUCTURES.items():
-        bodymap=json.loads((SNAPSHOT/slug/'body-map.json').read_text())
-        highfile=SNAPSHOT/slug/'high-accuracy.json'
-        high={(r['path'],r['name']):r for r in json.loads(highfile.read_text())} if highfile.exists() else {}
-        differences=[];all_differences=[]
-        for r in bodymap['matched']:
-            native=r['source'];vol=high.get((native['path'],native['name']),native)['volume_mm3']
-            delta=(r['volume']-vol)/vol*100 if vol else None
-            if delta is not None:all_differences.append(abs(delta))
-            if delta is not None and abs(delta)>.25:
-                differences.append({'path':native['path'],'name':native['name'],'native_volume_mm3':vol,'step_volume_mm3':r['volume'],'difference_percent':delta})
-        report['native_comparison'][key]={'matched_solids':len(bodymap['matched']),'max_adaptive_volume_difference_percent':max(all_differences),'max_bounds_error_mm':max(r['bounds_error'] for r in bodymap['matched']),'missing_native':bodymap['missing_native'],'volume_differences_over_0_25_percent':differences}
-        check(f'{key}: adaptive volume within 0.1 percent',max(all_differences)<.1)
-        check(f'{key}: matched body bounds within 0.02 mm',all(r['bounds_error']<=.02 for r in bodymap['matched']))
-        check(f'{key}: no missing nonzero-volume native solid',all(abs(r.get('volume_mm3',0))<1e-6 for r in bodymap['missing_native']))
+    for path in [SOURCE,*sorted(PT1.glob('pt1_*.csv')),NATIVE]:
+        report['source_files'].append({'name':path.name,'sha256':digest(path),'bytes':path.stat().st_size})
+    native=json.loads(NATIVE.read_text())
+    check('native dump is from Fusion v35 at very high accuracy with nothing unsaved',native['version']==35 and native['accuracy']=='very high' and not native['modified'])
+    check(f'native dump has {NUMBERED_BODIES} numbered bodies',len(native['bodies'])==NUMBERED_BODIES)
+    with (PT1/'pt1_materials_table.csv').open(encoding='utf-8',newline='') as stream:
+        materials={r['part number']:set(r['material'].split('; ')) for r in csv.DictReader(stream)}
+    check('every numbered body has the material of the materials table',all(b['mat'] in materials.get(b['pn'],()) for b in native['bodies']))
     aircraft=build_aircraft();report['assembly']=summary(aircraft)
-    check('assembly contains 318 solids',report['assembly']['solids']==318)
-    check('all 318 assembly solids pass OCP validity',report['assembly']['valid_solids']==318)
+    check('five systems in tree order',[c.label for c in aircraft.children]==list(SYSTEMS))
+    check(f'assembly contains {SOLIDS} solids',report['assembly']['solids']==SOLIDS)
+    check(f'all {SOLIDS} assembly solids pass OCP validity',report['assembly']['valid_solids']==SOLIDS)
     check('3950 mm span',abs(report['assembly']['size_mm'][1]-3950)<.001)
-    mirrored=next(c for c in aircraft.children if c.label=='inferred_starboard_outer_wing')
-    original=[s for s in aircraft.children[1].solids() if s.bounding_box().max.Y<=-669.9]
-    check('47 mirrored wing solids only',len(mirrored.solids())==len(original)==47)
-    check('mirror preserves summed volume',abs(sum(volume_mm3(s) for s in mirrored.solids())-sum(volume_mm3(s) for s in original))<.01)
-    check('mirrored outer wing starts at Y=670 mm',abs(mirrored.bounding_box().min.Y-670)<.01)
-    restored=next(c for c in aircraft.children if c.label=='restored_hidden_port_aft_motor_mount')
-    check('three hidden mount solids restored',len(restored.solids())==3)
-    recovery=json.loads((SNAPSHOT/'fuselage_v2/center-gear-recovery.json').read_text())
-    check('recovery left native source unmodified',recovery['status']=='complete' and not recovery['source_modified_before'] and not recovery['source_modified_after'])
-    report['recovered_structure']=[]
-    for slug,label,count in [('hidden_inner_ribs','restored_center_wing_ribs',6),('hidden_rear_gear','restored_rear_landing_gear',11)]:
-        group=next(c for c in aircraft.children if c.label==label)
-        native=next(g for g in recovery['groups'] if g['slug']==slug)
-        check(label+': exact body count',len(group.solids())==count)
-        for solid in group.children:
-            body=next(b for b in native['bodies'] if b['name']==solid.label)
-            bb=solid.bounding_box()
-            error=max(abs(a-b) for a,b in zip(list(bb.min)+list(bb.max),sum(body['bounds_mm'],[])))
-            volume_error=abs(volume_mm3(solid)/body['volume_mm3']-1)
-            report['recovered_structure'].append({'group':label,'body':solid.label,'bounds_error_mm':error,'volume_error_fraction':volume_error})
-            check(label+'/'+solid.label+': native bounds and volume',error<.02 and volume_error<.001)
-    check('saved-visible mode still 251 solids',len(build_aircraft(False,False,False).solids())==251)
+    occurrences=list(part_occurrences(aircraft))
+    report['invalid_on_read']=[o[1] for o in occurrences if not all(x.is_valid for x in o[3].solids())]
+    check(f'{OCCURRENCES} part occurrences',len(occurrences)==OCCURRENCES)
+    rows=part_numbers();by_number={r['number']:r for r in rows}
+    check(f'{PARTS} part numbers in the list',len(rows)==len(by_number)==PARTS)
+    found=Counter(o[0] for o in occurrences)
+    check('every part in the STEP is in the list and vice versa',set(found)==set(by_number))
+    check('list quantities match the STEP',all(int(by_number[n]['qty total'])==q for n,q in found.items()))
+    check('list quantities sum to the occurrences',sum(int(r['qty total']) for r in rows)==OCCURRENCES)
+    pool=native_occurrences(native);sides=Counter();differences=[];all_differences=[];centroid_errors=[];bounds_errors=[];unmatched=[]
+    for number,name,parents,node in occurrences:
+        total,c=measure(node.solids());sides[number,side(c[1])]+=1
+        candidates=pool.get(name,[])
+        if not candidates:unmatched.append(name);continue
+        best=min(candidates,key=lambda n:max(abs(a-b) for a,b in zip(n[1],c)));candidates.remove(best)
+        delta=(total-best[0])/best[0]*100;all_differences.append(abs(delta));centroid_errors.append(max(abs(a-b) for a,b in zip(best[1],c)))
+        centroid_error=centroid_errors[-1];bounds_errors.append(max(abs(a-b) for a,b in zip(best[2],mesh_bounds(node.solids()))));bounds_error=bounds_errors[-1]
+        if abs(delta)>.1 or centroid_error>.05 or bounds_error>.02:differences.append({'name':name,'native_volume_mm3':best[0],'step_volume_mm3':total,'difference_percent':delta,'centroid_error_mm':centroid_error,'bounds_error_mm':bounds_error})
+    leftovers=[k for k,v in pool.items() if v]
+    report['native_comparison']={'matched_occurrences':len(all_differences),'unmatched_step':unmatched,'unmatched_native':leftovers,'max_adaptive_volume_difference_percent':max(all_differences),'max_centroid_error_mm':max(centroid_errors),'max_bounds_error_mm':max(bounds_errors),'over_limits':differences}
+    check('every occurrence matched one native occurrence, both ways',not unmatched and not leftovers)
+    check('adaptive volume within 0.1 percent of native',max(all_differences)<.1)
+    check('centroid within 0.05 mm of native',max(centroid_errors)<.05)
+    check('matched body bounds within 0.02 mm',max(bounds_errors)<=.02)
+    check('list left, right and centre quantities match the STEP',all(int(r[k])==sides[r['number'],k] for r in rows for k in ('qty L','qty R','qty centre')))
+    split=[o for o in occurrences if o[0] in SPLIT_BODIES]
+    check('split bodies: 2 of each brace, 3 solids each',Counter(o[0] for o in split)==Counter({n:2 for n in SPLIT_BODIES}) and all(len(o[3].solids())==3 for o in split))
+    check(f'{SOLIDS} solids less split lumps equals {NUMBERED_BODIES} bodies',report['assembly']['solids']-2*len(split)==NUMBERED_BODIES)
+    check('four lift motors and four ESCs',found['41101']==4 and found['41301']==4)
+    check('right ruddervator horn group present',all(found[n]==2 for n in ('33301','33302','33303')))
     output=HERE/'output';output.mkdir(exist_ok=True)
     export_step(aircraft,output/'spearhead.step')
     (output/'spearhead.json').write_text(json.dumps(report['assembly'],indent=2))
     roundtrip=import_step(output/'spearhead.step');rt=summary(roundtrip);report['roundtrip']=rt
-    check('STEP roundtrip retains 318 solids',rt['solids']==318)
-    check('STEP roundtrip solids remain valid',rt['valid_solids']==318)
+    report['invalid_after_roundtrip']=[o[1] for o in part_occurrences(roundtrip) if not all(x.is_valid for x in o[3].solids())]
+    check(f'STEP roundtrip retains {SOLIDS} solids',rt['solids']==SOLIDS)
+    check('STEP roundtrip solids remain valid',rt['valid_solids']==SOLIDS)
     error=max(abs(a-b) for aa,bb in zip(rt['bounds_mm'],report['assembly']['bounds_mm']) for a,b in zip(aa,bb))
     check('STEP roundtrip bounds within 0.02 mm',error<.02)
     volume_error=abs(rt['summed_solid_volume_mm3']/report['assembly']['summed_solid_volume_mm3']-1)
     check('STEP roundtrip summed volume within 0.01 percent',volume_error<.0001)
     report['warnings']=[
-        'Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Adaptive volumes agree with native high-accuracy measurements. Validity, bounds and volume checks do not prove physical fit.',
-        'One zero-volume tail placeholder omitted by STEP export.',
-        'One outer wing is inferred by reflection. Restored fourth mount, center-wing ribs and rear gear were hidden in source.',
-        'Not as-built: current propulsion, avionics, battery, harness, coverings and fastening not reconciled.'
+        'Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Validity, volume and centroid checks do not prove physical fit.',
+        'Battery, avionics and harness are not modelled. Bought parts (motors, ESCs, aileron hinges) have no datasheet mass yet.',
+        'The hidden REF group of Fusion (130 bodies) is not in this export.'
     ]
     report['passed']=all(r['passed'] for r in report['checks'])
-    (REVIEW/'validation.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({'passed':report['passed'],'checks':len(report['checks']),'failed':[r for r in report['checks'] if not r['passed']],'assembly':report['assembly']},indent=2))
+    (REVIEW/'validation.json').write_text(json.dumps(report,indent=2)+'\n',newline='\n')
+    print(json.dumps({'passed':report['passed'],'checks':len(report['checks']),'failed':[r for r in report['checks'] if not r['passed']],'native':report['native_comparison'],'assembly':report['assembly']},indent=2))
     return report['passed']
 
 if __name__=='__main__':
-    import argparse
-    parser=argparse.ArgumentParser();parser.add_argument('--reuse-imports',action='store_true',help='Reuse prior passing import results only when SHA256 hashes match')
-    raise SystemExit(0 if run(parser.parse_args().reuse_imports) else 1)
+    raise SystemExit(0 if run() else 1)
