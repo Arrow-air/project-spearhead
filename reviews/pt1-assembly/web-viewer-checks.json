@@ -1,0 +1,121 @@
+{
+  "checks": [
+    {
+      "name": "5 groups",
+      "passed": true
+    },
+    {
+      "name": "one render mesh per solid",
+      "passed": true
+    },
+    {
+      "name": "490 solids",
+      "passed": true
+    },
+    {
+      "name": "metre scale span",
+      "passed": true
+    },
+    {
+      "name": "isolate fuselage",
+      "passed": true
+    },
+    {
+      "name": "identify clicked part",
+      "passed": true
+    },
+    {
+      "name": "selection shows the part number",
+      "passed": true
+    },
+    {
+      "name": "actual STEP download",
+      "passed": true
+    },
+    {
+      "name": "isolate Propulsion",
+      "passed": true
+    },
+    {
+      "name": "isolate Boom structure",
+      "passed": true
+    },
+    {
+      "name": "top camera",
+      "passed": true
+    },
+    {
+      "name": "front camera",
+      "passed": true
+    },
+    {
+      "name": "side camera",
+      "passed": true
+    },
+    {
+      "name": "iso camera",
+      "passed": true
+    },
+    {
+      "name": "wireframe on",
+      "passed": true
+    },
+    {
+      "name": "orbit moves camera",
+      "passed": true
+    },
+    {
+      "name": "mobile no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile panel opens",
+      "passed": true
+    },
+    {
+      "name": "mobile show all",
+      "passed": true
+    },
+    {
+      "name": "no browser errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "state": {
+    "groups": [
+      {
+        "id": "10000-FuselageStructure",
+        "visible": true,
+        "solids": 225
+      },
+      {
+        "id": "20000-WingStructure",
+        "visible": true,
+        "solids": 100
+      },
+      {
+        "id": "30000-TailStructure",
+        "visible": true,
+        "solids": 63
+      },
+      {
+        "id": "40000-Propulsion",
+        "visible": true,
+        "solids": 64
+      },
+      {
+        "id": "80000-BoomStructure",
+        "visible": true,
+        "solids": 38
+      }
+    ],
+    "meshes": 490,
+    "bounds": [
+      2.282450396944399,
+      0.8155272980779298,
+      3.950000047683715
+    ]
+  }
+}

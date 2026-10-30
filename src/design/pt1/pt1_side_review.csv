@@ -1,0 +1,234 @@
+number,name,system,left occurrence(s),right occurrence(s),class,volume diff mm3,max deviation mm,note
+11101,11101-BulkheadSta1,10000 Fuselage,,,centreline,,,x1 on y = 0
+11102,11102-BulkheadSta2,10000 Fuselage,,,centreline,,,x1 on y = 0
+11103,11103-BulkheadSta3,10000 Fuselage,,,centreline,,,x1 on y = 0
+11104,11104-BulkheadSta4,10000 Fuselage,,,centreline,,,x1 on y = 0
+11201,11201-TopLongeron,10000 Fuselage,,,centreline,,,x1 on y = 0
+11202,11202-RearUpperLongeron,10000 Fuselage,11202-RearUpperLongeron:1,11202-RearUpperLongeron:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+11203,11203-RearLowerLongeron,10000 Fuselage,11203-RearLowerLongeron:1,11203-RearLowerLongeron:2,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+11301,11301-Floor,10000 Fuselage,,,centreline,,,x1 on y = 0
+11302,11302-KeelStrip,10000 Fuselage,,,centreline,,,x1 on y = 0
+11303,11303-FloorSupport,10000 Fuselage,11303-FloorSupport:1,11303-FloorSupport:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+11304,11304-RearInclinedFloorPlate,10000 Fuselage,,,centreline,,,x1 on y = 0
+11305,11305-NoseKeelPlate2mm,10000 Fuselage,,,centreline,,,x1 on y = 0
+11306,11306-NoseDeckPlate2mm,10000 Fuselage,,,centreline,,,x1 on y = 0
+11307,11307-FrontDeckPlate2mm,10000 Fuselage,,,centreline,,,x1 on y = 0
+11401,11401-MidBoxBeam,10000 Fuselage,11401-MidBoxBeam:1,11401-MidBoxBeam:2,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+11402,11402-MidBoxBeamSupport,10000 Fuselage,,,centreline,,,x1 on y = 0
+11403,11403-MidSpar,10000 Fuselage,,,centreline,,,x1 on y = 0
+12101,12101-CentreConnector,10000 Fuselage,,,centreline,,,x1 on y = 0
+12102,12102-NoseBlock,10000 Fuselage,,,centreline,,,x1 on y = 0
+12105L,12105L-MidBoxBeamConnector / 12105R-MidBoxBeamConnector,10000 Fuselage,12105L-MidBoxBeamConnector:1,12105R-MidBoxBeamConnector:2,rotated copy,0.0,0.0,"identical turned 180 about z; self-symmetric part, also an exact mirror"
+12105L,12105L-MidBoxBeamConnector / 12105R-MidBoxBeamConnector,10000 Fuselage,12105L-MidBoxBeamConnector:2,12105R-MidBoxBeamConnector:1,rotated copy,-0.0,0.0,"identical turned 180 about z; self-symmetric part, also an exact mirror"
+12201,12201-FloorPinBoss10x11x6p1,10000 Fuselage,,,centreline,,,x9 on y = 0
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:1,12202-InsertBoss:39,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:10,12202-InsertBoss:48,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:11,12202-InsertBoss:47,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:12,12202-InsertBoss:50,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:13,12202-InsertBoss:49,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:14,12202-InsertBoss:51,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:15,12202-InsertBoss:52,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:16,12202-InsertBoss:53,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:17,12202-InsertBoss:56,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:18,12202-InsertBoss:55,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:19,12202-InsertBoss:54,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:2,12202-InsertBoss:38,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:20,12202-InsertBoss:58,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:21,12202-InsertBoss:57,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:22,12202-InsertBoss:60,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:23,12202-InsertBoss:59,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:24,12202-InsertBoss:62,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:25,12202-InsertBoss:61,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:26,12202-InsertBoss:63,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:27,12202-InsertBoss:65,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:28,12202-InsertBoss:64,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:29,12202-InsertBoss:66,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:3,12202-InsertBoss:41,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:30,12202-InsertBoss:67,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:31,12202-InsertBoss:68,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:32,12202-InsertBoss:69,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:33,12202-InsertBoss:70,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:34,12202-InsertBoss:71,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:35,12202-InsertBoss:72,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:36,12202-InsertBoss:73,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:37,12202-InsertBoss:74,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:4,12202-InsertBoss:40,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:5,12202-InsertBoss:42,mirror,-0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:6,12202-InsertBoss:44,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:7,12202-InsertBoss:43,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:8,12202-InsertBoss:46,mirror,0.0,0.0,
+12202,12202-InsertBoss,10000 Fuselage,12202-InsertBoss:9,12202-InsertBoss:45,mirror,0.0,0.0,
+12203,12203-InsertBoss11x11x14p5,10000 Fuselage,12203-InsertBoss11x11x14p5:1,12203-InsertBoss11x11x14p5:4,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+12203,12203-InsertBoss11x11x14p5,10000 Fuselage,12203-InsertBoss11x11x14p5:2,12203-InsertBoss11x11x14p5:3,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:1,12204-InsertBoss8p7x8p7x14p5:8,mirror,-0.0,0.0,
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:2,12204-InsertBoss8p7x8p7x14p5:7,mirror,0.0,0.0,
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:3,12204-InsertBoss8p7x8p7x14p5:10,mirror,0.0,0.0,
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:4,12204-InsertBoss8p7x8p7x14p5:9,mirror,-0.0,0.0,
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:5,12204-InsertBoss8p7x8p7x14p5:12,mirror,-0.0,0.0,
+12204,12204-InsertBoss8p7x8p7x14p5,10000 Fuselage,12204-InsertBoss8p7x8p7x14p5:6,12204-InsertBoss8p7x8p7x14p5:11,mirror,0.0,0.0,
+13101,13101-ForwardFuselageSkin,10000 Fuselage,,,centreline,,,x1 on y = 0
+13103L,13103L-MidSkinUpper / 13103R-MidSkinUpper,10000 Fuselage,13103L-MidSkinUpper:1,13103R-MidSkinUpper:1,different,-826.682,9.4,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference; position not mirrored: 1.07 mm
+13104L,13104L-MidSkinLower / 13104R-MidSkinLower,10000 Fuselage,13104L-MidSkinLower:1,13104R-MidSkinLower:1,different,-383.299,10.048,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+13105L,13105L-TailEndSkin / 13105R-TailEndSkin,10000 Fuselage,13105L-TailEndSkin:1,13105R-TailEndSkin:1,different,325.049,10.045,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+13106L,13106L-SideSkinSection2 / 13106R-SideSkinSection2,10000 Fuselage,13106L-SideSkinSection2:1,13106R-SideSkinSection2:1,different,-420.215,6.552,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference; position not mirrored: 0.55 mm
+13201,13201-NoseCone,10000 Fuselage,,,centreline,,,x1 on y = 0
+13202,13202-NoseTip,10000 Fuselage,,,centreline,,,x1 on y = 0
+13203,13203-TopPanelForward,10000 Fuselage,,,centreline,,,x1 on y = 0
+13301L,13301L-WingRootSkin1Upper / 13301R-WingRootSkin1Upper,10000 Fuselage,13301L-WingRootSkin1Upper:1,13301R-WingRootSkin1Upper:1,mirror,0.0,0.0,
+13302L,13302L-WingRootSkin2Upper / 13302R-WingRootSkin2Upper,10000 Fuselage,13302L-WingRootSkin2Upper:1,13302R-WingRootSkin2Upper:1,mirror,0.0,0.0,
+13303L,13303L-WingRootSkin2Lower / 13303R-WingRootSkin2Lower,10000 Fuselage,13303L-WingRootSkin2Lower:1,13303R-WingRootSkin2Lower:1,mirror,-0.0,0.0,
+13304L,13304L-WingRootSkin1Lower / 13304R-WingRootSkin1Lower,10000 Fuselage,13304L-WingRootSkin1Lower:1,13304R-WingRootSkin1Lower:1,mirror,-0.0,0.0,
+13305L,13305L-WingRootSkin1Front / 13305R-WingRootSkin1Front,10000 Fuselage,13305L-WingRootSkin1Front:1,13305R-WingRootSkin1Front:1,mirror,0.0,0.0,
+13306L,13306L-WingRootSkin2Front / 13306R-WingRootSkin2Front,10000 Fuselage,13306L-WingRootSkin2Front:1,13306R-WingRootSkin2Front:1,mirror,0.0,0.0,
+13307L,13307L-WingRootSkin1Rear / 13307R-WingRootSkin1Rear,10000 Fuselage,13307L-WingRootSkin1Rear:1,13307R-WingRootSkin1Rear:1,mirror,0.0,0.0,
+13308L,13308L-WingRootSkin2Rear / 13308R-WingRootSkin2Rear,10000 Fuselage,13308L-WingRootSkin2Rear:1,13308R-WingRootSkin2Rear:1,mirror,-0.0,0.0,
+13401L,13401L-FairingPanelA / 13401R-FairingPanelA,10000 Fuselage,13401L-FairingPanelA:1,13401R-FairingPanelA:1,mirror,-0.0,0.0,
+13402L,13402L-FairingPanelB / 13402R-FairingPanelB,10000 Fuselage,13402L-FairingPanelB:1,13402R-FairingPanelB:1,mirror,-0.0,0.0,
+13403L,13403L-FairingPanelC / 13403R-FairingPanelC,10000 Fuselage,13403L-FairingPanelC:1,13403R-FairingPanelC:1,mirror,-3.603,0.002,
+13405L,13405L-FairingPanelE / 13405R-FairingPanelE,10000 Fuselage,13405L-FairingPanelE:1,13405R-FairingPanelE:1,mirror,-0.0,0.0,
+13406L,13406L-FairingPanelF / 13406R-FairingPanelF,10000 Fuselage,13406L-FairingPanelF:1,13406R-FairingPanelF:1,mirror,-0.0,0.0,
+13407L,13407L-FairingLowerPanelRear246x250 / 13407R-FairingLowerPanelRear246x250,10000 Fuselage,13407L-FairingLowerPanelRear246x250:1,13407R-FairingLowerPanelRear246x250:1,mirror,0.0,0.0,
+13408L,13408L-FairingLowerPanelFront246x130 / 13408R-FairingLowerPanelFront246x130,10000 Fuselage,13408L-FairingLowerPanelFront246x130:1,13408R-FairingLowerPanelFront246x130:1,mirror,2.856,0.002,
+14101,14101-SideHatch,10000 Fuselage,x1,,left only,,,
+14102,14102-TopPanelAft,10000 Fuselage,,,centreline,,,x1 on y = 0
+14103,14103-TopPanelMid,10000 Fuselage,,,centreline,,,x1 on y = 0
+14104 / 14105,14104-FairingPanelD / 14105-FairingPanelDMirrored,10000 Fuselage,14104-FairingPanelD:1,14105-FairingPanelDMirrored:2,mirror,0.0,0.0,
+14105 / 14104,14105-FairingPanelDMirrored / 14104-FairingPanelD,10000 Fuselage,14105-FairingPanelDMirrored:1,14104-FairingPanelD:2,mirror,-0.0,0.0,
+14106,14106-FairingStrap,10000 Fuselage,14106-FairingStrap:1,14106-FairingStrap:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+14201L,14201L-HatchLatchHousing,10000 Fuselage,14201L-HatchLatchHousing:1,,left only,,,no counterpart at the mirrored position (nearest same-part occurrence 211 mm away)
+14201L,14201L-HatchLatchHousing,10000 Fuselage,14201L-HatchLatchHousing:2,,left only,,,extra occurrence on this side; other occurrences of the part are paired
+14201R,14201R-HatchLatchHousing,10000 Fuselage,,14201R-HatchLatchHousing:1,right only,,,no counterpart at the mirrored position (nearest same-part occurrence 211 mm away)
+14202,14202-LatchHousingBLeft,10000 Fuselage + 30000 Tail,x1,,left only,,,
+14202,14202-LatchHousingBLeft2,10000 Fuselage,x1,,left only,,,
+14203,14203-LatchBolt,10000 Fuselage,,14203-LatchBolt:7,right only,,,no counterpart at the mirrored position (nearest same-part occurrence 527 mm away)
+14203,14203-LatchBolt,10000 Fuselage,14203-LatchBolt:1,14203-LatchBolt:6,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+14203,14203-LatchBolt,10000 Fuselage,14203-LatchBolt:2,,left only,,,no counterpart at the mirrored position (nearest same-part occurrence 527 mm away)
+14203,14203-LatchBolt,10000 Fuselage,14203-LatchBolt:3,,left only,,,extra occurrence on this side; other occurrences of the part are paired
+14203,14203-LatchBolt,10000 Fuselage,14203-LatchBolt:4,,left only,,,extra occurrence on this side; other occurrences of the part are paired
+14203,14203-LatchBolt,10000 Fuselage,14203-LatchBolt:5,,left only,,,extra occurrence on this side; other occurrences of the part are paired
+14204,14204-SideLatchGuidePlate,10000 Fuselage,x1,,left only,,,
+14205,14205-SideLatchStopBlock,10000 Fuselage,x1,,left only,,,
+14206,14206-SideLatchPinBlock,10000 Fuselage,x1,,left only,,,
+14207,14207-LatchHousingBMirrored,10000 Fuselage,x1,,left only,,,
+14208,14208-HatchLatchHousingWithTab,10000 Fuselage,,x1,right only,,,
+14301,14301-NoseLatchBlock,10000 Fuselage,,x1,right only,,,
+14302,14302-NoseLatchStrip,10000 Fuselage,,x1,right only,,,
+15101,15101-FrontGearLegPlate,10000 Fuselage,,,centreline,,,x2 on y = 0
+15102,15102-FrontGearCentrePlate,10000 Fuselage,,,centreline,,,x1 on y = 0
+15104 / 15103,15104-FrontGearMountingPlateLeft / 15103-FrontGearMountingPlateRight,10000 Fuselage,15104-FrontGearMountingPlateLeft:1,15103-FrontGearMountingPlateRight:1,different,998.392,0.003,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+15105,15105-FrontGearDiagonalBrace,10000 Fuselage,15105-FrontGearDiagonalBrace:1,15105-FrontGearDiagonalBrace:2,rotated copy,0,0,"identical turned 180 about y; self-symmetric part, also an exact mirror; 3 solids per occurrence"
+15201,15201-RearGearLegPlate,10000 Fuselage,,,centreline,,,x2 on y = 0
+15202,15202-RearGearCentrePlate,10000 Fuselage,,,centreline,,,x1 on y = 0
+15204 / 15203,15204-RearGearMountingPlateLeft / 15203-RearGearMountingPlateRight,10000 Fuselage,15204-RearGearMountingPlateLeft:1,15203-RearGearMountingPlateRight:1,different,998.392,0.003,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+15205,15205-RearGearDiagonalBrace,10000 Fuselage,15205-RearGearDiagonalBrace:1,15205-RearGearDiagonalBrace:2,rotated copy,0,0,"identical turned 180 about y; self-symmetric part, also an exact mirror; 3 solids per occurrence"
+16101,16101-CentreSparTube30x30x1069,10000 Fuselage,,,centreline,,,x1 on y = 0
+16201,16201-CentreRibY248,10000 Fuselage,16201-CentreRibY248:1,16201-CentreRibY248:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+16202,16202-CentreRibY428,10000 Fuselage,16202-CentreRibY428:1,16202-CentreRibY428:2,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+16203,16203-CentreRootRibY668,10000 Fuselage,16203-CentreRootRibY668:1,16203-CentreRootRibY668:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22101 / 23101,22101-OuterSparTube30x30x1410 / 23101-OuterSparTube30x30x1410,20000 Wing,22101-OuterSparTube30x30x1410:1,23101-OuterSparTube30x30x1410:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22102 / 23102,22102-RearSparWeb / 23102-RearSparWeb,20000 Wing,22102-RearSparWeb:1,23102-RearSparWeb:1,rotated copy,0.0,0.0,"identical turned 180 about z; self-symmetric part, also an exact mirror"
+22201 / 23201,22201-WingRootRibY672 / 23201-WingRootRibY672,20000 Wing,22201-WingRootRibY672:1,23201-WingRootRibY672:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22202 / 23202,22202-WingRibY819Y966 / 23202-WingRibY819Y966,20000 Wing,22202-WingRibY819Y966:1,23202-WingRibY819Y966:2,identical,-0.438,0.0,"self-symmetric part, also an exact mirror"
+22202 / 23202,22202-WingRibY819Y966 / 23202-WingRibY819Y966,20000 Wing,22202-WingRibY819Y966:2,23202-WingRibY819Y966:1,identical,-0.438,0.0,"self-symmetric part, also an exact mirror"
+22203 / 23203,22203-WingRibY1113 / 23203-WingRibY1113,20000 Wing,22203-WingRibY1113:1,23203-WingRibY1113:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22204 / 23204,22204-WingFrontRibY1248Y1656Y1792 / 23204-WingFrontRibY1248Y1656Y1792,20000 Wing,22204-WingFrontRibY1248Y1656Y1792:1,23204-WingFrontRibY1248Y1656Y1792:3,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22204 / 23204,22204-WingFrontRibY1248Y1656Y1792 / 23204-WingFrontRibY1248Y1656Y1792,20000 Wing,22204-WingFrontRibY1248Y1656Y1792:2,23204-WingFrontRibY1248Y1656Y1792:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22204 / 23204,22204-WingFrontRibY1248Y1656Y1792 / 23204-WingFrontRibY1248Y1656Y1792,20000 Wing,22204-WingFrontRibY1248Y1656Y1792:3,23204-WingFrontRibY1248Y1656Y1792:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22205 / 23205,22205-WingFrontRibY1385 / 23205-WingFrontRibY1385,20000 Wing,22205-WingFrontRibY1385:1,23205-WingFrontRibY1385:1,identical,0.315,0.0,"self-symmetric part, also an exact mirror"
+22206 / 23206,22206-WingFrontRibY1520 / 23206-WingFrontRibY1520,20000 Wing,22206-WingFrontRibY1520:1,23206-WingFrontRibY1520:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22207 / 23207,22207-WingRibY1928 / 23207-WingRibY1928,20000 Wing,22207-WingRibY1928:1,23207-WingRibY1928:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22208 / 23208,22208-WingTipRibY1973 / 23208-WingTipRibY1973,20000 Wing,22208-WingTipRibY1973:1,23208-WingTipRibY1973:1,mirror,0.0,0.0,
+22301 / 23301,22301-LeadingEdgeSheet / 23301-LeadingEdgeSheet,20000 Wing,22301-LeadingEdgeSheet:1,23301-LeadingEdgeSheet:1,mirror,0.0,0.0,
+22302 / 23302,22302-LeadingEdgeStick10x5 / 23302-LeadingEdgeStick10x5,20000 Wing,22302-LeadingEdgeStick10x5:1,23302-LeadingEdgeStick10x5:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22401 / 23401,22401-TrailingEdgeTubeD4x2p5L445 / 23401-TrailingEdgeTubeD4x2p5L445,20000 Wing,22401-TrailingEdgeTubeD4x2p5L445:1,23401-TrailingEdgeTubeD4x2p5L445:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22402 / 23402,22402-TrailingEdgeTubeD4x2p5L800 / 23402-TrailingEdgeTubeD4x2p5L800,20000 Wing,22402-TrailingEdgeTubeD4x2p5L800:1,23402-TrailingEdgeTubeD4x2p5L800:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22403 / 23403,22403-TrailingEdgeTubeD4x2p5L50 / 23403-TrailingEdgeTubeD4x2p5L50,20000 Wing,22403-TrailingEdgeTubeD4x2p5L50:1,23403-TrailingEdgeTubeD4x2p5L50:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22501 / 23501,22501-AileronRib / 23501-AileronRib,20000 Wing,22501-AileronRib:1,23501-AileronRib:5,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22501 / 23501,22501-AileronRib / 23501-AileronRib,20000 Wing,22501-AileronRib:2,23501-AileronRib:4,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22501 / 23501,22501-AileronRib / 23501-AileronRib,20000 Wing,22501-AileronRib:3,23501-AileronRib:3,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22501 / 23501,22501-AileronRib / 23501-AileronRib,20000 Wing,22501-AileronRib:4,23501-AileronRib:2,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22501 / 23501,22501-AileronRib / 23501-AileronRib,20000 Wing,22501-AileronRib:5,23501-AileronRib:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22502 / 23502,22502-AileronEndRib / 23502-AileronEndRib,20000 Wing,22502-AileronEndRib:1,23502-AileronEndRib:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22502 / 23502,22502-AileronEndRib / 23502-AileronEndRib,20000 Wing,22502-AileronEndRib:2,23502-AileronEndRib:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22503 / 23503,22503-AileronNoseSheetLower1p5mm / 23503-AileronNoseSheetLower1p5mm,20000 Wing,22503-AileronNoseSheetLower1p5mm:1,23503-AileronNoseSheetLower1p5mm:1,mirror,-0.0,0.0,
+22504 / 23504,22504-AileronNoseSheetUpper1p5mm / 23504-AileronNoseSheetUpper1p5mm,20000 Wing,22504-AileronNoseSheetUpper1p5mm:1,23504-AileronNoseSheetUpper1p5mm:1,mirror,0.0,0.0,
+22601 / 23601,22601-AileronHingeRod10x10x800 / 23601-AileronHingeRod10x10x800,20000 Wing,22601-AileronHingeRod10x10x800:1,23601-AileronHingeRod10x10x800:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22602 / 23602,22602-AileronHingeBlock / 23602-AileronHingeBlock,20000 Wing,22602-AileronHingeBlock:1,23602-AileronHingeBlock:5,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22602 / 23602,22602-AileronHingeBlock / 23602-AileronHingeBlock,20000 Wing,22602-AileronHingeBlock:2,23602-AileronHingeBlock:4,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22602 / 23602,22602-AileronHingeBlock / 23602-AileronHingeBlock,20000 Wing,22602-AileronHingeBlock:3,23602-AileronHingeBlock:3,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22602 / 23602,22602-AileronHingeBlock / 23602-AileronHingeBlock,20000 Wing,22602-AileronHingeBlock:4,23602-AileronHingeBlock:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22602 / 23602,22602-AileronHingeBlock / 23602-AileronHingeBlock,20000 Wing,22602-AileronHingeBlock:5,23602-AileronHingeBlock:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22603 / 23603,22603-AileronHingeHolder / 23603-AileronHingeHolder,20000 Wing,22603-AileronHingeHolder:1,23603-AileronHingeHolder:5,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22603 / 23603,22603-AileronHingeHolder / 23603-AileronHingeHolder,20000 Wing,22603-AileronHingeHolder:2,23603-AileronHingeHolder:4,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22603 / 23603,22603-AileronHingeHolder / 23603-AileronHingeHolder,20000 Wing,22603-AileronHingeHolder:3,23603-AileronHingeHolder:3,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22603 / 23603,22603-AileronHingeHolder / 23603-AileronHingeHolder,20000 Wing,22603-AileronHingeHolder:4,23603-AileronHingeHolder:2,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22603 / 23603,22603-AileronHingeHolder / 23603-AileronHingeHolder,20000 Wing,22603-AileronHingeHolder:5,23603-AileronHingeHolder:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22604 / 23604,22604-AileronHinge / 23604-AileronHinge,20000 Wing,22604-AileronHinge:1,23604-AileronHinge:5,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+22604 / 23604,22604-AileronHinge / 23604-AileronHinge,20000 Wing,22604-AileronHinge:2,23604-AileronHinge:4,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+22604 / 23604,22604-AileronHinge / 23604-AileronHinge,20000 Wing,22604-AileronHinge:3,23604-AileronHinge:3,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+22604 / 23604,22604-AileronHinge / 23604-AileronHinge,20000 Wing,22604-AileronHinge:4,23604-AileronHinge:2,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+22604 / 23604,22604-AileronHinge / 23604-AileronHinge,20000 Wing,22604-AileronHinge:5,23604-AileronHinge:1,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+22701 / 23701,22701-AileronServoMount / 23701-AileronServoMount,20000 Wing,22701-AileronServoMount:1,23701-AileronServoMount:1,mirror,0.0,0.0,
+22702 / 23702,22702-AileronServoMountCap / 23702-AileronServoMountCap,20000 Wing,22702-AileronServoMountCap:1,23702-AileronServoMountCap:1,identical,-0.0,0.0,"self-symmetric part, also an exact mirror"
+22703 / 23703,22703-ServoBayRibShort / 23703-ServoBayRibShort,20000 Wing,22703-ServoBayRibShort:1,23703-ServoBayRibShort:1,identical,0.0,0.0,"self-symmetric part, also an exact mirror"
+22704 / 23704,22704-ServoBaySpanwiseWeb / 23704-ServoBaySpanwiseWeb,20000 Wing,22704-ServoBaySpanwiseWeb:1,23704-ServoBaySpanwiseWeb:1,rotated copy,0.0,0.0,"identical turned 180 about z; self-symmetric part, also an exact mirror"
+22705 / 23705,22705-AileronHornBase / 23705-AileronHornBase,20000 Wing,22705-AileronHornBase:1,23705-AileronHornBase:1,mirror,-0.0,0.0,
+22706 / 23706,22706-AileronHornRodClamp / 23706-AileronHornRodClamp,20000 Wing,22706-AileronHornRodClamp:1,23706-AileronHornRodClamp:1,mirror,-0.0,0.0,
+22707 / 23707,22707-AileronHornPlate / 23707-AileronHornPlate,20000 Wing,22707-AileronHornPlate:1,23707-AileronHornPlate:1,mirror,0.0,0.0,
+31101,31101-TailMainSpar,30000 Tail,,,centreline,,,x1 on y = 0
+31102,31102-TailCrossTubeD16x14,30000 Tail,,,centreline,,,x1 on y = 0
+31103,31103-TailPanelSparTubeD16x14,30000 Tail,31103-TailPanelSparTubeD16x14:1,31103-TailPanelSparTubeD16x14:2,rotated copy,0.0,0.0,"identical turned 180 about y; self-symmetric part, also an exact mirror"
+31201,31201-TailCentreRibLeft / 31201-TailCentreRibRight,30000 Tail,31201-TailCentreRibLeft:1,31201-TailCentreRibRight:1,mirror,0.0,0.0,
+31202,31202-TailRootRibLeft / 31202-TailRootRibRight,30000 Tail,31202-TailRootRibLeft:1,31202-TailRootRibRight:1,mirror,-0.0,0.0,
+31203,31203-TailMidRibLeft2 / 31203-TailMidRibRight2,30000 Tail,31203-TailMidRibLeft2:1,31203-TailMidRibRight2:1,mirror,0.0,0.0,
+31203,31203-TailMidRibLeft / 31203-TailMidRibRight,30000 Tail,31203-TailMidRibLeft:1,31203-TailMidRibRight:1,mirror,-0.0,0.0,
+31204,31204-TailTipRibLeft / 31204-TailTipRibRight,30000 Tail,31204-TailTipRibLeft:1,31204-TailTipRibRight:1,mirror,0.0,0.0,
+31205,31205-TailPanelCrossPlate,30000 Tail,31205-TailPanelCrossPlate:1,31205-TailPanelCrossPlate:2,mirror,0.0,0.0,
+31206,31206-TailRibPieceY312,30000 Tail,31206-TailRibPieceY312:1,31206-TailRibPieceY312:2,mirror,-0.0,0.0,
+31303L,31303L-TailSparConnector / 31303R-TailSparConnector,30000 Tail,31303L-TailSparConnector:1,31303R-TailSparConnector:1,different,-67.15,0.21,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+31304L,31304L-TailCentreConnector / 31304R-TailCentreConnector,30000 Tail,31304L-TailCentreConnector:1,31304R-TailCentreConnector:1,mirror,-0.0,0.0,
+32101L,32101L-TailRearSkinCover / 32101R-TailRearSkinCover,30000 Tail,32101L-TailRearSkinCover:1,32101R-TailRearSkinCover:1,different,-8014.025,6.358,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference; position not mirrored: 4.13 mm
+32102L,32102L-TailFrontSkinCover / 32102R-TailFrontSkinCover,30000 Tail,32102L-TailFrontSkinCover:1,32102R-TailFrontSkinCover:1,different,-8888.947,6.118,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference; position not mirrored: 4.38 mm
+32103 / 32106,32103-CoverMountTab / 32106-CoverMountTabMirrored,30000 Tail,32103-CoverMountTab:1,32106-CoverMountTabMirrored:1,mirror,-0.0,0.0,
+32104,32104-M3Shim8x8x0p5,30000 Tail,,,centreline,,,x1 on y = 0
+32105,32105-M3DShimOD8ID3p5T0p5,30000 Tail,,,centreline,,,x1 on y = 0
+32106 / 32103,32106-CoverMountTabMirrored / 32103-CoverMountTab,30000 Tail,32106-CoverMountTabMirrored:2,32103-CoverMountTab:2,mirror,0.0,0.0,
+32201,32201-TailCentreHatch,30000 Tail,,,centreline,,,x1 on y = 0
+32202,32202-TailHatchLatchReceiver,30000 Tail,,,centreline,,,x1 on y = 0
+33101,33101-RuddervatorLESheetLeft / 33101-RuddervatorLESheetRight,30000 Tail,33101-RuddervatorLESheetLeft:1,33101-RuddervatorLESheetRight:1,mirror,0.0,0.0,
+33101,33101-RuddervatorLESheetLeft / 33101-RuddervatorLESheetRight,30000 Tail,33101-RuddervatorLESheetLeft:2,33101-RuddervatorLESheetRight:2,mirror,0.0,0.0,
+33102,33102-RuddervatorRibLeft2 / 33102-RuddervatorRibRight2,30000 Tail,33102-RuddervatorRibLeft2:1,33102-RuddervatorRibRight2:1,mirror,-0.0,0.0,
+33102,33102-RuddervatorRibLeft3 / 33102-RuddervatorRibRight3,30000 Tail,33102-RuddervatorRibLeft3:1,33102-RuddervatorRibRight3:1,mirror,0.0,0.0,
+33102,33102-RuddervatorRibLeft3 / 33102-RuddervatorRibRight3,30000 Tail,33102-RuddervatorRibLeft3:2,33102-RuddervatorRibRight3:2,mirror,0.0,0.0,
+33102,33102-RuddervatorRibLeft / 33102-RuddervatorRibRight,30000 Tail,33102-RuddervatorRibLeft:1,33102-RuddervatorRibRight:1,mirror,-0.0,0.0,
+33201,33201-RuddervatorHingeRod10x10Bore8p5Left / 33201-RuddervatorHingeRod10x10Bore8p5Right,30000 Tail,33201-RuddervatorHingeRod10x10Bore8p5Left:1,33201-RuddervatorHingeRod10x10Bore8p5Right:1,rotated copy,0.0,0.0,"identical turned 180 about y; self-symmetric part, also an exact mirror"
+33202,33202-TailHingeBlock,30000 Tail,33202-TailHingeBlock:1,33202-TailHingeBlock:3,mirror,0.0,0.0,
+33202,33202-TailHingeBlock,30000 Tail,33202-TailHingeBlock:2,33202-TailHingeBlock:4,mirror,0.0,0.0,
+33203,33203-TailHingeHolder,30000 Tail,33203-TailHingeHolder:1,33203-TailHingeHolder:3,mirror,0.0,0.0,
+33203,33203-TailHingeHolder,30000 Tail,33203-TailHingeHolder:2,33203-TailHingeHolder:4,mirror,0.0,0.0,
+33301,33301-RuddervatorHornBase,30000 Tail,33301-RuddervatorHornBase:1,33301-RuddervatorHornBase:2,rotated copy,-0.0,0.0,same part on both sides
+33302,33302-RuddervatorHornRodClamp,30000 Tail,33302-RuddervatorHornRodClamp:1,33302-RuddervatorHornRodClamp:2,rotated copy,-0.0,0.0,same part on both sides
+33303,33303-RuddervatorHornPlate,30000 Tail,33303-RuddervatorHornPlate:1,33303-RuddervatorHornPlate:2,rotated copy,0.0,0.0,same part on both sides
+41101,41101-LiftMotor,40000 Propulsion,41101-LiftMotor:1,41101-LiftMotor:3,rotated copy,0,0,same part on both sides; placement is not a mirror (bought part CAD is not mirror-symmetric); position not mirrored: 0.66 mm; 10 solids per occurrence
+41101,41101-LiftMotor,40000 Propulsion,41101-LiftMotor:2,41101-LiftMotor:4,rotated copy,0,0,same part on both sides; placement is not a mirror (bought part CAD is not mirror-symmetric); position not mirrored: 0.66 mm; 10 solids per occurrence
+41301,41301-ESC,40000 Propulsion,41301-ESC:1,41301-ESC:3,rotated copy,0,0,identical turned 180 about z; position not mirrored: 4.80 mm; 6 solids per occurrence
+41301,41301-ESC,40000 Propulsion,41301-ESC:2,41301-ESC:4,rotated copy,0,0,identical turned 180 about z; position not mirrored: 4.80 mm; 6 solids per occurrence
+81101,81101-LongitudinalBoom30x30x2000,80000 Boom structure,81101-LongitudinalBoom30x30x2000:1,81101-LongitudinalBoom30x30x2000:2,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82101L,82101L-LateralJointBlock / 82101R-LateralJointBlock,80000 Boom structure,82101L-LateralJointBlock:1,82101R-LateralJointBlock:1,mirror,-0.0,0.0,
+82102,82102-LateralJointPlate,80000 Boom structure,82102-LateralJointPlate:1,82102-LateralJointPlate:3,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82102,82102-LateralJointPlate,80000 Boom structure,82102-LateralJointPlate:2,82102-LateralJointPlate:4,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82103,82103-LateralJointSpacer,80000 Boom structure,82103-LateralJointSpacer:1,82103-LateralJointSpacer:2,rotated copy,-0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82201,82201-RootClampTopPlate,80000 Boom structure,82201-RootClampTopPlate:1,82201-RootClampTopPlate:2,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82202,82202-RootClampBottomPlate,80000 Boom structure,82202-RootClampBottomPlate:1,82202-RootClampBottomPlate:2,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82203,82203-RootClampSpacerInnerFront,80000 Boom structure,82203-RootClampSpacerInnerFront:1,82203-RootClampSpacerInnerFront:2,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82204,82204-RootClampSpacerInnerRear,80000 Boom structure,82204-RootClampSpacerInnerRear:1,82204-RootClampSpacerInnerRear:2,rotated copy,-0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82205,82205-RootClampSpacerOuter,80000 Boom structure,82205-RootClampSpacerOuter:1,82205-RootClampSpacerOuter:3,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82205,82205-RootClampSpacerOuter,80000 Boom structure,82205-RootClampSpacerOuter:2,82205-RootClampSpacerOuter:4,rotated copy,0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+82301L,82301L-BoomSocketOuter / 82301R-BoomSocketOuter,80000 Boom structure,82301L-BoomSocketOuter:1,82301R-BoomSocketOuter:1,mirror,0.0,0.0,
+82302L,82302L-BoomSocketInner / 82302R-BoomSocketInner,80000 Boom structure,82302L-BoomSocketInner:1,82302R-BoomSocketInner:1,mirror,0.0,0.0,
+83101,83101-FrontMotorMountTopPlate,80000 Boom structure,83101-FrontMotorMountTopPlate:1,83101-FrontMotorMountTopPlate:2,rotated copy,-0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+83102,83102-FrontMotorMountBottomPlate,80000 Boom structure,83102-FrontMotorMountBottomPlate:1,83102-FrontMotorMountBottomPlate:2,rotated copy,-0.0,0.0,"identical turned 180 about x; self-symmetric part, also an exact mirror"
+83103L,83103L-FrontMotorMountUBlock / 83103R-FrontMotorMountUBlock,80000 Boom structure,83103L-FrontMotorMountUBlock:1,83103R-FrontMotorMountUBlock:1,mirror,-0.0,0.0,
+83201L,83201L-RearMotorMountUBlock / 83201R-RearMotorMountUBlock,80000 Boom structure,83201L-RearMotorMountUBlock:1,83201R-RearMotorMountUBlock:1,mirror,-0.0,0.0,
+83202L,83202L-RearMotorMountTopPlate / 83202R-RearMotorMountTopPlate,80000 Boom structure,83202L-RearMotorMountTopPlate:1,83202R-RearMotorMountTopPlate:1,different,66.123,0.039,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference
+83203L,83203L-RearMotorMountBottomPlate / 83203R-RearMotorMountBottomPlate,80000 Boom structure,83203L-RearMotorMountBottomPlate:1,83203R-RearMotorMountBottomPlate:1,different,66.104,0.043,max deviation sampled at 250 surface points after mirroring; internal features (holes) show in the volume difference

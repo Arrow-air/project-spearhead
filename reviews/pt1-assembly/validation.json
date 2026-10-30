@@ -1,0 +1,267 @@
+{
+  "source_files": [
+    {
+      "name": "AR-SH-PT1-0000_PT1_v35_noREF.step",
+      "sha256": "6e6b7c8e08346109f9725bd645423f7cf656e9d570d03ee1b0e6a85b0c0f41b5",
+      "bytes": 98574987
+    },
+    {
+      "name": "pt1_assembly_manifest.csv",
+      "sha256": "993491bb05f530a9881b40c403be20185aec36f6b44a44caca712eb7a6acc3d9",
+      "bytes": 91984
+    },
+    {
+      "name": "pt1_materials_table.csv",
+      "sha256": "0e880efebf20ec907c9eac8eb98f02deac3de7d651b7b09319126f96cac55a5c",
+      "bytes": 28984
+    },
+    {
+      "name": "pt1_part_numbers.csv",
+      "sha256": "75a3f73542b10242f5d2aa2b046df54d5c7b3a27ed46430bc7d203f8fc49fad3",
+      "bytes": 21128
+    },
+    {
+      "name": "pt1_renumber_map_v30_v32.csv",
+      "sha256": "382991e5abf0b41271f7af81321b91b34a4dc1b24f4a63ac2a5fbb387e3fdca0",
+      "bytes": 115982
+    },
+    {
+      "name": "pt1_side_review.csv",
+      "sha256": "60e54fb5a350bd176386464587ed3905f331b4723305e9d48f769bcf58ae0460",
+      "bytes": 33738
+    },
+    {
+      "name": "native-bodies.json",
+      "sha256": "915fd47334fb076e344a75b02fe09ceac4633777aff146fe993435dd23749735",
+      "bytes": 158600
+    }
+  ],
+  "native_comparison": {
+    "matched_occurrences": 426,
+    "unmatched_step": [],
+    "unmatched_native": [],
+    "max_adaptive_volume_difference_percent": 0.029542465501909507,
+    "max_centroid_error_mm": 0.02586793042860336,
+    "max_bounds_error_mm": 0.015003734678359137,
+    "over_limits": []
+  },
+  "checks": [
+    {
+      "name": "native dump is from Fusion v35 at very high accuracy with nothing unsaved",
+      "passed": true
+    },
+    {
+      "name": "native dump has 482 numbered bodies",
+      "passed": true
+    },
+    {
+      "name": "every numbered body has the material of the materials table",
+      "passed": true
+    },
+    {
+      "name": "five systems in tree order",
+      "passed": true
+    },
+    {
+      "name": "assembly contains 490 solids",
+      "passed": true
+    },
+    {
+      "name": "all 490 assembly solids pass OCP validity",
+      "passed": false
+    },
+    {
+      "name": "3950 mm span",
+      "passed": true
+    },
+    {
+      "name": "426 part occurrences",
+      "passed": true
+    },
+    {
+      "name": "215 part numbers in the list",
+      "passed": true
+    },
+    {
+      "name": "every part in the STEP is in the list and vice versa",
+      "passed": true
+    },
+    {
+      "name": "list quantities match the STEP",
+      "passed": true
+    },
+    {
+      "name": "list quantities sum to the occurrences",
+      "passed": true
+    },
+    {
+      "name": "every occurrence matched one native occurrence, both ways",
+      "passed": true
+    },
+    {
+      "name": "adaptive volume within 0.1 percent of native",
+      "passed": true
+    },
+    {
+      "name": "centroid within 0.05 mm of native",
+      "passed": true
+    },
+    {
+      "name": "matched body bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "list left, right and centre quantities match the STEP",
+      "passed": true
+    },
+    {
+      "name": "split bodies: 2 of each brace, 3 solids each",
+      "passed": true
+    },
+    {
+      "name": "490 solids less split lumps equals 482 bodies",
+      "passed": true
+    },
+    {
+      "name": "four lift motors and four ESCs",
+      "passed": true
+    },
+    {
+      "name": "right ruddervator horn group present",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip retains 490 solids",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip solids remain valid",
+      "passed": false
+    },
+    {
+      "name": "STEP roundtrip bounds within 0.02 mm",
+      "passed": true
+    },
+    {
+      "name": "STEP roundtrip summed volume within 0.01 percent",
+      "passed": true
+    }
+  ],
+  "warnings": [
+    "Default non-adaptive OCP volume is inaccurate on some spline surfaces; use spearhead.volume_mm3. Validity, volume and centroid checks do not prove physical fit.",
+    "Battery, avionics and harness are not modelled. Bought parts (motors, ESCs, aileron hinges) have no datasheet mass yet.",
+    "The hidden REF group of Fusion (130 bodies) is not in this export."
+  ],
+  "assembly": {
+    "solids": 490,
+    "valid_solids": 483,
+    "summed_solid_volume_mm3": 17710105.78356254,
+    "bounds_mm": [
+      [
+        -750.0000000000044,
+        -1975.0000001,
+        -403.590523262303
+      ],
+      [
+        1463.25631368704,
+        1975.0000001,
+        338.7782680650828
+      ]
+    ],
+    "size_mm": [
+      2213.2563136870444,
+      3950.0000002,
+      742.3687913273858
+    ],
+    "subsystems": [
+      {
+        "name": "10000-FuselageStructure",
+        "solids": 225
+      },
+      {
+        "name": "20000-WingStructure",
+        "solids": 100
+      },
+      {
+        "name": "30000-TailStructure",
+        "solids": 63
+      },
+      {
+        "name": "40000-Propulsion",
+        "solids": 64
+      },
+      {
+        "name": "80000-BoomStructure",
+        "solids": 38
+      }
+    ]
+  },
+  "invalid_on_read": [
+    "13106L-SideSkinSection2",
+    "13106R-SideSkinSection2",
+    "13407L-FairingLowerPanelRear246x250",
+    "13407R-FairingLowerPanelRear246x250",
+    "14102-TopPanelAft",
+    "14103-TopPanelMid",
+    "32101L-TailRearSkinCover"
+  ],
+  "roundtrip": {
+    "solids": 490,
+    "valid_solids": 478,
+    "summed_solid_volume_mm3": 17710116.75475007,
+    "bounds_mm": [
+      [
+        -750.0000000000044,
+        -1975.0000001,
+        -403.5905232623
+      ],
+      [
+        1463.2563136868193,
+        1975.0000001,
+        338.77826806507977
+      ]
+    ],
+    "size_mm": [
+      2213.256313686824,
+      3950.0000002,
+      742.3687913273798
+    ],
+    "subsystems": [
+      {
+        "name": "10000-FuselageStructure",
+        "solids": 225
+      },
+      {
+        "name": "20000-WingStructure",
+        "solids": 100
+      },
+      {
+        "name": "30000-TailStructure",
+        "solids": 63
+      },
+      {
+        "name": "40000-Propulsion",
+        "solids": 64
+      },
+      {
+        "name": "80000-BoomStructure",
+        "solids": 38
+      }
+    ]
+  },
+  "invalid_after_roundtrip": [
+    "13403L-FairingPanelC",
+    "13403R-FairingPanelC",
+    "13407L-FairingLowerPanelRear246x250",
+    "13407R-FairingLowerPanelRear246x250",
+    "13408L-FairingLowerPanelFront246x130",
+    "13408R-FairingLowerPanelFront246x130",
+    "14102-TopPanelAft",
+    "14103-TopPanelMid",
+    "32101L-TailRearSkinCover",
+    "32202-TailHatchLatchReceiver",
+    "31304L-TailCentreConnector",
+    "31304R-TailCentreConnector"
+  ],
+  "passed": false
+}

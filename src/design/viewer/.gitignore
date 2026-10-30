@@ -1,0 +1,3 @@
+node_modules/
+assets/*.glb
+__pycache__/

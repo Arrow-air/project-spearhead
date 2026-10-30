@@ -1,2 +1,5 @@
 *.sh text eol=lf
 *.command text eol=lf
+src/design/pt1/*.step filter=lfs diff=lfs merge=lfs -text
+src/design/pt1/*.csv text eol=lf
+src/design/pt1/*.json text eol=lf

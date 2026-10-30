@@ -51,6 +51,12 @@ project-spearhead/
         └── flight_dynamics_model/  # Flight dynamics / stability analysis
 ```
 
+## CAD reconstruction
+
+The [PT1 main assembly](src/design/README.md) is under `src/design/`: the Fusion
+STEP export, the part list and a Build123D loader, checks and web viewer. It is
+a review model, not a manufacturing release.
+
 ## Project phases
 
 1. **Electric flight validation** — build and fly the airframe on electric
