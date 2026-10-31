@@ -7,7 +7,7 @@ sidebar_position: 2
 # Spearhead Electrical Master Document
 
 **Doc ID:** SPH-E-001
-**Revision:** 0.23
+**Revision:** 0.24
 **Author:** errrks
 **Date:** June 2026
 **Status:** Phase 1 specified. Phases 2–4 are architecture stubs pending detailed design.
@@ -179,7 +179,7 @@ Derived from the Project Spearhead DAO proposal (AIP-006, March 2026) and meetin
 
 ## 4. Phase 1: Electric VTOL (Detailed)
 
-> **PT1 as built differs from this section.** The MAD shipment was refused by Turkish customs, so PT1 flies KDE motors and KDE UAS55HVC ESCs on physical PWM from the 6C I/O PWM OUT port, the wing surfaces are ailerons on the FMU PWM OUT port at 8.0 V, the tail runs DS3115MG substitute servos at 6 V, RC is ExpressLRS and the rangefinder is a Benewake TF02-Pro, and PT1.5 adds a pusher on its own 12S 15 Ah pack. The DroneCAN propulsion and 8 V and 8.4 V servo rails below remain the design and return with the MAD set in PT2. Read **SPH-E-006, PT1 and PT1.5 Electrical As-Built Note** (`docs/pt1-as-built-note.md`) for the as-built state, the validation log, and the open checks (servo rail tie through the 6C, CAN termination, pusher pack grounding).
+> **PT1 as built differs from this section.** The MAD shipment was refused by Turkish customs, so PT1 flies KDE motors and KDE UAS55HVC ESCs on physical PWM from the 6C I/O PWM OUT port, the wing surfaces are ailerons on the FMU PWM OUT port at 8.0 V, the tail runs DS3115MG substitute servos at 6 V, RC is ExpressLRS and the rangefinder is a Benewake TF02-Pro, and PT1.5 adds a pusher on its own 12S 15 Ah pack. The DroneCAN propulsion and 8 V and 8.4 V servo rails below remain the design and return with the MAD set in PT2. Read **SPH-E-006, PT1 and PT1.5 Electrical As-Built Note** (`docs/pt1-as-built-note.md`) for the as-built state, the validation log, and the open checks (servo rail tie through the 6C, CAN termination, pusher pack grounding, output map read-back). Two safety items as of October 18, 2026: the FC has never measured vehicle current, because the FCHUB sense on POWER2 (§4.13 Setup B) is not configured and the PM02 shunt sees only the FC leg (AB-08), and the software motor E-stop that §4.3 relies on under D2 was switched off in the field on October 18 (AB-13).
 
 Phase 1 scope: all systems needed for VTOL hover, control surface authority, structural validation, and detachable wing testing. No IC engine. No generator.
 
@@ -1580,6 +1580,7 @@ Arrow payload standard connector (per project requirements §9.7). Candidate: Mo
 
 | Rev | Date | Author | Changes |
 |---|---|---|---|
+| 0.24 | October 31, 2026 | errrks | §4 banner extended with the two October 18 safety items from the flight log review (no vehicle current sense as flown, AB-08, and the RC8 motor E-stop removed in the field, AB-13). Pointer to SPH-E-006 Rev 2. No design content changed |
 | 0.23 | October 17, 2026 | errrks | OQ-06 closed: the stored pitot is a Holybro PX4 Airspeed V1.3 with an MS4525DO transducer (I2C 0x28), as built on the PT1 nose. §4 airspeed table gets an as-built paragraph with `ARSPD_TYPE = 1` and `ARSPD_BUS = 1`, and the SPH-E-003 backup transducer is dropped. Pointer to SPH-E-006 Rev 1 |
 | 0.22 | October 16, 2026 | errrks | Added the §4 as-built banner pointing to **SPH-E-006** (`docs/pt1-as-built-note.md`), which records PT1 and PT1.5 as built from Erick's Oct 15 and 16 report: KDE motors and ESCs on PWM from the I/O PWM OUT port with a 5 V control lead rail from the FCHUB BEC, ailerons (not flaperons) on the FMU PWM OUT port at 8.0 V, tail Vx 6 V with DSSERVO DS3115MG substitute servos (4.8 to 7.2 V) on the ruddervators, Here4 on the CAN-L4-PWM GH connector, CAN splitter removed, I2C airspeed on the nose, ExpressLRS 2.4 GHz RP4TD on TELEM2 instead of Radiolink, Benewake TF02-Pro on TELEM3 instead of the Ainstein radar, pusher on a separate 12S 15 Ah pack for PT1.5. Oct 15 validation of the CAN to PWM tail path and the tail regulator. Open checks: VDD_SERVO tie between the two breakouts through the 6C, CAN termination at the tail end, pusher pack ground bond and safing, ArduPilot output map read-back. No design content changed |
 | 0.21 | October 14, 2026 | errrks | PT1 as-built correction: the tail PM12S-3 Vx is bridged to **6V** for the ruddervators, not the 8V design value. 8V stays the design value and is the PT2 STAIL rail. As-built notes added at §4.4 (regulation table and PM12S-3 entry), §4.6 H15, §4.10 (servo rail and PM12S-3 tables), §4.11. SPH-E-005 wiring diagram and its mmd source updated to match. No other content changed |
