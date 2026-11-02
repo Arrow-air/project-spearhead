@@ -1,6 +1,12 @@
+---
+title: "Preliminary Fixed-Wing Stability Analysis and CG Sensitivity Study"
+sidebar_label: "Information Note"
+sidebar_position: 1
+---
+
 # Preliminary Fixed-Wing Stability Analysis and CG Sensitivity Study
 
-# Status
+## Status
 
 "Preliminary"
 
@@ -10,7 +16,7 @@
 
 "Reference: [Preliminary Design Aerodynamic Database](../../Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/information-note.md)"
 
-# Project Description
+## Project Description
 
 This information note documents the preliminary fixed-wing stability analysis performed with the current flight dynamics model (FDM) and the Nondimit-generated aerodynamic databases. The purpose of the work is to understand how longitudinal, lateral, and directional stability characteristics change as the aerodynamic moment reference point / CG location is moved forward along the body x-axis.
 
@@ -18,7 +24,7 @@ The analysis was motivated by the preliminary aerodynamic database finding that 
 
 This is a preliminary engineering assessment. It is useful for identifying trends and selecting follow-on analysis points, but it is not a flight-test clearance result.
 
-## Objective
+### Objective
 
 The objectives of this study were:
 
@@ -28,7 +34,7 @@ The objectives of this study were:
 - Check whether the observed stability trend is physically consistent with moving the aerodynamic moment reference point.
 - Document limitations that must be resolved before the results are used for final envelope definition.
 
-## Background
+### Background
 
 The aerodynamic database was generated from the ADB v1.1 drag-corrected coefficient table. The delivered database uses body axes with `x` forward, `y` right, and `z` down, and the coefficient table is dimensionalized with the following reference values:
 
@@ -45,15 +51,15 @@ The nominal drag-corrected database is referenced to `(-0.15, 0.0, 0.15) m`. Add
 
 The Nondimit consistency check showed that the generated cases are force-consistent with the nominal drag-corrected export. Moment differences match the expected rigid-body moment transfer within export rounding tolerance. The largest moment error in the check was approximately `5e-05 N m`, and the largest force coefficient difference was approximately `1e-04`.
 
-# Methodology
+## Methodology
 
-## Aerodynamic Database / Nondimit Workflow
+### Aerodynamic Database / Nondimit Workflow
 
 The case databases were generated from the current drag-corrected ADB export. Nondimit was used to recenter the aerodynamic moment outputs at different body-axis x locations while keeping `y = 0.0 m` and `z = 0.15 m`.
 
 The FDM used the database metadata as the source of truth for density, dynamic pressure, reference geometry, and moment center. The model consumed nondimensional body-axis coefficient columns and reconstructed dimensional forces and moments using the database reference values.
 
-## FDM / Stability Workflow
+### FDM / Stability Workflow
 
 For each database, the FDM workflow:
 
@@ -67,7 +73,7 @@ For each database, the FDM workflow:
 
 The dynamic classification includes phugoid, short-period, roll, spiral, and lateral-directional oscillatory behavior where identifiable. Because the aircraft uses an inverse V-tail / ruddervator configuration, the lateral-directional classification is treated cautiously. No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was found in this linearization.
 
-## Analyzed Cases
+### Analyzed Cases
 
 Eight generated database cases were included:
 
@@ -93,9 +99,9 @@ Individual case reports are provided in:
 - [Case M5](cases/case_m5_stability_report.md)
 - [Case 0](cases/case_0_stability_report.md)
 
-# Results and Deliverables
+## Results and Deliverables
 
-## Case-by-Case Summary
+### Case-by-Case Summary
 
 | Case | x_ref, m | Trim Status | Alpha, deg | Elevator, deg | Cm_alpha | Longitudinal Dynamic Result | Spiral Result |
 |------|---------:|-------------|-----------:|--------------:|---------:|-----------------------------|---------------|
@@ -110,7 +116,7 @@ Individual case reports are provided in:
 
 All cases trimmed successfully. Elevator trim becomes increasingly negative as the reference location moves forward. Case 0 has the strongest longitudinal static stability but also requires the largest elevator trim deflection, so it should be treated as a forward stability bound rather than an automatic baseline.
 
-## Static Stability Comparison
+### Static Stability Comparison
 
 | Case | x_ref, m | Cm_alpha, 1/rad | Cn_beta, 1/rad | Cl_beta, 1/rad | Static Summary |
 |------|---------:|----------------:|---------------:|---------------:|----------------|
@@ -133,7 +139,7 @@ Directional static stability, represented here by `Cn_beta`, remains positive fo
 
 ![Cl beta trend](figures/cl_beta_vs_reference_x.png)
 
-## Dynamic Stability Comparison
+### Dynamic Stability Comparison
 
 | Case | Phugoid | Short-Period / Longitudinal Limiting Mode | Roll | Spiral | Dutch-Roll-Like Lateral-Directional Mode |
 |------|---------|-------------------------------------------|------|--------|------------------------------------------|
@@ -158,7 +164,7 @@ No clearly identifiable Dutch-roll-like lateral-directional oscillatory mode was
 
 ![Trim trend](figures/trim_trends.png)
 
-##  CG Sensitivity Trends
+###  CG Sensitivity Trends
 
 Moving the aerodynamic moment reference / CG forward makes the pitching moment slope more stabilizing. This trend is physically consistent with the expected moment-transfer effect from the aerodynamic force resultant: as the reference point moves forward, the same aerodynamic force distribution produces a more stabilizing pitch moment slope.
 
@@ -173,13 +179,13 @@ The key trend points are:
 
 The most sensitive stability behavior is longitudinal. Directional and lateral static derivatives remain favorable across the sampled range and change more gradually.
 
-## Stable / Unstable Region Summary
+### Stable / Unstable Region Summary
 
 The nominal, M10, and M8 cases are statically unstable in pitch and dynamically unstable in the identified longitudinal response. M65 and M6 are statically stable in pitch but remain dynamically unstable in the current linearization. M5p5, M5, and Case 0 have stable identified longitudinal modes.
 
 Case 0 has the strongest sampled longitudinal static margin, but the required elevator trim is much larger than the nearby transition cases. For near-term development, Case M5 at `x = -0.05 m` is recommended as the practical baseline because it has more margin than the first stable sampled case while remaining close to the identified transition region. Case M5p5 at `x = -0.055 m` should be retained as the current sampled estimate of the aft stability boundary.
 
-## Limitations
+### Limitations
 
 The following limitations apply:
 
@@ -190,7 +196,7 @@ The following limitations apply:
 - The stability boundary was estimated from discrete Nondimit-generated cases with interpolation between samples.
 - Results are based on linearization around modeled trim points and should be validated with time-domain simulations and higher-fidelity aerodynamic/control data.
 
-## Recommendations
+### Recommendations
 
 Use Case M5, `x = -0.05 m`, as the near-term FDM baseline for continued fixed-wing development. Retain Case M5p5, `x = -0.055 m`, as a boundary case for refining the aft stable region. Additional Nondimit cases near `x = -0.0575 m` would help narrow the dynamic transition.
 
@@ -198,7 +204,7 @@ Future database generation should preserve explicit metadata for density, veloci
 
 Before using these results for envelope definition, the FDM should be updated with improved mass properties, control-surface derivatives, rate derivatives, and propulsion effects. The inverse V-tail / ruddervator lateral-directional behavior should be revisited with a more complete model so that Dutch-roll-like coupled oscillatory behavior can be classified more reliably.
 
-## Source Files
+### Source Files
 
 The compact results included with this information note are:
 
@@ -208,7 +214,7 @@ The compact results included with this information note are:
 - Individual case reports in [cases/](cases/)
 - Comparison figures in [figures/](figures/)
 
-## Conclusion
+### Conclusion
 
 The stability sweep found a clear, physically consistent trend: moving the aerodynamic moment reference / CG forward improves longitudinal stability. Static pitch stability appears near `x = -0.0695 m`, while the dynamic longitudinal transition appears closer to `x = -0.0575 m`. The first sampled case with stable identified longitudinal modes is M5p5 at `x = -0.055 m`; M5 at `x = -0.05 m` provides a more practical near-term development baseline.
 

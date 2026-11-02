@@ -36,6 +36,15 @@ CANL
 carb
 Castrol
 cdeg
+ArduPilot
+arm64
+arrowair
+BVLOS
+connectorized
+quadplane
+Pixhawk
+SITL
+Türkiye
 chordwise
 CLIK
 connectorized

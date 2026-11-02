@@ -1,8 +1,14 @@
+---
+title: "Spearhead PT1 Electrical Planning and Design Foundation"
+sidebar_label: "PT1 Planning & Design Foundation"
+sidebar_position: 4
+---
+
 # Spearhead PT1 Electrical Planning and Design Foundation
 
 Internal doc ID: SPH-E-004. Companion to SPH-E-001 (Spearhead Electrical Master) and SPH-E-002 (PT1 Electrical Architecture Information Note).
 
-# Status
+## Status
 
 `Valid`
 
@@ -12,7 +18,7 @@ Internal doc ID: SPH-E-004. Companion to SPH-E-001 (Spearhead Electrical Master)
 
 `Reference: SPH-E-001 (master, Rev 0.18), SPH-E-002 (PT1 architecture note), SPH-E-003 (PT1 parts list)`
 
-# Project Description
+## Project Description
 
 Project Spearhead is an Arrow Air fixed-wing QuadPlane UAV at ~25 kg MTOW, a Quad-X VTOL with an IC pusher for cruise. This is the foundation note for the electrical design: the planning, the framing, and the engineering reasoning that produced the Prototype 1 (PT1) architecture.
 
@@ -20,13 +26,13 @@ It is a thinking document, not a parts list and not a decision register. SPH-E-0
 
 PT1 covers the electric VTOL phase and its supporting avionics. The IC engine, generator, BVLOS link, and payload bay are Phase 2 and later. They are out of scope for the PT1 architecture but in scope for the framing here, because most PT1 simplifications are only defensible once you state what the final product will need instead.
 
-# Bounty or Grant Proposal Document
+## Bounty or Grant Proposal Document
 
 This note documents internal engineering planning for the PT1 electrical work package, not a discrete bounty or grant. Requirements derive from the Project Spearhead proposal AIP-006 §9.
 
-# Methodology
+## Methodology
 
-## Design philosophy
+### Design philosophy
 
 PT1 follows one governing principle: **stay off the shelf and minimize custom PCBs.** PT1 is a test platform whose job is to validate VTOL hover, control-surface authority, structural behavior, and detachable-wing testing. It is not the product. Every subsystem was sized by weighing the final-product requirement against what PT1 actually needs to fly those tests. Where a final design choice adds mass, cost, or integration risk that PT1 does not need to retire, PT1 takes the simpler path and this note states what stays reserved for the final design.
 
@@ -36,7 +42,7 @@ Three consequences follow from that principle and recur through every decision b
 2. **PT1 may carry deliberate single points of failure** that the final product will not, as long as each one is recorded and bounded. FC power on a single module and no hardware HV kill are the two live examples.
 3. **PT1 runs final-class parts where running a throwaway test part would teach us nothing.** The clearest case is servos: PT1 flies the final HV servo class directly rather than a 5V test stage, because the test stage would not validate the torque, travel, or current the real surfaces see.
 
-## Decision framework
+### Decision framework
 
 Each subsystem trade was run the same way:
 
@@ -48,17 +54,17 @@ Each subsystem trade was run the same way:
 
 Decisions stem from Spearhead engineering calls through June 17, 2026 and independent research. The architecture moved materially between the June 11 and June 17 calls (FC, battery, regulators, GPS, kill switch), and this note reflects the June 17 state.
 
-# Results and Deliverables
+## Results and Deliverables
 
 The reasoning is organized by the engineering question each cluster of decisions answers, not by part. For the resulting choices in table form see SPH-E-002. For the cable-level result see SPH-E-001 §4.6.
 
-## 1. Requirements foundation and PT1 scope
+### 1. Requirements foundation and PT1 scope
 
 AIP-006 §9 sets fifteen electrical requirements (E-REQ-01 through E-REQ-15). Seven are Phase 1 and gate PT1: VTOL thrust-to-weight (E-REQ-01), HV and LV kills (E-REQ-02), battery SoC telemetry (E-REQ-03), redundant GPS (E-REQ-04), radar or laser altimeter (E-REQ-05), short-range RF link (E-REQ-08), pre-flight diagnostics (E-REQ-10), heading LEDs (E-REQ-11), link-loss recovery (E-REQ-12), and a Pixhawk-standard FC with quadplane logic (E-REQ-13). The rest (obstacle avoidance, >200 km telemetry, payload bay, IC ignition, generator) belong to later phases and are deliberately excluded from PT1 so the test platform stays simple enough to build and debug.
 
 The single largest scoping move is that **PT1 has no IC propulsion electronics at all.** No generator means no recharge-in-cruise path, no engine means no ignition or starter electrics. That removes the entire Phase 2 power-management problem from PT1 and lets the battery be sized purely for a hover-and-transition test budget rather than for endurance.
 
-## 2. The PT1-versus-final-product framework
+### 2. The PT1-versus-final-product framework
 
 Every simplification below is paired with the final-product item it defers. This is the through-line of the whole architecture.
 
@@ -73,7 +79,7 @@ Every simplification below is paired with the final-product item it defers. This
 
 The discipline is that none of these are silent. Each one lives in the §9.3 deviation register or the open-question/SPOF list in SPH-E-002, so the gap between PT1 and the certifiable final product is always visible.
 
-## 3. Power architecture reasoning
+### 3. Power architecture reasoning
 
 **Battery.** The energy driver for a QuadPlane is not sustained hover, it is the hover-and-transition budget, because the aircraft flies wing-borne for most of a mission. At ~85 A average hover draw a 22 Ah pack gives roughly 15 minutes of hover before reserve, far beyond any PT1 test flight. The first instinct in May was to drop to 16 Ah to save ~1.7 kg, and the June 11 call picked a 16 Ah ProFuse on that logic. June 17 reversed it: the motorobit 12S 22 Ah semi-solid pack is 3,709 g, which is ~113 g lighter than the 16 Ah ProFuse despite +6 Ah, because the cell density offsets the capacity. Once the weight penalty disappeared, the May energy trade no longer applied and capacity went back to 22 Ah. The C-rating reasoning is separate: 15C gives 330 A continuous, which clears the ≥15C floor and covers even the 320 A ESC-capped absolute peak, with the caveat that a 15C semi-solid pack will sag more under that peak than the 60C ProFuse would have, so the first high-throttle hover is a verification point.
 
@@ -85,7 +91,7 @@ The discipline is that none of these are silent. Each one lives in the §9.3 dev
 
 **Kill switches and the §9.3 deviation.** This is the most significant recorded compromise. AIP-006 §9.3 SHALL requires independent hardware HV and LV kills. PT1 keeps the LV kill but takes a recorded §9.3 deviation on the HV side: software E-stop (ArduPilot motor emergency stop on an RC switch, with the AMPX 2 s CAN watchdog as a backstop) plus unplugging the QS8-S anti-spark connector for ground safing. The reasoning chain: there is no clean contactor placement for PT1 without added mass and components, the EV200 contactor candidate is ~450 g and ~€149, the MOSFET alternative fails short and has no flight heritage, and the QS8-S anti-spark already manages the mating inrush that was the original argument for an inline kill. The software E-stop layer costs nothing and gets configured regardless. The full hardware HV kill returns for the final product, and the contactor/MOSFET analysis is preserved in SPH-E-001 §4.3 so the final-product work does not restart from zero.
 
-## 4. Avionics and control reasoning
+### 4. Avionics and control reasoning
 
 **Flight controller.** E-REQ-13 sets a Pixhawk-standard FC with quadplane logic as the floor. The interesting reasoning is why the full 6C beat both the Mini and the June 11 6X choice. Two drivers: the full 6C has 5 UARTs versus the Mini's 4, which the serial F9P primary GPS needs, and it has two analog POWER ports, which is what allows the FCHUB vehicle V/I to feed POWER2 directly. The analog PM02 V3 flipped from a constraint to an advantage in the process: the 6X's digital PM02D rode V/I over I2C and could not have fed an analog sense port, so the analog module is precisely what makes the two-port monitoring scheme work. The 6C IO PWM pins also drive the flaperons directly, which is what let the wing CAN-PWM node stay dropped.
 
@@ -99,7 +105,7 @@ The discipline is that none of these are silent. Each one lives in the §9.3 dev
 
 **GPS.** E-REQ-04 requires redundant GPS. The chosen pair is a salvaged u-blox F9P on a serial UART (primary) plus a Here4 on CAN (secondary). The serial-plus-CAN split is deliberate interface diversity, and the salvaged F9P with on-hand antennas costs nothing. The known limitation is that a mixed serial-plus-CAN pair cannot do moving-baseline GPS yaw, which needs two matched RTK units on one interface, so Phase 1 yaw comes from the compasses. The ~2 m nose-to-tail separation still gives spatial diversity for the redundant fix. If GPS yaw is wanted later, the path is two matched units on one interface.
 
-## 5. Sensing and monitoring reasoning
+### 5. Sensing and monitoring reasoning
 
 **Health monitoring (Setup B).** The dumb pack has no per-cell data, so vehicle current and SoC have to come from a sensor rather than the battery. Setup B puts the FCHUB 440 A sensor on POWER2 as the primary monitor (BATT1) and the PM02 V3 on POWER1 as redundant voltage (BATT2), with the instances swapped so the real current sensor is primary. The reason this is clean rather than a hack is the 6C's second analog POWER port: it lets the FCHUB V/I feed a dedicated sense port with no cutting of the PM02 harness. ESC voltage, current, and temperature stream separately over DroneCAN. Together this satisfies E-REQ-03 and E-REQ-10. A plug-in cell checker covers per-cell ground checks that the dumb pack cannot report. The bench FC is the same full 6C as the build, so Setup B validates on the bench exactly as it runs.
 
@@ -111,7 +117,7 @@ The discipline is that none of these are silent. Each one lives in the §9.3 dev
 
 **Airspeed.** PT1 reuses the pitot from storage, with the transducer interface still open. A backup I2C DLVR sensor is carried so an unusable stored transducer does not block the build.
 
-## 6. Cross-cutting engineering principles
+### 6. Cross-cutting engineering principles
 
 These shaped multiple decisions rather than one.
 
@@ -121,7 +127,7 @@ These shaped multiple decisions rather than one.
 - **Accepted single points of failure are recorded, not hidden.** FC power on one module and the absence of a hardware HV kill are both deliberate and both written down with their reversal path. The standard is that a reviewer can always find the gap.
 - **Sourcing follows the customs rule.** Buy in Turkey where stock exists, then EU stock, to keep customs simple, the same logic as the MAD order with the ATR certificate. This is why TR-side parts are sometimes accepted at a price premium (the PM12S-3 at ~4× Matek direct) when the customs simplicity is worth it.
 
-## Deliverables
+### Deliverables
 
 This note is the planning and rationale layer of the PT1 electrical doc set:
 
@@ -130,7 +136,7 @@ This note is the planning and rationale layer of the PT1 electrical doc set:
 - SPH-E-002: review summary of considered-versus-chosen per subsystem, plus the decision register, the deviation register, and the open-question record.
 - SPH-E-003: order-facing parts list with priorities, vendors, and lead flags.
 
-# Remarks
+## Remarks
 
 - This note is intentionally stable. It records why the architecture is shaped the way it is. When a decision changes, the change and its new rationale land in SPH-E-002 and the affected SPH-E-001 section first, and this note is revised only if the underlying design philosophy or a major trade actually moves.
 - The framing throughout is PT1-first with full-product context. Read a deferral here as a commitment recorded against the final product, not as a feature dropped. The reserved items (full HV kill, FC power redundancy, smart pack, integration PCB, long-range link) are tracked, not forgotten.

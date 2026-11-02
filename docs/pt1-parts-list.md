@@ -1,3 +1,9 @@
+---
+title: "Spearhead PT1 Electrical Parts List"
+sidebar_label: "PT1 Parts List"
+sidebar_position: 5
+---
+
 # Spearhead PT1 Electrical Parts List
 
 **Doc ID:** SPH-E-003

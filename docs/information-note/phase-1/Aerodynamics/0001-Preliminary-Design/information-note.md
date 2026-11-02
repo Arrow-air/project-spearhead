@@ -1,4 +1,10 @@
-# Status
+---
+title: "Preliminary Exterior Design"
+sidebar_label: "Information Note"
+sidebar_position: 1
+---
+
+## Status
 
 `Valid`
 
@@ -8,7 +14,7 @@
 
 `Reference: None`
 
-# Project Description
+## Project Description
 
 This information note documents the preliminary exterior design of Project Spearhead. The scope is the outer geometry: fuselage body, main wing, inverse V-tail, and the two longitudinal booms that carry the VTOL lift stations and support the aft tail geometry.
 
@@ -20,9 +26,9 @@ The resulting geometry will be used as a reference for structural design and aer
 |----------------|
 | ![Isometric exterior view](assets/images/isometric.png) |
 
-# Methodology
+## Methodology
 
-## 1. Fuselage Sizing Method
+### 1. Fuselage Sizing Method
 
 The fuselage exterior was sized from IC engine placement first. The cylinder was intentionally left outside the fuselage to improve cooling. The engine and exposed cylinder were placed above the aft fuselage and aligned with the upper exterior flow path for cleaner airflow around the cooling region. The IC engine and related systems are covered by the aft fuselage fairing.
 
@@ -32,25 +38,25 @@ After the IC engine placement, a 12S 16000 mAh battery and a 6 L fuel tank were 
 
 The nose was then designed to reduce drag while considering weight. The nose houses the avionics if the CG area has no room due to the structural elements.
 
-## 2. Wing and Tail Sizing Method
+### 2. Wing and Tail Sizing Method
 
 The main wing and tail geometry were sized using the aerodynamic sizing tool. The tool was used for the main wing airfoil, tail airfoil, planform parameters, incidence values, and the longitudinal spacing between the main wing and tail.
 
 The wing and tail spacing is defined using aerodynamic-center stations relative to the CG. The selected spacing is used with the chosen airfoils and planforms to satisfy cruise trim and tail volume requirements. The tail incidence is then solved by the sizing tool for zero-elevator cruise trim.
 
-## 3. Longitudinal Boom Layout Method
+### 3. Longitudinal Boom Layout Method
 
 The exterior design uses two straight longitudinal booms, one on each side of the fuselage.
 
 The lateral boom station was checked visually against the top and front views. The longitudinal positioning places the VTOL motor stations around the CG.
 
-## 4. Tail Horizontal Wing Section
+### 4. Tail Horizontal Wing Section
 
 Due to the electrical elements and avionics in the tail region, the center of the tail wing is left horizontal. This section provides housing while making the access hatch easier to use.
 
-# Results and Deliverables
+## Results and Deliverables
 
-## Fuselage Geometry
+### Fuselage Geometry
 
 | Section | Length | Section size |
 |---------|--------|--------------|
@@ -59,7 +65,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | Aft body | About 200 mm | Tapers to about 120 mm by 80 mm |
 | Total | 1095 mm | 240 mm max width, 275 mm max height |
 
-## Fuselage Sizing Inputs
+### Fuselage Sizing Inputs
 
 | Package item | Sizing role |
 |--------------|-------------|
@@ -67,7 +73,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | 12S 16000 mah battery | Primary power source inside fuselage |
 | 6 L fuel tank | Cruise fuel source inside fuselage |
 
-## Main Wing Geometry
+### Main Wing Geometry
 
 | Parameter | Value |
 |-----------|-------|
@@ -82,7 +88,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | Incidence | 1.0 deg |
 | Maximum thickness | 54 mm |
 
-## Tail Geometry
+### Tail Geometry
 
 | Parameter | Value |
 |-----------|-------|
@@ -95,7 +101,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | Dihedral | 35 deg |
 | Incidence | 2.0 deg |
 
-## Main and Tail Wings Positioning
+### Main and Tail Wings Positioning
 
 | Station | Value |
 |---------|-------|
@@ -103,7 +109,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | Tail AC relative to CG | 1.15 m aft |
 | Main wing AC to tail AC distance | 1.30 m |
 
-## Longitudinal Boom Layout
+### Longitudinal Boom Layout
 
 | Parameter | Value or description |
 |-----------|----------------------|
@@ -125,7 +131,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 |----------|
 | ![Top exterior view](assets/images/top.png) |
 
-## Source Files
+### Source Files
 
 | File |
 |-----|
@@ -136,7 +142,7 @@ Due to the electrical elements and avionics in the tail region, the center of th
 | [Wing/tail sizing config](assets/config.py) |
 | [Wing/tail sizing results](assets/sweep_results_re500000.txt) |
 
-# Remarks
+## Remarks
 
 - This note is intentionally limited to exterior geometry and the sizing drivers that define that geometry.
 - The sharp aft transition and lack of curvature are known prototype compromises. They are accepted for now to protect rear pusher propeller inflow and simplify Oratex covering.
