@@ -1,7 +1,7 @@
 # PT1 assembly review
 
 Source: Fusion design `AR-SH-PT1-0000 PT1` version 35, exported without the hidden
-`REF` group.
+`REF` group. Materials and masses are from version 37, which changed only materials.
 
 ## Deliverable
 
@@ -45,7 +45,7 @@ shape repair fixes none of them.
 
 These parts have 7 to 20 sliver faces or very short edges in Fusion, some with
 zero-length edges. Writing the assembly back to STEP through Build123D changes which
-solids read as invalid (12 solids after the roundtrip); `validation.json` lists both sets.
+solids read as invalid (11 solids after the roundtrip in this run, 12 in the previous one); `validation.json` lists both sets.
 
 ### Tip ribs, fixed in Fusion v35
 

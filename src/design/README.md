@@ -18,11 +18,12 @@ PT1), exported without the hidden `REF - NOT PT1 BUILD` group.
 | `pt1/pt1_materials_table.csv` | Material, density, quantity and mass per part number |
 | `pt1/pt1_side_review.csv` | Left and right comparison of every part |
 | `pt1/pt1_renumber_map_v30_v32.csv` | Part number and path changes from Fusion v30 to v32 |
-| `pt1/native-bodies.json` | Volume, centroid and material of every numbered body, read from Fusion v35 |
+| `pt1/native-bodies.json` | Volume and centroid of every numbered body, read from Fusion v35, and material from Fusion v37 |
 
 Fusion v33 and v34 changed only group names and two descriptions. Fusion v35 removed a
 thin wall from the tip ribs 22208 and 23208. The side review was computed on v32, and
-the tip-rib pair was re-checked on v35. See the
+the tip-rib pair was re-checked on v35. Fusion v36 and v37 changed only materials, so the
+STEP stays at v35 and the materials table and part list are from v37. See the
 [review notes](../../reviews/pt1-assembly/README.md).
 
 ## Run

@@ -12,12 +12,12 @@
     },
     {
       "name": "pt1_materials_table.csv",
-      "sha256": "0e880efebf20ec907c9eac8eb98f02deac3de7d651b7b09319126f96cac55a5c",
-      "bytes": 28984
+      "sha256": "a37ee88c02e4d11bea1f8b82b05a1c78a8a7dd1290390f9c20b021aa10a577a4",
+      "bytes": 28776
     },
     {
       "name": "pt1_part_numbers.csv",
-      "sha256": "75a3f73542b10242f5d2aa2b046df54d5c7b3a27ed46430bc7d203f8fc49fad3",
+      "sha256": "45346d695d58ac0b15029e73809f52ee01a9c73ee63ada43843cff2c981263e5",
       "bytes": 21128
     },
     {
@@ -32,15 +32,15 @@
     },
     {
       "name": "native-bodies.json",
-      "sha256": "915fd47334fb076e344a75b02fe09ceac4633777aff146fe993435dd23749735",
-      "bytes": 158600
+      "sha256": "aa9960a88aa029688cea602578539b801a14cee896bb270f35d06d7424ef03ec",
+      "bytes": 158575
     }
   ],
   "native_comparison": {
     "matched_occurrences": 426,
     "unmatched_step": [],
     "unmatched_native": [],
-    "max_adaptive_volume_difference_percent": 0.029542465501909507,
+    "max_adaptive_volume_difference_percent": 0.029542465501604588,
     "max_centroid_error_mm": 0.02586793042860336,
     "max_bounds_error_mm": 0.015003734678359137,
     "over_limits": []
@@ -207,7 +207,7 @@
   ],
   "roundtrip": {
     "solids": 490,
-    "valid_solids": 478,
+    "valid_solids": 479,
     "summed_solid_volume_mm3": 17710116.75475007,
     "bounds_mm": [
       [
@@ -259,7 +259,6 @@
     "14102-TopPanelAft",
     "14103-TopPanelMid",
     "32101L-TailRearSkinCover",
-    "32202-TailHatchLatchReceiver",
     "31304L-TailCentreConnector",
     "31304R-TailCentreConnector"
   ],

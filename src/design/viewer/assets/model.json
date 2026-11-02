@@ -78,22 +78,22 @@
     },
     "11304": {
       "description": "REAR INCLINED FLOOR PLATE",
-      "material": "?",
+      "material": "W",
       "qty": 1
     },
     "11305": {
       "description": "NOSE KEEL PLATE 2 MM",
-      "material": "?",
+      "material": "W",
       "qty": 1
     },
     "11306": {
       "description": "NOSE DECK PLATE 2 MM",
-      "material": "?",
+      "material": "W",
       "qty": 1
     },
     "11307": {
       "description": "FRONT DECK PLATE 2 MM",
-      "material": "?",
+      "material": "W",
       "qty": 1
     },
     "11401": {
@@ -593,7 +593,7 @@
     },
     "22501": {
       "description": "AILERON RIB",
-      "material": "?",
+      "material": "B",
       "qty": 5
     },
     "22502": {
@@ -743,7 +743,7 @@
     },
     "23501": {
       "description": "AILERON RIB",
-      "material": "?",
+      "material": "B",
       "qty": 5
     },
     "23502": {
@@ -818,7 +818,7 @@
     },
     "31101": {
       "description": "TAIL MAIN SPAR",
-      "material": "?",
+      "material": "W",
       "qty": 1
     },
     "31102": {

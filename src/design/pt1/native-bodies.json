@@ -1,6 +1,7 @@
 {
 "source": "AR-SH-PT1-0000 PT1",
 "version": 35,
+"materials_version": 37,
 "modified": false,
 "accuracy": "very high",
 "bodies": [
@@ -897,7 +898,7 @@
 0.03572,
 -38.99268
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -111.1996,
@@ -918,7 +919,7 @@
 0.03864,
 -36.1964
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -203.5,
 -111.1996,
@@ -939,7 +940,7 @@
 0.01102,
 -36.7739
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 195.4136,
 -111.1996,
@@ -960,7 +961,7 @@
 -0.0,
 -3.96744
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 370.0,
 -76.0442,
@@ -981,7 +982,7 @@
 2.62022,
 51.512
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -14.0,
@@ -1002,7 +1003,7 @@
 -68.0442,
 38.54521
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 187.414,
 -70.0442,
@@ -1023,7 +1024,7 @@
 -58.0442,
 -49.488
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 195.4136,
 -60.0442,
@@ -1044,7 +1045,7 @@
 68.0442,
 38.54521
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 187.414,
 66.0442,
@@ -1065,7 +1066,7 @@
 58.0442,
 -49.488
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 195.4136,
 56.0442,
@@ -1086,7 +1087,7 @@
 -0.0,
 -135.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -84.0,
@@ -1107,7 +1108,7 @@
 0.0,
 -142.62281
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -2.0,
@@ -1128,7 +1129,7 @@
 -82.0,
 -140.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -84.0,
@@ -1149,7 +1150,7 @@
 0.0,
 -104.64588
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 196.7629,
 -5.0,
@@ -1170,7 +1171,7 @@
 82.0,
 -140.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 80.0,
@@ -1191,7 +1192,7 @@
 0.0,
 -47.94924
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -564.4633,
 -1.0,
@@ -1212,7 +1213,7 @@
 0.0482,
 -12.88166
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -564.475,
 -105.4344,
@@ -1233,7 +1234,7 @@
 0.0,
 -14.88166
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -439.5,
 -90.453,
@@ -1254,7 +1255,7 @@
 -92.453,
 9.89173
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 -94.453,
@@ -1275,7 +1276,7 @@
 0.0,
 17.06666
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -18.7116,
 -94.453,
@@ -1296,7 +1297,7 @@
 -0.00387,
 11.03922
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 191.4136,
 -670.0,
@@ -1317,7 +1318,7 @@
 92.453,
 9.89173
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -443.5,
 90.453,
@@ -4131,7 +4132,7 @@
 5.33712,
 -220.48669
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -439.5,
 -209.5048,
@@ -4152,7 +4153,7 @@
 5.33712,
 -220.48669
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -417.5,
 -209.5048,
@@ -4173,7 +4174,7 @@
 -0.0,
 -180.07083
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -439.5,
 -84.5761,
@@ -4194,7 +4195,7 @@
 41.0,
 -139.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -439.5,
 2.0,
@@ -4215,7 +4216,7 @@
 -41.0,
 -139.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -439.5,
 -80.0,
@@ -4278,7 +4279,7 @@
 5.33712,
 -220.48669
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 169.414,
 -209.5048,
@@ -4299,7 +4300,7 @@
 5.33712,
 -220.48669
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 191.414,
 -209.5048,
@@ -4320,7 +4321,7 @@
 -0.0,
 -180.07083
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 169.414,
 -84.5761,
@@ -4341,7 +4342,7 @@
 41.0,
 -139.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 169.414,
 2.0,
@@ -4362,7 +4363,7 @@
 -41.0,
 -139.28279
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 169.414,
 -80.0,
@@ -4446,7 +4447,7 @@
 -248.0,
 14.01582
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -110.5392,
 -250.0,
@@ -4467,7 +4468,7 @@
 -428.0,
 14.03512
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -110.5392,
 -430.0,
@@ -4509,7 +4510,7 @@
 248.0,
 14.01582
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -110.5392,
 246.0,
@@ -4530,7 +4531,7 @@
 428.0,
 14.03512
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -110.5392,
 426.0,
@@ -4593,7 +4594,7 @@
 -1319.49479,
 10.76739
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 191.4136,
 -1975.0,
@@ -4614,7 +4615,7 @@
 -672.0,
 13.35831
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 -674.0,
@@ -4677,7 +4678,7 @@
 -1113.0,
 11.76053
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 -1115.0,
@@ -4761,7 +4762,7 @@
 -1384.66667,
 14.95057
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 -1386.667,
@@ -4782,7 +4783,7 @@
 -1519.5,
 14.95065
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 -1521.5,
@@ -4824,7 +4825,7 @@
 -1973.0,
 13.13855
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5319,
 -1975.0,
@@ -4950,7 +4951,7 @@
 -1791.5,
 4.57361
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 -1794.0,
@@ -4971,7 +4972,7 @@
 -1655.75,
 4.57361
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 -1658.25,
@@ -4992,7 +4993,7 @@
 -1520.0,
 4.57361
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 -1522.5,
@@ -5013,7 +5014,7 @@
 -1384.25,
 4.57361
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 -1386.75,
@@ -5034,7 +5035,7 @@
 -1248.5,
 4.57361
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 -1251.0,
@@ -5055,7 +5056,7 @@
 -1918.0,
 4.85764
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 200.562,
 -1920.0,
@@ -5076,7 +5077,7 @@
 -1122.0,
 4.85764
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 200.562,
 -1124.0,
@@ -5517,7 +5518,7 @@
 -1435.08333,
 14.94717
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 121.4136,
 -1437.0833,
@@ -5538,7 +5539,7 @@
 -1452.40061,
 10.87072
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 121.4136,
 -1521.5,
@@ -5643,7 +5644,7 @@
 1319.49479,
 10.76739
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 191.4136,
 670.0,
@@ -5664,7 +5665,7 @@
 672.0,
 13.35895
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 670.0,
@@ -5706,7 +5707,7 @@
 1113.0,
 11.76059
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 1111.0,
@@ -5769,7 +5770,7 @@
 1384.66667,
 14.95054
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 1382.6667,
@@ -5790,7 +5791,7 @@
 1519.5,
 14.95064
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5392,
 1517.5,
@@ -5832,7 +5833,7 @@
 1973.0,
 13.1385
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 -112.5319,
 1971.0,
@@ -6000,7 +6001,7 @@
 1248.5,
 4.57357
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 1246.0,
@@ -6021,7 +6022,7 @@
 1384.25,
 4.57357
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 1381.75,
@@ -6042,7 +6043,7 @@
 1520.0,
 4.57357
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 1517.5,
@@ -6063,7 +6064,7 @@
 1655.75,
 4.57357
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 1653.25,
@@ -6084,7 +6085,7 @@
 1791.5,
 4.57357
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Balsa",
 "bbox": [
 200.562,
 1789.0,
@@ -6105,7 +6106,7 @@
 1122.0,
 4.85764
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 200.562,
 1120.0,
@@ -6126,7 +6127,7 @@
 1918.0,
 4.85764
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 200.562,
 1916.0,
@@ -6567,7 +6568,7 @@
 1435.08333,
 14.94717
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 121.4136,
 1433.0833,
@@ -6588,7 +6589,7 @@
 1452.40061,
 10.87072
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 121.4136,
 1382.6667,
@@ -7533,7 +7534,7 @@
 0.3471,
 177.69961
 ],
-"mat": "PT1 TBD no mass",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1343.4984,
 -564.8338,
@@ -7617,7 +7618,7 @@
 -74.18943,
 310.61721
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1194.3108,
 -76.1974,
@@ -7638,7 +7639,7 @@
 74.18944,
 310.61714
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1194.3108,
 72.1815,
@@ -7659,7 +7660,7 @@
 -161.93565,
 284.46555
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1190.8772,
 -175.6755,
@@ -7680,7 +7681,7 @@
 161.93559,
 284.46557
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1190.8772,
 148.296,
@@ -7701,7 +7702,7 @@
 -382.46397,
 131.84698
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1185.4917,
 -396.0586,
@@ -7722,7 +7723,7 @@
 -272.27244,
 208.9569
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1188.1844,
 -285.8671,
@@ -7743,7 +7744,7 @@
 382.46385,
 131.84705
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1185.4917,
 368.679,
@@ -7764,7 +7765,7 @@
 272.27241,
 208.95698
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1188.1844,
 258.4875,
@@ -7785,7 +7786,7 @@
 -492.50233,
 52.97218
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1182.799,
 -506.2497,
@@ -7806,7 +7807,7 @@
 492.50226,
 52.9722
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1182.799,
 478.8702,
@@ -7827,7 +7828,7 @@
 -326.1896,
 168.19178
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1277.4197,
 -390.121,
@@ -7848,7 +7849,7 @@
 -314.15602,
 179.85212
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1279.0264,
 -324.2805,
@@ -7869,7 +7870,7 @@
 326.1896,
 168.19178
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1277.4197,
 260.7856,
@@ -7890,7 +7891,7 @@
 314.15602,
 179.85212
 ],
-"mat": "PT1 Beech Plywood",
+"mat": "PT1 Birch Plywood",
 "bbox": [
 1279.0264,
 299.788,
