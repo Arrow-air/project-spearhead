@@ -41,6 +41,8 @@ arm64
 arrowair
 BVLOS
 connectorized
+dimensionalized
+mathbf
 quadplane
 Pixhawk
 SITL
@@ -151,6 +153,10 @@ QSTABILIZE
 quadplane
 Radiolink
 RANS
+recentered
+remeshed
+ruddervator
+ruddervators
 Raymer
 recentered
 reclassed
