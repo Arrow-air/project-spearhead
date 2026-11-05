@@ -1,0 +1,8 @@
+{
+    "Exclude": [
+        "src/tools/",
+        "\\.DS_Store$",
+        "docs/information-note/.*/assets/",
+        "docs/information-note/.*/data/"
+    ]
+}

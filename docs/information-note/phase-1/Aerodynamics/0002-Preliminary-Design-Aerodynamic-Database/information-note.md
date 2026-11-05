@@ -8,9 +8,9 @@ sidebar_position: 1
 
 ## Status
 
-"Valid"
+"Replaced by [0003-Updated-Aerodynamic-Database](../0003-Updated-Aerodynamic-Database/information-note.md)"
 
-"Revision History: None"
+"Revision History: Superseded by [0003-Updated-Aerodynamic-Database](../0003-Updated-Aerodynamic-Database/information-note.md)"
 
 "Replacement Log: None"
 
