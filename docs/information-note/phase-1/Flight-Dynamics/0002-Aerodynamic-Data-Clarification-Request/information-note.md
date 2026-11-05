@@ -10,24 +10,21 @@ sidebar_position: 1
 
 "Open — awaiting Aero team response"
 
-"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793)"
+"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 6 November 2026, restructured to the information-note format, content unchanged"
 
 "Replacement Log: None"
 
-"Reference: [Preliminary Design Aerodynamic Database](../../Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/information-note.md), [Preliminary Fixed-Wing Stability Analysis](../0001-Preliminary-Fixed-Wing-Stability-Analysis/information-note.md)"
+"Reference: [Updated Aerodynamic Database](../../Aerodynamics/0003-Updated-Aerodynamic-Database/information-note.md), [Preliminary Design Aerodynamic Database](../../Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/information-note.md), [Preliminary Fixed-Wing Stability Analysis](../0001-Preliminary-Fixed-Wing-Stability-Analysis/information-note.md)"
 
-## Purpose
+## Project Description
 
 The October aerodynamic database (`tail_update_2026_10_07` base table and the 11 October 103-case control delivery) is being used for flight dynamics work. Before the flight mechanics model is corrected, a few reference, geometry and data points need confirmation from the Aero team. CG location and pusher motor selection will be decided afterwards, jointly, using the confirmed data.
 
 The questions are limited to what can be answered within one working day from existing CAD, setup files, exports and results. The only new CFD request is optional (AQ-12). Please answer in the [Response Log](#response-log) or reply per question ID. If a question rests on a wrong reading of the data, say so; that is also an answer.
 
-Priorities:
+## Methodology
 
-- **P0** — needed before the model can be corrected.
-- **P1** — useful for the same correction pass; answer if time allows.
-
-## Conventions Taken From the Deliveries
+### 1. Conventions Taken From the Deliveries
 
 Please confirm or correct each line.
 
@@ -43,7 +40,7 @@ Please confirm or correct each line.
 | Surface mapping proposed by the Aero team | Left/right aileron = +da/−da; left/right ruddervator = de+dr / de−dr |
 | Proposed surface travel | ±30° for all surfaces (11 October) |
 
-## Values Derived From the October Data
+### 2. Values Derived From the October Data
 
 These were calculated from the delivered tables. Please confirm them from your own post-processing, or point out where our reading differs.
 
@@ -57,7 +54,14 @@ These were calculated from the delivered tables. Please confirm them from your o
 | Neutral-row My difference between base and control tables at alpha = beta = 0, 25 m/s, after restoring the base to the origin | 0.972 N·m |
 | Elevator coverage in the 11 October delivery | −15° to +15° |
 
-## Questions
+### 3. Question Priorities
+
+Each question carries a priority:
+
+- **P0** — needed before the model can be corrected.
+- **P1** — useful for the same correction pass; answer if time allows.
+
+## Results and Deliverables
 
 ### A. Geometry and Reference Frame
 
@@ -161,7 +165,7 @@ Moments about (0, 0, 0); dimensional loads Fx, Fy, Fz, Mx, My, Mz; lift rotors o
 
 - **Question:** Confirm that rho = 1.021 kg/m³ represents the Ankara test field (about 1125 m) on a hot day (about 30 °C). On a 15 °C day it is closer to 1.08. Is 1.021 intended as the conservative design case for all analyses?
 
-## Response Log
+### Response Log
 
 | ID | Priority | Answer | Answered by | Date |
 |---|---|---|---|---|
@@ -183,3 +187,8 @@ Moments about (0, 0, 0); dimensional loads Fx, Fy, Fz, Mx, My, Mz; lift rotors o
 | AQ-16 | P1 | | | |
 | AQ-17 | P1 | | | |
 | AQ-18 | P0 | | | |
+
+## Remarks
+
+- AQ-02 and AQ-09 were answered by the Aero team on 14 October 2026; the other questions remain open.
+- The [Updated Aerodynamic Database](../../Aerodynamics/0003-Updated-Aerodynamic-Database/information-note.md) note was published after this request. Answers it contains are to be entered in the Response Log.

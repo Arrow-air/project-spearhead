@@ -10,11 +10,11 @@ sidebar_position: 1
 
 "Preliminary"
 
-"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 15 October 2026, hover and fixed-wing input responses added; Rev C, 16 October 2026, KDE5215XF-220 pusher option added"
+"Revision History: Rev A, 14 October 2026, initial release (flight dynamics, ZeynepB5793); Rev B, 15 October 2026, hover and fixed-wing input responses added; Rev C, 16 October 2026, KDE5215XF-220 pusher option added; pusher thrust-line moment stated per speed; Rev D, 6 November 2026, restructured to the information-note format (limitations, recommendations, source files and conclusion moved under Results and Deliverables; quality assurance moved to Remarks), content unchanged"
 
 "Replacement Log: Supersedes the CG conclusions of [note 0001](../0001-Preliminary-Fixed-Wing-Stability-Analysis/information-note.md) for the October aerodynamic database; note 0001 remains the record of the ADB v1.1 study."
 
-"Reference: [Aerodynamic Data Clarification Request](../0002-Aerodynamic-Data-Clarification-Request/information-note.md), [Preliminary Design Aerodynamic Database](../../Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/information-note.md), [FDM update of 14 October](../../../../../src/tools/flight_dynamics_model/docs/update_2026_10_14.md)"
+"Reference: [Aerodynamic Data Clarification Request](../0002-Aerodynamic-Data-Clarification-Request/information-note.md), [Updated Aerodynamic Database](../../Aerodynamics/0003-Updated-Aerodynamic-Database/information-note.md), [Preliminary Design Aerodynamic Database](../../Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/information-note.md), [FDM update of 14 October](../../../../../src/tools/flight_dynamics_model/docs/update_2026_10_14.md)"
 
 ## Project Description
 
@@ -232,9 +232,13 @@ throttle, so throttle is not duty. Both models use APC's 20×12 Sport map for th
 propeller. Stall speed at 21 kg is about 12.6 m/s (CLmax ≈ 1.40). Suggested PT1.5 speeds: minimum
 17, cruise 21, maximum 26 m/s.
 
-A pusher thrust line above the CG adds nose-down moment and more elevator demand: at +40 mm
-(the highest option) about 3 N·m at cruise thrust, roughly 2° of elevator. The lowest option
-(−50 mm, close to the CG height) is preferred.
+A pusher thrust line above the CG adds a nose-down moment, −(Z_mount − Z_CG)·T, and more
+nose-up elevator. Every open mount option is above the estimated CG height (Z −65 mm). At
++40 mm (the highest option, 105 mm above the CG) the moment is 2.4 N·m at 22 m/s and 3.1 N·m at
+26 m/s, which needs 1.9° and 1.4° more elevator than thrust through the CG. The lowest option
+(−50 mm, 15 mm above the CG) costs 0.3–0.4 N·m and 0.2–0.3° and is preferred. The figures are
+the same for both pusher motors, since trim thrust depends only on drag; they scale with the CG
+height, which is an estimate until PT1.5 is weighed.
 
 #### Dynamic modes at 22 m/s
 
@@ -260,20 +264,7 @@ about 9 s), which the autopilot handles. Roll subsidence is fast (−20.6 1/s).
 Runs without a motor named use the MAD pusher. These runs use 25 m/s aerodynamic coefficients
 below 20 m/s; see the limitations.
 
-### CG and pusher recommendations
-
-1. Target CG x −0.040 m (window −0.046 to −0.027 m); weigh PT1.5 and place the pusher pack forward
-   before adding ballast.
-2. Mount the pusher at the lowest option (z −50 mm, drawing frame).
-3. Pusher motor: in the model the KDE5215XF-220 gives about 11 % more static thrust and 16 % more
-   at 26 m/s, trims up to 28 m/s and shares the lift motor and ESC (spares). It draws about 4 % more
-   current at cruise, and KDE publishes only 180 s ratings, so continuous cruise current must be
-   checked thermally. The MAD motor has a published 24 A sustainable rating, which it passes above
-   about 25 m/s. Both need a static test with the wooden 20×12 propeller before the choice.
-4. Hover-only flight until the CG is set, AQ-12 and AQ-18 are answered and the elevator mixing gain
-   gives the full surface travel.
-
-## Limitations
+### Limitations
 
 - The CFD origin location is assumed (AQ-01); a few centimeters of error shifts every static
   margin by several points.
@@ -296,7 +287,22 @@ below 20 m/s; see the limitations.
 - In near-hover, the firmware's attitude estimate differs from the model attitude by about 0.2°,
   which causes the QHOVER drift reported above.
 
-## Recommendations
+### Recommendations
+
+CG and pusher:
+
+1. Target CG x −0.040 m (window −0.046 to −0.027 m); weigh PT1.5 and place the pusher pack forward
+   before adding ballast.
+2. Mount the pusher at the lowest option (z −50 mm, drawing frame).
+3. Pusher motor: in the model the KDE5215XF-220 gives about 11 % more static thrust and 16 % more
+   at 26 m/s, trims up to 28 m/s and shares the lift motor and ESC (spares). It draws about 4 % more
+   current at cruise, and KDE publishes only 180 s ratings, so continuous cruise current must be
+   checked thermally. The MAD motor has a published 24 A sustainable rating, which it passes above
+   about 25 m/s. Both need a static test with the wooden 20×12 propeller before the choice.
+4. Hover-only flight until the CG is set, AQ-12 and AQ-18 are answered and the elevator mixing gain
+   gives the full surface travel.
+
+Testing and parameters:
 
 - Answer AQ-01, AQ-12 and AQ-18 before the first transition.
 - Static thrust test of the chosen pusher motor and wooden 20×12 propeller.
@@ -309,7 +315,7 @@ below 20 m/s; see the limitations.
   after the motor cant and weathervane settings.
 - Include aileron-to-rudder mixing in the aircraft parameter alignment before fixed-wing flight.
 
-## Traceability
+### Source Files
 
 | Source | Location |
 |---|---|
@@ -321,18 +327,7 @@ below 20 m/s; see the limitations.
 | SITL runs | ArduPlane 4.7.1 (dbe79216), `spearhead/sitl/quad.py` |
 | Input responses | `data/input_response_metrics.json`, `figures/`; runs from `spearhead.sitl.quad --doublet` and `spearhead.sitl.flight <axis>_doublet`, analyzed with `src/tools/flight_dynamics_model/scripts/analyse_input_responses.py` (raw recordings are not kept in Git) |
 
-## Quality Assurance
-
-- 568 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
-  wind, failures and battery telemetry.
-- Moment restoration matches Nondimit's own recentering within 6×10⁻¹⁴ N·m.
-- Control signs, sideslip symmetry and the absence of double-counted pusher thrust were checked
-  against the September Aero notes.
-- The log-derived mass (17.8 kg) agrees with the stated mass (17.9 kg).
-- The Dutch roll measured in the SITL doublets agrees with the linear mode within 4 % in period
-  and 0.02 in damping ratio.
-
-## Conclusion
+### Conclusion
 
 PT1 hovered close to balance with its CG about 9 mm (±20 mm) aft of the rotor centroid; hover margin is not the
 constraint for PT1.5. The fixed-wing constraint is a narrow window, x −0.046 to −0.027 m, set by
@@ -342,3 +337,14 @@ transitions pass, but elevator trim and low-speed lift rest on extrapolated or u
 Input responses are well damped in pitch and roll; hover yaw is sluggish and lightly damped, and
 aileron inputs need rudder coordination. The next flight should be hover-only, with small doublets
 to check the hover responses.
+
+## Remarks
+
+- 568 FDM tests pass, including moment-reference restoration, profile geometry, trim, CG summary,
+  wind, failures and battery telemetry.
+- Moment restoration matches Nondimit's own recentering within 6×10⁻¹⁴ N·m.
+- Control signs, sideslip symmetry and the absence of double-counted pusher thrust were checked
+  against the September Aero notes.
+- The log-derived mass (17.8 kg) agrees with the stated mass (17.9 kg).
+- The Dutch roll measured in the SITL doublets agrees with the linear mode within 4 % in period
+  and 0.02 in damping ratio.
