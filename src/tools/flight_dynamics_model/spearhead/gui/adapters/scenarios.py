@@ -8,17 +8,19 @@ from typing import Any
 from ...params import AircraftParams
 from ...scenarios import load_scenario
 from ...config import SimulationConfig
+from ...aircraft import aircraft_summary
 
 
-def load_scenario_config(path: str | Path, params: AircraftParams | None = None) -> SimulationConfig:
+def load_scenario_config(path: str | Path, params: AircraftParams | None = None, *, aerodynamics: str | None = None) -> SimulationConfig:
     """Load a YAML scenario with the shared scenario loader."""
-    return load_scenario(path, params=params)
+    return load_scenario(path, params=params, aerodynamics=aerodynamics)
 
 
 def scenario_summary(config: SimulationConfig) -> dict[str, Any]:
     """Return a compact, GUI-friendly summary of a simulation config."""
     return {
         "name": config.name,
+        "aircraft": aircraft_summary(config.params),
         "duration": config.duration,
         "dt": config.dt,
         "n_points": config.n_points,
@@ -37,4 +39,3 @@ def scenario_summary(config: SimulationConfig) -> dict[str, Any]:
         ],
         "cg_body_xyz": config.params.cg_body_xyz.tolist(),
     }
-

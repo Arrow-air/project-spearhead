@@ -1,0 +1,32 @@
+{
+  "source": "https://cdn.shopify.com/s/files/1/0697/2293/1501/files/KV150-V8013IPE.webp?v=1722922466",
+  "source_page": "https://store.mad-motor.com/products/mad-v8013-ipe-vtol-drone-motor",
+  "source_file": "sources/KV150-V8013IPE.webp",
+  "transcription": "150KV table; throttle, voltage, battery current, shaft torque, RPM. Manufacturer reference/theoretical values at 25 C and sea level. Used only to fit motor electrical behaviour, never as an APC thrust curve.",
+  "test_propeller": "MAD FLUXER PRO 26x7.8 MATT",
+  "test_esc": "MAD AMPX 80A (5-14S)",
+  "kv_rpm_per_v": 150,
+  "no_load_current_a": 2.35,
+  "no_load_test_voltage_v": 30,
+  "published_phase_resistance_ohm": 0.037,
+  "sustainable_battery_current_a": 24,
+  "short_term_battery_current_a": 78,
+  "short_term_duration_s": [10, 30],
+  "samples": [
+    [0.30, 48.25, 3.50, 0.543, 2039],
+    [0.35, 48.21, 4.96, 0.703, 2328],
+    [0.40, 48.14, 6.77, 0.897, 2605],
+    [0.45, 48.07, 8.83, 1.085, 2875],
+    [0.50, 47.98, 11.91, 1.362, 3183],
+    [0.55, 47.87, 15.57, 1.643, 3507],
+    [0.60, 47.73, 19.79, 1.941, 3810],
+    [0.65, 47.59, 24.43, 2.235, 4084],
+    [0.70, 47.41, 29.96, 2.575, 4336],
+    [0.75, 47.21, 36.55, 2.970, 4557],
+    [0.80, 47.03, 41.69, 3.193, 4811],
+    [0.85, 46.78, 49.50, 3.588, 5029],
+    [0.90, 46.48, 58.47, 3.989, 5229],
+    [0.95, 46.23, 66.53, 4.299, 5439],
+    [1.00, 45.85, 77.83, 4.674, 5686]
+  ]
+}

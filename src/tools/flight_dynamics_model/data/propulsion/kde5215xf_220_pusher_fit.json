@@ -1,0 +1,76 @@
+{
+  "status": "provisional estimate; no installed KDE pusher / 20x12 bench test",
+  "source_csv": "kde5215xf_220_cf215_dp.csv",
+  "source_csv_sha256": "590e517281e2bdecaf490ce2aff7c8515caee95db3d623c8ed24159f22d765c3",
+  "source_workbook": "sources/KDE5215-220kV_rev2.xlsx (see kde5215xf_220_source.json)",
+  "test_esc": "KDE-UAS125UVC (the aircraft uses KDE-UAS75HVC+)",
+  "equation": "I_w = Q/Kt + I0; V_m = RPM/Kv + R_eq*I_w; I_batt = V_m*I_w/(eta*V); Kt = 60/(2*pi*Kv)",
+  "kv_rpm_per_v": 220.0,
+  "esc_efficiency_assumed": 0.97,
+  "equivalent_resistance_ohm": 0.13620059506679266,
+  "no_load_current_a": 1.8396765110205415,
+  "battery_current_fit_rms_relative": 0.0600540314773674,
+  "battery_current_fit_max_relative": 0.1610709421357756,
+  "throttle_duty_map": {
+    "voltages_v": [
+      25.2,
+      33.6,
+      42.0,
+      50.4
+    ],
+    "throttles": [
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "duty": [
+      [
+        0.30266291308502485,
+        0.41861509243684114,
+        0.5231861823575379,
+        0.6309342132550545,
+        0.7374370709574283,
+        0.8338040124238253,
+        0.9138091716785308
+      ],
+      [
+        0.2903525259064509,
+        0.4014403997813937,
+        0.5030585766866396,
+        0.6057066454716865,
+        0.7021055909325649,
+        0.7922554130692744,
+        0.8655605110488732
+      ],
+      [
+        0.2859547092676496,
+        0.38897108202362307,
+        0.4910588228708557,
+        0.5842302174816696,
+        0.6716552095160627,
+        0.756245405055623,
+        0.8182130462728106
+      ],
+      [
+        0.27885674929233634,
+        0.37453709617219916,
+        0.47631529304985165,
+        0.5640067727907566,
+        0.6428947748282444,
+        0.7232199740277631,
+        0.7669580732405445
+      ]
+    ]
+  },
+  "static_test_check": {
+    "rpm_rms": 0.003278199295795426,
+    "rpm_max": 0.006855146685359015,
+    "current_rms": 0.05286117944433724,
+    "current_max": 0.16008445550755032
+  },
+  "published_phase_resistance_ohm": 0.078
+}

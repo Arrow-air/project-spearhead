@@ -9,6 +9,7 @@ from typing import TextIO
 import numpy as np
 
 from ..result import SimulationResult
+from ..aircraft import aircraft_summary
 
 
 def _trim_summary(result: SimulationResult) -> dict | None:
@@ -30,6 +31,7 @@ def result_to_json_dict(result: SimulationResult) -> dict:
     """Return a JSON-serializable representation of a simulation result."""
     return {
         "name": result.config.name,
+        "aircraft": aircraft_summary(result.config.params),
         "success": result.success,
         "message": result.message,
         "duration": result.config.duration,

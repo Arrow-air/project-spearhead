@@ -1,0 +1,26 @@
+# READ-ONLY DISCUSSION DRAFT. All lines commented deliberately. Not an aircraft upload file.
+# Assumptions, pending measurements and return-path conditions: see README.md and candidate.json.
+# AIRSPEED_MIN 18  # Replace wingless 9 m/s; 1.25 times a 14.4 m/s indicated stall speed. Not derived from a measured stall test.
+# Q_ASSIST_SPEED 15  # Enable assistance; MIN minus 3 m/s, above the assumed 14.4 m/s stall. In 4.7.1 -1 disables ALL Q_ASSIST triggers outside transitions.
+# AIRSPEED_CRUISE 25  # First steady-flight target near the existing 28 m/s true-speed test after density conversion; 25 indicated is ~27.38 true at rho=1.021.
+# AIRSPEED_MAX 27  # Automatic demanded-speed ceiling; 1.5 times the illustrative MIN=18. It is not an overspeed limiter and is not a requested test speed.
+# SCALING_SPEED 25  # Set the speed-scaling reference near cruise before the first fixed-wing tune; logged fixed-wing gains match the 4.7.1 defaults. Existing SITL tune uses 28 and cannot be transferred.
+# Q_TRANS_FAIL 20  # Bound airspeed-wait time instead of indefinite transition; peer GreatShark also uses 20 s. Demonstrate acceleration to MIN within this time.
+# Q_TRANS_FAIL_ACT 1  # QRTL on failed transition; 4.7.1 enum 1=QRTL, 0=QLAND.
+# Q_OPTIONS 262177  # Add bit 0 level transition and bit 5 VTOL RC-failsafe QRTL; preserve bit 18 VTOL-only arming. Do not add bit 19 or 20.
+# ROLL_LIMIT_DEG 25  # Reduce maximum fixed-wing bank from 45 degrees for initial gentle manoeuvres; level-turn stall multiplier decreases from 1.189 to 1.050.
+# PTCH_LIM_MAX_DEG 10  # Reduce nose-up demand from 20 degrees while climb capability is unmeasured; matches present SITL angle envelope only.
+# PTCH_LIM_MIN_DEG -10  # Reduce nose-down demand from -25 degrees for the initial flight; matches SITL envelope.
+# PTCH2SRV_TCONST 0.75  # Use a gentler initial pitch demand than 0.5 logged / 0.2 SITL; both similar-aircraft reference files use 0.75. This is a demand-shaping choice, not a validated tune.
+# RLL2SRV_RMAX 45  # Replace unlimited roll rate demand with 45 deg/s for the initial test.
+# PTCH2SRV_RMAX_UP 22  # Limit upward pitch rate; approximately 560/25=22.4 deg/s per tuning guidance.
+# PTCH2SRV_RMAX_DN 22  # Apply the same initial pitch demand limit downward.
+# FLTMODE3 19  # Expose QLOITER immediately before the FBWA slot.
+# FLTMODE4 5  # Expose FBWA for manual-forward-throttle first transition; do not start in CRUISE/AUTO.
+# FLTMODE5 21  # Expose QRTL return mode after FBWA.
+# FLTMODE6 20  # Expose QLAND at the final switch slot.
+# FS_LONG_ACTN 1  # Explicit RTL on long failsafe rather than continuing an automatic mode.
+# Q_RTL_MODE 1  # Configure normal RTL to finish with VTOL return/landing instead of prolonged fixed-wing circling.
+# BATT_FS_LOW_ACT 6  # Replace warning-only with return, loiter down and QLAND.
+# BATT_FS_CRT_ACT 4  # Restore QLAND action that was disabled inside log17.
+# BATT_ARM_VOLT 46.8  # Restore the earlier minimum arming voltage from this same log; prevents treating the later 44 V allowance as a ready-to-fly standard.

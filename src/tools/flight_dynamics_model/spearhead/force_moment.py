@@ -5,7 +5,7 @@ import numpy as np
 from .aero import aero_model
 from .controls import ControlInput, control_at
 from .params import AircraftParams
-from .propulsion import propulsion_model_placeholder
+from .propulsion import propulsion_model
 from .rotations import euler_body_to_ned
 
 COMPONENTS = ("wing", "tail", "fuselage", "propulsion", "gravity", "total")
@@ -53,21 +53,24 @@ def compute_force_moment_breakdown(
     x: np.ndarray,
     params: AircraftParams,
     control_override: ControlInput | None = None,
+    wind_ned: np.ndarray | None = None,
 ) -> dict[str, dict[str, np.ndarray]]:
     """Return body-frame force and moment contributions about the CG.
 
     Forces are in N, moments are in N*m, and all vectors are expressed in the
-    aircraft body frame.
+    aircraft body frame. ``wind_ned`` (m/s, NED) makes aerodynamic and pusher
+    loads use the air-relative velocity; the state keeps the inertial velocity.
     """
     v_b = x[3:6]
     phi, theta, psi = x[6:9]
     omega_b = x[9:12]
 
-    control = control_at(t, control_override)
-    F_aero_b, M_aero_b, _ = aero_model(v_b, omega_b, control, params)
-    F_prop_b, M_prop_b = propulsion_model_placeholder(control, params)
-
     R_body_to_ned = euler_body_to_ned(phi, theta, psi)
+    v_air_b = v_b if wind_ned is None else v_b - R_body_to_ned.T @ np.asarray(wind_ned, dtype=float)
+    control = control_at(t, control_override)
+    F_aero_b, M_aero_b, _ = aero_model(v_air_b, omega_b, control, params)
+    F_prop_b, M_prop_b = propulsion_model(control, params, axial_speed_m_s=float(v_air_b[0]))
+
     F_gravity_ned = np.array([0.0, 0.0, params.mass * params.g])
     F_gravity_b = R_body_to_ned.T @ F_gravity_ned
 

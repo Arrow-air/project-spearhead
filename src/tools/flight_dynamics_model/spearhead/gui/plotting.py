@@ -125,6 +125,7 @@ def flight_deck_controls_figure(history: list[dict[str, float]]):
         ("aileron_deg", "aileron deg"),
         ("rudder_deg", "rudder deg"),
         ("throttle_pct", "throttle %"),
+        ("lift_throttle_pct", "lift %"),
     )
     for field, name in fields:
         values = _optional_series(history, field) if history else [0.0]

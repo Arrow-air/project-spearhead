@@ -1,0 +1,49 @@
+id: reference_design
+label: Reference Spearhead
+description: Planned finished aircraft at 25 kg with MAD lift hardware; existing preliminary fixed-wing model retained. Its ADB v1.1 is statically unstable at the stated CG (static margin about -17 %, unresolved since September) and the rotor stations are the withdrawn nominal rectangle; use this profile for software regression only.
+
+# Aircraft totals remain the FDM baseline, not a sum of individual component masses.
+aircraft:
+  mass: 25.0
+  cg_body_xyz: [-0.15, 0.0, 0.15]
+  inertia: [[2.5, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 5.0]]
+  rho: 1.09
+geometry:
+  tail_chord: 0.28
+  tail_area: 0.376
+aerodynamics:
+  dataset: adb_v1_1
+  version: adb_v1.1
+  geometry_version: preliminary_tail_chord_0.28m
+  path: ../../../../docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv
+battery:
+  cells: 12
+  voltage_v: 44.4
+  capacity_ah: 22.0
+  mass_kg: 3.709
+propulsion:
+  pusher:
+    installed: true
+    # Preserve the current forward-thrust placeholder; not a calibrated IC engine.
+    max_thrust_n: 120.0
+  lift:
+    motor:
+      model: MAD V8013 PRO IPE
+      kv_rpm_per_v: 150
+      source: docs/pt1-parts-list.md
+    esc:
+      model: MAD AMPX 80A V2 DroneCAN
+      continuous_current_a: 80
+      source: docs/pt1-parts-list.md
+    propeller:
+      model: MAD FLUXER PRO 26x7.8 MATT
+      diameter_in: 26.0
+      pitch_in: 7.8
+      blades: 2
+      source: docs/pt1-parts-list.md
+    # Nominal rectangle centred on the baseline CG; positions/spins need as-built measurement.
+    # Order: front-right, rear-right, rear-left, front-left. Signs act on body yaw torque.
+    positions_body_m: [[0.55, 0.55, 0.15], [-0.85, 0.55, 0.15], [-0.85, -0.55, 0.15], [0.55, -0.55, 0.15]]
+    reaction_torque_signs: [1, -1, 1, -1]
+    # Do not substitute KDE curves for the original MAD hardware.
+    performance_path: null

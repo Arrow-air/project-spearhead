@@ -35,7 +35,7 @@ def test_dynamics_uses_shared_total_force_and_moment(monkeypatch):
     expected_force_b = np.array([params.mass, 2.0 * params.mass, 3.0 * params.mass])
     expected_moment_b = np.array([params.inertia[0, 0], 2.0 * params.inertia[1, 1], 3.0 * params.inertia[2, 2]])
 
-    def fake_force_moment_breakdown(t, state, model_params, control_override=None):
+    def fake_force_moment_breakdown(t, state, model_params, control_override=None, wind_ned=None):
         return {
             "total": {
                 "force_b": expected_force_b,

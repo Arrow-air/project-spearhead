@@ -1,0 +1,27 @@
+# Simulation-only PT1.5 air-start transition diagnostic; mass, CG and inertia are estimates; rotor positions from the 14 Oct drawing.
+firmware: Plane-4.7.1
+aircraft: pt15
+aerodynamics: tail_update_2026_10_07
+flight_regime: hover
+# PT1.5 target CG (pt15 profile): inside the 22 m/s window; z is a build-up estimate.
+cg_body_xyz_m: [-0.040, 0.0, 0.065]
+hover_trim: independent_rotors
+speed_m_s: 0
+altitude_m: 80
+max_step_s: 0.0025
+physics_rate_hz: 200
+control_deflection_policy: linear
+# Aero-team proposal relayed by user on 2026-10-11: ±30° for all surfaces.
+# Linear PWM mapping is still uncalibrated; measured AeroDB coverage is separate.
+channels:
+  aileron: {number: 1, travel_deg: 30}
+  elevator: {number: 2, reverse: true, travel_deg: 30}
+  # MAD AMPX factory PWM envelope; actual aircraft ESC still requires calibration.
+  pusher: {number: 3, minimum: 1050, maximum: 1940}
+  rudder: {number: 4, travel_deg: 30}
+  # FDM order FR, RR, RL, FL; ArduPilot motor outputs 5, 8, 6, 7.
+  lift:
+    - {number: 5, minimum: 1100, maximum: 1940}
+    - {number: 8, minimum: 1100, maximum: 1940}
+    - {number: 6, minimum: 1100, maximum: 1940}
+    - {number: 7, minimum: 1100, maximum: 1940}

@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
 
@@ -92,7 +93,8 @@ def test_stability_exports_json_and_csv(tmp_path):
 def test_stability_cli_smoke(tmp_path):
     json_path = tmp_path / "stability.json"
     env = os.environ.copy()
-    env["PYTHONPATH"] = "src/tools/flight_dynamics_model"
+    fdm_root = Path(__file__).resolve().parents[1]
+    env["PYTHONPATH"] = str(fdm_root)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
 
     completed = subprocess.run(
@@ -101,7 +103,7 @@ def test_stability_cli_smoke(tmp_path):
             "-m",
             "spearhead.stability",
             "analyze",
-            "src/tools/flight_dynamics_model/scenarios/pitch_doublet.yaml",
+            str(fdm_root / "scenarios" / "pitch_doublet.yaml"),
             "--json",
             str(json_path),
         ],

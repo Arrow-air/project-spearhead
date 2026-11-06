@@ -1,0 +1,196 @@
+{
+  "status": "DRAFT_NOT_APPLIED_NOT_FLIGHT_VALIDATED",
+  "firmware": "Plane-4.7.1",
+  "assumed_mass_kg": 25,
+  "proposed": {
+    "AIRSPEED_MIN": {
+      "value": 18,
+      "reason": "Replace wingless 9 m/s; 1.25 times a 14.4 m/s indicated stall speed. Not derived from a measured stall test.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-reliability.html",
+      "condition": "Illustrative 25 kg winged configuration ONLY: calibrated indicated stall speed <=14.4 m/s; replace from measured AUW/stall margin; corrected controls and real CG still required"
+    },
+    "Q_ASSIST_SPEED": {
+      "value": 15,
+      "reason": "Enable assistance; MIN minus 3 m/s, above the assumed 14.4 m/s stall. In 4.7.1 -1 disables ALL Q_ASSIST triggers outside transitions.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/quadplane.cpp",
+      "condition": "Illustrative 25 kg winged configuration ONLY: calibrated indicated stall speed <=14.4 m/s; replace from measured AUW/stall margin; corrected controls and real CG still required"
+    },
+    "AIRSPEED_CRUISE": {
+      "value": 25,
+      "reason": "First steady-flight target near the existing 28 m/s true-speed test after density conversion; 25 indicated is ~27.38 true at rho=1.021.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+      "condition": "Illustrative 25 kg winged configuration ONLY: calibrated indicated stall speed <=14.4 m/s; replace from measured AUW/stall margin; corrected controls and real CG still required"
+    },
+    "AIRSPEED_MAX": {
+      "value": 27,
+      "reason": "Automatic demanded-speed ceiling; 1.5 times the illustrative MIN=18. It is not an overspeed limiter and is not a requested test speed.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+      "condition": "Illustrative 25 kg winged configuration ONLY: calibrated indicated stall speed <=14.4 m/s; replace from measured AUW/stall margin; corrected controls and real CG still required; confirm attainable sustainable full-throttle level speed; no tests at 30 m/s or above"
+    },
+    "SCALING_SPEED": {
+      "value": 25,
+      "reason": "Set the speed-scaling reference near cruise before the first fixed-wing tune; logged fixed-wing gains match the 4.7.1 defaults. Existing SITL tune uses 28 and cannot be transferred.",
+      "source": "https://ardupilot.org/plane/docs/airspeed-parameters-setup.html",
+      "condition": "Only with default/reset fixed-wing rate gains and a new tune; verify physical surface mapping first"
+    },
+    "Q_TRANS_FAIL": {
+      "value": 20,
+      "reason": "Bound airspeed-wait time instead of indefinite transition; peer GreatShark also uses 20 s. Demonstrate acceleration to MIN within this time.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/quadplane.cpp",
+      "condition": "Validate real forward-thrust curve and timeout/abort in QuadPlane SITL"
+    },
+    "Q_TRANS_FAIL_ACT": {
+      "value": 1,
+      "reason": "QRTL on failed transition; 4.7.1 enum 1=QRTL, 0=QLAND.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/quadplane.cpp",
+      "condition": "Validate QRTL approach, return path, home and battery reserve; QRTL can command fixed-wing flight when distant"
+    },
+    "Q_OPTIONS": {
+      "value": 262177,
+      "reason": "Add bit 0 level transition and bit 5 VTOL RC-failsafe QRTL; preserve bit 18 VTOL-only arming. Do not add bit 19 or 20.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/quadplane.cpp",
+      "condition": "Review bitmask against fresh board export and rehearse QRTL; level transition restricts bank and VTOL climb response"
+    },
+    "ROLL_LIMIT_DEG": {
+      "value": 25,
+      "reason": "Reduce maximum fixed-wing bank from 45 degrees for initial gentle manoeuvres; level-turn stall multiplier decreases from 1.189 to 1.050.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+      "condition": "First-flight operating limit, not an aerodynamic structural limit"
+    },
+    "PTCH_LIM_MAX_DEG": {
+      "value": 10,
+      "reason": "Reduce nose-up demand from 20 degrees while climb capability is unmeasured; matches present SITL angle envelope only.",
+      "source": "https://ardupilot.org/plane/docs/tecs-total-energy-control-system-for-speed-height-tuning-guide.html",
+      "condition": "Confirm sustainable climb and surface authority; FBWA does not regulate airspeed or altitude"
+    },
+    "PTCH_LIM_MIN_DEG": {
+      "value": -10,
+      "reason": "Reduce nose-down demand from -25 degrees for the initial flight; matches SITL envelope.",
+      "source": "https://ardupilot.org/plane/docs/tecs-total-energy-control-system-for-speed-height-tuning-guide.html",
+      "condition": "Pilot retains throttle/speed responsibility in FBWA"
+    },
+    "PTCH2SRV_TCONST": {
+      "value": 0.75,
+      "reason": "Use a gentler initial pitch demand than 0.5 logged / 0.2 SITL; both similar-aircraft reference files use 0.75. This is a demand-shaping choice, not a validated tune.",
+      "source": "https://ardupilot.org/plane/docs/new-roll-and-pitch-tuning.html",
+      "condition": "Recheck actual pitch response before TECS/autonomous flight"
+    },
+    "RLL2SRV_RMAX": {
+      "value": 45,
+      "reason": "Replace unlimited roll rate demand with 45 deg/s for the initial test.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+      "condition": "Engineering starting limit; adjust from actual response"
+    },
+    "PTCH2SRV_RMAX_UP": {
+      "value": 22,
+      "reason": "Limit upward pitch rate; approximately 560/25=22.4 deg/s per tuning guidance.",
+      "source": "https://ardupilot.org/plane/docs/new-roll-and-pitch-tuning.html",
+      "condition": "Rate-demand limit only; does not certify load factor or prevent stall"
+    },
+    "PTCH2SRV_RMAX_DN": {
+      "value": 22,
+      "reason": "Apply the same initial pitch demand limit downward.",
+      "source": "https://ardupilot.org/plane/docs/new-roll-and-pitch-tuning.html",
+      "condition": "Rate-demand limit only; verify elevator direction and measured throw"
+    },
+    "FLTMODE3": {
+      "value": 19,
+      "reason": "Expose QLOITER immediately before the FBWA slot.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+      "condition": "Verify actual six-position RC7 switch mapping and pilot bailout"
+    },
+    "FLTMODE4": {
+      "value": 5,
+      "reason": "Expose FBWA for manual-forward-throttle first transition; do not start in CRUISE/AUTO.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+      "condition": "Wings and forward propulsion installed; surface/pusher direction checked"
+    },
+    "FLTMODE5": {
+      "value": 21,
+      "reason": "Expose QRTL return mode after FBWA.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+      "condition": "Rehearse the return path and confirm switch positions"
+    },
+    "FLTMODE6": {
+      "value": 20,
+      "reason": "Expose QLAND at the final switch slot.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+      "condition": "Verify mode selection on the actual radio"
+    },
+    "FS_LONG_ACTN": {
+      "value": 1,
+      "reason": "Explicit RTL on long failsafe rather than continuing an automatic mode.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/ArduPlane/Parameters.cpp",
+      "condition": "End-to-end receiver/GCS loss tests; preserve FS_GCS_ENABL=1"
+    },
+    "Q_RTL_MODE": {
+      "value": 1,
+      "reason": "Configure normal RTL to finish with VTOL return/landing instead of prolonged fixed-wing circling.",
+      "source": "https://ardupilot.org/plane/docs/quadplane-flying.html",
+      "condition": "Return path validated with real aircraft geometry and propulsion"
+    },
+    "BATT_FS_LOW_ACT": {
+      "value": 6,
+      "reason": "Replace warning-only with return, loiter down and QLAND.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/libraries/AP_BattMonitor/AP_BattMonitor_Params.cpp",
+      "condition": "Voltage calibrated and QRTL/return reserve demonstrated; these actions do not correct a bad current sensor"
+    },
+    "BATT_FS_CRT_ACT": {
+      "value": 4,
+      "reason": "Restore QLAND action that was disabled inside log17.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/libraries/AP_BattMonitor/AP_BattMonitor_Params.cpp",
+      "condition": "Voltage threshold calibration and sufficiently clear emergency landing area"
+    },
+    "BATT_ARM_VOLT": {
+      "value": 46.8,
+      "reason": "Restore the earlier minimum arming voltage from this same log; prevents treating the later 44 V allowance as a ready-to-fly standard.",
+      "source": "https://github.com/ArduPilot/ardupilot/blob/dbe792162d06cab66c3475fd5556bf7a120f119e/libraries/AP_BattMonitor/AP_BattMonitor_Params.cpp",
+      "condition": "12S chemistry and actual voltage calibration confirmed; this is not a state-of-charge estimate"
+    }
+  },
+  "pending": {
+    "ARSPD_TYPE": "Choose for the installed transducer; logged 0 means none. Do not copy SITL analog type 2.",
+    "ARSPD_USE": "Propose 1 only after the physical sensor is healthy and calibrated. Absent from log17 because TYPE=0; SITL currently 0.",
+    "ARSPD_RATIO": "Determine from physical pitot installation/calibration; do not copy SITL or peer value.",
+    "SERVOx_FUNCTION": "Confirm direct vs inverse-V-tail mixing. Log17 has elevator19/rudder21 and all outputs9-16 disabled, so it does not establish a working CAN ruddervator setup.",
+    "SERVOx_MIN/MAX/TRIM/REVERSED": "Measure actual travel and direction. Log1100-1900 != SITL1000-2000; simulated elevator1575 trim is not a hardware trim.",
+    "TRIM_THROTTLE": "Logged45 retained as untuned placeholder; measure winged level flight. SITL requested25.4188 is stored as integer25 and uses a fictitious120 N pusher.",
+    "PTCH_TRIM_DEG": "Retain logged0 until winged trim measurements; do not copy diagnostic -0.1485 deg.",
+    "TECS_CLMB_MAX/TECS_SINK_MIN/TECS_SINK_MAX": "Measure sustainable climb/glide with real pusher and low battery; logged5/2/5 are unvalidated defaults.",
+    "TECS_LAND_ARSPD": "Set slightly above the final validated AIRSPEED_MIN before an automatic landing approach; do not invent a speed while MIN is conditional.",
+    "RTL_ALTITUDE/Q_RTL_ALT/WP_LOITER_RAD/RTL_RADIUS": "Location-dependent. Logged -1/15/60/0 does not define a reviewed first-forward-flight return path. At 25 m/s indicated and rho1.021, 25 deg bank gives ~164 m still-air radius. Start evaluating ~200 m loiter/return radius, 80 m return altitude and40 m VTOL return height in site-specific SITL, not as unconditional hardware values.",
+    "INS_HNTCH_*": "Log16 spectrum ~75-90 Hz warrants design work; log17 notch still disabled. Do not copy GreatShark75 Hz or Mugin51 Hz, or ESC-RPM mode with non-telemetry KDE ESCs.",
+    "Q_M_THST_HOVER": "Relearn with wings/pusher installed; retain last learned0.227437 as historical wingless value, not a prediction for winged25 kg.",
+    "Q_M_BAT_CURR_MAX/BATT_WATT_MAX": "Remain0 until real propulsion-current measurement is calibrated; recent logged current is not total propulsion current."
+  },
+  "retained": {
+    "Q_TRANSITION_MS": "Keep5000 ms; fade AFTER minimum airspeed, not total transition time.",
+    "LEVEL_ROLL_LIMIT": "Keep5 degrees; level-transition bank cap after adding Q_OPTIONS bit0.",
+    "Q_ASSIST_ANGLE": "Keep30 degrees; trigger becomes available with positive Q_ASSIST_SPEED.",
+    "Q_ASSIST_DELAY": "Keep0.5 s; verify trigger timing in simulation.",
+    "Q_BACKTRANS_MS": "Keep3000 ms; check return deceleration before changing.",
+    "Q_TRANS_DECEL": "Keep2 m/s\u00b2 as a tested-in-future stopping estimate; not an achieved measurement.",
+    "Q_ENABLE": "Keep1 on hardware; simulation0 is a different fixed-wing-only setup.",
+    "Q_FRAME_CLASS": "Keep1 QUAD; verify physical motor mapping.",
+    "Q_FRAME_TYPE": "Keep1 X; verify motor order/direction.",
+    "Q_M_THST_EXPO": "Keep0.75, doc starting value for20+inch props; no stand data justifies a new exponent.",
+    "Q_M_PWM_MIN": "Keep1100; programmed KDE RANGE endpoint, still verify all ESCs.",
+    "Q_M_PWM_MAX": "Keep1940; programmed KDE RANGE endpoint, still verify all ESCs.",
+    "Q_M_PWM_TYPE": "Keep0 normal PWM; do not copy DShot settings.",
+    "Q_RC_SPEED": "Keep400 Hz within KDE50-600 Hz input range.",
+    "Q_M_BAT_VOLT_MAX": "Keep50.4 V for12S4.2 V/cell configuration.",
+    "Q_M_BAT_VOLT_MIN": "Keep39.6 V compensation floor; not a battery-failsafe threshold.",
+    "Q_M_BAT_IDX": "Keep0 first battery; GreatShark1 uses a different monitor topology.",
+    "Q_M_HOVER_LEARN": "Keep2; relearn after weight changes.",
+    "Q_M_SPIN_ARM": "Keep0.1 pending repeat bench confirmation; not inferred from motorKv.",
+    "Q_M_SPIN_MIN": "Keep0.15 pending repeat bench confirmation.",
+    "INS_GYRO_FILTER": "Keep20 Hz;20+inch initial recommendation.",
+    "INS_ACCEL_FILTER": "Keep10 Hz; current documented VTOL starting range.",
+    "ARMING_SKIPCHK": "Keep0; no bypass of checks.",
+    "ARMING_REQUIRE": "Keep1.",
+    "STALL_PREVENTION": "Keep1, but correct minimum airspeed still essential.",
+    "SERVO_AUTO_TRIM": "Keep0 for the first diagnostic flight; controlled later trim procedure after measured surface setup.",
+    "STAB_PITCH_DOWN": "Keep2 degrees on hardware; SITL0 was an intentional test simplification.",
+    "FS_GCS_ENABL": "Keep1 and verify heartbeat failsafe; a disarmed QLAND event in log17 is not an airborne test."
+  }
+}

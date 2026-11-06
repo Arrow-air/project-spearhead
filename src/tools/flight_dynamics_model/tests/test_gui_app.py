@@ -179,7 +179,8 @@ def test_flight_deck_live_plot_helper_returns_serializable_plotly_figure():
     assert set(payloads) == {"attitude", "rates", "controls", "airspeed_altitude"}
     assert len(payloads["attitude"]["data"]) == 3
     assert len(payloads["rates"]["data"]) == 3
-    assert len(payloads["controls"]["data"]) == 4
+    assert len(payloads["controls"]["data"]) == 5
+    assert payloads["controls"]["data"][-1]["name"] == "lift %"
     assert len(payloads["airspeed_altitude"]["data"]) == 2
     assert payloads["controls"]["data"][0]["name"] == "elevator deg"
 

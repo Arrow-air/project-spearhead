@@ -1,0 +1,186 @@
+{
+  "config": {
+    "firmware": "Plane-4.7.1",
+    "aircraft": "reference_design",
+    "aerodynamics": "tail_update_2026_10_07",
+    "cg_body_xyz_m": [
+      0.013595893369954063,
+      0.0,
+      0.45
+    ],
+    "speed_m_s": 28.0,
+    "altitude_m": 100.0,
+    "max_step_s": 0.0025,
+    "physics_rate_hz": 200,
+    "control_deflection_policy": "linear",
+    "channels": {
+      "aileron": {
+        "number": 1,
+        "travel_deg": 20
+      },
+      "elevator": {
+        "number": 2,
+        "reverse": true,
+        "travel_deg": 20
+      },
+      "pusher": {
+        "number": 3
+      },
+      "rudder": {
+        "number": 4,
+        "travel_deg": 20
+      }
+    }
+  },
+  "aircraft": {
+    "id": "reference_design",
+    "label": "Reference Spearhead",
+    "description": "Planned MAD lift hardware; existing preliminary fixed-wing model retained.",
+    "mass_kg": 25.0,
+    "cg_body_xyz_m": [
+      0.013595893369954063,
+      0.0,
+      0.45
+    ],
+    "inertia_kg_m2": [
+      [
+        2.5,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        4.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        5.0
+      ]
+    ],
+    "tail_chord_m": null,
+    "geometry_version": "updated_tail_chord_value_pending",
+    "aero_database_version": "tail_update_2026_10_07",
+    "aero_database_path": "src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/database.csv",
+    "aero_dataset_id": "tail_update_2026_10_07",
+    "rho_kg_m3": 1.021,
+    "moment_center_body_xyz_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "deflection_database_path": "src/tools/flight_dynamics_model/data/aerodynamics/tail_update_2026_10_07/sources/deflection.csv",
+    "control_data": {
+      "coverage": {
+        "aileron": {
+          "alpha_deg": [
+            -5.0,
+            0.0
+          ],
+          "deflection_deg": [
+            -5.0,
+            5.0
+          ]
+        },
+        "elevator": {
+          "alpha_deg": [
+            -5.0,
+            5.0
+          ],
+          "deflection_deg": [
+            -5.0,
+            5.0
+          ]
+        },
+        "rudder": {
+          "alpha_deg": [
+            -5.0,
+            0.0
+          ],
+          "deflection_deg": [
+            -5.0,
+            5.0
+          ]
+        }
+      },
+      "beta_deg": 0.0,
+      "outside_coverage_policy": "hold endpoint and report",
+      "combined_surfaces_policy": "add independent increments; interactions unmeasured",
+      "rate_derivatives": "provisional"
+    },
+    "battery_voltage_v": 44.4,
+    "pusher_installed": true,
+    "pusher_max_thrust_n": 120.0,
+    "lift_motor": {
+      "model": "MAD V8013 PRO IPE",
+      "kv_rpm_per_v": 150,
+      "source": "docs/pt1-parts-list.md"
+    },
+    "lift_esc": {
+      "model": "MAD AMPX 80A V2 DroneCAN",
+      "continuous_current_a": 80,
+      "source": "docs/pt1-parts-list.md"
+    },
+    "lift_propeller": {
+      "model": "MAD FLUXER PRO 26x7.8 MATT",
+      "diameter_in": 26.0,
+      "pitch_in": 7.8,
+      "blades": 2,
+      "source": "docs/pt1-parts-list.md"
+    },
+    "lift_performance_path": null
+  },
+  "trim_control": {
+    "de": -0.05249030881430387,
+    "da": -2.128047271425286e-06,
+    "dr": -0.0008572558364056511,
+    "throttle": 0.2541881217184671,
+    "lift_throttle": 0.0,
+    "lift_motor_throttles": null
+  },
+  "requested_parameters": {
+    "SERVO1_TRIM": 1500,
+    "SERVO2_TRIM": 1575,
+    "SERVO4_TRIM": 1499,
+    "RC1_DZ": 0,
+    "RC2_DZ": 0,
+    "RC4_DZ": 0,
+    "RC3_TRIM": 1000,
+    "FLTMODE_CH": 0,
+    "ARMING_REQUIRE": 1,
+    "ARMING_SKIPCHK": 0,
+    "AHRS_EKF_TYPE": 3,
+    "EK3_ENABLE": 1,
+    "PTCH_TRIM_DEG": -0.1485223938180078,
+    "STAB_PITCH_DOWN": 0,
+    "KFF_THR2PTCH": 0,
+    "TRIM_THROTTLE": 25.41881217184671,
+    "AIRSPEED_CRUISE": 28.0,
+    "SCALING_SPEED": 28.0,
+    "AIRSPEED_MIN": 15,
+    "AIRSPEED_MAX": 35,
+    "PTCH_RATE_FF": 0.45,
+    "PTCH_RATE_P": 0.08,
+    "PTCH_RATE_I": 0.15,
+    "PTCH2SRV_TCONST": 0.2,
+    "RLL_RATE_FF": 0.08625,
+    "RLL_RATE_P": 0.02,
+    "RLL_RATE_I": 0.075,
+    "ROLL_LIMIT_DEG": 30,
+    "PTCH_LIM_MIN_DEG": -10,
+    "PTCH_LIM_MAX_DEG": 10
+  },
+  "firmware": {
+    "tag": "Plane-4.7.1",
+    "source_commit": "dbe792162d06cab66c3475fd5556bf7a120f119e",
+    "identity": "ArduPlane V4.7.1 (dbe79216)",
+    "binary_sha256": "d1b4151c2f7b28b5c497ffc35786d06d568729c72d305185ba64d7e5024d0860"
+  },
+  "limitations": [
+    "diagnostic CG; not a physical flight recommendation",
+    "assumed unmeasured servo travel; provisional rates/inertia/pusher",
+    "bootstrap hold is a protocol test, not controlled flight",
+    "AP atmosphere is standard; FDM rho is fixed at 1.021"
+  ]
+}

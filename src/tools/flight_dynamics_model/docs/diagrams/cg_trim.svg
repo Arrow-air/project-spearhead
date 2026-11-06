@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="518" viewBox="0 0 1080 518" role="img" aria-labelledby="title desc">
+<title id="title">Database, CG and trim</title><desc id="desc">Interpolate the October aerodynamic database, dimensionalize loads, transfer the aerodynamic moment once to the selected CG, solve trim and analyze flight or stability.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 L6 4 L1 7" fill="none" stroke="#5b8dee" stroke-width="1.4" stroke-linejoin="round"/></marker></defs>
+<style>text {font-family: 'Neue Haas Grotesk', Arial, Helvetica, sans-serif;} .eyebrow {font-size:11px;font-weight:700;letter-spacing:1.6px;fill:#5b8dee;} .title {font-size:30px;font-weight:700;fill:#f3f4f6;} .heading {font-size:23px;font-weight:700;fill:#f3f4f6;} .body {font-size:15px;fill:#b2b3b5;} .caption {font-size:13px;fill:#b2b3b5;} .number {font-size:12px;font-weight:700;fill:#5b8dee;}</style>
+<rect width="1080" height="518" rx="16" fill="#1b1b1d"/>
+<text x="48" y="36" class="eyebrow">SPEARHEAD / 03 · MODEL ANALYSIS</text>
+<text x="48" y="82" class="title">From aerodynamic data to trim</text>
+<text x="48" y="111" class="body">Recompute loads and trim for the selected CG; apply the moment transfer once.</text>
+<rect x="48" y="152" width="176" height="177" rx="10" fill="#242526" stroke="#3b3d42" stroke-width="1.2"/>
+<text x="64" y="181" class="number">01</text>
+<text x="64" y="217" class="heading">AeroDB</text>
+<text x="64" y="252" class="caption">October database</text>
+<text x="64" y="275" class="caption">ρ = 1.021 kg/m³</text>
+<text x="64" y="298" class="caption">Moments at (0,0,0)</text>
+<path d="M227 242 L247 242" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<rect x="250" y="152" width="176" height="177" rx="10" fill="#242526" stroke="#3b3d42" stroke-width="1.2"/>
+<text x="266" y="181" class="number">02</text>
+<text x="266" y="217" class="heading">Loads</text>
+<text x="266" y="252" class="caption">Interpolate coefficients</text>
+<text x="266" y="275" class="caption">Use current</text>
+<text x="266" y="298" class="caption">dynamic pressure</text>
+<path d="M429 242 L449 242" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<rect x="452" y="152" width="176" height="177" rx="10" fill="#242526" stroke="#5b8dee" stroke-width="1.2"/>
+<text x="468" y="181" class="number">03</text>
+<text x="468" y="217" class="heading">CG shift</text>
+<text x="468" y="252" class="caption">Source origin → CG</text>
+<text x="468" y="275" class="caption">Transfer aerodynamic</text>
+<text x="468" y="298" class="caption">moment once</text>
+<path d="M631 242 L651 242" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<rect x="654" y="152" width="176" height="177" rx="10" fill="#242526" stroke="#3b3d42" stroke-width="1.2"/>
+<text x="670" y="181" class="number">04</text>
+<text x="670" y="217" class="heading">Trim</text>
+<text x="670" y="252" class="caption">Balance forces</text>
+<text x="670" y="275" class="caption">and moments</text>
+<text x="670" y="298" class="caption">in level flight</text>
+<path d="M833 242 L853 242" stroke="#5b8dee" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+<rect x="856" y="152" width="176" height="177" rx="10" fill="#242526" stroke="#3b3d42" stroke-width="1.2"/>
+<text x="872" y="181" class="number">05</text>
+<text x="872" y="217" class="heading">Analyze</text>
+<text x="872" y="252" class="caption">Fly or linearize</text>
+<text x="872" y="275" class="caption">Compare CG cases</text>
+<text x="872" y="298" class="caption">Report failures</text>
+<rect x="48" y="362" width="984" height="83" rx="10" fill="#242526" stroke="#3b3d42" stroke-width="1.2"/>
+<text x="70" y="389" class="eyebrow">MOMENT TRANSFER</text>
+<text x="70" y="422" font-size="23" fill="#f3f4f6">M<tspan baseline-shift="sub" font-size="14">CG</tspan> = M<tspan baseline-shift="sub" font-size="14">source</tspan> + (r<tspan baseline-shift="sub" font-size="14">source</tspan> − r<tspan baseline-shift="sub" font-size="14">CG</tspan>) × F</text>
+<text x="48" y="480" class="caption">Body axes: x forward · y right · z down. Trim is equilibrium; stability is checked separately.</text>
+</svg>

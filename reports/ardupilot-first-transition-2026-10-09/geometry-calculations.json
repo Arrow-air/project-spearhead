@@ -1,0 +1,36 @@
+{
+  "mass_kg": 25,
+  "wing_area_m2": 1.805,
+  "span_m": 3.95,
+  "rho_kg_m3": 1.021,
+  "wing_loading_kg_m2": 13.850415512465375,
+  "aspect_ratio": 8.644044321329641,
+  "tas_to_eas": 0.9129454462097404,
+  "candidate_min_eas": 18,
+  "maximum_stall_eas_for_25pct_margin": 14.4,
+  "required_clmax_at_25kg": 1.06943009326435,
+  "cruise_tas_for_25_eas": 27.383892546692753,
+  "turn_radius_at_25_eas_bank25": 163.9823630458211,
+  "stall_sensitivity": [
+    {
+      "assumed_clmax": 0.8,
+      "stall_eas": 16.649212599222807,
+      "stall_tas": 18.23680995216642
+    },
+    {
+      "assumed_clmax": 1,
+      "stall_eas": 14.891508457483264,
+      "stall_tas": 16.311498698315525
+    },
+    {
+      "assumed_clmax": 1.2,
+      "stall_eas": 13.594025162404241,
+      "stall_tas": 14.89029297297261
+    },
+    {
+      "assumed_clmax": 1.5,
+      "stall_eas": 12.158865740391402,
+      "stall_tas": 13.31828291698168
+    }
+  ]
+}

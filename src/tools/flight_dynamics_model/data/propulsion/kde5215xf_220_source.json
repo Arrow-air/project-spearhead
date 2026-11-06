@@ -1,0 +1,49 @@
+{
+  "retrieved_date": "2026-10-06",
+  "manufacturer": "KDE Direct",
+  "motor_url": "https://www.kdedirect.com/products/kde5215xf-220",
+  "esc_url": "https://www.kdedirect.com/products/kde-uas75hvc",
+  "propeller_url": "https://www.kdedirect.com/products/kde-cf215-dp",
+  "workbook_url": "https://cdn.shopify.com/s/files/1/0496/8205/files/KDE5215-220kV_rev2.xlsx?v=1738877548",
+  "workbook_sha256": "4518adfad15af2ff8481f1c599785ce58b77a2fa107a31a3f0a30dff3db6e620",
+  "sheet": "Sheet1",
+  "source_rows": [
+    [
+      "17:23",
+      25.2
+    ],
+    [
+      "59:65",
+      33.6
+    ],
+    [
+      "101:107",
+      42
+    ],
+    [
+      "143:149",
+      50.4
+    ]
+  ],
+  "extracted_columns": {
+    "voltage_v": "B (merged label)",
+    "throttle": "D",
+    "thrust_n": "I (measured)",
+    "current_a": "E",
+    "power_w": "F",
+    "rpm": "N",
+    "torque_nm": "O",
+    "estimated_sea_level_thrust_n": "L (estimated only)"
+  },
+  "test_esc": "KDE-UAS125UVC",
+  "test_firmware": "D460337",
+  "conditions": "Temperature: 68 deg F | Elevation: 3500' |  Relative Humidity: 40% | Pressure: 1010 hPA",
+  "motor_edition_settings": "Motor Edition Selected | Synchronous Rectification: Deactivated",
+  "limitations": [
+    "Different ESC from PT1 UAS75HVC+; static surrogate pending bench validation.",
+    "Runtime uses measured thrust, not manufacturer estimated sea-level thrust.",
+    "No density, inflow, advance-speed, battery-sag, ESC loss or thermal-duration corrections.",
+    "Throttle below 25% is an assumed linear ramp from motor-off.",
+    "Full-throttle samples may exceed published 180s motor ratings; the map is not a continuous-duty envelope."
+  ]
+}

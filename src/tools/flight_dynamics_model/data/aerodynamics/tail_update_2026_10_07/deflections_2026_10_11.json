@@ -1,0 +1,14 @@
+{
+  "model": "sparse_controls_v1",
+  "source": "sources/deflection_2026_10_11.csv",
+  "source_sha256": "6029c0bcb3f24af2edcf732dfbc2b3129c7b836883a226192ad00b1bc4609afa",
+  "rho_kg_m3": 1.021,
+  "moment_center_body_xyz_m": [
+    0,
+    0,
+    0
+  ],
+  "reference_authority": "Inherit prior user-confirmed origin and density; delivery has no new reference metadata",
+  "velocity_policy": "Continuous linear interpolation of normalized coefficients after per-plane alpha hold / bounded deflection extrapolation, with coverage flags; hold measured speed endpoints",
+  "sideslip_baselines": "Preserved for audit; full alpha/beta base unchanged"
+}

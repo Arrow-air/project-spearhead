@@ -1,0 +1,112 @@
+{
+  "version": "tail_update_2026_10_07",
+  "received_date": "2026-10-07",
+  "rho_kg_m3": 1.021,
+  "moment_center_body_xyz_m": [
+    0,
+    0,
+    0
+  ],
+  "authority": "Raw CFD origin (0,0,0) and rho 1.021 confirmed by user from 2026-10-06. Nondimit base export records its final center (-0.1,0,0.15); the active base is numerically recentered to the CFD origin, not relabeled. Aero team confirmed on 2026-10-14 that the Nondimit export center of database.csv was (-0.1,0,0.15) and that the deflection tables are at (0,0,0).",
+  "raw_database_moment_center_body_xyz_m": [
+    -0.1,
+    0,
+    0.15
+  ],
+  "tail_chord_m": null,
+  "tail_chord_note": "Updated tail chord; numeric value not supplied. Reference wing chord remains 0.457 m.",
+  "sources": {
+    "deflection.csv": {
+      "sha256": "9430a96ecd043517d6b584a2973b269c52266d7b79d50392822651dadf136ac4",
+      "path": "sources/deflection.csv"
+    },
+    "database.csv": {
+      "sha256": "6a9561724e7f3059e88e206d8793054ed357723af73b8e7aaec501f6eff83dc1",
+      "path": "sources/database.csv"
+    },
+    "results_2026_10_09.csv": {
+      "path": "sources/results_2026_10_09.csv",
+      "sha256": "9efdce5b1f23ff7e7119de211697b2f668a5fcaa8dc4277740b409f532120b60",
+      "received_date": "2026-10-09",
+      "cases": 54
+    },
+    "deflection_2026_10_11.csv": {
+      "path": "sources/deflection_2026_10_11.csv",
+      "sha256": "6029c0bcb3f24af2edcf732dfbc2b3129c7b836883a226192ad00b1bc4609afa",
+      "cases": 103,
+      "received_date": "2026-10-11"
+    }
+  },
+  "control_model": "Sparse alpha/deflection triangulation per surface and speed; measured elevator/rudder interaction residual; endpoint alpha hold and bounded deflection extrapolation; beta=0 controls; full base numerically normalized to source origin before adding origin-referenced control increments.",
+  "active_controls": {
+    "version": "controls_2026_10_11",
+    "path": "deflections_2026_10_11.json",
+    "sha256": "c48b55e8a54fe4844a7bd44395f312c8546eadd7912b48225cec12fe13199451",
+    "cases": 103,
+    "source": "deflection_2026_10_11.csv",
+    "convergence": "not_assessed",
+    "units_and_reference": "Inherit prior user-confirmed origin and density; delivery has no new reference metadata"
+  },
+  "previous_active_controls": {
+    "version": "controls_2026_10_09",
+    "path": "deflections_2026_10_09.csv",
+    "sha256": "c94135f1a1931e5a86471f2fea8ad651cceca8979c415940d8a355d557c0e49e",
+    "cases": 49,
+    "alpha_deg": [
+      -5,
+      0,
+      5,
+      10,
+      15,
+      20,
+      30
+    ],
+    "beta_deg": 0,
+    "velocity_m_s": 25,
+    "surface_deflections_deg": [
+      -5,
+      0,
+      5
+    ],
+    "source": "results_2026_10_09.csv",
+    "excluded_from_increments": [
+      "Case050",
+      "Case051",
+      "Case052",
+      "Case053",
+      "Case054"
+    ],
+    "selection_reason": "These five cases are zero-control sideslip baselines, not control increments. Preserve for audit; full base alpha/beta database remains unchanged.",
+    "convergence": "not_assessed",
+    "units_and_reference": "Inherited user-confirmed degrees, N, N*m, rho=1.021, body moment origin=(0,0,0); no new reference metadata supplied."
+  },
+  "active_base": {
+    "method": "Nondimit.recenter_export_rows",
+    "source_sha256": "6a9561724e7f3059e88e206d8793054ed357723af73b8e7aaec501f6eff83dc1",
+    "source_export_center_body_xyz_m": [
+      -0.1,
+      0.0,
+      0.15
+    ],
+    "canonical_center_body_xyz_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rho_kg_m3": 1.021,
+    "output_accuracy": 1e-10,
+    "rows": 32761,
+    "max_force_change_n": 0.0,
+    "max_origin_transfer_error_nm": 5.684341886080802e-14,
+    "existing_corrections_reapplied": false,
+    "active_sha256": "18c1356e292bf8d9008a45c029ad0a7654825934e99b6f6f7f8ca15e84428755",
+    "path": "database.csv",
+    "preprocessing_version": "numeric_origin_recovery_2026_10_12",
+    "raw_cfd_center_body_xyz_m": [
+      0,
+      0,
+      0
+    ],
+    "coefficient_note": "Recomputed from preserved dimensional loads at the unchanged reference values; finer output precision avoids a second quantization."
+  }
+}

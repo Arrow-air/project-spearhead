@@ -1,0 +1,66 @@
+id: pt1_as_built
+label: PT1 as flown (wings on, no pusher)
+description: PT1 as flown on 19 September 2026 (second hover test, wings attached, no pusher, surface servos not installed). Mass is the log-derived 17.9 kg. CG x is derived from the hover front/rear thrust share (49.3 % front) with the 14 October 2026 drawing rotor positions. CG z, inertia and rate damping are build-up and vortex-lattice estimates. Use this profile to compare with the PT1 hover logs; PT1.5 flight simulation uses pt15.
+aircraft:
+  mass: 17.9
+  # Body axes from the CFD origin (wing root quarter-chord): x forward, z down.
+  # x from the logged hover thrust share and drawing rotor stations; z is an estimate.
+  cg_body_xyz: [-0.0475, 0.0, 0.065]
+  # Component build-up estimate about this CG (14 October 2026), +/-20 %.
+  inertia: [[4.30, 0.0, -0.29], [0.0, 3.73, 0.0], [-0.29, 0.0, 7.66]]
+  rho: 1.021
+geometry:
+  tail_chord: null
+  tail_area: null
+aerodynamics:
+  dataset: tail_update_2026_10_07
+  # Wing + inverse-V-tail vortex-lattice estimates (no fuselage/booms), per radian
+  # with p*b/2V, q*c/2V, r*b/2V. Cmq is for this CG; it scales with tail arm.
+  rate_derivatives: {Cmq: -9.6, Clp: -0.58, Clr: 0.10, Cnp: -0.04, Cnr: -0.04}
+battery:
+  cells: 12
+  voltage_v: 44.4
+  capacity_ah: 22.0
+  mass_kg: 3.709
+propulsion:
+  pusher:
+    # PT1 flew without a pusher.
+    installed: false
+  lift:
+    motor:
+      model: KDE5215XF-220
+      data_edition: HE manufacturer data
+      kv_rpm_per_v: 220
+      torque_constant_nm_per_a: 0.0434
+      resistance_ohm: 0.078
+      no_load_current_a_at_10v: 0.5
+      magnetic_poles: 28
+      rotor_inertia_kg_m2: 0.0000632
+      mass_kg_with_wires: 0.360
+      continuous_current_a_180s: 44
+      continuous_power_w_180s: 1955
+      source: https://www.kdedirect.com/products/kde5215xf-220
+    esc:
+      model: KDE-UAS75HVC+
+      manufacturer_product_id: KDE-UAS75HVC
+      continuous_current_a_180s: 75
+      peak_current_a_5s: 130
+      continuous_power_w_180s: 3330
+      peak_power_w_5s: 5770
+      voltage_min_v: 11.1
+      voltage_max_v: 52.2
+      refresh_rate_hz: 600
+      mass_kg_with_wires: 0.114
+      source: https://www.kdedirect.com/products/kde-uas75hvc
+    propeller:
+      model: KDE-CF215-DP
+      diameter_in: 21.5
+      pitch_in: 7.3
+      blades: 2
+      mass_kg_per_blade: 0.0258
+      source: https://www.kdedirect.com/products/kde-cf215-dp
+    # 14 October 2026 drawing (X aft, Z up from the CFD origin) converted to body axes.
+    # Order FR, RR, RL, FL = ArduPilot motors 1, 4, 2, 3.
+    positions_body_m: [[0.675, 0.55, -0.043], [-0.750, 0.55, -0.043], [-0.750, -0.55, -0.043], [0.675, -0.55, -0.043]]
+    reaction_torque_signs: [1, -1, 1, -1]
+    performance_path: ../data/propulsion/kde5215xf_220_cf215_dp.csv

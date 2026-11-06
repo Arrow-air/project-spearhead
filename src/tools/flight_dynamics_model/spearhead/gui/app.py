@@ -49,6 +49,7 @@ from .plotting import (
 )
 from .state import APP_STATE
 from ..config import ControlInputCommand, SimulationConfig
+from ..aircraft import aircraft_options, aerodynamic_options, load_aircraft_config
 
 
 FDM_ROOT = Path(__file__).resolve().parents[2]
@@ -58,6 +59,7 @@ DEFAULT_PORT = 8080
 
 _pages_registered = False
 _flight_deck_session: FlightDeckSession | None = None
+_sitl_manager = None
 
 
 def get_example_scenarios() -> list[Path]:
@@ -108,6 +110,27 @@ def _scenario_options() -> dict[str, Path]:
     return {path.name: path for path in get_example_scenarios()}
 
 
+def scenario_options_for_aircraft(aircraft_id: str, aerodynamics: str | None = None) -> dict[str, Path]:
+    """Offer scenarios supported by the selected hardware and trim model."""
+    params = load_aircraft_config(aircraft_id, aerodynamics=aerodynamics)
+    options = {}
+    for name, path in _scenario_options().items():
+        try:
+            config = load_scenario_config(path, params=params)
+        except ValueError:
+            continue
+        if config.start_from_trim and not params.pusher_installed:
+            continue
+        if not params.pusher_installed and config.control_override is not None and config.control_override.throttle > 0:
+            continue
+        if config.start_from_trim:
+            from ..trim import trim_fixed_wing_longitudinal
+            if not trim_fixed_wing_longitudinal(params, config.trim_target_speed, config.trim_altitude)["success"]:
+                continue
+        options[name] = path
+    return options
+
+
 def _load_uploaded_config(upload_event) -> tuple[str, dict[str, Any]]:
     suffix = Path(getattr(upload_event, "name", "scenario.yaml")).suffix or ".yaml"
     content = upload_event.content.read()
@@ -129,11 +152,15 @@ def _load_uploaded_config(upload_event) -> tuple[str, dict[str, Any]]:
     return source, scenario_summary(config)
 
 
-def _load_example_config(name: str) -> SimulationConfig:
+def _load_example_config(name: str, aircraft_id: str | None = None, aerodynamics: str | None = None) -> SimulationConfig:
     scenario_options = _scenario_options()
     if name not in scenario_options:
         raise ValueError(f"Unknown example scenario: {name}")
-    config = load_scenario_config(scenario_options[name])
+    config = load_scenario_config(
+        scenario_options[name],
+        params=None if aircraft_id is None else load_aircraft_config(aircraft_id, aerodynamics=aerodynamics),
+        aerodynamics=aerodynamics,
+    )
     APP_STATE.set_scenario(name, config)
     return config
 
@@ -266,11 +293,42 @@ def cg_positions_from_x_values(config: SimulationConfig, x_values: list[float]) 
 
 
 def _render_page_shell(ui) -> None:
-    ui.colors(primary="#0f766e", secondary="#475569", accent="#38bdf8")
+    ui.colors(primary="#0943bf", secondary="#191c22", accent="#527bd2")
     ui.add_head_html(
         """
         <style>
         body { background: #08111f; }
+        .fd-nav { gap: 6px; }
+        .fd-nav a { padding: 8px 14px; border-radius: 8px; color: #94a3b8; text-decoration: none; }
+        .fd-nav a:hover { color: #f8fafc; background: #172334; }
+        .fd-nav a[aria-current="page"] { color: #e0f2fe; background: #153047; }
+        .nicegui-content:has(.fd-workspace) { padding: 0; gap: 0; }
+        .fd-workspace { max-width: 1600px; margin: 0 auto; background: none; }
+        .fd-workspace .fd-panel { box-shadow: none; border-color: #26364a; border-radius: 12px; }
+        .fd-workspace .fd-pfd { height: 330px; min-height: 330px; box-shadow: none; }
+        .fd-workspace .q-btn { text-transform: none; border-radius: 8px; }
+        .fd-session-select { width: 280px; max-width: 100%; }
+        .fd-instruments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .fd-health { font-size: 12px; color: #94a3b8; }
+        .fd-alert { border-left: 3px solid #f59e0b; background: #332b1b; padding: 8px 12px; border-radius: 6px; }
+        .fd-error { border-left-color: #ef4444; background: #361f2b; }
+        .fd-info { color: #94a3b8; min-width: 28px; min-height: 28px; }
+        .fd-info:hover, .fd-info:focus-visible { color: #bae6fd; }
+        .fd-info-tooltip { max-width: min(440px, calc(100vw - 32px)); font-size: 13px; line-height: 1.6;
+                           white-space: normal; background: #172334; color: #e2e8f0; padding: 12px 16px;
+                           border: 1px solid #334155; border-radius: 8px; }
+        .fd-arm-badge { font-size: 15px; font-weight: 700; letter-spacing: .06em; padding: 8px 14px;
+                        border: 1px solid; border-radius: 8px; }
+        .fd-arm-armed { color: #6ee7b7; background: #064e3b; border-color: #10b981; }
+        .fd-arm-disarmed { color: #cbd5e1; background: #1e293b; border-color: #64748b; }
+        .fd-arm-unknown { color: #fcd34d; background: #332b1b; border-color: #a16207; }
+        .fd-startup { background: #10243a; border: 1px solid #2d597a; border-radius: 10px; }
+        @media (max-width: 760px) {
+            .fd-instruments { grid-template-columns: minmax(0, 1fr); }
+            .fd-nav a { padding: 6px 9px; font-size: 13px; }
+            .fd-session-select { width: 100%; }
+            .fd-startup-time { align-items: flex-start; width: 100%; padding-left: 36px; }
+        }
         .fd-console {
             background: radial-gradient(circle at 50% 20%, #172554 0, #0f172a 38%, #08111f 100%);
             color: #dbeafe;
@@ -609,12 +667,23 @@ def _render_page_shell(ui) -> None:
         </style>
         """
     )
-    with ui.header().classes("items-center justify-between bg-slate-950 text-white"):
-        ui.label("Spearhead Flight Deck").classes("text-lg font-semibold")
+    ui.add_head_html("<style>" + Path(__file__).with_name("arrow_theme.css").read_text() + "</style>")
+    path = ui.context.client.request.url.path
+    if path == "/embed":
+        return
+    with ui.header().classes("items-center justify-between fd-arrow-header text-white"):
         with ui.row().classes("items-center gap-2"):
-            ui.link("Flight Deck", "/").classes("text-white no-underline")
-            ui.link("Analyze", "/analyze").classes("text-white no-underline")
-            ui.link("Scenario Library", "/scenario-library").classes("text-white no-underline")
+            ui.html('<img src="https://www.arrowair.com/images/arrow-flint_logo-lockup-white2x.png" alt="Arrow" style="width:118px;height:36px;object-fit:contain">')
+            ui.label("SPEARHEAD").classes("fd-brand-caption")
+        with ui.row().classes("items-center fd-nav"):
+            for label, target, active in [
+                ("Flight Deck", "/", path in ("/", "/sitl")),
+                ("Analyze", "/analyze", path in ("/analyze", "/model-lab", "/simulation", "/stability", "/cg-sweep")),
+                ("Scenarios", "/scenario-library", path == "/scenario-library"),
+            ]:
+                link = ui.link(label, target)
+                if active:
+                    link.props('aria-current="page"')
     ui.separator()
 
 
@@ -697,7 +766,7 @@ def _maneuver_metadata(config: SimulationConfig, maneuver_key: str) -> list[dict
         if command.surface.strip().lower() in {"elevator", "de", "aileron", "da", "rudder", "ruddervator", "dr"}:
             amplitude = float(np.rad2deg(amplitude))
             unit = " deg"
-        elif command.surface.strip().lower() == "throttle":
+        elif command.surface.strip().lower() in {"throttle", "lift_throttle"}:
             amplitude = 100.0 * amplitude
             unit = "%"
         rows.append(
@@ -745,7 +814,7 @@ def _render_live_plot_cards(ui, container, history: list[dict[str, float]]) -> N
 
 
 def _register_flight_deck_page(ui) -> None:
-    @ui.page("/")
+    @ui.page("/model-lab")
     def flight_deck_page() -> None:
         _render_page_shell(ui)
         scenario_options = _scenario_options()
@@ -757,9 +826,13 @@ def _register_flight_deck_page(ui) -> None:
             session = _active_flight_deck_session(selected_name)
         except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
             with ui.column().classes("w-full max-w-5xl mx-auto gap-4 p-4"):
-                _page_intro(ui, "Flight Deck", "Realtime aircraft simulation console.")
-                ui.label(f"Unable to initialize Flight Deck: {exc}").classes("text-red-600")
+                _page_intro(ui, "Model Lab", "Model-only maneuvers and response analysis.")
+                ui.label(f"Unable to initialize Model Lab: {exc}").classes("text-red-600")
             return
+
+        scenario_options = scenario_options_for_aircraft(session.base_config.params.aircraft_id, session.base_config.params.aero_dataset_id)
+        if selected_name not in scenario_options:
+            selected_name = next(iter(scenario_options), None)
 
         telemetry_cards: dict[str, Any] = {}
         control_labels: dict[str, Any] = {}
@@ -772,7 +845,7 @@ def _register_flight_deck_page(ui) -> None:
         with ui.column().classes("fd-console w-full gap-3 p-3"):
             with ui.row().classes("w-full items-center justify-between fd-panel px-4 py-3"):
                 with ui.row().classes("items-center gap-3"):
-                    ui.label("FLIGHT DECK").classes("text-xl font-semibold text-sky-100")
+                    ui.label("MODEL LAB").classes("text-xl font-semibold text-sky-100")
                     maneuver_badge = ui.html(_maneuver_badge_html(session.maneuver.label))
                     scenario_badge = ui.label(session.scenario_source).classes("text-sm fd-muted")
                 with ui.row().classes("items-center gap-3"):
@@ -788,6 +861,19 @@ def _register_flight_deck_page(ui) -> None:
             with ui.grid(columns="220px minmax(620px, 1.4fr) 250px").classes("w-full gap-3"):
                 with ui.column().classes("fd-panel gap-2 p-3"):
                     ui.label("SETUP").classes("text-xs font-semibold text-sky-200")
+                    aircraft_select = ui.select(
+                        options=aircraft_options(),
+                        value=session.base_config.params.aircraft_id,
+                        label="Aircraft",
+                    ).props("dark filled dense").classes("w-full")
+                    aerodynamics_select = ui.select(
+                        options=aerodynamic_options(),
+                        value=session.base_config.params.aero_dataset_id,
+                        label="Aerodynamics",
+                    ).props("dark filled dense").classes("w-full")
+                    aircraft_details = ui.label("").classes("text-xs text-slate-300")
+                    aero_details = ui.label("").classes("text-xs text-slate-300")
+                    lift_details = ui.label("").classes("text-xs text-slate-300")
                     scenario_select = ui.select(
                         options=list(scenario_options),
                         value=selected_name,
@@ -851,6 +937,7 @@ def _register_flight_deck_page(ui) -> None:
                         ("aileron_deg", "AIL", True),
                         ("rudder_deg", "RUD", True),
                         ("throttle_pct", "THR", False),
+                        ("lift_throttle_pct", "LIFT", False),
                     ]:
                         with ui.column().classes("w-full gap-1"):
                             with ui.row().classes("w-full justify-between"):
@@ -903,10 +990,38 @@ def _register_flight_deck_page(ui) -> None:
             )
             play_button.text = "PAUSE" if session.status == RUNNING else "PLAY"
             status_message.text = session.message
+            params = session.base_config.params
+            lift = params.lift_system
+            aircraft_details.text = (
+                f"{'' if lift is None else lift.motor.get('model', '')} | "
+                f"{params.battery.voltage_v:g} V | "
+                f"Pusher {'installed' if params.pusher_installed else 'absent'} | "
+                f"{params.aero_database_version}, tail chord "
+                f"{'pending' if params.geometry.tail_chord is None else str(params.geometry.tail_chord) + ' m'}"
+            )
+            aero_details.text = (
+                f"ρ {params.rho:g} kg/m³ | Moment center "
+                f"({', '.join(f'{float(value):g}' for value in params.aerodb_reference.moment_center_body_xyz)}) | "
+                + ("Partial controls: β=0°, ±5°; elevator α=-5..5°, aileron/rudder α=-5..0°. "
+                   "Endpoints held outside coverage; rates provisional."
+                   if params.deflection_database_path else "Provisional controls and rates.")
+            )
+            coverage = session.aerodynamic_coverage()
+            if coverage is not None:
+                aero_details.text += (
+                    " Active controls within measured coverage."
+                    if coverage["within_measured_coverage"]
+                    else " Active controls outside measured coverage; local approximation in use."
+                )
+            lift_details.text = (
+                f"Static lift {controls.get('lift_thrust_n', 0.0):.1f} N | "
+                f"Bench estimate {controls.get('lift_current_a', 0.0):.1f} A, "
+                f"{controls.get('lift_power_w', 0.0):.0f} W"
+            )
             trim_label.text = (
                 f"{session.base_config.trim_target_speed:g} m/s at "
                 f"{session.base_config.trim_altitude:g} m"
-            )
+            ) if session.base_config.start_from_trim else "Open loop; no fixed-wing trim"
 
             units = {
                 "airspeed": "m/s",
@@ -957,7 +1072,7 @@ def _register_flight_deck_page(ui) -> None:
             try:
                 if not scenario_select.value:
                     raise ValueError("No example scenario is selected.")
-                config = _load_example_config(str(scenario_select.value))
+                config = _load_example_config(str(scenario_select.value), str(aircraft_select.value), str(aerodynamics_select.value))
                 session.set_scenario(str(scenario_select.value), config)
                 maneuver_select.options = maneuver_options(config)
                 maneuver_select.value = session.maneuver_key
@@ -970,6 +1085,12 @@ def _register_flight_deck_page(ui) -> None:
                 session.message = f"Failed to load scenario: {exc}"
                 ui.notify(session.message, type="negative")
                 render(force_plot=True)
+
+        def select_aircraft() -> None:
+            options = scenario_options_for_aircraft(str(aircraft_select.value), str(aerodynamics_select.value))
+            selected = scenario_select.value if scenario_select.value in options else next(iter(options), None)
+            scenario_select.set_options(list(options), value=selected)
+            load_scenario()
 
         def select_maneuver() -> None:
             session.set_maneuver(str(maneuver_select.value))
@@ -999,6 +1120,8 @@ def _register_flight_deck_page(ui) -> None:
                 render()
 
         scenario_select.on("update:model-value", lambda _: load_scenario())
+        aircraft_select.on("update:model-value", lambda _: select_aircraft())
+        aerodynamics_select.on("update:model-value", lambda _: select_aircraft())
         maneuver_select.on("update:model-value", lambda _: select_maneuver())
         speed_select.on("update:model-value", lambda _: speed_changed())
         reset_button.on_click(reset_clicked)
@@ -1015,7 +1138,11 @@ def _register_analyze_page(ui) -> None:
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
             _page_intro(ui, "Analyze", "Review the latest run and open the advanced analysis tools.")
 
-            with ui.grid(columns=3).classes("w-full gap-3"):
+            with ui.element("div").classes("grid grid-cols-1 md:grid-cols-2 w-full gap-3"):
+                with ui.card().classes("gap-2 p-4 shadow-sm"):
+                    ui.label("Model Lab").classes("text-lg font-semibold")
+                    ui.label("Model-only maneuvers, playback and control responses.").classes("text-slate-600")
+                    ui.link("Open Model Lab", "/model-lab").classes("text-blue-700 no-underline")
                 with ui.card().classes("gap-2 p-4 shadow-sm"):
                     ui.label("Simulation Review").classes("text-lg font-semibold")
                     ui.label("Batch run, plots, and exports.").classes("text-slate-600")
@@ -1025,15 +1152,15 @@ def _register_analyze_page(ui) -> None:
                     ui.label("Trim, linearization, modes, derivatives.").classes("text-slate-600")
                     ui.link("Open Stability", "/stability").classes("text-blue-700 no-underline")
                 with ui.card().classes("gap-2 p-4 shadow-sm"):
-                    ui.label("Advanced CG Sweep").classes("text-lg font-semibold")
-                    ui.label("Runtime CG stability sweep.").classes("text-slate-600")
-                    ui.link("Open CG Sweep", "/cg-sweep").classes("text-blue-700 no-underline")
+                    ui.label("CG window").classes("text-lg font-semibold")
+                    ui.label("PT1.5 static margin, elevator trim and hover headroom across CG.").classes("text-slate-600")
+                    ui.link("Open CG window", "/cg-sweep").classes("text-blue-700 no-underline")
 
             result = APP_STATE.simulation_result
             with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Latest Flight Deck Run")
+                _section_header(ui, "Latest Model Lab Run")
                 if result is None:
-                    _empty_state(ui, "Press Play on the Flight Deck to capture a run.")
+                    _empty_state(ui, "Press Play in Model Lab to capture a model-only run. ArduPilot recordings are available on the Flight Deck.")
                     return
                 summary = simulation_result_summary(result)
                 ui.label(
@@ -1525,169 +1652,63 @@ def _register_stability_page(ui) -> None:
 def _register_cg_sweep_page(ui) -> None:
     @ui.page("/cg-sweep")
     def cg_sweep_page() -> None:
+        """PT1.5 CG window: the Flight Deck CG summary evaluated over a range of CG x."""
         _render_page_shell(ui)
-        scenario_options = _scenario_options()
-        selected_name = APP_STATE.scenario_source
-        if selected_name not in scenario_options:
-            selected_name = next(iter(scenario_options), None)
-
-        active_config = APP_STATE.config
-        if active_config is None and selected_name is not None:
-            active_config = load_scenario_config(scenario_options[selected_name])
-
+        from ..aircraft import pusher_options
+        from ..cg_card import TRIM_SPEEDS_M_S, cg_card
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
-            _page_intro(ui, "CG Sweep", "Run runtime center-of-gravity stability sweeps through the shared backend.")
-
-            if active_config is None:
-                _empty_state(ui, "Load a scenario first.")
-                return
-
+            _page_intro(ui, "CG window", "Static margin, elevator trim and hover headroom across CG positions for PT1.5.")
             with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Run CG Sweep", "Enter CG x positions and run the existing stability sweep.")
                 ui.label(
-                    "This sweep varies runtime `cg_body_xyz` with the nominal ADB. "
-                    "It does not use separate per-CG aerodynamic databases."
-                ).classes("text-slate-600")
-                status = ui.label(
-                    f"Loaded scenario: {APP_STATE.scenario_source or active_config.name}"
-                    if APP_STATE.config is not None
-                    else "Load a scenario first, or use the bundled example below."
+                    "October AeroDB with ±30° travel. Static margin is stick-fixed at 22 m/s trim. Elevator beyond "
+                    "±15° relies on extrapolated control data. Hover is the busiest rotor against its 95 % spin thrust. "
+                    "The lift-rotor centroid is at x = −37.5 mm. Estimates, not a measured envelope."
                 ).classes("text-slate-600")
                 with ui.row().classes("items-end gap-3"):
-                    selected = ui.select(
-                        options=list(scenario_options),
-                        value=selected_name,
-                        label="Example scenario",
-                    ).classes("min-w-80")
-                    ui.button("Load Scenario", on_click=lambda: load_selected_for_sweep())
-                    ui.button("Run CG Sweep", on_click=lambda: run_clicked()).props("color=primary")
+                    cg_x_input = ui.input("CG x values [mm, forward positive]", value="-70, -60, -50, -40, -30, -20, -10, 0").classes("min-w-96")
+                    cg_z_input = ui.number("CG z [mm, down positive]", value=65, step=5).classes("w-48")
+                    pusher_input = ui.select(pusher_options("pt15"), value="mad", label="Pusher motor").classes("min-w-64")
+                    run_button = ui.button("Compute", on_click=lambda: compute()).props("color=primary")
+                status = ui.label("").classes("text-slate-600")
+                columns = [{"name": "x", "label": "CG x (mm)", "field": "x"},
+                           {"name": "sm", "label": "SM 22 m/s (%)", "field": "sm"},
+                           *[{"name": f"de{int(s)}", "label": f"Elevator {s:g} m/s (°)", "field": f"de{int(s)}"} for s in TRIM_SPEEDS_M_S],
+                           {"name": "pusher", "label": "Pusher 22 m/s (command · current)", "field": "pusher"},
+                           {"name": "hover", "label": "Hover busiest rotor (%)", "field": "hover"}]
+                table = ui.table(columns=columns, rows=[], row_key="x").classes("w-full")
 
-                cg_x_input = ui.input(
-                    "CG x values [m]",
-                    value="-0.15, -0.10, -0.05, 0.0",
-                    placeholder="-0.15, -0.10, -0.05, 0.0",
-                ).classes("w-full")
-
-                with ui.expansion("Advanced settings").classes("w-full"):
-                    with ui.grid(columns=2).classes("w-full gap-3"):
-                        state_perturbation_input = ui.number(
-                            "State perturbation",
-                            value=1e-5,
-                            min=1e-12,
-                        )
-                        control_perturbation_input = ui.number(
-                            "Control perturbation",
-                            value=1e-5,
-                            min=1e-12,
-                        )
-
-            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Sweep Results", "Per-point success, mode counts, and most unstable pole.")
-                results_empty = _empty_state(ui, "Run CG sweep to see results.")
-                result_columns = [
-                    {"name": "case", "label": "Case", "field": "case", "align": "left"},
-                    {"name": "cg_x", "label": "CG x [m]", "field": "cg_x", "align": "right"},
-                    {"name": "success", "label": "Success", "field": "success", "align": "left"},
-                    {"name": "total_modes", "label": "Modes", "field": "total_modes", "align": "right"},
-                    {
-                        "name": "most_unstable_real",
-                        "label": "Max Real",
-                        "field": "most_unstable_real",
-                        "align": "right",
-                    },
-                    {"name": "error", "label": "Error", "field": "error", "align": "left"},
-                ]
-                results_table = ui.table(columns=result_columns, rows=[], row_key="case").classes("w-full")
-                results_table.visible = False
-
-            with ui.card().classes("w-full gap-3 p-4 shadow-sm"):
-                _section_header(ui, "Trend and Exports", "Inspect CG sensitivity and download sweep outputs.")
-                trend_empty = _empty_state(ui, "Run CG sweep to see trend.")
-                trend_container = ui.column().classes("w-full")
-                export_row = ui.row().classes("gap-3")
-                export_row.visible = False
-
-            def load_selected_for_sweep() -> None:
+            async def compute():
+                from nicegui import run
                 try:
-                    if not selected.value:
-                        raise ValueError("No example scenario is selected.")
-                    _load_example_config(selected.value)
-                    results_table.rows = []
-                    results_table.visible = False
-                    results_table.update()
-                    results_empty.visible = True
-                    trend_container.clear()
-                    trend_empty.visible = True
-                    render_exports()
-                    status.text = f"Loaded scenario: {selected.value}"
-                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
-                    status.text = f"Failed to load scenario: {exc}"
-                    ui.notify(status.text, type="negative")
-
-            def render_exports() -> None:
-                export_row.clear()
-                result = APP_STATE.cg_sweep_result
-                if result is None:
-                    export_row.visible = False
+                    xs = [float(v)/1000 for v in cg_x_input.value.replace(";", ",").split(",") if v.strip()]
+                    z = float(cg_z_input.value)/1000
+                except ValueError:
+                    status.text = "Enter comma-separated CG x values in millimetres."
                     return
-                export_row.visible = True
-                with export_row:
-                    ui.button(
-                        "Export JSON",
-                        on_click=lambda: ui.download(
-                            export_stability_json_text(result),
-                            filename=f"{result.base_config.name}_cg_sweep.json",
-                        ),
-                    )
-                    ui.button(
-                        "Export CSV",
-                        on_click=lambda: ui.download(
-                            export_stability_modes_csv_text(result),
-                            filename=f"{result.base_config.name}_cg_sweep_modes.csv",
-                        ),
-                    )
-
-            def run_clicked() -> None:
+                if not xs or len(xs) > 20:
+                    status.text = "Enter 1–20 CG positions."
+                    return
+                run_button.disable()
+                rows = []
                 try:
-                    config = _active_or_example_config(selected.value if selected.value else None)
-                    x_values = parse_cg_x_values(str(cg_x_input.value))
-                    cg_positions = cg_positions_from_x_values(config, x_values)
-                    linearization_config = build_linearization_config(
-                        state_perturbation=float(state_perturbation_input.value),
-                        control_perturbation=float(control_perturbation_input.value),
-                    )
-                    status.text = "Running CG sweep..."
-                    result = run_cg_sweep_for_gui(
-                        config,
-                        cg_positions,
-                        linearization_config=linearization_config,
-                    )
-                    APP_STATE.set_cg_sweep_result(result)
-                    results_table.rows = cg_sweep_summary_rows(result)
-                    results_table.visible = True
-                    results_table.update()
-                    results_empty.visible = False
-                    trend_container.clear()
-                    with trend_container:
-                        ui.plotly(cg_sweep_trend_figure(result)).classes("w-full")
-                    trend_empty.visible = False
-                    render_exports()
-                    status.text = (
-                        f"CG sweep complete: successful={len(result.successful_points)} "
-                        f"total={len(result.points)}"
-                    )
-                except Exception as exc:  # noqa: BLE001 - GUI should surface validation errors.
-                    message = f"CG sweep failed: {exc}"
-                    APP_STATE.set_cg_sweep_error(message)
-                    results_table.rows = []
-                    results_table.visible = False
-                    results_table.update()
-                    results_empty.visible = True
-                    trend_container.clear()
-                    trend_empty.visible = True
-                    render_exports()
-                    status.text = message
-                    ui.notify(message, type="negative")
+                    for i, x in enumerate(xs, 1):
+                        status.text = f"Computing {i}/{len(xs)} (trims can take several seconds)…"
+                        card = await run.cpu_bound(cg_card, "pt15", x, z, 30., pusher_input.value)
+                        cruise = card["trims"].get(22.)
+                        row = {"x": f"{1000*x:+.1f}",
+                               "sm": "no trim" if card["static_margin_22"] is None else f"{100*card['static_margin_22']:+.1f}",
+                               "hover": "—" if card["hover_max_rotor_fraction"] is None else f"{100*card['hover_max_rotor_fraction']:.0f}",
+                               "pusher": "no trim" if not cruise or "pusher_current_a" not in cruise else
+                               f"{100*cruise['pusher_command']:.0f} % · {cruise['pusher_current_a']:.1f} A"
+                               + (" !" if cruise["above_current_limit"] else "")}
+                        for speed, trim in card["trims"].items():
+                            row[f"de{int(speed)}"] = "no trim" if trim is None else f"{trim['elevator_deg']:+.1f}" + (" *" if trim["beyond_measured"] else "")
+                        rows.append(row)
+                        table.rows = list(rows)
+                        table.update()
+                    status.text = "Done. * beyond the measured ±15° elevator data; ! pusher above its current limit."
+                finally:
+                    run_button.enable()
 
 
 def create_app() -> None:
@@ -1696,6 +1717,19 @@ def create_app() -> None:
     if _pages_registered:
         return
     ui = _require_nicegui()
+    from nicegui import app as nicegui_app
+    nicegui_app.add_static_file(url_path="/embed-preview", local_file=Path(__file__).with_name("embed_preview.html"))
+    nicegui_app.add_static_files(url_path="/flight-deck-assets", local_directory=Path(__file__).with_name("assets"))
+    from .sitl_page import register_sitl_page
+    from .sitl_session import SITLManager
+    global _sitl_manager
+    if _sitl_manager is None:
+        _sitl_manager = SITLManager()
+    register_sitl_page(ui, _sitl_manager, _render_page_shell)
+    async def close_sitl():
+        import asyncio
+        await asyncio.to_thread(_sitl_manager.close)
+    nicegui_app.on_shutdown(close_sitl)
     _register_flight_deck_page(ui)
     _register_analyze_page(ui)
     _register_scenario_page(ui)
@@ -1705,9 +1739,15 @@ def create_app() -> None:
     _pages_registered = True
 
 
-def run_gui(*, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, reload: bool = False, show: bool = True) -> None:
+def run_gui(*, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, reload: bool = False, show: bool = True,
+            sitl_binary=None, sitl_python=None, sitl_port=19602, sitl_mavlink_port=16360) -> None:
     """Run the NiceGUI app."""
     ui = _require_nicegui()
+    global _sitl_manager
+    from .sitl_session import SITLManager
+    if not _pages_registered:
+        _sitl_manager = SITLManager(binary=sitl_binary, python=sitl_python,
+                                    port=sitl_port, mavlink_port=sitl_mavlink_port)
     create_app()
     ui.run(title="Spearhead Flight Dynamics Model", host=host, port=port, reload=reload, show=show)
 
@@ -1719,6 +1759,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help="port for the local GUI server")
     parser.add_argument("--reload", action="store_true", help="reload the GUI when source files change")
     parser.add_argument("--no-show", action="store_true", help="do not open a browser window automatically")
+    parser.add_argument("--sitl-binary", help="pinned ArduPlane 4.7.1 executable")
+    parser.add_argument("--sitl-python", help="Python with requirements-sitl installed; defaults to GUI Python")
+    parser.add_argument("--sitl-port", type=int, default=19602)
+    parser.add_argument("--sitl-mavlink-port", type=int, default=16360)
     return parser
 
 
@@ -1727,7 +1771,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
-        run_gui(host=args.host, port=args.port, reload=args.reload, show=not args.no_show)
+        run_gui(host=args.host, port=args.port, reload=args.reload, show=not args.no_show,
+                sitl_binary=args.sitl_binary, sitl_python=args.sitl_python,
+                sitl_port=args.sitl_port, sitl_mavlink_port=args.sitl_mavlink_port)
     except RuntimeError as exc:
         parser.exit(1, f"{exc}\n")
     return 0

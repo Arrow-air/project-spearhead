@@ -1,0 +1,8 @@
+id: adb_v1_1
+label: ADB v1.1 — original tail
+version: adb_v1.1
+geometry_version: preliminary_tail_chord_0.28m
+path: ../../../../docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv
+geometry:
+  tail_chord: 0.28
+  tail_area: 0.376

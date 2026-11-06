@@ -8,17 +8,19 @@ from pathlib import Path
 from .export import export_csv, export_json
 from .scenarios import load_scenario
 from .simulation import run_simulation
+from .aircraft import aircraft_options, aerodynamic_options, load_aircraft_config
 
 
 def _run(args: argparse.Namespace) -> int:
-    config = load_scenario(args.scenario)
+    params = None if args.aircraft is None else load_aircraft_config(args.aircraft)
+    config = load_scenario(args.scenario, params=params, aerodynamics=args.aerodynamics)
     result = run_simulation(config)
     if args.csv:
         export_csv(result, args.csv)
     if args.json:
         export_json(result, args.json)
 
-    print(f"{config.name}: success={result.success} samples={result.time.size}")
+    print(f"{config.name} [{config.params.aircraft_id}]: success={result.success} samples={result.time.size}")
     if not result.success:
         print(result.message)
         return 1
@@ -32,6 +34,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     run_parser = subparsers.add_parser("run", help="run a YAML simulation scenario")
     run_parser.add_argument("scenario", type=Path)
+    run_parser.add_argument("--aircraft", choices=list(aircraft_options()), help="override the scenario aircraft profile")
+    run_parser.add_argument("--aerodynamics", choices=list(aerodynamic_options()), help="override the aerodynamic dataset independently of hardware")
     run_parser.add_argument("--csv", type=Path, help="write CSV time-history output")
     run_parser.add_argument("--json", type=Path, help="write JSON time-history output")
     run_parser.set_defaults(func=_run)

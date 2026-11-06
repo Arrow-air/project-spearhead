@@ -10,6 +10,7 @@ from typing import Any, TextIO
 import numpy as np
 
 from .types import CGSweepResult, ModalAnalysisResult, StabilityResult
+from ..aircraft import aircraft_summary
 
 
 def _json_default(value: Any):
@@ -38,6 +39,7 @@ def stability_to_dict(result: StabilityResult) -> dict[str, Any]:
     """Return a JSON-serializable stability result summary."""
     return {
         "name": result.config.name,
+        "aircraft": aircraft_summary(result.config.params),
         "warning": result.warning,
         "cg_body_xyz": result.config.params.cg_body_xyz,
         "trim": {

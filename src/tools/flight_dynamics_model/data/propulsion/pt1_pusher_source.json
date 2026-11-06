@@ -1,0 +1,39 @@
+{
+  "retrieved": "2026-10-11",
+  "status": "provisional estimate; no installed APC/MAD bench test",
+  "user_confirmed_kv": 150,
+  "sources": {
+    "motor_product": "https://mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor?VariantsId=11016",
+    "motor_table": "https://cdn.shopify.com/s/files/1/0697/2293/1501/files/KV150-V8013IPE.webp?v=1722922466",
+    "esc_product": "https://mad-motor.com/products/mad-ampx-80a-5-14s-esc?VariantsId=11212",
+    "esc_manual": "https://ueeshop.ly200-cdn.com/u_file/UPAZ/UPAZ594/2407/04/file/AMPX80A5-14SV2Manual.pdf",
+    "propeller_product": "https://www.apcprop.com/product/20x12/",
+    "propeller_data": "https://www.apcprop.com/files/PER3_20x12.dat",
+    "propeller_method": "https://www.apcprop.com/technical-information/performance-data/"
+  },
+  "apc_version": "v2022-0915",
+  "apc_simulation_date": "2022-09-22",
+  "apc_density_reference_kg_m3": 1.225,
+  "motor_fit": {
+    "equation": "duty*V = rpm/Kv + R_equivalent*(Q/Kt + I0); Kt=60/(2*pi*Kv)",
+    "method": "least squares through origin for R, all 15 manufacturer rows; Kv=150, I0=2.35 fixed",
+    "equivalent_resistance_ohm": 0.1056886284068577,
+    "voltage_fit_rms_v": 0.2048491894849896,
+    "published_phase_resistance_ohm": 0.037,
+    "esc_efficiency_assumed": 0.97
+  },
+  "files": [
+    {
+      "path": "sources/PER3_20x12.dat",
+      "sha256": "d86a988072b594a3423e6905c633790daeeda1ea10095f44336ecaa2ff3a82f5"
+    },
+    {
+      "path": "sources/KV150-V8013IPE.webp",
+      "sha256": "af85f2a353de55bb8e0a699056a5f8f0f8c45cf550710a09ae03a8957b0f3c1d"
+    },
+    {
+      "path": "mad_v8013_150_bench.json",
+      "sha256": "1e89718f0e719003f3ebb62ae518a793e8d4e069d93071f13994b5c6ed89d097"
+    }
+  ]
+}

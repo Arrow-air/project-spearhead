@@ -1,0 +1,57 @@
+{
+  "reference": {
+    "rho_kg_m3": 1.021,
+    "speed_m_s": 25,
+    "moment_center_body_xyz_m": [
+      0,
+      0,
+      0
+    ]
+  },
+  "grid_points": 32761,
+  "comparison": [
+    {
+      "alpha_deg": -5,
+      "beta_deg": 0,
+      "old_cl": -0.0531,
+      "new_cl": -0.098,
+      "old_cd": 0.034,
+      "new_cd": 0.0427,
+      "old_pitch_moment_at_origin_nm": -16.441246594375,
+      "new_pitch_moment_at_origin_nm": -15.475564374374995
+    },
+    {
+      "alpha_deg": 0,
+      "beta_deg": 0,
+      "old_cl": 0.3759,
+      "new_cl": 0.3587,
+      "old_cd": 0.0343,
+      "new_cd": 0.0426,
+      "old_pitch_moment_at_origin_nm": -35.698797573437496,
+      "new_pitch_moment_at_origin_nm": -13.212131489687497
+    },
+    {
+      "alpha_deg": 5,
+      "beta_deg": 0,
+      "old_cl": 0.7976,
+      "new_cl": 0.8173,
+      "old_cd": 0.0612,
+      "new_cd": 0.0729,
+      "old_pitch_moment_at_origin_nm": -46.75812806921874,
+      "new_pitch_moment_at_origin_nm": -5.000607535937498
+    }
+  ],
+  "new_trim": {
+    "alpha_deg": -0.5567998377069237,
+    "theta_deg": 19.999999999999996,
+    "de_deg": 4.999999999999999,
+    "throttle": 0.9174437406969201
+  },
+  "new_trim_success": false,
+  "new_trim_residuals": [
+    5.684341886080802e-16,
+    1.826670594446291,
+    1.7892042861942379,
+    0.35878384084142173
+  ]
+}
