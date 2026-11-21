@@ -47,7 +47,7 @@ Loads use body axes, x forward and z down, about the wing quarter-chord origin. 
 
 ### Case Results
 
-The [full case results](assets/results.csv) contain case inputs, total forces and moments, component loads, averaging windows and achieved disk thrust.
+The [case results](assets/results.csv) contain case inputs, total forces and moments, component loads, averaging windows and achieved disk thrust.
 
 At 22 m/s, alpha = 2 deg and neutral elevator:
 
@@ -86,4 +86,4 @@ Near this condition, a 10 mm forward CG shift adds about 2.45 N m of nose-down m
 - Thrust checks on the current tail give about 0.4 N m/N at 22 m/s, alpha 2 deg (X002 versus P005), and 1.0 N m/N at 17 m/s, alpha 4 deg (X001_retry versus P017), using My about the origin and achieved thrust. Lower thrust gives more nose-down moment. Extrapolating the 22 m/s sensitivity from 30 N to 17 to 22 N gives roughly 0.6 to 1.0 deg of incidence equivalent; this estimate needs a case with thrust matched to drag.
 - The -2 deg cases at 22 and 25 m/s (P029, P014 and P015) ran for 400 iterations. The -4 deg baseline at 22 m/s, alpha 2 deg shifted 2.6 N m between 400 and 800 iterations (P002 versus P025), equivalent to about 0.5 deg of incidence. The trim estimate retains this convergence uncertainty.
 - P001 and P003 in the CG plot achieved 26.6 and 26.5 N of disk thrust. The beta = 5 deg cases P034 and P035 achieved 26.1 and 22.4 N. These fall below the 27 to 30 N range accepted in note 0003 and introduce thrust variation into the comparisons.
-- Follow-up work includes 800-iteration repeats of the -2 deg cases at 22 and 25 m/s and a cruise case with thrust matched to drag. The final incidence setting and aerodynamic database update remain to be confirmed.
+- Follow-up work includes 800-iteration repeats of the -2 deg cases at 22 and 25 m/s and a cruise case with thrust matched to drag. The final tail incidence remains to be confirmed before rerunning the aerodynamic database at that setting.
