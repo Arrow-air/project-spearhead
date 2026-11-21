@@ -68,7 +68,7 @@ The deflection cases are delivered as direct CFD results, with the same mesh set
 
 ### 5. Coefficient Output Preparation
 
-The dense surrogate output was then processed with Nondimit in the same way as the preliminary design aerodynamic database, with three differences. The moment reference center is (-0.10 m, 0 m, 0.15 m), instead of (-0.15 m, 0 m, 0.15 m). The reference density is the run condition of the new simulation file, 1.021 kg/m^3, instead of 1.09 kg/m^3. "Fy", "Mx", and "Mz" are set to zero at beta = 0 deg to remove the small asymmetry left by the surrogate.
+The dense surrogate output was then processed with Nondimit in the same way as the preliminary design aerodynamic database, with three differences. The moment reference center is (-0.10 m, 0 m, 0.15 m), instead of (-0.15 m, 0 m, 0.15 m). The reference density is the run condition of the new simulation file, 1.092 kg/m^3, instead of 1.09 kg/m^3. "Fy", "Mx", and "Mz" are set to zero at beta = 0 deg to remove the small asymmetry left by the surrogate.
 
 The wind-frame drag multiplier of 1.3 for omitted drag-producing components was applied as in the preliminary design aerodynamic database, to the wind-frame drag component "D" only, and the corrected drag vector was projected back into body axes.
 
@@ -127,15 +127,15 @@ The coefficient table is organized by alpha and beta in degrees. The delivered c
 
 | Reference | Symbol | Value |
 |-----------|--------|-------|
-| Air density | $$\rho$$ | 1.021 kg/m^3 |
+| Air density | $$\rho$$ | 1.092 kg/m^3 |
 | Reference velocity | $$V$$ | 25 m/s |
-| Dynamic pressure | $$q = 0.5 \rho V^{2}$$ | 319.0625 Pa |
+| Dynamic pressure | $$q = 0.5 \rho V^{2}$$ | 341.25 Pa |
 | Reference area | $$S$$ | 1.805 m^2 |
 | Reference span | $$b$$ | 3.95 m |
 | Reference chord | $$c$$ | 0.457 m |
-| Force denominator | $$qS$$ | 575.9078 N |
-| Roll and yaw moment denominator | $$qSb$$ | 2274.8358 N m |
-| Pitch moment denominator | $$qSc$$ | 263.1899 N m |
+| Force denominator | $$qS$$ | 615.9563 N |
+| Roll and yaw moment denominator | $$qSb$$ | 2433.0272 N m |
+| Pitch moment denominator | $$qSc$$ | 281.4920 N m |
 | Moment reference center, body x y z | $$(x_m, y_m, z_m)$$ | -0.10 m, 0 m, 0.15 m |
 
 The density value corresponds to the run condition of the simulation file.
