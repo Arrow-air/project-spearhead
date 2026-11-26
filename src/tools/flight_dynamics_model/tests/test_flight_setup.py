@@ -26,9 +26,10 @@ def test_prototype_forward_start_solves_actual_trim_with_requested_actuators(tmp
     residual = dynamics(0, physics.state, physics.params, trim)
     np.testing.assert_allclose(residual[[2, 3, 4, 5, 9, 10, 11]], 0, atol=1e-6)
     assert np.linalg.norm(physics.state[3:6]) == pytest.approx(speed)
-    assert physics.params.mass == 21 and mapping.lift == ()
+    assert physics.params.mass == 22 and mapping.lift == ()
     assert physics.params.control_surface_limits_deg == (30, 30, 30)
-    assert (mapping.pusher.minimum, mapping.pusher.maximum) == (1050, 1940)
+    # AMPX factory range 1050-1940 us with the 45 % output limit at 1450 us.
+    assert (mapping.pusher.minimum, mapping.pusher.maximum) == (1050, 1450)
     params = prototype_forward_parameters(mapping, physics.state, trim)
     baseline = transition_parameters("first_transition_2026_10_09")
     for key in baseline:
@@ -100,7 +101,7 @@ def test_custom_hover_reaches_physics_and_manifest(tmp_path):
     path.write_text(yaml.safe_dump(config))
     physics, _, manifest = load_setup(path)
     assert physics.state[2] == -32
-    assert physics.params.mass == 21
+    assert physics.params.mass == 22
     assert manifest["config"]["altitude_m"] == 32
 
 

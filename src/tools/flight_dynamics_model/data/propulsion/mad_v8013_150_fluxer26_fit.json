@@ -1,0 +1,173 @@
+{
+  "source": "mad_v8013_150_fluxer26_source.json",
+  "source_sha256": "87be77090a2f5223b69bcaaf4ca1312e027c4ac6ac3323c6e7fca543e87b9713",
+  "curve": "mad_v8013_150_fluxer26_rho1021.csv",
+  "curve_sha256": "a2c82ff388d7b5bf6dae04248d4bf8f0063c297e8c71abfa1084027504632025",
+  "target_density_kg_m3": 1.021,
+  "test_density_kg_m3": 1.184,
+  "voltages_v": [
+    36.0,
+    40.0,
+    42.0,
+    44.4,
+    48.0,
+    50.4
+  ],
+  "throttles": [
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95,
+    1.0
+  ],
+  "equations": "The manufacturer sheet (`data/propulsion/mad_v8013_150_fluxer26_source.json`)\ngives one 48 V throttle sweep at sea level and 25 C. The FDM lift lookup takes\nbattery voltage and throttle and applies no density correction, so this script\nrebuilds the curve at the profile density (1.021 kg/m^3, Ankara hot day) over a\nbattery-voltage grid:",
+  "kv_rpm_per_v": 150.0,
+  "esc_efficiency_assumed": 0.97,
+  "equivalent_resistance_ohm": 0.11088319355266425,
+  "no_load_current_a": 2.4224957204671203,
+  "ct_vs_rpm_polyfit": [
+    2.7930231998057763e-06,
+    0.05834211981565929
+  ],
+  "cq_vs_rpm_polyfit": [
+    1.0860303196671233e-07,
+    0.0028852662178919615
+  ],
+  "coefficient_rpm_range": [
+    2039.0,
+    5686.0
+  ],
+  "max_abs_error_vs_sheet": {
+    "thrust_error": 0.050134785392735526,
+    "current_error": 0.07532590650599646,
+    "rpm_error": 0.020498313378271016,
+    "torque_error": 0.0571775163801963
+  },
+  "validation_rows": [
+    {
+      "throttle": 0.3,
+      "thrust_error": -0.03812237470440605,
+      "current_error": -0.07532590650599646,
+      "rpm_error": -0.020498313378271016,
+      "torque_error": -0.0571775163801963
+    },
+    {
+      "throttle": 0.35,
+      "thrust_error": 0.0007836460157490954,
+      "current_error": -0.033685150032011335,
+      "rpm_error": -0.007692530533502162,
+      "torque_error": -0.016477302675087846
+    },
+    {
+      "throttle": 0.4,
+      "thrust_error": -0.011060268590825317,
+      "current_error": 0.003745416118320799,
+      "rpm_error": 0.0035768567738361234,
+      "torque_error": -0.0023988102041750947
+    },
+    {
+      "throttle": 0.45,
+      "thrust_error": 0.03232820157056371,
+      "current_error": 0.05255028026706188,
+      "rpm_error": 0.012700406989599067,
+      "torque_error": 0.03333531047853677
+    },
+    {
+      "throttle": 0.5,
+      "thrust_error": 0.009635635547631471,
+      "current_error": 0.03504917122926332,
+      "rpm_error": 0.005570380021625132,
+      "torque_error": 0.0046032671420506155
+    },
+    {
+      "throttle": 0.55,
+      "thrust_error": -0.009175376426963866,
+      "current_error": 0.023239188921303056,
+      "rpm_error": -0.0071467822171505935,
+      "torque_error": -0.005142449667165927
+    },
+    {
+      "throttle": 0.6,
+      "thrust_error": -0.039005589140493235,
+      "current_error": 0.017203406177316527,
+      "rpm_error": -0.014849469158616069,
+      "torque_error": -0.012050716384123583
+    },
+    {
+      "throttle": 0.65,
+      "thrust_error": -0.019844877315245202,
+      "current_error": 0.022122014074555274,
+      "rpm_error": -0.015612323185149601,
+      "torque_error": -0.007582831728481398
+    },
+    {
+      "throttle": 0.7,
+      "thrust_error": -0.03256658408165258,
+      "current_error": 0.015939717642056594,
+      "rpm_error": -0.01371554376040518,
+      "torque_error": -0.01712687215849029
+    },
+    {
+      "throttle": 0.75,
+      "thrust_error": -0.050134785392735526,
+      "current_error": 0.00025602527287604815,
+      "rpm_error": -0.007091454417823995,
+      "torque_error": -0.038405333933623664
+    },
+    {
+      "throttle": 0.8,
+      "thrust_error": 0.000383921168447543,
+      "current_error": 0.041209782139210116,
+      "rpm_error": -0.008897253269369854,
+      "torque_error": 0.0010810572054822387
+    },
+    {
+      "throttle": 0.85,
+      "thrust_error": -0.010897833656407507,
+      "current_error": 0.027212696547754156,
+      "rpm_error": -0.005897154389760462,
+      "torque_error": -0.013435647843901055
+    },
+    {
+      "throttle": 0.9,
+      "thrust_error": -0.024088622449160546,
+      "current_error": 0.006887035370154226,
+      "rpm_error": -0.0018279971166583753,
+      "torque_error": -0.026012032225395942
+    },
+    {
+      "throttle": 0.95,
+      "thrust_error": 0.00449353856229906,
+      "current_error": 0.01759964353060184,
+      "rpm_error": -0.00017739423521823117,
+      "torque_error": -0.012214737680344423
+    },
+    {
+      "throttle": 1.0,
+      "thrust_error": -0.0007969573376712669,
+      "current_error": -0.01245184554589518,
+      "rpm_error": -0.008535921671517732,
+      "torque_error": -0.017522289919201017
+    }
+  ],
+  "limitations": [
+    "One manufacturer sweep at 48 V; other voltages come from the motor model.",
+    "Static thrust only: no inflow, ground effect, rotor-speed dynamics or thermal limits.",
+    "Rows below 30 % throttle are model extrapolation (basis model_below_sheet).",
+    "Sheet is for the V8013 IPE edition; installed PRO edition to be confirmed.",
+    "No installed bench test yet; the curve is a provisional surrogate."
+  ]
+}

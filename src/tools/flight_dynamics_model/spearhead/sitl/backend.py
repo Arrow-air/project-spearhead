@@ -48,6 +48,21 @@ def verify_firmware(path):
             "identity": expected.decode(), "binary_sha256": sha256(path)}
 
 
+def check_pusher_endpoints(channel, system):
+    """The pusher channel endpoints must reproduce the profile's ESC range and output limit.
+
+    The FDM normalizes pusher PWM over the channel's minimum..maximum and scales it by
+    the profile's output limit, so the channel maximum must be the limited endpoint.
+    """
+    if system is None or "pwm_range_us" not in system.esc:
+        return
+    low, high = system.esc["pwm_range_us"]
+    expected = low+system.output_limit*(high-low)
+    if channel.minimum != low or abs(channel.maximum-expected) > 1:
+        raise ValueError(f"Pusher channel must span {low}-{expected:.0f} us (ESC {low}-{high} us, "
+                         f"output limit {system.output_limit:.0%}); got {channel.minimum}-{channel.maximum} us")
+
+
 def load_setup(path=None):
     path = Path(path or CONFIG_ROOT / "fixed_wing_new.yaml").resolve()
     config = yaml.safe_load(path.read_text())
@@ -60,7 +75,7 @@ def load_setup(path=None):
     cg = np.asarray(config["cg_body_xyz_m"], dtype=float)
     if cg.shape != (3,) or not np.isfinite(cg).all():
         raise ValueError("CG must contain three finite values")
-    # Optional pusher option of the profile (PT1.5: "mad" or "kde"); default is the profile's choice.
+    # Optional pusher option of the profile; default is the profile's selected option.
     params = replace(load_aircraft_config(config["aircraft"], aerodynamics=DATASET, pusher=config.get("pusher")),
                      cg_body_xyz=cg)
     if (not params.use_aero_database or params.deflection_database_path is None
@@ -72,6 +87,7 @@ def load_setup(path=None):
         raise ValueError("Configure all four conventional actuator mappings explicitly")
     mapping = ActuatorMap(**{k: tuple(Channel(**item) for item in v) if k == "lift" else Channel(**v)
                              for k, v in channels.items()})
+    check_pusher_endpoints(mapping.pusher, params.pusher_system)
     policy = config.get("control_deflection_policy", "hold")
     if policy not in ("hold", "linear"):
         raise ValueError("Control deflection policy must be hold or linear")

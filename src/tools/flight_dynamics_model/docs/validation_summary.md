@@ -1,7 +1,9 @@
 # Validation summary
 
-**15 October 2026 · provisional engineering baseline.** What has been checked, with which
-result, and what is not validated. Engineering conclusions for PT1.5 are in
+**21 November 2026 · provisional engineering baseline.** What has been checked, with which
+result, and what is not validated. The PT1.5 hardware changed on 21 November (MAD lift units,
+HOBBYWING pusher; see the [hardware update](update_2026_11_21.md)). Engineering conclusions for
+the earlier 21 kg KDE configuration are in
 [Flight Dynamics note 0003](../../../../docs/information-note/phase-1/Flight-Dynamics/0003-PT1-5-Hover-and-Fixed-Wing-Assessment/information-note.md);
 the model itself is described in the [model reference](model_reference.md).
 
@@ -9,41 +11,43 @@ the model itself is described in the [model reference](model_reference.md).
 
 - ArduPlane 4.7.1 (`dbe79216`) in JSON SITL lockstep with the FDM; normal arming, frozen gains
   (PT1 logged VTOL gains, 9 October fixed-wing proposal), Ankara home (1125 m above sea level).
-- PT1.5 (`pt15`): 21 kg, KDE lift rotors at the 14 October drawing stations, MAD 150KV pusher
-  estimate (KDE5215XF-220 pusher as an option) with the 20×12 propeller, proposed ±30° surface
-  travel, October AeroDB at 1.021 kg/m³.
+- PT1.5 (`pt15`): 22 kg; MAD V8013 150KV / AMPX 80A / FLUXER PRO 26×7.8 lift units at the
+  14 October drawing stations; HOBBYWING 5230SL 380KV / AMPX 80A / APC 20×12 pusher limited to
+  45 % of the ESC range (`SERVO3_MAX` 1450 µs); proposed ±30° surface travel; October AeroDB at
+  1.021 kg/m³.
 - Simulation CG (−0.040, 0, +0.065) m: the target inside the 22 m/s window, not a measurement.
-  PT1.5 without ballast is estimated at about −0.08 m.
+  PT1.5 without ballast is estimated at about −0.085 m.
 
 ## Trim at the target CG
 
-| TAS | Alpha | Elevator | Pusher command | Pusher current | Max real part, longitudinal |
+| TAS | Alpha | Elevator | Pusher command | Pusher current | Phugoid real part |
 |---|---:|---:|---:|---:|---:|
-| 20 m/s | 2.54° | −21.1° | 77 % | 15.0 A | −0.052 |
-| 22 m/s | 1.49° | −18.2° | 83 % | 18.0 A | −0.062 |
-| 24 m/s | 0.70° | −15.8° | 90 % | 21.8 A | −0.073 |
-| 26 m/s | 0.08° | −14.6° | 96 % | 26.3 A | −0.090 |
+| 20 m/s | 2.83° | −21.3° | 71 % | 15.9 A | −0.045 |
+| 22 m/s | 1.73° | −18.4° | 76 % | 18.9 A | −0.056 |
+| 24 m/s | 0.90° | −16.0° | 82 % | 22.8 A | −0.067 |
+| 26 m/s | 0.25° | −14.7° | 88 % | 27.4 A | −0.081 |
+| 28 m/s | −0.26° | −14.2° | 94 % | 32.7 A | −0.085 |
 
-All four meet the six-axis trim and level-flight residual checks. Elevator trim is beyond the
-measured ±15° at every stable CG (linear extrapolation until the AQ-12 cases arrive), and above
-about 24 m/s the MAD pusher exceeds its 24 A sustainable current.
+All five meet the six-axis trim and level-flight residual checks. The pusher command is a
+percentage of the limited range (100 % = 1450 µs = 45 % of the ESC range). Elevator trim is beyond
+the measured ±15° up to 24 m/s (linear extrapolation until the AQ-12 cases arrive). The spiral
+mode stays mildly divergent (about +0.08 1/s), as before.
 
-With the KDE5215XF-220 pusher the attitude and elevator are the same; the command and current
-change:
+## Checks, 21 November hardware
 
-| TAS | Pusher command | Pusher current |
-|---|---:|---:|
-| 20 m/s | 62 % | 15.5 A |
-| 22 m/s | 69 % | 18.7 A |
-| 24 m/s | 76 % | 22.9 A |
-| 26 m/s | 85 % | 28.0 A |
-| 28 m/s | 95 % | 33.7 A |
+| Check | Result |
+|---|---|
+| Model tests | 572 passed (1 skipped: PT1 DataFlash sample not in the repository) |
+| Lift curve against the MAD sheet | Thrust within 5 %, current within 7.5 %, RPM within 2 % at 48 V and sea level |
+| Pusher fit against the HOBBYWING sheet | Duty within 4.8 % of throttle, battery current RMS 2.3 %, up to 80 A |
+| Hover hold, calm | Passed: 60 s free flight, max tilt 0.57°, settled altitude error 0.68 m; lift PWM 1629–1651 µs; lift pack 79 A at 45.7–46.6 V; QHOVER drift 72 m (no position hold) |
+| Hover → FBWA, 9 October parameters | Passed: 32.4 s sustained FBWA without lift, 26.0 m/s, peak pitch 1.4°, altitude loss 0.4 m; pusher up to 90 % of the limited range, 33 A and 55 N |
+| 22 m/s FBWA hold, 60 s | Passed: speed 21.94–22.04 m/s, altitude within 0.74 m, attitude RMS error below 0.05°; pusher at 76 % (1354 µs) and 18.7 A; firmware VFR_HUD throttle 76 % |
 
-The KDE option trims to 28 m/s, where the MAD option has no trim, and stays below the 44 A
-180 s motor rating; KDE publishes no continuous rating, and it draws slightly more current than
-the MAD motor for the same thrust.
+Not yet repeated with the new hardware: wind and gust hover, hover and forward doublets, lift
+motor failure, forward → hover and ground start.
 
-## Checks
+## Checks, October baseline (21 kg, KDE lift; superseded hardware)
 
 | Check | Result |
 |---|---|
@@ -62,9 +66,8 @@ the MAD motor for the same thrust.
 | Lift-pack telemetry | The firmware read 46.6 V and 83 A in hover with a temporary `BATT_MONITOR = 4` overlay |
 | Speed | About 0.3× real time on a two-core cloud machine running several simulations or a build at once |
 
-Rows without a pusher named use the MAD pusher. Recordings made before 14 October used the former rotor rectangle and CG and do not validate
-the current geometry. Forward → hover and ground-start runs were not repeated after the drawing
-update.
+Rows without a pusher named used the MAD pusher. Recordings made before 14 October used the
+former rotor rectangle and CG and do not validate the current geometry.
 
 ## Physical consistency review
 
@@ -86,8 +89,9 @@ Checked against the September aerodynamic questions, the delivery specification 
 
 ## Not validated
 
-- Measured PT1.5 mass, CG and inertia; the pusher motor, propeller and mount height; servo and PWM
-  calibration and the ±30° travel; the V-tail mixer outputs.
+- Measured PT1.5 mass, CG and inertia; lift and pusher bench data with the installed propellers;
+  the pusher mount height; servo and ESC PWM calibration and the ±30° travel; the V-tail mixer
+  outputs.
 - Sparse control and sideslip coverage, provisional rate damping, the low-speed aerodynamic data.
 - Rotor inflow, propwash, ground effect, actuator dynamics, battery sag on thrust, detailed wind.
 - Any physical flight envelope. Simulation passes support test planning; they are not flight

@@ -987,7 +987,7 @@ def register_sitl_page(ui, manager, render_shell):
             speed.min = 0 if hover_setup else 22
             speed.max = 26 if prototype_forward else 30
             duration.min = MIN_DURATION.get(maneuver.value, 15)
-            setup_hint.text = ("Air-start hover · KDE lift · selected pusher motor with the 20×12 propeller estimate." if hover_setup else
+            setup_hint.text = ("Air-start hover · MAD lift · selected pusher motor with the 20×12 propeller estimate." if hover_setup else
                                "Air-start at six-axis trim · provisional pusher · Spearhead hover awaits MAD performance data.")
             if prototype_forward:
                 setup_hint.text = "PT1.5 forward air start at computed six-axis trim for the selected speed and simulation CG. ±30° proposed travel; frozen forward parameters. Lift motors remain off; fixed-wing modes are available. Physical CG is unconfirmed."
@@ -1063,7 +1063,7 @@ def register_sitl_page(ui, manager, render_shell):
             if forward_mode:
                 mode_help.text += " PT1.5 electric pusher is estimated; forward-flight results depend on the simulation CG."
             mass = manifest.get("aircraft", {}).get("mass_kg", 21)
-            mode_scope.text = (f"PT1.5 Quad-X · {mass:g} kg · four KDE lift motors · neutral pilot sticks" if 18 in mode_options else
+            mode_scope.text = (f"PT1.5 Quad-X · {mass:g} kg · four MAD lift motors · neutral pilot sticks" if 18 in mode_options else
                                f"PT1.5 fixed-wing · {mass:g} kg · lift motors off · neutral pilot sticks" if displayed_aircraft.get("id") == "pt15" else
                                "Fixed-wing reference aircraft · neutral pilot sticks")
             mode_limits.text = ("PT1.5 pusher: simulation estimate; physical motor and thrust-line placement are not finalized. CG and inertia remain unconfirmed. Servo travel is proposed at ±30°, with uncalibrated linkage. Earlier forward-CG passes used ±20° travel. "

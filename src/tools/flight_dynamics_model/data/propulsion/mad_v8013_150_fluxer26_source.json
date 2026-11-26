@@ -1,0 +1,71 @@
+{
+  "retrieved": "2026-11-21",
+  "manufacturer": "MAD Components",
+  "sources": {
+    "motor_product": "https://mad-motor.com/products/v8013-pro-ipe-vtol-drone-motor?VariantsId=11016",
+    "esc_product": "https://mad-motor.com/products/mad-ampx-80a-5-14s-esc?VariantsId=11212",
+    "esc_manual": "https://ueeshop.ly200-cdn.com/u_file/UPAZ/UPAZ594/2407/04/file/AMPX80A5-14SV2Manual.pdf",
+    "propeller_product": "https://mad-motor.com/products/fluxer-matt-pro-26x78-inch?VariantsId=10133",
+    "test_sheet": "https://cdn.shopify.com/s/files/1/0697/2293/1501/files/KV150-V8013IPE.webp?v=1722922466"
+  },
+  "source_file": "sources/KV150-V8013IPE.webp",
+  "source_file_sha256": "af85f2a353de55bb8e0a699056a5f8f0f8c45cf550710a09ae03a8957b0f3c1d",
+  "combination": "MAD V8013 IPE 150KV + MAD FLUXER PRO 26x7.8 MATT + MAD AMPX 80A (5-14S), 12S",
+  "conditions": "Manufacturer reference/theoretical values: input voltage 48 V, 25 C, sea level; rotational speed set by throttle.",
+  "test_density_kg_m3": 1.184,
+  "test_density_note": "Dry air at 101325 Pa and 25 C (sheet states sea level and 25 C).",
+  "edition_note": "The sheet is for the IPE edition; the purchased motor is listed as V8013 PRO. Confirm the installed edition.",
+  "specifications": {
+    "kv_rpm_per_v": 150,
+    "no_load_current_a": 2.35,
+    "no_load_test_voltage_v": 30,
+    "phase_resistance_ohm": 0.037,
+    "motor_mass_kg": 0.544,
+    "max_current_a": 77.8,
+    "max_power_w": 3569,
+    "max_thrust_kgf": 15,
+    "max_torque_nm": 4.67,
+    "recommended_propeller": "26x7.8",
+    "recommended_esc": "MAD AMPX 80A (5-14S)",
+    "single_rotor_takeoff_weight_kg": [4.5, 6.5],
+    "sustainable_battery_current_a": 24,
+    "short_term_battery_current_a": 78,
+    "short_term_duration_s": [10, 30]
+  },
+  "esc_specifications": {
+    "model": "MAD AMPX 80A (5-14S)",
+    "continuous_current_a": 80,
+    "continuous_current_note": "Requires good heat dissipation",
+    "voltage_cells": [5, 14],
+    "mass_kg_without_wires": 0.090,
+    "pwm_range_us_default": [1050, 1940],
+    "pwm_range_note": "Factory default; throttle calibration supported.",
+    "thermal_derating": "Above 125 C power reduced to minimum 50 %; above 140 C output off"
+  },
+  "propeller_specifications": {
+    "model": "MAD FLUXER PRO 26x7.8 MATT",
+    "diameter_in": 26.0,
+    "pitch_in": 7.8,
+    "blades": 2,
+    "mass_kg": 0.069,
+    "mass_source": "https://rcdrone.top/products/src-mad-363-26x7-8-inch-fluxer-pro-matt-carbon-fiber-propeller (reseller listing, 69 g)"
+  },
+  "columns": ["throttle", "voltage_v", "current_a", "input_power_w", "output_power_w", "torque_nm", "rpm", "thrust_gf", "efficiency_percent", "efficiency_gf_per_w"],
+  "samples": [
+    [0.30, 48.25, 3.50, 168.9, 115.9, 0.543, 2039, 1694, 68.6, 10.0],
+    [0.35, 48.21, 4.96, 239.1, 171.4, 0.703, 2328, 2204, 71.7, 9.2],
+    [0.40, 48.14, 6.77, 325.9, 244.7, 0.897, 2605, 2894, 75.1, 8.9],
+    [0.45, 48.07, 8.83, 424.5, 326.7, 1.085, 2875, 3482, 77.0, 8.2],
+    [0.50, 47.98, 11.91, 571.4, 454.0, 1.362, 3183, 4355, 79.5, 7.6],
+    [0.55, 47.87, 15.57, 745.3, 603.4, 1.643, 3507, 5313, 81.0, 7.1],
+    [0.60, 47.73, 19.79, 944.6, 774.6, 1.941, 3811, 6440, 82.0, 6.8],
+    [0.65, 47.59, 24.43, 1162.6, 955.9, 2.235, 4084, 7318, 82.2, 6.3],
+    [0.70, 47.41, 29.96, 1420.4, 1169.2, 2.575, 4336, 8476, 82.3, 6.0],
+    [0.75, 47.21, 36.55, 1725.5, 1417.3, 2.970, 4557, 9759, 82.1, 5.7],
+    [0.80, 47.03, 41.69, 1960.7, 1608.7, 3.193, 4811, 10389, 82.0, 5.3],
+    [0.85, 46.78, 49.50, 2315.6, 1889.6, 3.588, 5029, 11655, 81.6, 5.0],
+    [0.90, 46.48, 58.47, 2717.7, 2184.3, 3.989, 5229, 12985, 80.4, 4.8],
+    [0.95, 46.23, 66.53, 3075.7, 2448.6, 4.299, 5439, 13809, 79.6, 4.5],
+    [1.00, 45.85, 77.83, 3568.5, 2783.1, 4.674, 5686, 15032, 78.0, 4.2]
+  ]
+}

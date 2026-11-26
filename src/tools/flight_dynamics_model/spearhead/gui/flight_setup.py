@@ -5,7 +5,7 @@ import math
 
 import yaml
 
-from ..aircraft import pusher_options
+from ..aircraft import pusher_options, selected_pusher_option
 from ..sitl.backend import CONFIG_ROOT
 from ..sitl import failures as failure_model
 
@@ -55,8 +55,9 @@ FAILURES = {
     "pusher_out": "Pusher cut",
     "battery_low": "Low battery (awaits BATT parameter approval)",
 }
-# Pusher motor options of the PT1.5 profile (MAD V8013 150KV or KDE5215XF-220, both with the 20x12 propeller).
+# Pusher motor options of the PT1.5 profile (HOBBYWING 5230SL 380KV with the APC 20x12 since 21 November 2026).
 PUSHERS = pusher_options("pt15")
+DEFAULT_PUSHER = selected_pusher_option("pt15")
 # A gust reaches its peak 1.5 s after it starts; same direction as the steady wind.
 GUST_START_S, GUST_DURATION_S = 20., 3.
 TRANSITION_PARAMETERS = {
@@ -92,7 +93,7 @@ class FlightSetup:
     gust_m_s: float = 0
     failure: str = "none"
     failure_time_s: float = 20
-    pusher: str = "mad"
+    pusher: str = DEFAULT_PUSHER
 
     def validate(self):
         if self.aircraft not in AIRCRAFT or self.initial_point not in POINTS[self.aircraft]:

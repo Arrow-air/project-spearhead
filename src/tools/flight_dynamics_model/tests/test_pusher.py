@@ -21,15 +21,20 @@ def pt1():
 
 
 def test_motor_fit_matches_manufacturer_operating_points(pt1):
-    source = json.loads((AIRCRAFT_CONFIGS.parent / "data/propulsion/mad_v8013_150_bench.json").read_text())
-    samples = np.asarray(source["samples"])
-    duty, voltage, _, torque, rpm = samples.T
-    kt = 60/(2*np.pi*150)
-    winding_current = torque/kt+2.35
-    required_voltage = rpm/150+pt1.pusher_system.equivalent_resistance_ohm*winding_current
-    # Fit checked against all 15 points, not the much larger 26-inch prop thrust.
-    assert np.sqrt(np.mean((required_voltage-duty*voltage)**2)) < .21
-    assert np.max(abs(required_voltage-duty*voltage)) < .6
+    source = json.loads((AIRCRAFT_CONFIGS.parent / "data/propulsion/hobbywing_5230sl_380_source.json").read_text())
+    samples = np.vstack([np.asarray(table["samples"]) for table in source["tables"].values()])
+    throttle, _, current, _, rpm, torque = samples.T
+    used = current <= 80
+    kv = pt1.pusher_system.motor["kv_rpm_per_v"]
+    kt = 60/(2*np.pi*kv)
+    winding_current = torque/kt+pt1.pusher_system.motor["no_load_current_a"]
+    required_voltage = rpm/kv+pt1.pusher_system.equivalent_resistance_ohm*winding_current
+    error = (required_voltage-throttle*source["test_voltage_v"])[used]
+    # Within 2.5 % rms and 5 % of the 29.6 V test voltage over the AMPX range.
+    assert np.sqrt(np.mean(error**2)) < .75 and np.max(abs(error)) < 1.5
+    metadata = json.loads((AIRCRAFT_CONFIGS.parent / "data/propulsion/hobbywing_5230sl_380_pusher_fit.json").read_text())
+    path = AIRCRAFT_CONFIGS.parent / "data/propulsion" / metadata["source"]
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == metadata["source_sha256"]
     metadata = json.loads((AIRCRAFT_CONFIGS.parent / "data/propulsion/pt1_pusher_source.json").read_text())
     for source in metadata["files"]:
         path = AIRCRAFT_CONFIGS.parent / "data/propulsion" / source["path"]
@@ -52,24 +57,30 @@ def test_apc_coefficients_reconstruct_published_dimensional_units(pt1):
 def test_estimate_respects_voltage_torque_and_energy_balance(pt1, speed):
     system = pt1.pusher_system
     sample = estimate_pusher(system, 44.4, .85, speed, 1.021)
-    kt = 60/(2*np.pi*150)
-    winding_current = sample["torque_nm"]/kt+2.35
-    assert sample["rpm"]/150+winding_current*system.equivalent_resistance_ohm == pytest.approx(.85*44.4)
+    kv = system.motor["kv_rpm_per_v"]
+    kt = 60/(2*np.pi*kv)
+    duty = .85*system.output_limit
+    winding_current = sample["torque_nm"]/kt+system.motor["no_load_current_a"]
+    assert sample["rpm"]/kv+winding_current*system.equivalent_resistance_ohm == pytest.approx(duty*44.4)
+    assert sample["effective_duty"] == pytest.approx(duty)
     assert sample["power_w"] == pytest.approx(sample["current_a"]*44.4)
     assert sample["shaft_power_w"] == pytest.approx(sample["torque_nm"]*sample["rpm"]*2*np.pi/60)
     assert 0 < sample["shaft_power_w"] < sample["power_w"]
-    assert sample["rpm"] < .85*44.4*150
+    assert sample["rpm"] < duty*44.4*kv
     assert not sample["outside_propeller_data"]
     json.dumps(sample)  # Telemetry needs native JSON types.
 
 
 def test_maximum_limits_and_sustainable_guideline_are_distinct(pt1):
     sample = estimate_pusher(pt1.pusher_system, 44.4, 1, 0, 1.021)
+    assert not sample["above_sustainable_current"] and not sample["limited"]
+    guideline = replace(pt1.pusher_system, sustainable_current_a=24)
+    sample = estimate_pusher(guideline, 44.4, 1, 0, 1.021)
     assert sample["above_sustainable_current"] and not sample["limited"]
-    constrained = replace(pt1.pusher_system, max_current_a=24)
+    constrained = replace(pt1.pusher_system, max_current_a=24, sustainable_current_a=24)
     sample = estimate_pusher(constrained, 44.4, 1, 10, 1.021)
     assert sample["current_a"] == pytest.approx(24)
-    assert sample["limited"] and sample["effective_duty"] < 1
+    assert sample["limited"] and sample["effective_duty"] < pt1.pusher_system.output_limit
     constrained = replace(pt1.pusher_system, max_input_power_w=600)
     sample = estimate_pusher(constrained, 44.4, 1, 0, 1.021)
     assert sample["power_w"] == pytest.approx(600)

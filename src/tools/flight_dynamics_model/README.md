@@ -34,13 +34,15 @@ ignores.
 | [Model reference](docs/model_reference.md) | Axes, aerodynamic data and moment reference, aircraft profiles, propulsion, CG and stability analysis, Python and CLI use |
 | [Validation summary](docs/validation_summary.md) | What has been checked, results, and what is not validated |
 | [Changes relative to main](docs/update_2026_10_14.md) | What this work adds to the July model, with migration notes |
+| [PT1.5 hardware update, 21 November](docs/update_2026_11_21.md) | MAD lift units and HOBBYWING pusher: data, models, output limit, mass and results |
 
 Engineering results for PT1 and PT1.5 are in the Flight Dynamics information notes under
 [`docs/information-note/phase-1/Flight-Dynamics/`](../../../docs/information-note/phase-1/Flight-Dynamics/).
 
 ## Model scope
 
-PT1.5 is a provisional 21 kg model on the October aerodynamic database. The simulation CG
+PT1.5 is a provisional 22 kg model on the October aerodynamic database, with MAD V8013 150KV
+lift units and a HOBBYWING 5230SL 380KV pusher (hardware of 21 November 2026). The simulation CG
 (x −40 mm, z +65 mm) is a target, not a measurement; inertia and rate damping are estimates;
 rotor and pusher stations follow the 14 October drawing; ±30° surface travel is a proposal.
 Sparse control data, the low-speed aerodynamic data, missing propwash and the generic battery

@@ -47,13 +47,15 @@ def test_profiles_are_independent_and_preserve_original_parameters():
     original = AircraftParams()
     reference = load_aircraft_config("reference_design")
     pt1 = load_aircraft_config("pt15")
-    assert pt1.mass == 21.0 and reference.mass == 25.0
+    assert pt1.mass == 22.0 and reference.mass == 25.0
     assert reference.lift_system.motor["model"] == "MAD V8013 PRO IPE"
-    assert pt1.lift_system.motor["model"] == "KDE5215XF-220"
-    assert pt1.lift_system.esc["model"] == "KDE-UAS75HVC+"
+    assert pt1.lift_system.motor["model"] == "MAD V8013 PRO 150KV"
+    assert pt1.lift_system.esc["model"] == "MAD AMPX 80A (5-14S)"
+    assert pt1.lift_system.propeller["model"] == "MAD FLUXER PRO 26x7.8 MATT"
     assert pt1.lift_system.propeller["blades"] == 2
+    assert load_aircraft_config("pt1_as_built").lift_system.motor["model"] == "KDE5215XF-220"
     assert reference.pusher_installed and pt1.pusher_installed
-    assert reference.pusher_system is None and pt1.pusher_system.motor["kv_rpm_per_v"] == 150
+    assert reference.pusher_system is None and pt1.pusher_system.motor["kv_rpm_per_v"] == 380
     assert reference.Tmax == original.Tmax
     assert reference.aero_database_path == original.aero_database_path
     assert reference.geometry == original.geometry
@@ -65,7 +67,7 @@ def test_profiles_are_independent_and_preserve_original_parameters():
 def test_pt1_as_flown_and_pt15_share_drawing_rotors_but_not_mass_cg_or_pusher():
     pt1 = load_aircraft_config("pt1_as_built")
     pt15 = load_aircraft_config("pt15")
-    assert pt1.mass == 17.9 and pt15.mass == 21.0
+    assert pt1.mass == 17.9 and pt15.mass == 22.0
     assert pt1.cg_body_xyz.tolist() == [-.0475, 0, .065]
     assert not pt1.pusher_installed and pt15.pusher_installed
     assert pt15.pusher_system.position_body_m == (-.374, 0., .05)
@@ -101,7 +103,8 @@ def test_zero_lift_reference_loads_equal_legacy_forward_propulsion():
 
 
 def test_static_curve_exact_points_interpolation_and_voltage_bounds():
-    pt1 = load_aircraft_config("pt15")
+    # PT1 as flown keeps the KDE workbook curve; these are exact workbook points.
+    pt1 = load_aircraft_config("pt1_as_built")
     curve = load_static_performance(pt1.lift_system.performance_path)
     point = curve.lookup(50.4, 0.5)
     assert point == {"thrust_n": 42.39, "current_a": 13.4, "power_w": 676.0, "rpm": 4460.0, "torque_nm": 1.11}
@@ -114,13 +117,13 @@ def test_static_curve_exact_points_interpolation_and_voltage_bounds():
 
 
 def test_lift_force_body_sign_moment_balance_and_cg_transfer():
-    pt1 = load_aircraft_config("pt15")
+    pt1 = load_aircraft_config("pt1_as_built")
     pt1 = replace(pt1, battery=replace(pt1.battery, voltage_v=50.4))
     control = Control(0, 0, 0, 0, lift_throttle=0.5)
     force, moment = propulsion_model(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -4 * 42.39])
-    # Rotor centroid x = -37.5 mm is 2.5 mm ahead of the -40 mm PT1.5 target CG.
-    np.testing.assert_allclose(moment, [0, (-.0375 - -.04) * 4 * 42.39, 0], atol=1e-12)
+    # Rotor centroid x = -37.5 mm is 10 mm ahead of the -47.5 mm PT1 CG.
+    np.testing.assert_allclose(moment, [0, (-.0375 - -.0475) * 4 * 42.39, 0], atol=1e-12)
     shifted = replace(pt1, cg_body_xyz=pt1.cg_body_xyz + [0.1, 0.0, 0.0])
     shifted_force, shifted_moment = propulsion_model(control, shifted)
     np.testing.assert_allclose(shifted_force, force)
@@ -130,12 +133,12 @@ def test_lift_force_body_sign_moment_balance_and_cg_transfer():
 
 
 def test_single_rotor_has_expected_roll_pitch_and_reaction_yaw_moment():
-    pt1 = load_aircraft_config("pt15")
+    pt1 = load_aircraft_config("pt1_as_built")
     pt1 = replace(pt1, battery=replace(pt1.battery, voltage_v=50.4))
     control = Control(0, 0, 0, 0, lift_motor_throttles=(0.5, 0, 0, 0))
     force, moment, samples = lift_propulsion(control, pt1)
     np.testing.assert_allclose(force, [0, 0, -42.39])
-    np.testing.assert_allclose(moment, [-0.55 * 42.39, (.675 + .04) * 42.39, 1.11])
+    np.testing.assert_allclose(moment, [-0.55 * 42.39, (.675 + .0475) * 42.39, 1.11])
     assert samples[0]["rpm"] == 4460
     with pytest.raises(ValueError, match="one finite lift throttle"):
         lift_propulsion(replace(control, lift_motor_throttles=(0.5,)), pt1)
