@@ -21,6 +21,7 @@ def aerodynamic_options() -> dict[str, str]:
 
 
 def select_aerodynamics(params, dataset_id: str):
+    """Select an AeroDB; the flight density stays the profile's when the profile sets one."""
     """Select a versioned aerodynamic dataset independently of the hardware."""
     from .aerodb import load_aerodynamic_database_cached
     from .deflections import load_deflection_database_cached
@@ -38,7 +39,8 @@ def select_aerodynamics(params, dataset_id: str):
     return replace(params, aero_dataset_id=dataset_id,
                    aero_database_version=data["version"], aero_database_path=database_path,
                    deflection_database_path=deflection_path, aerodb_reference=database.reference,
-                   rho=database.reference.rho, Sref=database.reference.S,
+                   rho=params.rho if params.rho_from_profile else database.reference.rho,
+                   Sref=database.reference.S,
                    bref=database.reference.b, cref=database.reference.c,
                    geometry_version=data["geometry_version"],
                    geometry=replace(params.geometry, **data.get("geometry", {})))
@@ -210,6 +212,10 @@ def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerod
     for key in ("inertia", "cg_body_xyz"):
         if key in values:
             values[key] = np.asarray(values[key], dtype=float)
+    if "rho" in values:
+        if not np.isfinite(values["rho"]) or values["rho"] <= 0:
+            raise ValueError("Aircraft flight density must be positive")
+        values["rho_from_profile"] = True
     if "mass" in values and (not np.isfinite(values["mass"]) or values["mass"] <= 0):
         raise ValueError("Aircraft mass must be positive")
     if "cg_body_xyz" in values and (values["cg_body_xyz"].shape != (3,) or not np.all(np.isfinite(values["cg_body_xyz"]))):
@@ -305,6 +311,7 @@ def aircraft_summary(params) -> dict[str, Any]:
         "aero_database_path": str(params.aero_database_path),
         "aero_dataset_id": params.aero_dataset_id,
         "rho_kg_m3": params.rho,
+        "aero_reference_rho_kg_m3": params.aerodb_reference.rho,
         "moment_center_body_xyz_m": params.aerodb_reference.moment_center_body_xyz.tolist(),
         "deflection_database_path": None if params.deflection_database_path is None else str(params.deflection_database_path),
         "control_data": control_data,

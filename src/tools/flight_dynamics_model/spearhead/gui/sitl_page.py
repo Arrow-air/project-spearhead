@@ -1062,7 +1062,7 @@ def register_sitl_page(ui, manager, render_shell):
             forward_mode = 18 in mode_options and (mode_select.value in PLANE_MODES or mode_select.value == 25)
             if forward_mode:
                 mode_help.text += " PT1.5 electric pusher is estimated; forward-flight results depend on the simulation CG."
-            mass = manifest.get("aircraft", {}).get("mass_kg", 21)
+            mass = manifest.get("aircraft", {}).get("mass_kg", 22)
             mode_scope.text = (f"PT1.5 Quad-X · {mass:g} kg · four MAD lift motors · neutral pilot sticks" if 18 in mode_options else
                                f"PT1.5 fixed-wing · {mass:g} kg · lift motors off · neutral pilot sticks" if displayed_aircraft.get("id") == "pt15" else
                                "Fixed-wing reference aircraft · neutral pilot sticks")

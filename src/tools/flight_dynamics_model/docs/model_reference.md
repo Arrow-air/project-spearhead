@@ -27,11 +27,32 @@ independently (`load_aircraft_config(id, aerodynamics=...)`, `--aerodynamics` on
 | Dataset | Used by | Content |
 |---|---|---|
 | `adb_v1_1` | `reference_design` | Drag-corrected ADB v1.1 (`docs/information-note/phase-1/Aerodynamics/0002-Preliminary-Design-Aerodynamic-Database/assets/adb_v1_1_drag_correction.csv`), alpha/beta only, moment center (−0.15, 0, +0.15) m, rho 1.09 kg/m³; provisional control derivatives |
-| `tail_update_2026_10_07` | `pt15`, `pt1_as_built`, SITL | October base table with the updated tail and the 11 October control delivery, rho 1.021 kg/m³ (Ankara test field, hot day) |
+| `tail_update_2026_10_07` | `pt15`, `pt1_as_built`, SITL | October base table with the updated tail and the 11 October control delivery; reference density 1.092 kg/m³ (CFD run condition) |
 | `tail_update_2026_10_07_controls_2026_10_09` | archive | Same base with the earlier 49-case control revision |
 
 Reference geometry for both: S = 1.805 m², b = 3.95 m, c = 0.457 m. The updated tail chord and
 area were not supplied and are marked pending.
+
+### Reference density and flight density
+
+An AeroDB's reference density is the density its coefficients were normalized with; the flight
+density is the air the aircraft flies in. They are separate: `params.aerodb_reference.rho` turns
+the table and control loads into coefficients, `params.rho` sets the dynamic pressure in flight.
+A profile that sets `aircraft.rho` keeps it when an AeroDB is selected; otherwise the flight
+density follows the AeroDB reference. The SITL flies every aircraft at the Ankara hot-day density,
+1.021 kg/m³.
+
+| | October export (until 26 November 2026) | Now |
+|---|---|---|
+| Reference density of `tail_update_2026_10_07` | 1.021 kg/m³ | 1.092 kg/m³, the CFD run condition |
+| Flight density, `pt15` and `pt1_as_built` | 1.021 kg/m³ | 1.021 kg/m³ |
+| Aerodynamic loads at Ankara | Equal to the CFD loads at 1.092 kg/m³ | 6.5 % lower (1.021/1.092) |
+
+The correction follows Aerodynamics note 0003 as revised in PR #34 (commit 9b882ad, not yet
+merged). `scripts/recenter_october_database.py` regenerates the coefficients from the preserved
+dimensional loads at 1.092 kg/m³; dimensional loads are unchanged, and the result matches the
+revised 0003 table within its 10⁻⁴ rounding. Control loads are delivered dimensionally and are
+normalized with the reference density when loaded.
 
 ### Coefficients and moment reference
 

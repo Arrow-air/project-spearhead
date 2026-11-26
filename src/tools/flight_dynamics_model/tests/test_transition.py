@@ -40,7 +40,7 @@ def test_delayed_confirmation_gets_the_full_five_second_ramp():
 
 
 def test_transition_requires_prototype_air_start_and_altitude_margin():
-    assert AIRCRAFT['pt15'] == 'PT1.5 · 21 kg'
+    assert AIRCRAFT['pt15'] == 'PT1.5 · 22 kg'
     setup = FlightSetup(initial_point='hover80', maneuver='transition', altitude_m=80)
     assert setup.validate().scenario == 'quad_transition'
     assert setup.config()['cg_body_xyz_m'] == [-.04, 0, .065]

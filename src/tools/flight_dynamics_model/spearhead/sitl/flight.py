@@ -36,6 +36,11 @@ def manual_surface_rc(channel, trim_angle, firmware_trim_pwm, delta_deg):
     Neither direct PWM injection nor an FDM control override is used.
     """
     desired_pwm = surface_pwm(channel, trim_angle+np.deg2rad(delta_deg))
+    # Unrounded target, so the choice below is not biased by half an output count.
+    normalized_target = np.rad2deg(trim_angle)/channel.travel_deg*(-1 if channel.reverse else 1) + \
+        delta_deg/channel.travel_deg*(-1 if channel.reverse else 1)
+    target_span = channel.maximum-channel.trim if normalized_target >= 0 else channel.trim-channel.minimum
+    desired_exact = channel.trim + normalized_target*target_span
     span = (channel.maximum-firmware_trim_pwm if desired_pwm >= firmware_trim_pwm
             else firmware_trim_pwm-channel.minimum)
     if span <= 0:
@@ -49,7 +54,7 @@ def manual_surface_rc(channel, trim_angle, firmware_trim_pwm, delta_deg):
                        else firmware_trim_pwm-channel.minimum)
         return firmware_trim_pwm+int(normalized*output_span)
     candidates = range(max(1000,ideal_rc-2),min(2000,ideal_rc+2)+1)
-    return min(candidates,key=lambda rc:(abs(output_pwm(rc)-desired_pwm),abs(rc-ideal_rc)))
+    return min(candidates,key=lambda rc:(abs(output_pwm(rc)-desired_exact),abs(rc-ideal_rc)))
 
 
 def manual_elevator_rc(mapping, trim, firmware_trim_pwm, delta_deg):

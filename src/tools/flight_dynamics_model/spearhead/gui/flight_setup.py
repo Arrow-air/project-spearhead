@@ -10,7 +10,7 @@ from ..sitl.backend import CONFIG_ROOT
 from ..sitl import failures as failure_model
 
 # Flight Deck flies PT1.5 only; the 25 kg reference design stays in Model Lab (old AeroDB and geometry).
-AIRCRAFT = {"pt15": "PT1.5 · 21 kg"}
+AIRCRAFT = {"pt15": "PT1.5 · 22 kg"}
 DOUBLET_LABELS = {"pitch_doublet": "Pitch doublet · elevator ±3°", "roll_doublet": "Roll doublet · aileron ±5°",
                   "yaw_doublet": "Yaw doublet · rudder ±5°", "throttle_doublet": "Throttle doublet · up to ±10 points"}
 HOVER_DOUBLET_LABELS = {"pitch_doublet": "Pitch doublet · attitude ±8°", "roll_doublet": "Roll doublet · attitude ±8°",
@@ -35,13 +35,14 @@ MIN_DURATION = {"steps": 118, "elevator": 45, "transition": 60, "back_transition
                 **{key: 45 for key in DOUBLET_LABELS}}
 # Body x from the CFD origin (wing root quarter-chord), forward positive. The 14 October
 # drawing puts the lift-rotor centroid at x = -37.5 mm; 22 m/s margins are October AeroDB
-# estimates at z = +65 mm and move with any aerodynamic correction.
+# estimates at z = +65 mm (reference density 1.092, flown at 1.021, 22 kg) and move with any
+# aerodynamic correction.
 TRANSITION_CGS = {
-    "target40": "PT1.5 target · x −40 mm (SM ≈ 6 %, default)",
-    "pt1_log": "PT1 logged · x −47.5 mm (SM ≈ 5 %)",
-    "aft60": "Aft · x −60 mm (SM ≈ 2 %)",
-    "forward25": "Forward · x −25 mm (SM ≈ 10 %)",
-    "forward0": "Forward · x 0 mm (SM ≈ 15 %, elevator-limited)",
+    "target40": "PT1.5 target · x −40 mm (SM ≈ 5.5 %, default)",
+    "pt1_log": "PT1 logged · x −47.5 mm (SM ≈ 4 %)",
+    "aft60": "Aft · x −60 mm (SM ≈ 1.5 %)",
+    "forward25": "Forward · x −25 mm (SM ≈ 9 %)",
+    "forward0": "Forward · x 0 mm (SM ≈ 14 %, elevator-limited)",
 }
 TRANSITION_CG_X = {"target40": -.040, "pt1_log": -.0475, "aft60": -.060, "forward25": -.025, "forward0": 0.}
 # Build-up estimate of the CG height below the origin; unmeasured.

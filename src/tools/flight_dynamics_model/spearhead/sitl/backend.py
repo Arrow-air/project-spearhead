@@ -48,6 +48,12 @@ def verify_firmware(path):
             "identity": expected.decode(), "binary_sha256": sha256(path)}
 
 
+# The SITL home is the Ankara test field; every simulated aircraft flies at its
+# hot-day density. The AeroDB keeps its own reference density (CFD run condition).
+SITE_RHO = 1.021
+AERO_REFERENCE_RHO = 1.092
+
+
 def check_pusher_endpoints(channel, system):
     """The pusher channel endpoints must reproduce the profile's ESC range and output limit.
 
@@ -77,10 +83,11 @@ def load_setup(path=None):
         raise ValueError("CG must contain three finite values")
     # Optional pusher option of the profile; default is the profile's selected option.
     params = replace(load_aircraft_config(config["aircraft"], aerodynamics=DATASET, pusher=config.get("pusher")),
-                     cg_body_xyz=cg)
+                     cg_body_xyz=cg, rho=SITE_RHO)
     if (not params.use_aero_database or params.deflection_database_path is None
-            or params.rho != 1.021 or not np.array_equal(params.aerodb_reference.moment_center_body_xyz, [0, 0, 0])):
-        raise ValueError("Unexpected AeroDB, deflections, density, or source moment center")
+            or params.rho != SITE_RHO or params.aerodb_reference.rho != AERO_REFERENCE_RHO
+            or not np.array_equal(params.aerodb_reference.moment_center_body_xyz, [0, 0, 0])):
+        raise ValueError("Unexpected AeroDB, deflections, flight or reference density, or source moment center")
     channels = dict(config["channels"])
     if set(channels) not in ({"aileron", "elevator", "rudder", "pusher"},
                              {"aileron", "elevator", "rudder", "pusher", "lift"}):
