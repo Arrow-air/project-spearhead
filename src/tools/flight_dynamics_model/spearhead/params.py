@@ -105,7 +105,12 @@ class AeroDBReference:
 @dataclass(frozen=True)
 class AircraftParams:
     g: float = 9.80665
+    # Flight (ambient) density. An AeroDB carries its own reference density in
+    # aerodb_reference.rho, used only to dimensionalize its coefficients.
     rho: float = 1.09
+    # True when the aircraft profile sets rho; selecting an AeroDB then keeps it.
+    # Otherwise the flight density follows the AeroDB reference density.
+    rho_from_profile: bool = False
     mass: float = 25.0
     inertia: np.ndarray = field(default_factory=lambda: np.diag([2.5, 4.0, 5.0]))
     Sref: float = 1.805

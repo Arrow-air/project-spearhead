@@ -1,0 +1,22 @@
+{
+  "source": "hobbywing_5230sl_380_source.json",
+  "source_sha256": "1e10c36723567816f3ce0d3062bf06342a0cd9776df0937e24e7cd8bfea8cbbd",
+  "equations": "The manufacturer sheet (`data/propulsion/hobbywing_5230sl_380_source.json`)\ngives three 29.6 V throttle sweeps (APC 17x10E, 18x10E, 18x12E) with battery\ncurrent, RPM and torque. With Kv = 380 RPM/V and Kt = 60/(2*pi*Kv):",
+  "kv_rpm_per_v": 380,
+  "esc_efficiency_assumed": 0.97,
+  "equivalent_resistance_ohm": 0.026870280195906177,
+  "no_load_current_a": 5.339284679131907,
+  "published_phase_resistance_ohm": 0.0078,
+  "published_no_load_current_a": 4.0,
+  "points": 53,
+  "max_fit_current_a": 80.0,
+  "duty_minus_throttle_max": 0.04800897681064231,
+  "battery_current_relative_rms": 0.02290303761043344,
+  "battery_current_relative_max": 0.04064596462739871,
+  "limitations": [
+    "Fitted at 29.6 V only; PT1.5 runs it at 12S (36-50.4 V), outside the 6-8S rating, behind an output limit.",
+    "Test ESC is not stated; the AMPX 80A is assumed to apply duty = throttle as in the MAD sheet.",
+    "Constant I0: iron losses rising with RPM are absorbed in the fit only within the tested RPM range.",
+    "No thermal model; the sheet's full-throttle runs reached 80 C within 1.4-6 minutes."
+  ]
+}

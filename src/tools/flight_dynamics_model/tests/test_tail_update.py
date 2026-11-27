@@ -59,7 +59,8 @@ def test_preserves_deliveries_and_recovers_the_exported_origin_numerically():
     p = load_aircraft_config("pt15", aerodynamics=LEGACY)
     database = load_aerodynamic_database(p.aero_database_path)
     assert len(database.alpha_grid_deg) * len(database.beta_grid_deg) == 32761
-    assert p.rho == database.reference.rho == 1.021
+    # Flight density (Ankara) and AeroDB reference density (CFD run condition) are distinct.
+    assert p.rho == 1.021 and database.reference.rho == p.aerodb_reference.rho == 1.092
     np.testing.assert_equal(database.reference.moment_center_body_xyz, [0, 0, 0])
     assert p.cref == 0.457  # Wing reference chord, not the updated tail chord.
     assert p.geometry.tail_chord is None
@@ -99,6 +100,7 @@ def test_results_intake_cannot_silently_discard_a_nonzero_beta_control_case(tmp_
 @pytest.mark.parametrize("speed", [18., 22., 25., 28.])
 def test_new_positive_alpha_control_increments_scale_speed_and_shift_moments_once(speed):
     p = load_aircraft_config("pt15", aerodynamics=LEGACY)
+    p = replace(p, rho=p.aerodb_reference.rho)  # CFD loads are at the run density
     rows = source_rows()
     base = next(r for r in rows if r["alpha"] == 10 and all(r[k] == 0 for k in ("aileron", "elevator", "rudder")))
     row = next(r for r in rows if r["alpha"] == 10 and r["elevator"] == 5)
@@ -115,7 +117,8 @@ def test_new_positive_alpha_control_increments_scale_speed_and_shift_moments_onc
 
 @pytest.mark.parametrize("row", source_rows())
 def test_all_delivered_cases_reproduce_measured_load_increments(row):
-    p = replace(load_aircraft_config("pt15", aerodynamics=LEGACY), cg_body_xyz=np.zeros(3))
+    p = load_aircraft_config("pt15", aerodynamics=LEGACY)
+    p = replace(p, cg_body_xyz=np.zeros(3), rho=p.aerodb_reference.rho)  # CFD loads are at the run density
     alpha = np.deg2rad(row["alpha"])
     velocity = row["velocity"] * np.array([np.cos(alpha), 0, np.sin(alpha)])
     zero = Control(0, 0, 0, 0)
@@ -220,7 +223,9 @@ def test_hardware_and_databases_can_be_switched_independently():
     old = select_aerodynamics(new, "adb_v1_1")
     assert new.lift_system == reference.lift_system
     assert new.pusher_installed
-    assert new.rho == 1.021 and old.rho == 1.09
+    # The reference profile keeps its own flight density; each AeroDB keeps its reference.
+    assert new.rho == old.rho == 1.09
+    assert new.aerodb_reference.rho == 1.092 and old.aerodb_reference.rho == 1.09
     assert old.aero_database_path == reference.aero_database_path
     assert old.geometry == reference.geometry
     assert old.deflection_database_path is None

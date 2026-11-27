@@ -2,6 +2,11 @@
 
 The CFD origin and the coefficient export's final moment center are distinct.
 Existing force corrections are already in the export and must not be repeated.
+
+Coefficients are regenerated from the preserved dimensional loads with the CFD
+run density, 1.092 kg/m^3 (Aerodynamics note 0003 correction, PR #34, commit
+9b882ad). The October export normalized them with 1.021 kg/m^3, which is the
+Ankara flight density, not the run condition. Dimensional loads are unchanged.
 """
 
 import argparse
@@ -16,6 +21,8 @@ import numpy as np
 FDM_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = FDM_ROOT / "data/aerodynamics/tail_update_2026_10_07"
 SOURCE_SHA256 = "6a9561724e7f3059e88e206d8793054ed357723af73b8e7aaec501f6eff83dc1"
+SOURCE_EXPORT_RHO = 1.021  # density written in the October export header
+REFERENCE_RHO = 1.092      # CFD run condition, note 0003 as corrected in PR #34
 sys.path.insert(0, str(FDM_ROOT.parent / "Nondimit"))
 import nondimit as nd
 
@@ -28,9 +35,9 @@ def recenter_base(source, destination):
         raise ValueError("This converter is pinned to the preserved October export")
     metadata, headers, rows = nd.read_csv_table_with_metadata(source)
     _, original = nd.read_export_settings(metadata)
-    if original.old_center != (-0.1, 0.0, 0.15) or original.rho != 1.021:
+    if original.old_center != (-0.1, 0.0, 0.15) or original.rho != SOURCE_EXPORT_RHO:
         raise ValueError("Unexpected source export reference")
-    settings = replace(original, new_center=(0.0, 0.0, 0.0), output_accuracy=1e-10)
+    settings = replace(original, rho=REFERENCE_RHO, new_center=(0.0, 0.0, 0.0), output_accuracy=1e-10)
     mapping = nd.default_mapping(headers)
     output_headers, output_rows = nd.recenter_export_rows(
         rows, headers, mapping, settings,
@@ -55,6 +62,10 @@ def recenter_base(source, destination):
         "existing_force_corrections_retained=true", "corrections_reapplied=false",
     ])
     output_metadata.append(["# Previously applied export options", *metadata[2][1:]])
+    output_metadata.append([
+        "# Reference density", f"source_export_rho={SOURCE_EXPORT_RHO:g}", f"reference_rho={REFERENCE_RHO:g}",
+        "basis=CFD run condition (Aerodynamics note 0003 correction)", "coefficients_from=dimensional loads",
+    ])
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(".csv.tmp")
     nd.write_csv_table(temporary, output_headers, output_rows, metadata=output_metadata)
@@ -67,6 +78,7 @@ def recenter_base(source, destination):
         "source_export_center_body_xyz_m": list(original.old_center),
         "canonical_center_body_xyz_m": list(settings.new_center),
         "rho_kg_m3": settings.rho,
+        "source_export_rho_kg_m3": SOURCE_EXPORT_RHO,
         "output_accuracy": settings.output_accuracy,
         "rows": len(rows),
         "max_force_change_n": force_error,

@@ -16,10 +16,12 @@ control_deflection_policy: linear
 channels:
   aileron: {number: 1, travel_deg: 30}
   elevator: {number: 2, reverse: true, travel_deg: 30}
-  # MAD AMPX factory PWM envelope; actual aircraft ESC still requires calibration.
-  pusher: {number: 3, minimum: 1050, maximum: 1940}
+  # AMPX 80A calibrated to its factory 1050-1940 us range; SERVO3_MAX 1450 us is the
+  # 45 % output limit of the 380KV pusher on 12S (pt15 output_limit), active in every mode.
+  pusher: {number: 3, minimum: 1050, maximum: 1450}
   rudder: {number: 4, travel_deg: 30}
   # FDM order FR, RR, RL, FL; ArduPilot motor outputs 5, 8, 6, 7.
+  # Lift AMPX 80A ESCs assumed calibrated to Q_M_PWM_MIN/MAX 1100-1940 us.
   lift:
     - {number: 5, minimum: 1100, maximum: 1940}
     - {number: 8, minimum: 1100, maximum: 1940}

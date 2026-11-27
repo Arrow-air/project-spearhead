@@ -34,8 +34,8 @@ def test_hover_setup_balances_actual_four_motor_wrench_with_pusher_off():
     assert physics.params.aircraft_id == "pt15" and physics.params.pusher_installed
     assert control.throttle == 0
     assert [channel.number for channel in mapping.lift] == [5, 8, 6, 7]
-    assert physics.params.mass == 21.0
-    assert control.lift_throttle == pytest.approx(.6663451997065988)
+    assert physics.params.mass == 22.0
+    assert control.lift_throttle == pytest.approx(.644371606263417)
     np.testing.assert_allclose(dynamics(0, physics.state, physics.params, control), 0, atol=1e-12)
     assert manifest["config"]["flight_regime"] == "hover"
 

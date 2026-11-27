@@ -101,8 +101,8 @@ def main():
 
     metadata, headers, base_rows = nd.read_csv_table_with_metadata(SOURCE / "database.csv")
     _, reference = nd.read_export_settings(metadata)
-    if reference.old_center != (0.0, 0.0, 0.0) or reference.rho != 1.021:
-        raise ValueError("Source must use the user-confirmed origin and density")
+    if reference.old_center != (0.0, 0.0, 0.0) or reference.rho != 1.092:
+        raise ValueError("Source must use the user-confirmed origin and the CFD reference density")
     mapping = nd.default_mapping(headers)
     control_source = load_aircraft_config("pt15").deflection_database_path
     _, def_headers, def_rows = nd.read_csv_table_with_metadata(control_source)
@@ -175,13 +175,13 @@ def main():
         database = load_aerodynamic_database(directory / "database.csv")
         controls = load_deflection_database(directory / "deflection.csv", database.reference)
         np.testing.assert_allclose(database.reference.moment_center_body_xyz, case["moment_center_body_xyz_m"], rtol=0, atol=0)
-        if database.reference.rho != 1.021 or database.alpha_grid_deg.size * database.beta_grid_deg.size != 32761 or controls.case_count != len(def_rows):
+        if database.reference.rho != reference.rho or database.alpha_grid_deg.size * database.beta_grid_deg.size != 32761 or controls.case_count != len(def_rows):
             raise AssertionError("Generated database could not be loaded consistently by the FDM")
         fdm_checks.append({"case": case["case"], "base_grid_points": 32761,
                            "deflection_cases": controls.case_count, "fdm_load_passed": True})
     (args.output_dir / "fdm_validation.json").write_text(json.dumps(fdm_checks, indent=2) + "\n")
     lines = ["# October AeroDB — Nondimit moment-center exports", "",
-             "Generated with the actual Nondimit v1.1 conversion backend. Each case is independently recentered from the user-confirmed source origin (0,0,0) m. Density remains 1.021 kg/m³; reference velocity 25 m/s, S=1.805 m², b=3.95 m, c=0.457 m. Existing drag correction is preserved and not reapplied. No beta-zero cleanup is applied during recentering.", "",
+             "Generated with the actual Nondimit v1.1 conversion backend. Each case is independently recentered from the user-confirmed source origin (0,0,0) m. Reference density 1.092 kg/m³ (CFD run condition); reference velocity 25 m/s, S=1.805 m², b=3.95 m, c=0.457 m. Existing drag correction is preserved and not reapplied. No beta-zero cleanup is applied during recentering.", "",
              "| Case | x (m) | y (m) | z (m) |", "|---|---:|---:|---:|"]
     lines.extend(f"| {name} | {center[0]:g} | {center[1]:g} | {center[2]:g} |" for name, center in CASES.items())
     lines += ["", f"Each folder has `database.csv` (32,761 base points), `deflection_nondimit.csv` ({len(def_rows)} cases, native Nondimit metadata and coefficient columns), `deflection.csv` (the same data with a plain CSV header for the FDM control loader), and `reference.json`. Surface angles, case IDs, source velocities and force values are preserved.", "",

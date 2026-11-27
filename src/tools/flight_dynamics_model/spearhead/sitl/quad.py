@@ -1,4 +1,4 @@
-"""Official ArduPlane 4.7.1 QuadPlane hover with four independent KDE motors."""
+"""Official ArduPlane 4.7.1 QuadPlane hover with four independent lift motors (PT1.5: MAD V8013)."""
 
 import argparse
 from dataclasses import asdict

@@ -10,12 +10,16 @@ from ..controls import Control
 class Channel:
     number: int
     minimum: int = 1000
-    trim: int = 1500
+    # None: midpoint of minimum and maximum (1500 for the default range). Motor
+    # channels do not use trim; a limited motor endpoint may sit below 1500 us.
+    trim: int | None = None
     maximum: int = 2000
     reverse: bool = False
     travel_deg: float = 5.0
 
     def __post_init__(self):
+        if self.trim is None:
+            object.__setattr__(self, "trim", (self.minimum+self.maximum)//2)
         if not 1 <= self.number <= 32 or not 800 <= self.minimum < self.trim < self.maximum <= 2200:
             raise ValueError("Invalid PWM channel or limits")
         if not math.isfinite(self.travel_deg) or not 0 < self.travel_deg <= 45:

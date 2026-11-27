@@ -21,7 +21,9 @@ CASES = [r for r in ROWS if float(r["beta"]) == 0]
 
 @pytest.mark.parametrize("row", CASES, ids=[r["case_id"] for r in CASES])
 def test_every_new_measured_case_reproduces_all_six_load_increments(row):
-    params = replace(load_aircraft_config("pt15"), cg_body_xyz=np.zeros(3),
+    params = load_aircraft_config("pt15")
+    # CFD loads are at the run (reference) density; reproduce them there.
+    params = replace(params, cg_body_xyz=np.zeros(3), rho=params.aerodb_reference.rho,
                      control_deflection_policy="linear", control_surface_limits_deg=(30,30,30))
     r = {k: float(v) for k,v in row.items() if k != "case_id"}
     base = next(b for b in ROWS if all(float(b[k]) == r[k] for k in ("alpha", "beta", "velocity"))

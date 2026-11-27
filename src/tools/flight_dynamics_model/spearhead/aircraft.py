@@ -21,6 +21,7 @@ def aerodynamic_options() -> dict[str, str]:
 
 
 def select_aerodynamics(params, dataset_id: str):
+    """Select an AeroDB; the flight density stays the profile's when the profile sets one."""
     """Select a versioned aerodynamic dataset independently of the hardware."""
     from .aerodb import load_aerodynamic_database_cached
     from .deflections import load_deflection_database_cached
@@ -38,7 +39,8 @@ def select_aerodynamics(params, dataset_id: str):
     return replace(params, aero_dataset_id=dataset_id,
                    aero_database_version=data["version"], aero_database_path=database_path,
                    deflection_database_path=deflection_path, aerodb_reference=database.reference,
-                   rho=database.reference.rho, Sref=database.reference.S,
+                   rho=params.rho if params.rho_from_profile else database.reference.rho,
+                   Sref=database.reference.S,
                    bref=database.reference.b, cref=database.reference.c,
                    geometry_version=data["geometry_version"],
                    geometry=replace(params.geometry, **data.get("geometry", {})))
@@ -99,6 +101,10 @@ class PusherSystem:
     current_limit_label: str = "sustainable current"
     # Optional ESC throttle-to-voltage-fraction map over battery voltage; None means duty = throttle.
     throttle_duty_map: dict[str, Any] | None = None
+    # Fraction of the ESC throttle range reached at 100 % commanded throttle. A value
+    # below 1 is a hard output limit set by the pusher servo endpoint (SERVOn_MAX),
+    # which applies in every flight mode; commanded throttle is scaled by it.
+    output_limit: float = 1.0
 
     def __post_init__(self):
         positive = [self.equivalent_resistance_ohm, self.voltage_min_v, self.voltage_max_v,
@@ -113,6 +119,8 @@ class PusherSystem:
         if self.position_body_m is not None and (np.shape(self.position_body_m) != (3,)
                                                  or not np.all(np.isfinite(self.position_body_m))):
             raise ValueError("Pusher position must contain three finite values")
+        if not np.isfinite(self.output_limit) or not 0 < self.output_limit <= 1:
+            raise ValueError("Pusher output limit must be in (0, 1]")
         if self.reaction_torque_sign not in (-1, 0, 1):
             raise ValueError("Pusher reaction torque sign must be -1, 0 or +1")
         if self.throttle_duty_map is not None:
@@ -126,7 +134,7 @@ class PusherSystem:
 
     def duty(self, throttle: float, voltage_v: float) -> float:
         """Voltage fraction applied to the motor for a commanded throttle."""
-        throttle = float(np.clip(throttle, 0, 1))
+        throttle = float(np.clip(throttle, 0, 1))*self.output_limit
         if self.throttle_duty_map is None:
             return throttle
         table = self.throttle_duty_map
@@ -171,6 +179,15 @@ def pusher_options(name_or_path: str | Path = "pt15") -> dict[str, str]:
     return {key: str(value.get("label") or value.get("motor", {}).get("model", key)) for key, value in options.items()}
 
 
+def selected_pusher_option(name_or_path: str | Path = "pt15") -> str | None:
+    """The pusher option a profile selects by default (None when it has no pusher estimate)."""
+    path = Path(name_or_path)
+    if not path.is_file():
+        path = AIRCRAFT_CONFIGS / f"{name_or_path}.yaml"
+    pusher = (yaml.safe_load(path.read_text()).get("propulsion") or {}).get("pusher", {})
+    return _pusher_options(pusher)[1]
+
+
 def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerodynamics: str | None = None,
                          pusher: str | None = None):
     """Build independent parameters from a bundled profile or a YAML file.
@@ -195,6 +212,10 @@ def load_aircraft_config(name_or_path: str | Path = "reference_design", *, aerod
     for key in ("inertia", "cg_body_xyz"):
         if key in values:
             values[key] = np.asarray(values[key], dtype=float)
+    if "rho" in values:
+        if not np.isfinite(values["rho"]) or values["rho"] <= 0:
+            raise ValueError("Aircraft flight density must be positive")
+        values["rho_from_profile"] = True
     if "mass" in values and (not np.isfinite(values["mass"]) or values["mass"] <= 0):
         raise ValueError("Aircraft mass must be positive")
     if "cg_body_xyz" in values and (values["cg_body_xyz"].shape != (3,) or not np.all(np.isfinite(values["cg_body_xyz"]))):
@@ -290,6 +311,7 @@ def aircraft_summary(params) -> dict[str, Any]:
         "aero_database_path": str(params.aero_database_path),
         "aero_dataset_id": params.aero_dataset_id,
         "rho_kg_m3": params.rho,
+        "aero_reference_rho_kg_m3": params.aerodb_reference.rho,
         "moment_center_body_xyz_m": params.aerodb_reference.moment_center_body_xyz.tolist(),
         "deflection_database_path": None if params.deflection_database_path is None else str(params.deflection_database_path),
         "control_data": control_data,
@@ -313,6 +335,7 @@ def aircraft_summary(params) -> dict[str, Any]:
             "label": params.pusher_system.label,
             "current_limit_label": params.pusher_system.current_limit_label,
             "throttle_duty_map": params.pusher_system.throttle_duty_map,
+            "output_limit": params.pusher_system.output_limit,
             "model": "steady motor equilibrium + APC analytical Ct/Cp; provisional",
         },
         "lift_motor": None if lift is None else lift.motor,

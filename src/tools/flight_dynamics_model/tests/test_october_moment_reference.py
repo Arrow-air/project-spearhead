@@ -26,7 +26,7 @@ def test_origin_recovery_and_runtime_cg_shift_equal_direct_export_to_cg(cg, spee
     )
     database = load_aerodynamic_database_cached(ROOT / "database.csv")
     actual_force, actual_moment = dimensional_body_force_moment(
-        database.coefficients_at(alpha, beta), .5 * 1.021 * speed ** 2,
+        database.coefficients_at(alpha, beta), database.reference.rho/2 * speed ** 2,
         database.reference, cg_body_xyz=np.array(cg),
     )
     np.testing.assert_allclose(actual_force, expected_force, atol=1e-6, rtol=0)

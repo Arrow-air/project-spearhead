@@ -31,7 +31,7 @@ SCENARIOS = {
     "quad_transition": "PT1.5 · hover to forward flight diagnostic",
     "quad_ground": "PT1.5 · ground takeoff, hover and landing",
     "quad_interactive": "PT1.5 QuadPlane · all modes · 10 min",
-    "quad_hover": "PT1.5 QuadPlane hover · KDE · 60 s",
+    "quad_hover": "PT1.5 QuadPlane hover · MAD lift · 60 s",
     "interactive": "Interactive flight · mode controls · 10 min",
     "fbwa": "Nominal FBWA · 60 s",
     "steps": "Pitch / roll steps · 118 s",

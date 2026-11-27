@@ -1,7 +1,7 @@
 {
   "version": "tail_update_2026_10_07",
   "received_date": "2026-10-07",
-  "rho_kg_m3": 1.021,
+  "rho_kg_m3": 1.092,
   "moment_center_body_xyz_m": [
     0,
     0,
@@ -93,13 +93,13 @@
       0.0,
       0.0
     ],
-    "rho_kg_m3": 1.021,
+    "rho_kg_m3": 1.092,
     "output_accuracy": 1e-10,
     "rows": 32761,
     "max_force_change_n": 0.0,
     "max_origin_transfer_error_nm": 5.684341886080802e-14,
     "existing_corrections_reapplied": false,
-    "active_sha256": "18c1356e292bf8d9008a45c029ad0a7654825934e99b6f6f7f8ca15e84428755",
+    "active_sha256": "ba0688381e0092aad4c07097c37fadcfc3ca2a94f5a113e02af9267576f0b48d",
     "path": "database.csv",
     "preprocessing_version": "numeric_origin_recovery_2026_10_12",
     "raw_cfd_center_body_xyz_m": [
@@ -107,6 +107,9 @@
       0,
       0
     ],
-    "coefficient_note": "Recomputed from preserved dimensional loads at the unchanged reference values; finer output precision avoids a second quantization."
-  }
+    "coefficient_note": "Recomputed from preserved dimensional loads at the unchanged reference values; finer output precision avoids a second quantization. Since 2026-11-26 coefficients use the corrected reference density 1.092 kg/m3.",
+    "source_export_rho_kg_m3": 1.021
+  },
+  "flight_density_kg_m3": 1.021,
+  "density_note": "Reference density corrected on 2026-11-26 from 1.021 to 1.092 kg/m3, the CFD run condition (Aerodynamics note 0003 correction, PR #34, commit 9b882ad, not yet merged). Coefficients are regenerated from the preserved dimensional loads; dimensional loads are unchanged. 1.021 kg/m3 remains the Ankara flight density, set by the aircraft profiles. Deflection loads are dimensional and are normalized with the database reference density at load."
 }

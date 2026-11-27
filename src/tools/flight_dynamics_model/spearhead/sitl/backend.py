@@ -48,6 +48,27 @@ def verify_firmware(path):
             "identity": expected.decode(), "binary_sha256": sha256(path)}
 
 
+# The SITL home is the Ankara test field; every simulated aircraft flies at its
+# hot-day density. The AeroDB keeps its own reference density (CFD run condition).
+SITE_RHO = 1.021
+AERO_REFERENCE_RHO = 1.092
+
+
+def check_pusher_endpoints(channel, system):
+    """The pusher channel endpoints must reproduce the profile's ESC range and output limit.
+
+    The FDM normalizes pusher PWM over the channel's minimum..maximum and scales it by
+    the profile's output limit, so the channel maximum must be the limited endpoint.
+    """
+    if system is None or "pwm_range_us" not in system.esc:
+        return
+    low, high = system.esc["pwm_range_us"]
+    expected = low+system.output_limit*(high-low)
+    if channel.minimum != low or abs(channel.maximum-expected) > 1:
+        raise ValueError(f"Pusher channel must span {low}-{expected:.0f} us (ESC {low}-{high} us, "
+                         f"output limit {system.output_limit:.0%}); got {channel.minimum}-{channel.maximum} us")
+
+
 def load_setup(path=None):
     path = Path(path or CONFIG_ROOT / "fixed_wing_new.yaml").resolve()
     config = yaml.safe_load(path.read_text())
@@ -60,18 +81,20 @@ def load_setup(path=None):
     cg = np.asarray(config["cg_body_xyz_m"], dtype=float)
     if cg.shape != (3,) or not np.isfinite(cg).all():
         raise ValueError("CG must contain three finite values")
-    # Optional pusher option of the profile (PT1.5: "mad" or "kde"); default is the profile's choice.
+    # Optional pusher option of the profile; default is the profile's selected option.
     params = replace(load_aircraft_config(config["aircraft"], aerodynamics=DATASET, pusher=config.get("pusher")),
-                     cg_body_xyz=cg)
+                     cg_body_xyz=cg, rho=SITE_RHO)
     if (not params.use_aero_database or params.deflection_database_path is None
-            or params.rho != 1.021 or not np.array_equal(params.aerodb_reference.moment_center_body_xyz, [0, 0, 0])):
-        raise ValueError("Unexpected AeroDB, deflections, density, or source moment center")
+            or params.rho != SITE_RHO or params.aerodb_reference.rho != AERO_REFERENCE_RHO
+            or not np.array_equal(params.aerodb_reference.moment_center_body_xyz, [0, 0, 0])):
+        raise ValueError("Unexpected AeroDB, deflections, flight or reference density, or source moment center")
     channels = dict(config["channels"])
     if set(channels) not in ({"aileron", "elevator", "rudder", "pusher"},
                              {"aileron", "elevator", "rudder", "pusher", "lift"}):
         raise ValueError("Configure all four conventional actuator mappings explicitly")
     mapping = ActuatorMap(**{k: tuple(Channel(**item) for item in v) if k == "lift" else Channel(**v)
                              for k, v in channels.items()})
+    check_pusher_endpoints(mapping.pusher, params.pusher_system)
     policy = config.get("control_deflection_policy", "hold")
     if policy not in ("hold", "linear"):
         raise ValueError("Control deflection policy must be hold or linear")

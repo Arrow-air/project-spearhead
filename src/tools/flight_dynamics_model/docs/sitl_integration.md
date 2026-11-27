@@ -40,9 +40,10 @@ browser does not create a second physics model. Nothing is flashed to hardware.
 
 | Output | Mapping |
 |---|---|
-| SERVO1–4 | Virtual aileron, elevator (reversed), pusher (1050–1940 µs for either pusher motor), rudder |
+| SERVO1–4 | Virtual aileron, elevator (reversed), pusher, rudder |
+| Pusher PWM | AMPX 80A range 1050–1940 µs; `SERVO3_MAX` 1450 µs is the 45 % output limit of the profile (`output_limit`), checked against the profile when a configuration loads |
 | SERVO5–8 | Lift motors 1–4 (Quad-X); FDM rotor order front-right, rear-right, rear-left, front-left = channels 5, 8, 6, 7 |
-| Lift PWM | 1100–1940 µs (`Q_M_PWM_MIN/MAX` from the PT1 log) |
+| Lift PWM | 1100–1940 µs (`Q_M_PWM_MIN/MAX` from the PT1 log); the AMPX lift ESCs are assumed calibrated to this range |
 | Surface travel | PT1.5: ±30° over 1000–2000 µs (Aero team proposal, uncalibrated); reference fixed-wing configurations: ±20° |
 
 Servo and ESC dynamics are ideal (no delay or rate limit). The two-surface V-tail outputs

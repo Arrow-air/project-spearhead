@@ -5,7 +5,7 @@ the firmware and the FDM, shows the flight live and keeps the recording. Install
 with the [setup guide](setup_guide.md); how the firmware connection works is in
 [SITL integration](sitl_integration.md).
 
-The Flight Deck flies **PT1.5** (`pt15`, 21 kg) only. The 25 kg reference design stays available
+The Flight Deck flies **PT1.5** (`pt15`, 22 kg) only. The 25 kg reference design stays available
 in Model Lab and on the command line. Results are simulations of a provisional model, not
 flight clearance.
 
@@ -55,10 +55,10 @@ aerodynamic data stay visible in the result even when the checks pass.
 
 ## Starting conditions
 
-**Pusher motor.** MAD V8013 150KV with AMPX 80A (default) or KDE5215XF-220 with KDE-UAS75HVC+
-(the lift motor and ESC), both with the 20×12 propeller. The choice changes pusher thrust, current,
-trim command and the current limit used by the alerts; see the
-[model reference](model_reference.md#pusher).
+**Pusher motor.** HOBBYWING PLATINUM 5230SL 380KV with a MAD AMPX 80A and the APC 20×12, output
+limited to 45 % of the ESC range (SERVO3_MAX 1450 µs) because the motor is rated for 6–8S and runs
+on the 12S pack. It is currently the only option; the selector stays for future alternatives. See
+the [model reference](model_reference.md#pusher).
 
 **CG.** The simulation CG (target, not measured) defaults to x −40 mm, z +65 mm from the CFD
 origin. Alternatives: PT1 logged x −47.5 mm, aft −60 mm, forward −25 mm and 0 mm. Below the
@@ -97,7 +97,7 @@ recorded values are labelled.
 
 **Live alerts:** elevator beyond the measured ±15° data (or any other control beyond measured
 coverage), forward flight between 3 and 20 m/s where the aerodynamic data are least reliable,
-pusher above its current limit (MAD 24 A sustainable; KDE 44 A, the 180 s motor rating), lift
+pusher above its current limit (80 A, the AMPX continuous rating), lift
 pack below 3.5 V per cell, and an injected
 failure.
 

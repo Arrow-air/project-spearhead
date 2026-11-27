@@ -1654,7 +1654,7 @@ def _register_cg_sweep_page(ui) -> None:
     def cg_sweep_page() -> None:
         """PT1.5 CG window: the Flight Deck CG summary evaluated over a range of CG x."""
         _render_page_shell(ui)
-        from ..aircraft import pusher_options
+        from ..aircraft import pusher_options, selected_pusher_option
         from ..cg_card import TRIM_SPEEDS_M_S, cg_card
         with ui.column().classes("w-full max-w-6xl mx-auto gap-4 p-4"):
             _page_intro(ui, "CG window", "Static margin, elevator trim and hover headroom across CG positions for PT1.5.")
@@ -1667,7 +1667,7 @@ def _register_cg_sweep_page(ui) -> None:
                 with ui.row().classes("items-end gap-3"):
                     cg_x_input = ui.input("CG x values [mm, forward positive]", value="-70, -60, -50, -40, -30, -20, -10, 0").classes("min-w-96")
                     cg_z_input = ui.number("CG z [mm, down positive]", value=65, step=5).classes("w-48")
-                    pusher_input = ui.select(pusher_options("pt15"), value="mad", label="Pusher motor").classes("min-w-64")
+                    pusher_input = ui.select(pusher_options("pt15"), value=selected_pusher_option("pt15"), label="Pusher motor").classes("min-w-64")
                     run_button = ui.button("Compute", on_click=lambda: compute()).props("color=primary")
                 status = ui.label("").classes("text-slate-600")
                 columns = [{"name": "x", "label": "CG x (mm)", "field": "x"},
